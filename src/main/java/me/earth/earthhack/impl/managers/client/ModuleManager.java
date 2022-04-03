@@ -121,6 +121,7 @@ import me.earth.earthhack.impl.modules.player.multitask.MultiTask;
 import me.earth.earthhack.impl.modules.player.ncptweaks.NCPTweaks;
 import me.earth.earthhack.impl.modules.player.noglitchblocks.NoGlitchBlocks;
 import me.earth.earthhack.impl.modules.player.nohunger.NoHunger;
+import me.earth.earthhack.impl.modules.player.noinventorydesync.InventorySync;
 import me.earth.earthhack.impl.modules.player.norotate.NoRotate;
 import me.earth.earthhack.impl.modules.player.raytrace.RayTrace;
 import me.earth.earthhack.impl.modules.player.reach.Reach;
@@ -289,6 +290,7 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new NCPTweaks());
         this.forceRegister(new NoGlitchBlocks());
         this.forceRegister(new NoHunger());
+        this.forceRegister(new InventorySync());
         this.forceRegister(new NoRotate());
         this.forceRegister(new Arrows());
         this.forceRegister(new RayTrace());
@@ -301,6 +303,7 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new Suicide());
         this.forceRegister(new Timer());
         this.forceRegister(new XCarry());
+
         this.forceRegister(new BlockHighlight());
         this.forceRegister(new BreadCrumbs());
         this.forceRegister(new Chams());

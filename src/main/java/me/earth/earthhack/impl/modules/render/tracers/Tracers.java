@@ -9,8 +9,10 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.render.tracers.mode.BodyPart;
 import me.earth.earthhack.impl.modules.render.tracers.mode.TracerMode;
 import me.earth.earthhack.impl.util.math.MathUtil;
+import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.module.EntityTypeModule;
+import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,6 +34,8 @@ public class Tracers extends EntityTypeModule
             register(new EnumSetting<>("Target", BodyPart.Body));
     protected final Setting<Boolean> lines      =
             register(new BooleanSetting("Lines", true));
+    protected final Setting<Boolean> outsideFov      =
+            register(new BooleanSetting("OutsideFov", false));
     protected final Setting<Float> lineWidth    =
             register(new NumberSetting<>("LineWidth", 1.5f, 0.1f, 5.0f));
     protected final Setting<Integer> tracers    =
@@ -65,6 +69,11 @@ public class Tracers extends EntityTypeModule
                         < MathUtil.square(minRange.getValue())
                     || entity.getDistanceSq(mc.player)
                         > MathUtil.square(maxRange.getValue()))
+            {
+                return false;
+            }
+
+            if (outsideFov.getValue() && RotationUtil.inFov(entity))
             {
                 return false;
             }

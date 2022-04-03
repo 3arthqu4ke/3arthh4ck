@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(value = GameSettings.Options.class)
 public abstract class MixinOptions
 {
-    @SuppressWarnings("UnresolvedMixinReference")
     @ModifyConstant(
         method = "<clinit>",
         constant = @Constant(floatValue = 110.0f))
@@ -17,7 +16,6 @@ public abstract class MixinOptions
         return 180.0f;
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @ModifyConstant(
         method = "<clinit>",
         constant = @Constant(floatValue = 2.0f))

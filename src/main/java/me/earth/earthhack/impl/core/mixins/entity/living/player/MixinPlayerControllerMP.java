@@ -6,10 +6,7 @@ import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.impl.core.ducks.network.ICPacketPlayerDigging;
 import me.earth.earthhack.impl.core.ducks.network.IPlayerControllerMP;
-import me.earth.earthhack.impl.event.events.misc.ClickBlockEvent;
-import me.earth.earthhack.impl.event.events.misc.DamageBlockEvent;
-import me.earth.earthhack.impl.event.events.misc.ResetBlockEvent;
-import me.earth.earthhack.impl.event.events.misc.RightClickItemEvent;
+import me.earth.earthhack.impl.event.events.misc.*;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.misc.tpssync.TpsSync;
@@ -19,6 +16,8 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -232,6 +231,19 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
     private void syncCurrentPlayItemHook(PlayerControllerMP playerControllerMP)
     {
         Locks.acquire(Locks.PLACE_SWITCH_LOCK, this::syncCurrentPlayItem);
+    }
+
+    @Inject(method = "windowClick", at = @At("HEAD"), cancellable = true)
+    private void windowClickHook(int windowId, int slotId, int mouseButton,
+                                 ClickType type, EntityPlayer player,
+                                 CallbackInfoReturnable<ItemStack> cir)
+    {
+        WindowClickEvent event = new WindowClickEvent(windowId, slotId, mouseButton, type, player);
+        Bus.EVENT_BUS.post(event);
+        if (event.isCancelled())
+        {
+            cir.setReturnValue(event.getStack());
+        }
     }
 
 }

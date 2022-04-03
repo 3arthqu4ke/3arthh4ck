@@ -10,6 +10,7 @@ import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.raytrace.RayTracer;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.RenderUtil;
+import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -213,6 +214,7 @@ public class RotationUtil implements Globals
      */
     public static boolean inFov(double x, double y, double z)
     {
+        /*
         // TODO: When checking this in a RenderEvent just use one Frustum...
         Entity renderEntity = RenderUtil.getEntity();
         if (renderEntity == null)
@@ -220,9 +222,14 @@ public class RotationUtil implements Globals
             return false;
         }
 
+
         Frustum frustum = Interpolation.createFrustum(renderEntity);
         return frustum.isBoundingBoxInFrustum(
                 new AxisAlignedBB(x-1,y-1,x-1,x+1,y+1,z+1));
+
+         */
+
+        return getAngle(x, y, z) < mc.gameSettings.fovSetting / 2;
     }
 
     /**
@@ -239,6 +246,14 @@ public class RotationUtil implements Globals
                 entity.posX,
                 entity.posY + yOffset,
                 entity.posZ);
+
+        return MathUtil.angle(vec3d, Interpolation.interpolatedEyeVec());
+    }
+
+    public static double getAngle(double x, double y, double z)
+    {
+        Vec3d vec3d = MathUtil.fromTo(Interpolation.interpolatedEyePos(),
+                                      x, y, z);
 
         return MathUtil.angle(vec3d, Interpolation.interpolatedEyeVec());
     }
