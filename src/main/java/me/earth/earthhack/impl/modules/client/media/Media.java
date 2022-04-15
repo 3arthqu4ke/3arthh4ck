@@ -33,6 +33,8 @@ public class Media extends RegisteringModule<String, RemovingString>
             register(new StringSetting("Replacement", "3arthqu4ke"));
     protected final Setting<Boolean> replaceCustom =
             register(new BooleanSetting("Custom", false));
+    protected final Setting<Boolean> dontShowInCommands =
+            register(new BooleanSetting("DontCompleteCommands", true));
 
     /** Cache for already matched strings. */
     protected final Map<String, String> cache =
@@ -160,6 +162,16 @@ public class Media extends RegisteringModule<String, RemovingString>
     protected String formatString(String string)
     {
         return string;
+    }
+
+    public boolean isHidingInCommands(String name)
+    {
+        return isEnabled()
+            && dontShowInCommands.getValue()
+            && (custom.keySet().stream().anyMatch(
+                s -> s.getName().equalsIgnoreCase(name))
+            || pattern.matcher(name).matches()
+            || pingBypass != null && pingBypass.matcher(name).matches());
     }
 
     public void reload()

@@ -8,8 +8,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.util.UUIDTypeAdapter;
+import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.api.util.interfaces.Globals;
+import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.media.Media;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import org.apache.commons.io.IOUtils;
 
@@ -21,17 +24,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 
 public class LookUpUtil implements Globals
 {
+    private static final ModuleCache<Media> MEDIA = Caches.getModule(
+        Media.class);
     private static final BiMap<String, UUID> CACHE = HashBiMap.create();
     private static final JsonParser PARSER = new JsonParser();
 
@@ -262,13 +260,18 @@ public class LookUpUtil implements Globals
 
             if (profile != null)
             {
-                return profile.getGameProfile().getName();
+                String name = profile.getGameProfile().getName();
+                if (name != null && !MEDIA.returnIfPresent(
+                    m -> m.isHidingInCommands(name), false)) {
+                    return name;
+                }
             }
         }
 
         for (String str : CACHE.keySet())
         {
-            if (TextUtil.startsWith(str, input))
+            if (TextUtil.startsWith(str, input) && !MEDIA.returnIfPresent(
+                m -> m.isHidingInCommands(str), false))
             {
                 return str;
             }
