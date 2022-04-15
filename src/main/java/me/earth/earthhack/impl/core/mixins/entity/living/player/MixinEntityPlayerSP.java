@@ -10,6 +10,7 @@ import me.earth.earthhack.impl.event.events.misc.UpdateEvent;
 import me.earth.earthhack.impl.event.events.movement.BlockPushEvent;
 import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.rotationbypass.Compatibility;
 import me.earth.earthhack.impl.modules.misc.portals.Portals;
 import me.earth.earthhack.impl.modules.movement.autosprint.AutoSprint;
 import me.earth.earthhack.impl.modules.movement.autosprint.mode.SprintMode;
@@ -55,6 +56,8 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         Caches.getModule(Portals.class);
     private static final SettingCache<Boolean, BooleanSetting, Portals> CHAT =
         Caches.getSetting(Portals.class, BooleanSetting.class, "Chat", true);
+    private static final ModuleCache<Compatibility> ROTATION_BYPASS =
+        Caches.getModule(Compatibility.class);
 
     @Shadow
     public MovementInput movementInput;
@@ -64,7 +67,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
 
     private final Minecraft mc = Minecraft.getMinecraft();
     private MotionUpdateEvent.Riding riding;
-    private MotionUpdateEvent motionEvent;
+    private MotionUpdateEvent motionEvent = new MotionUpdateEvent();
 
     @Override
     @Accessor(value = "lastReportedPosX")
@@ -299,24 +302,97 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         Bus.EVENT_BUS.post(new UpdateEvent());
     }
 
+    @Inject(method = "onUpdate",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/entity/EntityPlayerSP;onUpdateWalkingPlayer()V",
+            shift = At.Shift.BEFORE))
+    private void onUpdateWalkingPlayerPre(CallbackInfo ci)
+    {
+        if (ROTATION_BYPASS.isEnabled())
+        {
+            motionEvent = new MotionUpdateEvent(Stage.PRE,
+                                                this.posX,
+                                                this.getEntityBoundingBox().minY,
+                                                this.posZ,
+                                                this.rotationYaw,
+                                                this.rotationPitch,
+                                                this.onGround);
+            Bus.EVENT_BUS.post(motionEvent);
+            posX = motionEvent.getX();
+            posY = motionEvent.getY();
+            posZ = motionEvent.getZ();
+            rotationYaw = motionEvent.getRotationYaw();
+            rotationPitch = motionEvent.getRotationPitch();
+            onGround = motionEvent.isOnGround();
+        }
+    }
+
     @Inject(
         method = "onUpdateWalkingPlayer",
-        at = @At(
-            value = "HEAD"),
+        at = @At(value = "HEAD"),
         cancellable = true)
     private void onUpdateWalkingPlayer_Head(CallbackInfo callbackInfo)
     {
-        motionEvent = new MotionUpdateEvent(Stage.PRE,
-                                            this.posX,
-                                            this.getEntityBoundingBox().minY,
-                                            this.posZ,
-                                            this.rotationYaw,
-                                            this.rotationPitch,
-                                            this.onGround);
-        Bus.EVENT_BUS.post(motionEvent);
+        if (!ROTATION_BYPASS.isEnabled())
+        {
+            motionEvent = new MotionUpdateEvent(Stage.PRE,
+                                                this.posX,
+                                                this.getEntityBoundingBox().minY,
+                                                this.posZ,
+                                                this.rotationYaw,
+                                                this.rotationPitch,
+                                                this.onGround);
+            Bus.EVENT_BUS.post(motionEvent);
+        }
+
         if (motionEvent.isCancelled())
         {
             callbackInfo.cancel();
+        }
+    }
+
+    @Inject(
+        method = "onUpdate",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/entity/EntityPlayerSP;onUpdateWalkingPlayer()V",
+            shift = At.Shift.AFTER))
+    private void onUpdateWalkingPlayerPost(CallbackInfo ci)
+    {
+        if (ROTATION_BYPASS.isEnabled() && !ROTATION_BYPASS.returnIfPresent(
+            Compatibility::isShowingRotations, false))
+        {
+            // maybe someone else changed our position in the meantime
+            if (posX == motionEvent.getX())
+            {
+                posX = motionEvent.getInitialX();
+            }
+
+            if (posY == motionEvent.getY())
+            {
+                posY = motionEvent.getInitialY();
+            }
+
+            if (posZ == motionEvent.getZ())
+            {
+                posZ = motionEvent.getInitialZ();
+            }
+
+            if (rotationYaw == motionEvent.getRotationYaw())
+            {
+                rotationYaw = motionEvent.getInitialYaw();
+            }
+
+            if (rotationPitch == motionEvent.getRotationPitch())
+            {
+                rotationPitch = motionEvent.getInitialPitch();
+            }
+
+            if (onGround == motionEvent.isOnGround())
+            {
+                onGround = motionEvent.isInitialOnGround();
+            }
         }
     }
 

@@ -21,6 +21,7 @@ import me.earth.earthhack.impl.modules.client.management.Management;
 import me.earth.earthhack.impl.modules.client.media.Media;
 import me.earth.earthhack.impl.modules.client.notifications.Notifications;
 import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.rotationbypass.Compatibility;
 import me.earth.earthhack.impl.modules.client.safety.Safety;
 import me.earth.earthhack.impl.modules.client.server.ServerModule;
 import me.earth.earthhack.impl.modules.client.tab.TabModule;
@@ -183,6 +184,7 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new HUD());
         this.forceRegister(new Management());
         this.forceRegister(new Notifications());
+        this.forceRegister(new Compatibility());
         this.forceRegister(new Safety());
         this.forceRegister(new ServerModule());
         this.forceRegister(new TabModule());

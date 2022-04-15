@@ -20,6 +20,13 @@ import net.minecraft.entity.Entity;
 @SuppressWarnings("unused")
 public class MotionUpdateEvent extends StageEvent implements Globals
 {
+    private final double initialX;
+    private final double initialY;
+    private final double initialZ;
+    private final float initialYaw;
+    private final float initialPitch;
+    private final boolean initialOnGround;
+
     private double x;
     private double y;
     private double z;
@@ -27,6 +34,12 @@ public class MotionUpdateEvent extends StageEvent implements Globals
     private float rotationPitch;
     private boolean onGround;
     protected boolean modified;
+
+    public MotionUpdateEvent()
+    {
+        this(Stage.PRE, 0, 0, 0, 0, 0, false);
+    }
+
 
     public MotionUpdateEvent(Stage stage, MotionUpdateEvent event)
     {
@@ -54,6 +67,52 @@ public class MotionUpdateEvent extends StageEvent implements Globals
         this.rotationYaw = rotationYaw;
         this.rotationPitch = rotationPitch;
         this.onGround = onGround;
+        this.initialX = x;
+        this.initialY = y;
+        this.initialZ = z;
+        this.initialYaw = rotationYaw;
+        this.initialPitch = rotationPitch;
+        this.initialOnGround = onGround;
+    }
+
+    public double getInitialX()
+    {
+        return initialX;
+    }
+
+    public double getInitialY()
+    {
+        return initialY;
+    }
+
+    public double getInitialZ()
+    {
+        return initialZ;
+    }
+
+    public float getInitialYaw()
+    {
+        return initialYaw;
+    }
+
+    public float getInitialPitch()
+    {
+        return initialPitch;
+    }
+
+    public boolean isInitialOnGround()
+    {
+        return initialOnGround;
+    }
+
+    public float getRotationYaw()
+    {
+        return rotationYaw;
+    }
+
+    public float getRotationPitch()
+    {
+        return rotationPitch;
     }
 
     public boolean isModified()
