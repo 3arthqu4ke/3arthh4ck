@@ -8,25 +8,8 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.antisurround.AntiSurround;
 import me.earth.earthhack.impl.modules.combat.autocrystal.helpers.Confirmer;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.ACRotate;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.AntiWeakness;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.AutoSwitch;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.BreakValidity;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.RotationThread;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.SwingTime;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.Target;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.AntiTotemData;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.BreakData;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalData;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalTimeStamp;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.EmptySet;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.ForceData;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.IBreakHelper;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.MineSlots;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.PlaceData;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.PositionData;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.RotationComparator;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.RotationFunction;
+import me.earth.earthhack.impl.modules.combat.autocrystal.modes.*;
+import me.earth.earthhack.impl.modules.combat.autocrystal.util.*;
 import me.earth.earthhack.impl.modules.combat.legswitch.LegSwitch;
 import me.earth.earthhack.impl.modules.combat.offhand.Offhand;
 import me.earth.earthhack.impl.modules.combat.offhand.modes.OffhandMode;
@@ -58,13 +41,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public abstract class AbstractCalculation<T extends CrystalData>
         extends Finishable implements Globals
@@ -99,6 +76,8 @@ public abstract class AbstractCalculation<T extends CrystalData>
     protected boolean fallback;
     protected int motionID;
     protected int count;
+    protected int shieldCount;
+    protected int shieldRange;
 
     public AbstractCalculation(AutoCrystal module,
                                List<Entity> entities,
@@ -296,6 +275,7 @@ public abstract class AbstractCalculation<T extends CrystalData>
 
     protected void setCount(BreakData<T> breakData, float minDmg)
     {
+        shieldCount = breakData.getShieldCount();
         if (module.multiPlaceMinDmg.getValue())
         {
             count = (int) breakData.getData()
@@ -484,8 +464,8 @@ public abstract class AbstractCalculation<T extends CrystalData>
         this.enemies = split.get(2);
         this.players = split.get(3);
         this.all = new ArrayList<>(enemies.size() + players.size());
-        this.all.addAll(enemies);
-        this.all.addAll(players);
+        shieldRange += enemies.stream().peek(e -> all.add(e)).filter(e -> e.getDistanceSq(mc.player) <= MathUtil.square(module.shieldRange.getValue())).count();
+        shieldRange += players.stream().peek(e -> all.add(e)).filter(e -> e.getDistanceSq(mc.player) <= MathUtil.square(module.shieldRange.getValue())).count();
         if (module.yCalc.getValue())
         {
             maxY = Double.MIN_VALUE;
@@ -848,18 +828,40 @@ public abstract class AbstractCalculation<T extends CrystalData>
             }
 
             place(firstData,
-                    firstData.getTarget(),
-                    !module.rotate.getValue().noRotate(ACRotate.Place),
-                    rotating || scheduling,
-                    slow,
-                    slow ? firstData.getMaxDamage() : Float.MAX_VALUE,
-                    liquidBreak);
+                  firstData.getTarget(),
+                  !module.rotate.getValue().noRotate(ACRotate.Place),
+                  rotating || scheduling,
+                  slow,
+                  slow ? firstData.getMaxDamage() : Float.MAX_VALUE,
+                  liquidBreak);
 
             return false;
         }
 
+        Optional<PositionData> shield;
+        if (module.shield.getValue()
+            && module.shieldTimer.passed(module.shieldDelay.getValue())
+            && (shieldCount < module.shieldCount.getValue() || !attacking)
+            && (shield = data.getShieldData().stream().findFirst()).isPresent()
+            && placeData.getHighestSelfDamage()
+                >= module.shieldMinDamage.getValue()
+            && shieldRange > 0)
+        {
+            place(shield.get(),
+                  shield.get().getTarget(),
+                  !module.rotate.getValue().noRotate(ACRotate.Place),
+                  rotating || scheduling,
+                  false,
+                  Float.MAX_VALUE,
+                  null,
+                  true);
+
+            module.shieldTimer.reset();
+            return false;
+        }
+
         return !module.damageSyncHelper.isSyncing(0.0f,
-                module.damageSync.getValue());
+                                                  module.damageSync.getValue());
     }
 
     protected void place(PositionData data,
@@ -877,64 +879,66 @@ public abstract class AbstractCalculation<T extends CrystalData>
                          boolean schedule,
                          boolean resetSlow,
                          float damage,
-                         MutableWrapper<Boolean> liquidBreak)
-    {
-        if (liquidBreak != null)
-        {
+                         MutableWrapper<Boolean> liquidBreak) {
+        place(data, target, rotate, schedule, resetSlow, damage, liquidBreak,
+              false);
+    }
+
+    protected void place(PositionData data,
+                         EntityPlayer target,
+                         boolean rotate,
+                         boolean schedule,
+                         boolean resetSlow,
+                         float damage,
+                         MutableWrapper<Boolean> liquidBreak,
+                         boolean shield) {
+        if (liquidBreak != null) {
             module.liquidTimer.reset();
         }
 
         module.placeTimer.reset(resetSlow ? module.slowPlaceDelay.getValue()
-                                          : module.placeDelay.getValue());
+                                    : module.placeDelay.getValue());
         BlockPos pos = data.getPos();
         BlockPos crystalPos = new BlockPos(
-                pos.getX() + 0.5f, pos.getY() + 1, pos.getZ() + 0.5f);
+            pos.getX() + 0.5f, pos.getY() + 1, pos.getZ() + 0.5f);
 
-        module.placed.put(crystalPos, new CrystalTimeStamp(damage));
-
+        module.placed.put(crystalPos, new CrystalTimeStamp(damage, shield));
         module.damageSyncHelper.setSync(pos,
                                         data.getMaxDamage(),
                                         module.newVerEntities.getValue());
         module.setTarget(target);
         boolean realtime = module.realtime.getValue();
-        if (!realtime)
-        {
+        if (!realtime) {
             module.setRenderPos(pos, data.getMaxDamage());
         }
 
         MutableWrapper<Boolean> hasPlaced = new MutableWrapper<>(false);
-        if (!InventoryUtil.isHolding(Items.END_CRYSTAL))
-        {
+        if (!InventoryUtil.isHolding(Items.END_CRYSTAL)) {
             if (module.autoSwitch.getValue() == AutoSwitch.Always
                 || module.autoSwitch.getValue() == AutoSwitch.Bind
-                    && module.switching)
-            {
-                if (!module.mainHand.getValue())
-                {
+                && module.switching) {
+                if (!module.mainHand.getValue()) {
                     mc.addScheduledTask(() ->
-                    {
-                        OFFHAND.computeIfPresent(o ->
-                                o.setMode(OffhandMode.CRYSTAL));
-                    });
+                                        {
+                                            OFFHAND.computeIfPresent(o ->
+                                                                         o.setMode(OffhandMode.CRYSTAL));
+                                        });
                 }
             }
         }
 
         Runnable post = module.rotationHelper.post(
-                    module, data.getMaxDamage(),
-                    realtime, pos, hasPlaced, liquidBreak);
-        if (rotate)
-        {
+            module, data.getMaxDamage(),
+            realtime, pos, hasPlaced, liquidBreak);
+        if (rotate) {
             RotationFunction function =
                 module.rotationHelper.forPlacing(pos, hasPlaced);
 
-            if (module.rotationCanceller.setRotations(function))
-            {
+            if (module.rotationCanceller.setRotations(function)) {
                 module.runPost();
                 post.run();
 
-                if (module.attack.getValue() && hasPlaced.get())
-                {
+                if (module.attack.getValue() && hasPlaced.get()) {
                     module.rotation = function;
                 }
 
@@ -944,12 +948,9 @@ public abstract class AbstractCalculation<T extends CrystalData>
             module.rotation = function;
         }
 
-        if (schedule || !placeCheckPre(pos))
-        {
+        if (schedule || !placeCheckPre(pos)) {
             module.post.add(post);
-        }
-        else
-        {
+        } else {
             post.run();
         }
     }

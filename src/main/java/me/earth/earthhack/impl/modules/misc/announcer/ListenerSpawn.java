@@ -41,16 +41,18 @@ public class ListenerSpawn
                     || Math.abs(event.getPacket().getSpeedZ() / 8000) > 0.001)
                 && module.miss.getValue())
         {
-            EntityPlayer closestPlayer = Managers.ENTITIES.getPlayers()
-                    .stream()
-                    .filter(player -> player != mc.player && !Managers.FRIENDS.contains(player))
-                    .sorted(Comparator.comparing(player -> player.getDistanceSq(event.getPacket().getX(), event.getPacket().getY(), event.getPacket().getZ())))
-                    .collect(Collectors.toList())
-                    .get(0);
-            if (closestPlayer != null)
-            {
-                module.arrowMap.put(event.getPacket().getEntityID(), closestPlayer);
-            }
+            Managers.ENTITIES.getPlayers()
+                             .stream()
+                             .filter(
+                                 player -> player != mc.player && !Managers.FRIENDS.contains(
+                                     player)).min(
+                        Comparator.comparing(
+                            player -> player.getDistanceSq(event.getPacket().getX(),
+                                                           event.getPacket().getY(),
+                                                           event.getPacket().getZ()))).ifPresent(
+                        closestPlayer -> module.arrowMap.put(
+                            event.getPacket().getEntityID(), closestPlayer));
+
         }
     }
 

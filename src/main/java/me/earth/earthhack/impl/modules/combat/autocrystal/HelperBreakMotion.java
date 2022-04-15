@@ -7,7 +7,6 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.safety.Safety;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.BreakData;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalData;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalDataMotion;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
@@ -17,7 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class HelperBreakMotion extends AbstractBreakHelper<CrystalDataMotion>
 {
@@ -65,15 +63,23 @@ public class HelperBreakMotion extends AbstractBreakHelper<CrystalDataMotion>
     }
 
     @Override
-    protected boolean calcSelf(Entity crystal, CrystalDataMotion data)
+    protected boolean calcSelf(
+        BreakData<CrystalDataMotion> breakData,
+        Entity crystal, CrystalDataMotion data)
     {
         boolean breakCase = true;
+        boolean incrementedCount = false;
         switch (data.getTiming())
         {
             case BOTH:
                 breakCase = false;
             case PRE:
                 float preDamage = module.damageHelper.getDamage(crystal);
+                if (preDamage <= module.shieldSelfDamage.getValue())
+                {
+                    breakData.setShieldCount(breakData.getShieldCount() + 1);
+                    incrementedCount = true;
+                }
 
                 data.setSelfDmg(preDamage);
                 if (preDamage > EntityUtil.getHealth(mc.player) - 1.0f)
@@ -91,6 +97,12 @@ public class HelperBreakMotion extends AbstractBreakHelper<CrystalDataMotion>
             case POST:
                 float postDamage = module.damageHelper.getDamage(crystal,
                     RotationUtil.getRotationPlayer().getEntityBoundingBox());
+
+                if (!incrementedCount
+                    && postDamage <= module.shieldSelfDamage.getValue())
+                {
+                    breakData.setShieldCount(breakData.getShieldCount() + 1);
+                }
 
                 data.setPostSelf(postDamage);
                 if (postDamage > EntityUtil.getHealth(mc.player) - 1.0f)

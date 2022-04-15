@@ -15,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public class HelperBreak extends AbstractBreakHelper<CrystalData>
 {
@@ -53,10 +52,17 @@ public class HelperBreak extends AbstractBreakHelper<CrystalData>
     }
 
     @Override
-    protected boolean calcSelf(Entity crystal, CrystalData data)
+    protected boolean calcSelf(
+        BreakData<CrystalData> breakData,
+        Entity crystal, CrystalData data)
     {
         float selfDamage = module.damageHelper.getDamage(crystal);
         data.setSelfDmg(selfDamage);
+        if (selfDamage <= module.shieldSelfDamage.getValue())
+        {
+            breakData.setShieldCount(breakData.getShieldCount() + 1);
+        }
+
         if (selfDamage > EntityUtil.getHealth(mc.player) - 1.0f)
         {
             Managers.SAFETY.setSafe(false);

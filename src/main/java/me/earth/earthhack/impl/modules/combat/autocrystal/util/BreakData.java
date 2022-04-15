@@ -13,6 +13,7 @@ public class BreakData<T extends CrystalData>
     private float fallBackDmg = Float.MAX_VALUE;
     private Entity antiTotem;
     private Entity fallBack;
+    private int shieldCount;
 
     public BreakData(Collection<T> data)
     {
@@ -53,6 +54,16 @@ public class BreakData<T extends CrystalData>
     public Collection<T> getData()
     {
         return data;
+    }
+
+    public int getShieldCount()
+    {
+        return shieldCount;
+    }
+
+    public void setShieldCount(int shieldCount)
+    {
+        this.shieldCount = shieldCount;
     }
 
 }

@@ -1,7 +1,6 @@
 package me.earth.earthhack.impl.modules.client.debug;
 
 import me.earth.earthhack.api.event.bus.EventListener;
-import me.earth.earthhack.api.event.events.Stage;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
@@ -17,13 +16,13 @@ import me.earth.earthhack.impl.event.listeners.PostSendListener;
 import me.earth.earthhack.impl.event.listeners.ReceiveListener;
 import me.earth.earthhack.impl.util.client.DebugUtil;
 import me.earth.earthhack.impl.util.client.SimpleData;
-import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
-import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
+import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.network.play.client.CPacketUseEntity;
@@ -46,6 +45,8 @@ public class Debug extends Module
 {
     private final Setting<Boolean> debugPlace =
          register(new BooleanSetting("DebugPlacePing", false));
+    private final Setting<Boolean> debugPlaceDistance =
+        register(new BooleanSetting("DebugPlaceDistance", false));
     private final Setting<Boolean> debugBreak =
         register(new BooleanSetting("DebugBreakPing", false));
 
@@ -157,15 +158,37 @@ public class Debug extends Module
                 BlockPos pos = new BlockPos(e.getPacket().getX(),
                                             e.getPacket().getY() - 1,
                                             e.getPacket().getZ());
-                if (debugPlace.getValue())
+                if (debugPlace.getValue() || debugPlaceDistance.getValue())
                 {
                     Long l = times.remove(pos);
                     if (l != null)
                     {
-                        long curr = System.currentTimeMillis();
-                        mc.addScheduledTask(() ->
-                            DebugUtil.debug(pos,
-                                "Crystal took " + (curr - l) + "ms to spawn."));
+                        long diff = System.currentTimeMillis() - l;
+                        EntityPlayer player = mc.player;
+                        SPacketSpawnObject packet = e.getPacket();
+                        double x = packet.getX();
+                        double y = packet.getY();
+                        double z = packet.getZ();
+                        EntityEnderCrystal entity =
+                            new EntityEnderCrystal(mc.world, x, y, z);
+                        boolean canBeSeen = true;
+                        if (debugPlaceDistance.getValue()
+                            && diff < 1000 && player != null
+                            && (player.getDistanceSq(entity) >= 36.0
+                            || !(canBeSeen = player.canEntityBeSeen(entity))
+                            && player.getDistanceSq(entity) >= 9.0))
+                        {
+                            boolean finalCanBeSeen = canBeSeen;
+                            mc.addScheduledTask(() ->
+                                DebugUtil.debug(pos, (finalCanBeSeen
+                                    ? TextColor.RED : TextColor.GOLD)
+                                    + "Crystal was out of range!"));
+                        }
+                        else if (debugPlace.getValue())
+                        {
+                            mc.addScheduledTask(() -> DebugUtil.debug(
+                                pos, "Crystal took " + diff + "ms to spawn."));
+                        }
                     }
                 }
 

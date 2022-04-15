@@ -1,11 +1,20 @@
 package me.earth.earthhack.impl.util.math;
 
+// TODO: why does this exist?
 public class Timer
 {
     private long startTime;
 
     public Timer() {
         startTime = System.currentTimeMillis();
+    }
+
+    public boolean passed(double ms) {
+        return System.currentTimeMillis() - startTime >= ms;
+    }
+
+    public boolean passed(long ms) {
+        return System.currentTimeMillis() - startTime >= ms;
     }
 
     public long getTime() {

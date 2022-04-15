@@ -34,7 +34,7 @@ public class HelperLiquids implements Globals
         newData.setTarget(placeData.getTarget());
         for (PositionData data : placeData.getLiquid())
         {
-            if (placeHelper.validate(data, friends) != null)
+            if (placeHelper.validate(placeData, data, friends) != null)
             {
                 placeHelper.calcPositionData(newData, data, players);
             }

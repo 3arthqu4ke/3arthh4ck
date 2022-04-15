@@ -227,6 +227,20 @@ public class AutoCrystal extends Module
             register(new NumberSetting<>("Range", 12.0f, 0.1f, 20.0f));
     protected final Setting<Boolean> suicide =
             register(new BooleanSetting("Suicide", false));
+    protected final Setting<Boolean> shield =
+            register(new BooleanSetting("Shield", false));
+    protected final Setting<Integer> shieldCount =
+            register(new NumberSetting<>("ShieldCount", 1, 1, 5));
+    protected final Setting<Float> shieldMinDamage =
+            register(new NumberSetting<>("ShieldMinDamage", 6.0f, 0.0f, 20.0f));
+    protected final Setting<Float> shieldSelfDamage =
+            register(new NumberSetting<>("ShieldSelfDamage", 2.0f, 0.0f, 20.0f));
+    protected final Setting<Integer> shieldDelay =
+            register(new NumberSetting<>("ShieldPlaceDelay", 50, 0, 5000));
+    protected final Setting<Float> shieldRange =
+            register(new NumberSetting<>("ShieldRange", 10.0f, 0.0f, 20.0f));
+    protected final Setting<Boolean> shieldPrioritizeHealth =
+            register(new BooleanSetting("Shield-PrioritizeHealth", false));
     protected final Setting<Boolean> multiTask =
             register(new BooleanSetting("MultiTask", true));
     protected final Setting<Boolean> multiPlaceCalc =
@@ -571,6 +585,7 @@ public class AutoCrystal extends Module
     protected final StopWatch cTargetTimer = new StopWatch();
     protected final StopWatch forceTimer = new StopWatch();
     protected final StopWatch liquidTimer = new StopWatch();
+    protected final StopWatch shieldTimer = new StopWatch();
 
     /* ---------------- States -------------- */
     protected final Queue<Runnable> post = new ConcurrentLinkedQueue<>();

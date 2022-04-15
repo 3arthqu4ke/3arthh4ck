@@ -10,10 +10,7 @@ import me.earth.earthhack.impl.modules.client.safety.Safety;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.ACRotate;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.AntiFriendPop;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.Target;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.AntiTotemData;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.ForcePosition;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.PlaceData;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.PositionData;
+import me.earth.earthhack.impl.modules.combat.autocrystal.util.*;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.RayTraceUtil;
 import me.earth.earthhack.impl.util.math.geocache.Sphere;
@@ -231,10 +228,11 @@ public class HelperPlace implements Globals
             return null;
         }
 
-        return validate(data, friends);
+        return validate(placeData, data, friends);
     }
 
-    public PositionData validate(PositionData data, List<EntityPlayer> friends)
+    public PositionData validate(PlaceData placeData, PositionData data,
+                                 List<EntityPlayer> friends)
     {
         if (BlockUtil.getDistanceSq(data.getPos())
                 >= MathUtil.square(module.placeTrace.getValue())
@@ -244,6 +242,11 @@ public class HelperPlace implements Globals
         }
 
         float selfDamage = module.damageHelper.getDamage(data.getPos());
+        if (selfDamage > placeData.getHighestSelfDamage())
+        {
+            placeData.setHighestSelfDamage(selfDamage);
+        }
+
         if (selfDamage > EntityUtil.getHealth(mc.player) - 1.0)
         {
             if (!data.usesObby() && !data.isLiquid())
@@ -311,7 +314,12 @@ public class HelperPlace implements Globals
                         mc.world,
                         Blocks.OBSIDIAN.getDefaultState(),
                         module.traceWidth.getValue());
-                if (!mc.world.getBlockState(ray.getResult().getBlockPos()).getBlock().isFullBlock(mc.world.getBlockState(ray.getResult().getBlockPos())))
+
+                //noinspection deprecation
+                if (!mc.world.getBlockState(ray.getResult().getBlockPos())
+                             .getBlock()
+                             .isFullBlock(mc.world.getBlockState(
+                                 ray.getResult().getBlockPos())))
                 {
                     return false;
                 }
@@ -385,6 +393,21 @@ public class HelperPlace implements Globals
                 || positionData.getMaxDamage() > data.getMinDamage())
         {
             data.getData().add(positionData);
+        }
+        else if (module.shield.getValue()
+            && !positionData.usesObby()
+            && !positionData.isLiquid()
+            && positionData.isValid()
+            && positionData.getSelfDamage()
+                <= module.shieldSelfDamage.getValue())
+        {
+            if (module.shieldPrioritizeHealth.getValue())
+            {
+                positionData.setDamage(0.0f);
+            }
+
+            positionData.setTarget(data.getShieldPlayer());
+            data.getShieldData().add(positionData);
         }
     }
 

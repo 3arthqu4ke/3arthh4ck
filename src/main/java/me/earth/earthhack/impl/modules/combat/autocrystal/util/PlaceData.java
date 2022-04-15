@@ -1,5 +1,6 @@
 package me.earth.earthhack.impl.modules.combat.autocrystal.util;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 
@@ -18,10 +19,12 @@ public class PlaceData
     private final Map<BlockPos, PositionData> liquidObby     = new HashMap<>();
 
     private final List<PositionData> liquid    = new ArrayList<>();
-    private final List<PositionData> invalid   = new ArrayList<>();
     private final Set<PositionData> data       = new TreeSet<>();
     private final Set<AntiTotemData> antiTotem = new TreeSet<>();
+    private final Set<PositionData> shieldData = new TreeSet<>();
 
+    private EntityPlayer shieldPlayer;
+    private float highestSelfDamage;
     private final float minDamage;
     private EntityPlayer target;
 
@@ -33,6 +36,16 @@ public class PlaceData
     public void setTarget(EntityPlayer target)
     {
         this.target = target;
+    }
+
+    public EntityPlayer getShieldPlayer()
+    {
+        if (shieldPlayer == null)
+        {
+            shieldPlayer = new ShieldPlayer(Minecraft.getMinecraft().world);
+        }
+
+        return shieldPlayer;
     }
 
     public void addAntiTotem(AntiTotemData data)
@@ -132,6 +145,19 @@ public class PlaceData
         }
 
         return builder.toString();
+    }
+
+    public float getHighestSelfDamage() {
+        return highestSelfDamage;
+    }
+
+    public void setHighestSelfDamage(float highestSelfDamage) {
+        this.highestSelfDamage = highestSelfDamage;
+    }
+
+    public Set<PositionData> getShieldData()
+    {
+        return shieldData;
     }
 
 }

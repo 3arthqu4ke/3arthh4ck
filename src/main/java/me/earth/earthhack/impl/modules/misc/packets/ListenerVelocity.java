@@ -4,6 +4,7 @@ import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 
 final class ListenerVelocity extends
@@ -26,6 +27,12 @@ final class ListenerVelocity extends
         }
 
         SPacketEntityVelocity packet = event.getPacket();
+        EntityPlayer player = mc.player;
+        if (player == null || player.getEntityId() == packet.getEntityID())
+        {
+            return;
+        }
+
         Entity entity = Managers.ENTITIES.getEntity(packet.getEntityID());
         if (entity != null)
         {

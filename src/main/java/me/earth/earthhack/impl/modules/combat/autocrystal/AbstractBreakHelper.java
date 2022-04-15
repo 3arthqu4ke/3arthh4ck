@@ -27,7 +27,9 @@ public abstract class AbstractBreakHelper<T extends CrystalData>
 
     protected abstract boolean isValid(Entity crystal, T data);
 
-    protected abstract boolean calcSelf(Entity crystal, T data);
+    protected abstract boolean calcSelf(
+        BreakData<T> breakData,
+        Entity crystal, T data);
 
     protected abstract void calcCrystal(BreakData<T> data,
                                         T crystalData,
@@ -50,7 +52,7 @@ public abstract class AbstractBreakHelper<T extends CrystalData>
             }
 
             T crystalData = newCrystalData(crystal);
-            if (calcSelf(crystal, crystalData))
+            if (calcSelf(data, crystal, crystalData))
             {
                 continue;
             }

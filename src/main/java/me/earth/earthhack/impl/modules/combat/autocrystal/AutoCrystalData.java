@@ -448,6 +448,13 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
         register(module.priority, "Allows you to set the RotationSpoof-" +
             "Priority. Should only be used if you understand how this " +
             "can affect the client.");
+
+        register(module.shield, "Only use this when you have low ping." +
+            " Places crystals which don't deal damage to you to shield" +
+            " you from enemies crystals.");
+        register(module.shieldCount, "MultiPlace for Shield.");
+        register(module.shieldMinDamage, "When to activate the shield.");
+        register(module.shieldSelfDamage, "Max damage to deal to yourself.");
     }
 
     @Override
