@@ -75,7 +75,8 @@ public class CrystalData implements Comparable<CrystalData>
     @Override
     public int hashCode()
     {
-        return crystal.getEntityId();
+        // return crystal.getEntityId();
+        return crystal.getPosition().hashCode();
     }
 
     @Override

@@ -56,7 +56,8 @@ public abstract class AbstractBreakHelper<T extends CrystalData>
             }
 
             if (!isValid(crystal, crystalData)
-                || module.antiFriendPop.getValue().shouldCalc(AntiFriendPop.Break)
+                || module.antiFriendPop.getValue()
+                                       .shouldCalc(AntiFriendPop.Break)
                     && checkFriendPop(crystal, friends))
             {
                 continue;

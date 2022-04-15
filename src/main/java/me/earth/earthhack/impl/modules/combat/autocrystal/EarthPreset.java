@@ -86,7 +86,7 @@ import java.awt.*;
 
     Earthhack.getLogger().info(builder.toString());
  */
-public class EarthPreset extends BuildinPreset
+public class EarthPreset extends BuildinPreset<AutoCrystal>
 {
     public EarthPreset(AutoCrystal module)
     {

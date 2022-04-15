@@ -528,6 +528,8 @@ public class AutoCrystal extends Module
             register(new BooleanSetting("DestroyThread", false));
     protected final Setting<Boolean> serverThread =
             register(new BooleanSetting("ServerThread", false));
+    protected final Setting<Boolean> gameloop =
+        register(new BooleanSetting("Gameloop", false));
     protected final Setting<Boolean> asyncServerThread =
             register(new BooleanSetting("AsyncServerThread", false));
     protected final Setting<Boolean> earlyFeetThread =

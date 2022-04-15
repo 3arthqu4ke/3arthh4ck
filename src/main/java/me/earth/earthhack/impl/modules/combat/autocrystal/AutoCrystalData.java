@@ -422,6 +422,9 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
         register(module.entityThread, "Starts a new Calculation in the moment" +
             " a player moves. That means we can attack him as soon as " +
             "possible after he leaves a hole.");
+        register(module.gameloop, "Attempts to start a thread every gameloop." +
+            " Not recommended when rotating. If this or MotionThread is off " +
+            "AutoCrystal might not place.");
         register(module.spawnThread, "Starts a Thread immediately after a " +
             "crystal spawned.");
         register(module.destroyThread, "Starts a Thread immediately after " +
@@ -437,7 +440,8 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
         register(module.lateBreakThread, "Breaks crystals late into a server tick " +
                 "when earlyFeetThread is enabled so that your CA is not outplaced.");
         register(module.motionThread, "Starts a Thread immediately after " +
-                "a MotionUpdateEvent.");
+                "a MotionUpdateEvent. If this or GameLoop is off AutoCrystal" +
+            " might not place.");
         register(module.blockChangeThread, "Starts a Thread immediately after" +
             " a block has changed close to an enemy player.");
 
