@@ -3,19 +3,15 @@ package me.earth.earthhack.impl.core;
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.plugin.PluginConfig;
 import me.earth.earthhack.impl.core.transfomer.EarthhackTransformer;
-import me.earth.earthhack.impl.core.util.MixinHelper;
 import me.earth.earthhack.impl.managers.client.PluginManager;
 import me.earth.earthhack.impl.managers.thread.scheduler.Scheduler;
 import me.earth.earthhack.impl.util.misc.FileUtil;
 import me.earth.earthhack.tweaker.EarthhackTweaker;
 import me.earth.earthhack.tweaker.TweakerCore;
-import me.earth.earthhack.tweaker.launch.Argument;
-import me.earth.earthhack.tweaker.launch.DevArguments;
 import me.earth.earthhack.vanilla.Environment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
@@ -52,7 +48,6 @@ public class Core implements TweakerCore
         FileUtil.getDirectory(path, "util");
         FileUtil.getDirectory(path, "plugins");
 
-        MixinHelper helper = MixinHelper.getHelper();
         PluginManager.getInstance().createPluginConfigs(pluginClassLoader);
 
         MixinBootstrap.init();
@@ -89,12 +84,10 @@ public class Core implements TweakerCore
                              + "'s MixinConfig: "
                              + config.getMixinConfig());
 
-                helper.addConfigExclusion(config.getMixinConfig());
                 Mixins.addConfiguration(config.getMixinConfig());
             }
         }
 
-        helper.addConfigExclusion("mixins.earth.json");
         Mixins.addConfiguration("mixins.earth.json");
         String obfuscationContext = "searge";
         if (Environment.getEnvironment() == Environment.VANILLA)

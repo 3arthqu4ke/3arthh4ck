@@ -25,6 +25,3 @@ run
 forge*changelog.txt
 
 # version files
-src/main/java/me/earth/earthhack/impl/Earthhack.java
-src/main/resources/mcmod.info
-version

@@ -1,6 +1,5 @@
 package me.earth.earthhack.api.config.preset;
 
-import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.SettingContainer;
 

@@ -3,7 +3,6 @@ package me.earth.earthhack.impl.core.transfomer;
 import me.earth.earthhack.impl.core.Core;
 import me.earth.earthhack.impl.core.transfomer.patch.EarthhackPatcher;
 import me.earth.earthhack.impl.core.transfomer.patch.patches.*;
-import me.earth.earthhack.impl.core.util.MixinHelper;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.mixin.MixinEnvironment;
@@ -47,18 +46,6 @@ public class EarthhackTransformer implements IClassTransformer
             Core.LOGGER.warn(
                 "Transformer is reentrant on class: "
                         + name + " : " + transformed + ".");
-        }
-
-        if (changingPriority)
-        {
-            try
-            {
-                MixinHelper.getHelper().establishDominance();
-            }
-            catch (Throwable t)
-            {
-                t.printStackTrace();
-            }
         }
 
         if (transformed.equals("net.minecraft.client.entity.EntityPlayerSP"))

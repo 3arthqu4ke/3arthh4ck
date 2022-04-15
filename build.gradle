@@ -1,6 +1,3 @@
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-
 buildscript {
     repositories {
         //noinspection JCenterRepository
@@ -38,106 +35,13 @@ apply plugin: 'eclipse'
 
 mainClassName = "me.earth.earthhack.installer.main.Main"
 group project.modGroup //http://maven.apache.org/guides/mini/guide-naming-conventions.html
-
-def getCheckedOutGitCommitHash() {
-    def gitFolder = "$projectDir/.git/"
-    def takeFromHash = 12
-    /*
-     * '.git/HEAD' contains either
-     *      in case of detached head: the currently checked out commit hash
-     *      otherwise: a reference to a file containing the current commit hash
-     */
-    def head = new File(gitFolder + "HEAD").text.split(":") // .git/HEAD
-    def isCommit = head.length == 1 // e5a7c79edabbf7dd39888442df081b1c9d8e88fd
-    // def isRef = head.length > 1     // ref: refs/heads/master
-
-    if(isCommit) return head[0].trim().take(takeFromHash) // e5a7c79edabb
-
-    def refHead = new File(gitFolder + head[1].trim()) // .git/refs/heads/master
-    refHead.text.trim().take takeFromHash
-}
-
-// build constants
-
-boolean INCREMENT = false // increments version
-// NO APPEND THAT YOURSELF BITCH
-boolean UNIQUE = false // adds a random 8-char string to the build number
-// instead of incrementing the last number
-// this is so that we don't get absurdly large numbers
-// maybe only increment the number automatically if CI is ever added to the repo?
-boolean HASH = true
-boolean DATE = false // adds the date to the random string
-boolean CLEAR = true // clears other jars in the build folder to stop it from being clogged up
+project.version = '1.4.0'
 
 boolean VANILLA = false
-
-String title = getCheckedOutGitCommitHash()
-
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
-    // idk this gets called when u do anything but whatever
-    File versionFile = file 'version'
-    String contents = versionFile.getText( 'UTF-8' )
-    String[] split = contents.split('\\.')
-    int lastVersion = Integer.parseInt(split[2].split('-')[0])
-    if (INCREMENT)
-    {
-        lastVersion++
-    }
-
-    if (!UNIQUE)
-    {
-        contents = split[0] + '.' + split[1] + '.' + (lastVersion)
-    }
-    else
-    {
-        String extra = ""
-        if (DATE)
-        {
-            Date date = Calendar.getInstance().getTime()
-            DateFormat dateFormat = new SimpleDateFormat('mm-dd-yy-hh-mm')
-            extra = dateFormat.format(date) + '-'
-        }
-
-        String generatedString = UUID.randomUUID().toString().split('-')[0]
-        String randomString = lastVersion + '-' + 'build-' + extra + generatedString
-        contents = split[0] + '.' + split[1] + '.' + randomString
-    }
-
-    if (HASH)
-    {
-        contents = split[0] + '.' + split[1] + '.' + lastVersion + '-' + title
-    }
-
-    versionFile.write( contents, 'UTF-8' )
-
-    version contents
-
     sourceCompatibility = targetCompatibility = '1.8'
-    // Tbh it would be much easier if we could assign this differently
-    // instead of writing it, but StackOverflow didn't give a working
-    // solution for that. One looked promising but it caused duplicate classes.
-    File update = file 'src/main/java/me/earth/earthhack/impl/Earthhack.java'
-    contents = update.getText( 'UTF-8' )
-    contents = contents.replaceAll( 'VERSION = "(.*?)"', 'VERSION = "' + project.version + '"' )
-    update.write( contents, 'UTF-8' )
-    update = file 'src/main/resources/mcmod.info'
-    contents = update.getText( 'UTF-8' )
-    contents = contents.replaceAll( '"version": "(.*?)"', '"version": "' + project.version + '"' )
-    update.write( contents, 'UTF-8' )
-
-    if (CLEAR)
-    {
-        File libs = file buildDir.getAbsolutePath() + '/libs/'
-        if (libs.exists() && libs.isDirectory())
-        {
-            for (File file in libs.listFiles())
-            {
-                file.delete()
-            }
-        }
-    }
 }
 
 minecraft {
