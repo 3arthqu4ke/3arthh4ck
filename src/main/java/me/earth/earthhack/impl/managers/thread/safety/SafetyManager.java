@@ -11,6 +11,7 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.safety.Safety;
 import me.earth.earthhack.impl.modules.client.safety.util.Update;
+import me.earth.earthhack.impl.util.math.Timer;
 import net.minecraft.entity.Entity;
 
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class SafetyManager extends SubscriberImpl implements Globals
      Caches.getSetting(Safety.class, BooleanSetting.class, "Anvils", false);
     protected final SettingCache<Boolean, BooleanSetting, Safety> terrain =
      Caches.getSetting(Safety.class, BooleanSetting.class, "Terrain", false);
+    protected final SettingCache<Integer, NumberSetting<Integer>, Safety> fullCalc =
+     Caches.getSetting(Safety.class, Setting.class, "FullCalcDelay", 0);
+    private final Timer fullCalcTimer = new Timer();
 
     /**
      * Constructs a new SafetyManager.
@@ -94,7 +98,9 @@ public class SafetyManager extends SubscriberImpl implements Globals
                                                          longs.getValue(),
                                                          big.getValue(),
                                                          anvils.getValue(),
-                                                         terrain.getValue());
+                                                         terrain.getValue(),
+                                                         fullCalcTimer,
+                                                         fullCalc.getValue());
             Managers.THREAD.submit(runnable);
         }
     }

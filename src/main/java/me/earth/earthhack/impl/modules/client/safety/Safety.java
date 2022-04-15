@@ -29,6 +29,7 @@ public class Safety extends Module
         register(new BooleanSetting("Post-Calc", false));
         register(new BooleanSetting("Terrain", false));
         register(new BooleanSetting("Anvils", false));
+        register(new NumberSetting<>("FullCalcDelay", 0, 0, 5000));
         register(ICachedDamage.SHOULD_CACHE);
         this.setData(new SafetyData(this));
     }

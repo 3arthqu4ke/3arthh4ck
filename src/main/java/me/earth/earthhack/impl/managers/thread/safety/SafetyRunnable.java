@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.managers.thread.safety;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.util.math.Timer;
 import me.earth.earthhack.impl.util.math.geocache.Sphere;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import me.earth.earthhack.impl.util.minecraft.DamageUtil;
@@ -32,6 +33,8 @@ public class SafetyRunnable implements Globals, SafeRunnable
     private final boolean big;
     private final boolean anvils;
     private final boolean terrain;
+    private final Timer fullCalcTimer;
+    private final int fullCalcDelay;
 
     public SafetyRunnable(SafetyManager manager,
                           List<Entity> crystals,
@@ -42,7 +45,9 @@ public class SafetyRunnable implements Globals, SafeRunnable
                           boolean longs,
                           boolean big,
                           boolean anvils,
-                          boolean terrain)
+                          boolean terrain,
+                          Timer fullCalcTimer,
+                          int fullCalcDelay)
     {
         this.manager        = manager;
         this.crystals       = crystals;
@@ -54,6 +59,8 @@ public class SafetyRunnable implements Globals, SafeRunnable
         this.big            = big;
         this.anvils         = anvils;
         this.terrain        = terrain;
+        this.fullCalcTimer = fullCalcTimer;
+        this.fullCalcDelay = fullCalcDelay;
     }
 
     @Override
@@ -107,6 +114,12 @@ public class SafetyRunnable implements Globals, SafeRunnable
             }
         }
 
+        if (!manager.isSafe() && !fullCalcTimer.passed(fullCalcDelay))
+        {
+            return;
+        }
+
+        fullCalcTimer.reset();
         AxisAlignedBB serverBB = Managers.POSITION.getBB();
         BlockPos middle = PositionUtil.fromBB(serverBB);
         int x = middle.getX();
