@@ -7,6 +7,7 @@ import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
+import me.earth.earthhack.api.setting.settings.StringSetting;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.render.TextRenderer;
@@ -35,8 +36,8 @@ import net.minecraft.potion.PotionEffect;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 // TODO: REWRITE?
@@ -53,6 +54,10 @@ public class HUD extends Module {
             register(new ColorSetting("Color", Color.WHITE));
     protected final Setting<Boolean> logo =
             register(new BooleanSetting("Logo", true));
+    protected final Setting<Boolean> logover =
+            register(new BooleanSetting("Logoversion" , true));
+    protected final Setting<String> logostring =
+            register(new StringSetting("logoname" , "3arthh4ck"));
     protected final Setting<Boolean> coordinates =
             register(new BooleanSetting("Coordinates", true));
     protected final Setting<Boolean> armor =
@@ -122,8 +127,8 @@ public class HUD extends Module {
     }
 
     protected void renderLogo() {
-        if (logo.getValue()) {
-            renderText("3arthh4ck - " + Earthhack.VERSION, 2, 2);
+        if (logo.getValue() || logover.getValue()) {
+            renderText(logostring.getValue() + (logover.getValue() ? (" " + Earthhack.VERSION) : ""), 2, 2);
         }
     }
 
