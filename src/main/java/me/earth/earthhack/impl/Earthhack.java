@@ -14,7 +14,7 @@ public class Earthhack implements Globals
 {
     private static final Logger LOGGER = LogManager.getLogger("3arthh4ck");
     public static final String NAME = "3arthh4ck";
-    public static final String VERSION = "1.4.0";
+    public static final String VERSION = "1.5.0";
 
     public static void preInit()
     {
@@ -25,7 +25,6 @@ public class Earthhack implements Globals
     {
         LOGGER.info("\n\nInitializing 3arthh4ck.");
         Display.setTitle("3arthh4ck - " + VERSION);
-        DiscordPresence.start();
         Managers.load();
         LOGGER.info("\n3arthh4ck initialized.\n");
     }

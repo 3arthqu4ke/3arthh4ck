@@ -3,10 +3,10 @@ package me.earth.earthhack.impl.modules.render.rechams;
 import me.earth.earthhack.impl.event.events.render.RenderCrystalCubeEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 
-public class ListenerRenderCrystalCube extends ModuleListener<Chams, RenderCrystalCubeEvent>
+public class ListenerRenderCrystalCube extends ModuleListener<ReChams, RenderCrystalCubeEvent>
 {
 
-	public ListenerRenderCrystalCube(Chams module)
+	public ListenerRenderCrystalCube(ReChams module)
 	{
 		super(module, RenderCrystalCubeEvent.class);
 	}

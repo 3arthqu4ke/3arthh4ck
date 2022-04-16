@@ -4,10 +4,10 @@ import me.earth.earthhack.impl.event.events.render.BeginRenderEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.render.rechams.mode.ChamsMode;
 
-public class ListenerBeginRender extends ModuleListener<Chams, BeginRenderEvent>
+public class ListenerBeginRender extends ModuleListener<ReChams, BeginRenderEvent>
 {
 
-    public ListenerBeginRender(Chams module)
+    public ListenerBeginRender(ReChams module)
     {
         super(module, BeginRenderEvent.class);
     }

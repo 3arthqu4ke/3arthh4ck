@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 // TODO: maybe a more efficient method of checking settings so we don't have to do it every frame?
 // TODO: shader settings
 @SuppressWarnings("all")
-public class Chams extends Module
+public class ReChams extends Module
 {
 
     public final Setting<ChamsPage> page =
@@ -464,7 +464,7 @@ public class Chams extends Module
     public final GlShader framebufferImageShader = new GlShader("framebufferimage");
     public final GlShader stencilShader = new GlShader("stencil");
 
-    public Chams()
+    public ReChams()
     {
         super("ReChams", Category.Render);
         this.listeners.add(new ListenerRenderModelPre(this));

@@ -155,6 +155,7 @@ import me.earth.earthhack.impl.modules.render.norender.NoRender;
 import me.earth.earthhack.impl.modules.render.penis.Penis;
 import me.earth.earthhack.impl.modules.render.popchams.PopChams;
 import me.earth.earthhack.impl.modules.render.rainbowenchant.RainbowEnchant;
+import me.earth.earthhack.impl.modules.render.rechams.ReChams;
 import me.earth.earthhack.impl.modules.render.search.Search;
 import me.earth.earthhack.impl.modules.render.skeleton.Skeleton;
 import me.earth.earthhack.impl.modules.render.sounds.Sounds;
@@ -338,7 +339,7 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new PopChams());
         this.forceRegister(new ItemChams());
         this.forceRegister(new Ambience());
-        this.forceRegister(new me.earth.earthhack.impl.modules.render.rechams.Chams());
+        this.forceRegister(new ReChams());
         this.forceRegister(new ModelTotem());
 
         this.forceRegister(new PingBypass());

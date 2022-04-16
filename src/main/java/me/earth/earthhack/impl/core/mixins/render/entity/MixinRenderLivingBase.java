@@ -8,28 +8,34 @@ import me.earth.earthhack.impl.modules.player.spectate.Spectate;
 import me.earth.earthhack.impl.modules.render.chams.Chams;
 import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
 import me.earth.earthhack.impl.modules.render.esp.ESP;
+import me.earth.earthhack.impl.modules.render.rechams.ReChams;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static me.earth.earthhack.impl.managers.Managers.ROTATION;
 
 @Mixin(RenderLivingBase.class)
-public abstract class MixinRenderLivingBase {
+public abstract class MixinRenderLivingBase<T extends EntityLivingBase> {
+    @Shadow
+    protected abstract boolean isVisible(T p_193115_1_);
+
     private static final ModuleCache<Spectate> SPECTATE =
             Caches.getModule(Spectate.class);
     private static final ModuleCache<Chams> CHAMS =
             Caches.getModule(Chams.class);
-    private static final ModuleCache<me.earth.earthhack.impl.modules.render.rechams.Chams> RE_CHAMS =
-            Caches.getModule(me.earth.earthhack.impl.modules.render.rechams.Chams.class);
+    private static final ModuleCache<ReChams> RE_CHAMS =
+            Caches.getModule(ReChams.class);
     private static final ModuleCache<ESP> ESP_MODULE =
             Caches.getModule(ESP.class);
 
@@ -145,53 +151,25 @@ public abstract class MixinRenderLivingBase {
         }
     }
 
-    @Redirect(
-            method = "renderModel",
-            at = @At(
-                    value = "INVOKE",
-                    target = "net/minecraft/client/model/ModelBase." +
-                            "render(Lnet/minecraft/entity/Entity;FFFFFF)V"))
-    private void renderHook(ModelBase model,
-                            Entity entityIn,
-                            float limbSwing,
-                            float limbSwingAmount,
-                            float ageInTicks,
-                            float netHeadYaw,
-                            float headPitch,
-                            float scale) {
+    @Inject(method = "renderModel", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBase;render(Lnet/minecraft/entity/Entity;FFFFFF)V", shift = At.Shift.BEFORE), cancellable = true)
+    private void handler$renderHookPre$zge000(T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, CallbackInfo ci, boolean flag, boolean flag1) {
         RenderLivingBase<?> renderLiving = RenderLivingBase.class.cast(this);
-        EntityLivingBase entity = (EntityLivingBase) entityIn;
-
-        ModelRenderEvent event = new ModelRenderEvent.Pre(renderLiving,
-                entity,
-                model,
-                limbSwing,
-                limbSwingAmount,
-                ageInTicks,
-                netHeadYaw,
-                headPitch,
-                scale);
+        ModelRenderEvent event = new ModelRenderEvent.Pre(renderLiving, entitylivingbaseIn, renderLiving.getMainModel(), limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
         Bus.EVENT_BUS.post(event);
+        if (event.isCancelled()) {
+            Bus.EVENT_BUS.post(new ModelRenderEvent.Post(renderLiving, entitylivingbaseIn, renderLiving.getMainModel(), limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
+            if (flag1) {
+                GlStateManager.disableBlendProfile(GlStateManager.Profile.TRANSPARENT_MODEL);
+            }
 
-        if (!event.isCancelled()) {
-            model.render(entityIn,
-                    limbSwing,
-                    limbSwingAmount,
-                    ageInTicks,
-                    netHeadYaw,
-                    headPitch,
-                    scale);
+            ci.cancel();
         }
+    }
 
-        Bus.EVENT_BUS.post(new ModelRenderEvent.Post(renderLiving,
-                entity,
-                model,
-                limbSwing,
-                limbSwingAmount,
-                ageInTicks,
-                netHeadYaw,
-                headPitch,
-                scale));
+    @Inject(method = "renderModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelBase;render(Lnet/minecraft/entity/Entity;FFFFFF)V", shift = At.Shift.AFTER))
+    private void renderHookPost(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, CallbackInfo ci) {
+        RenderLivingBase<?> renderLiving = RenderLivingBase.class.cast(this);
+        Bus.EVENT_BUS.post(new ModelRenderEvent.Post(renderLiving, entity, renderLiving.getMainModel(), limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor));
     }
 
 }
