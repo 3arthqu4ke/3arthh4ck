@@ -1,29 +1,21 @@
 package me.earth.earthhack.impl.modules.render.rechams.mode;
 
-import me.earth.earthhack.api.event.events.Stage;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityRenderer;
-import me.earth.earthhack.impl.core.ducks.render.IFramebuffer;
-import me.earth.earthhack.impl.core.ducks.render.IRenderManager;
 import me.earth.earthhack.impl.core.mixins.render.entity.IRenderEnderCrystal;
 import me.earth.earthhack.impl.event.events.render.*;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.modules.render.rechams.Chams;
-import me.earth.earthhack.impl.util.math.Vec2d;
+import me.earth.earthhack.impl.modules.render.rechams.ReChams;
 import me.earth.earthhack.impl.util.minecraft.EntityType;
 import me.earth.earthhack.impl.util.render.OutlineUtil;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
-import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.impl.util.render.shader.FramebufferWrapper;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderEnderCrystal;
@@ -34,20 +26,15 @@ import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.ARBStencilTexturing;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.util.vector.Vector4f;
 
 import java.awt.*;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.GL_DEPTH_STENCIL_ATTACHMENT;
 
 public enum ChamsMode implements Globals
 {
@@ -56,7 +43,7 @@ public enum ChamsMode implements Globals
     Normal,
     Better() {
         @Override
-        public void renderPre(ModelRenderEvent.Pre event, Chams module)
+        public void renderPre(ModelRenderEvent.Pre event, ReChams module)
         {
             event.setCancelled(true);
             event.setCancelled(true);
@@ -122,7 +109,7 @@ public enum ChamsMode implements Globals
     },
     JelloBottom {
         @Override
-        public void renderPre(ModelRenderEvent.Pre event, Chams module)
+        public void renderPre(ModelRenderEvent.Pre event, ReChams module)
         {
             event.setCancelled(true);
             render(event);
@@ -162,7 +149,7 @@ public enum ChamsMode implements Globals
     },
     JelloTop {
         @Override
-        public void renderPost(ModelRenderEvent.Post event, Chams module)
+        public void renderPost(ModelRenderEvent.Post event, ReChams module)
         {
             Color color = module.getColor(event.getEntity());
             glPushMatrix();
@@ -206,19 +193,19 @@ public enum ChamsMode implements Globals
     {
 
         @Override
-        public void renderPre(ModelRenderEvent.Pre event, Chams module)
+        public void renderPre(ModelRenderEvent.Pre event, ReChams module)
         {
 
         }
 
         @Override
-        public void renderCrystalPre(CrystalRenderEvent.Pre event, Chams module)
+        public void renderCrystalPre(CrystalRenderEvent.Pre event, ReChams module)
         {
 
         }
 
         @Override
-        public void beginRender(BeginRenderEvent event, Chams module)
+        public void beginRender(BeginRenderEvent event, ReChams module)
         {
             OutlineUtil.checkSetupFBO();
             glClear(GL_STENCIL_BUFFER_BIT);
@@ -228,7 +215,7 @@ public enum ChamsMode implements Globals
     },
     FramebufferImage {
         @Override
-        public void renderEntity(RenderEntityEvent.Pre event, Chams module)
+        public void renderEntity(RenderEntityEvent.Pre event, ReChams module)
         {
             if (module.isValid(event.getEntity(), this) && !module.forceRenderEntities)
             {
@@ -266,24 +253,24 @@ public enum ChamsMode implements Globals
         }
 
         @Override
-        public void renderEntityPost(RenderEntityEvent.Post event, Chams module)
+        public void renderEntityPost(RenderEntityEvent.Post event, ReChams module)
         {
 
         }
 
         @Override
-        public void renderWorld(WorldRenderEvent event, Chams module)
+        public void renderWorld(WorldRenderEvent event, ReChams module)
         {
         }
 
         @Override
-        public void renderHud(PreRenderHandEvent event, Chams module)
+        public void renderHud(PreRenderHandEvent event, ReChams module)
         {
 
         }
 
         @Override
-        public void render3D(Render3DEvent event, Chams module)
+        public void render3D(Render3DEvent event, ReChams module)
         {
             // mc.entityRenderer.setupOverlayRendering();
             for (Tuple<ChamsPage, FramebufferWrapper> toUpdate : module.getFramebuffersFromMode(this)) toUpdate.getSecond().updateFramebuffer();
@@ -378,7 +365,7 @@ public enum ChamsMode implements Globals
         }
 
         @Override
-        public void beginRender(BeginRenderEvent event, Chams module)
+        public void beginRender(BeginRenderEvent event, ReChams module)
         {
             OutlineUtil.checkSetupFBO();
             glClear(GL_STENCIL_BUFFER_BIT);
@@ -397,13 +384,13 @@ public enum ChamsMode implements Globals
     FramebufferTest {
 
         @Override
-        public void renderPre(ModelRenderEvent.Pre event, Chams module)
+        public void renderPre(ModelRenderEvent.Pre event, ReChams module)
         {
 
         }
 
         @Override
-        public void render3D(Render3DEvent event, Chams module)
+        public void render3D(Render3DEvent event, ReChams module)
         {
             glPushAttrib(GL_ALL_ATTRIB_BITS);
             glEnable(GL_STENCIL_TEST);
@@ -438,7 +425,7 @@ public enum ChamsMode implements Globals
         }
 
         @Override
-        public void beginRender(BeginRenderEvent event, Chams module)
+        public void beginRender(BeginRenderEvent event, ReChams module)
         {
             OutlineUtil.checkSetupFBO();
             glClear(GL_STENCIL_BUFFER_BIT);
@@ -446,7 +433,7 @@ public enum ChamsMode implements Globals
         }
 
         @Override
-        public void renderCrystalPre(CrystalRenderEvent.Pre event, Chams module)
+        public void renderCrystalPre(CrystalRenderEvent.Pre event, ReChams module)
         {
             // this is needed so that weird clipping does not occur when using the other stenciling method
             event.setCancelled(true);
@@ -471,7 +458,7 @@ public enum ChamsMode implements Globals
     },
     ShaderImage {
         @Override
-        public void renderPre(ModelRenderEvent.Pre event, Chams module)
+        public void renderPre(ModelRenderEvent.Pre event, ReChams module)
         {
             ScaledResolution resolution = new ScaledResolution(mc);
             float[] rect = Render2DUtil.getOnScreen2DHitBox(event.getEntity(), resolution.getScaledWidth(), resolution.getScaledHeight());
@@ -608,7 +595,7 @@ public enum ChamsMode implements Globals
         }
 
         @Override
-        public void beginRender(BeginRenderEvent event, Chams module)
+        public void beginRender(BeginRenderEvent event, ReChams module)
         {
             OutlineUtil.checkSetupFBO();
             glClear(GL_STENCIL_BUFFER_BIT);
@@ -616,7 +603,7 @@ public enum ChamsMode implements Globals
         }
 
         @Override
-        public void renderCrystalPre(CrystalRenderEvent.Pre event, Chams module)
+        public void renderCrystalPre(CrystalRenderEvent.Pre event, ReChams module)
         {
             ScaledResolution resolution = new ScaledResolution(mc);
             float[] rect = Render2DUtil.getOnScreen2DHitBox(event.getEntity(), resolution.getScaledWidth(), resolution.getScaledHeight());
@@ -756,38 +743,38 @@ public enum ChamsMode implements Globals
     {
 
         @Override
-        public void renderPre(ModelRenderEvent.Pre event, Chams module)
+        public void renderPre(ModelRenderEvent.Pre event, ReChams module)
         {
 
         }
 
         @Override
-        public void renderCrystalPre(CrystalRenderEvent.Pre event, Chams module)
+        public void renderCrystalPre(CrystalRenderEvent.Pre event, ReChams module)
         {
 
         }
 
         @Override
-        public void render3D(Render3DEvent event, Chams module)
+        public void render3D(Render3DEvent event, ReChams module)
         {
 
         }
 
     };
 
-    public void renderPre(ModelRenderEvent.Pre event, Chams module){}
-    public void renderPost(ModelRenderEvent.Post event, Chams module){}
-    public void renderCrystalPre(CrystalRenderEvent.Pre event, Chams module){}
-    public void renderCrystalPost(CrystalRenderEvent.Post event, Chams module){}
-    public void renderEntity(RenderEntityEvent.Pre event, Chams module) {}
-    public void renderWorld(WorldRenderEvent event, Chams module) {}
-    public void renderHud(PreRenderHandEvent event, Chams module) {}
-    public void render3D(Render3DEvent event, Chams module) {}
-    public void renderEntityPost(RenderEntityEvent.Post event, Chams module) {}
-    public void render2D(Render2DEvent event, Chams module) {}
-    public void beginRender(BeginRenderEvent event, Chams module) {}
-    public void renderCrystalCube(RenderCrystalCubeEvent event, Chams module) {}
-    public void renderArmor(RenderArmorEvent event, Chams module) {}
+    public void renderPre(ModelRenderEvent.Pre event, ReChams module){}
+    public void renderPost(ModelRenderEvent.Post event, ReChams module){}
+    public void renderCrystalPre(CrystalRenderEvent.Pre event, ReChams module){}
+    public void renderCrystalPost(CrystalRenderEvent.Post event, ReChams module){}
+    public void renderEntity(RenderEntityEvent.Pre event, ReChams module) {}
+    public void renderWorld(WorldRenderEvent event, ReChams module) {}
+    public void renderHud(PreRenderHandEvent event, ReChams module) {}
+    public void render3D(Render3DEvent event, ReChams module) {}
+    public void renderEntityPost(RenderEntityEvent.Post event, ReChams module) {}
+    public void render2D(Render2DEvent event, ReChams module) {}
+    public void beginRender(BeginRenderEvent event, ReChams module) {}
+    public void renderCrystalCube(RenderCrystalCubeEvent event, ReChams module) {}
+    public void renderArmor(RenderArmorEvent event, ReChams module) {}
 
     private static void render(ModelRenderEvent.Pre event) {
         event.getModel().render(event.getEntity(),
@@ -952,7 +939,7 @@ public enum ChamsMode implements Globals
         glPopMatrix();
     }
 
-    private static void renderWireframe(ModelRenderEvent.Post event, Chams module, Color color, boolean xqz, Color wallsColor, float lineWidth)
+    private static void renderWireframe(ModelRenderEvent.Post event, ReChams module, Color color, boolean xqz, Color wallsColor, float lineWidth)
     {
         glPushMatrix();
         glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -984,12 +971,12 @@ public enum ChamsMode implements Globals
         glPopMatrix();
     }
 
-    private static void renderGlint(ModelRenderEvent.Pre event, Chams module, Color color)
+    private static void renderGlint(ModelRenderEvent.Pre event, ReChams module, Color color)
     {
         renderEnchantEffect(event.getEntity(), event.getModel(), event.getLimbSwing(), event.getLimbSwingAmount(), mc.getRenderPartialTicks(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScale(), 1.0f, color);
     }
 
-    private static void renderGlint(ModelRenderEvent.Post event, Chams module, Color color)
+    private static void renderGlint(ModelRenderEvent.Post event, ReChams module, Color color)
     {
         renderEnchantEffect(event.getEntity(), event.getModel(), event.getLimbSwing(), event.getLimbSwingAmount(), mc.getRenderPartialTicks(), event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScale(), 1.0f, color);
     }
@@ -1041,12 +1028,12 @@ public enum ChamsMode implements Globals
         GL11.glPopMatrix();
     }
 
-    private static void renderLightning(ModelRenderEvent.Pre event, Chams module)
+    private static void renderLightning(ModelRenderEvent.Pre event, ReChams module)
     {
 
     }
 
-    private static void renderLightning(ModelRenderEvent.Post event, Chams module)
+    private static void renderLightning(ModelRenderEvent.Post event, ReChams module)
     {
 
     }

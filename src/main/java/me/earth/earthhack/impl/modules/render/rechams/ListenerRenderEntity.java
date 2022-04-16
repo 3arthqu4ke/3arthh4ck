@@ -3,10 +3,10 @@ package me.earth.earthhack.impl.modules.render.rechams;
 import me.earth.earthhack.impl.event.events.render.RenderEntityEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 
-public class ListenerRenderEntity extends ModuleListener<Chams, RenderEntityEvent.Pre>
+public class ListenerRenderEntity extends ModuleListener<ReChams, RenderEntityEvent.Pre>
 {
 
-    public ListenerRenderEntity(Chams module)
+    public ListenerRenderEntity(ReChams module)
     {
         super(module, RenderEntityEvent.Pre.class);
     }

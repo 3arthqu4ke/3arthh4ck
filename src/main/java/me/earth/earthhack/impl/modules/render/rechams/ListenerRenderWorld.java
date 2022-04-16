@@ -4,10 +4,10 @@ import me.earth.earthhack.impl.event.events.render.WorldRenderEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.render.rechams.mode.ChamsMode;
 
-public class ListenerRenderWorld extends ModuleListener<Chams, WorldRenderEvent>
+public class ListenerRenderWorld extends ModuleListener<ReChams, WorldRenderEvent>
 {
 
-    public ListenerRenderWorld(Chams module)
+    public ListenerRenderWorld(ReChams module)
     {
         super(module, WorldRenderEvent.class);
     }

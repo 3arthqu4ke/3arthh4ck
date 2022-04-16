@@ -2,12 +2,11 @@ package me.earth.earthhack.impl.modules.render.rechams;
 
 import me.earth.earthhack.impl.event.events.render.RenderArmorEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
-import me.earth.earthhack.impl.modules.render.rechams.mode.ChamsMode;
 
-public class ListenerRenderArmor extends ModuleListener<Chams, RenderArmorEvent>
+public class ListenerRenderArmor extends ModuleListener<ReChams, RenderArmorEvent>
 {
 
-	public ListenerRenderArmor(Chams module)
+	public ListenerRenderArmor(ReChams module)
 	{
 		super(module, RenderArmorEvent.class);
 	}

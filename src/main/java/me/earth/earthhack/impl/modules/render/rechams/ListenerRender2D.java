@@ -4,10 +4,10 @@ import me.earth.earthhack.impl.event.events.render.Render2DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.render.rechams.mode.ChamsMode;
 
-public class ListenerRender2D extends ModuleListener<Chams, Render2DEvent>
+public class ListenerRender2D extends ModuleListener<ReChams, Render2DEvent>
 {
 
-    public ListenerRender2D(Chams module)
+    public ListenerRender2D(ReChams module)
     {
         super(module, Render2DEvent.class);
     }

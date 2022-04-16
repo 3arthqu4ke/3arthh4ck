@@ -3,10 +3,10 @@ package me.earth.earthhack.impl.modules.render.rechams;
 import me.earth.earthhack.impl.event.events.render.CrystalRenderEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 
-public class ListenerRenderCrystalPost extends ModuleListener<Chams, CrystalRenderEvent.Post>
+public class ListenerRenderCrystalPost extends ModuleListener<ReChams, CrystalRenderEvent.Post>
 {
 
-    public ListenerRenderCrystalPost(Chams module)
+    public ListenerRenderCrystalPost(ReChams module)
     {
         super(module, CrystalRenderEvent.Post.class);
     }
