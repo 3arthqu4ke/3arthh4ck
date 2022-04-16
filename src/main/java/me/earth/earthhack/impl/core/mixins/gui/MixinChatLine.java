@@ -2,8 +2,10 @@ package me.earth.earthhack.impl.core.mixins.gui;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
+import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.ColorSetting;
+import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.impl.core.ducks.gui.IChatLine;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.misc.chat.Chat;
@@ -34,8 +36,8 @@ public abstract class MixinChatLine implements IChatLine
      = Caches.getSetting(Chat.class, BooleanSetting.class, "TimeStamps", false);
     private static final SettingCache<Color, ColorSetting, Chat> COLOR
             = Caches.getSetting(Chat.class, ColorSetting.class, "TimeStampsColor", Color.WHITE);
-    private static final SettingCache<Boolean, BooleanSetting, Chat> RAINBOW
-            = Caches.getSetting(Chat.class, BooleanSetting.class, "RainbowTimeStamps", false);
+    private static final SettingCache<Chat.Rainbow, EnumSetting<Chat.Rainbow>, Chat> RAINBOW
+            = Caches.getSetting(Chat.class, Setting.class, "Rainbow", Chat.Rainbow.None);
     private static final DateFormat FORMAT = new SimpleDateFormat("k:mm");
     private static final Minecraft MC = Minecraft.getMinecraft();
 
@@ -59,16 +61,27 @@ public abstract class MixinChatLine implements IChatLine
                                 int chatLineIDIn,
                                 CallbackInfo ci)
     {
-        Color color = COLOR.getValue();
-        int hex = MathUtil.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        String colorString = TextColor.CUSTOM + Integer.toHexString(hex);
+        StringBuilder timeStampBuilder = new StringBuilder();
+        switch (RAINBOW.getValue()) {
+            case None:
+                Color color = COLOR.getValue();
+                int hex = MathUtil.toRGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+                String colorString = TextColor.CUSTOM + Integer.toHexString(hex);
+                timeStampBuilder.append(colorString);
+                break;
+            case Horizontal:
+                timeStampBuilder.append(TextColor.RAINBOW_PLUS);
+                break;
+            case Vertical:
+                timeStampBuilder.append(TextColor.RAINBOW_MINUS);
+                break;
+        }
 
-        this.timeStamp =
-                (RAINBOW.getValue() ? TextColor.RAINBOW_PLUS : colorString)
-                + "<"
-                + FORMAT.format(new Date())
-                + "> "
-                + TextColor.RESET;
+        this.timeStamp = timeStampBuilder.append("<")
+                                         .append(FORMAT.format(new Date()))
+                                         .append("> ")
+                                         .append(TextColor.RESET)
+                                         .toString();
 
         String t = lineStringIn.getFormattedText();
         if (CHAT.isEnabled() && TIME_STAMPS.getValue())

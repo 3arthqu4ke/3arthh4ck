@@ -13,6 +13,9 @@ final class ChatData extends DefaultData<Chat>
         register("Clean",
                 "Doesn't render the rectangle around/behind the chat.");
         register("Infinite", "Never delete received messages.");
+        register("Rainbow", "If you want Rainbow timestamps. Note that because"
+            + " I'm lazy changing this setting will only take effect for" +
+            " messages which have been received afterwards.");
     }
 
     @Override

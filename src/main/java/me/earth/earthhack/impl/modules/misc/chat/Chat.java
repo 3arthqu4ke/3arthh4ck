@@ -3,10 +3,7 @@ package me.earth.earthhack.impl.modules.misc.chat;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
-import me.earth.earthhack.api.setting.settings.BooleanSetting;
-import me.earth.earthhack.api.setting.settings.EnumSetting;
-import me.earth.earthhack.api.setting.settings.NumberSetting;
-import me.earth.earthhack.api.setting.settings.StringSetting;
+import me.earth.earthhack.api.setting.settings.*;
 import me.earth.earthhack.impl.event.events.render.ChatEvent;
 import me.earth.earthhack.impl.managers.thread.scheduler.Scheduler;
 import me.earth.earthhack.impl.modules.misc.chat.util.LoggerMode;
@@ -15,6 +12,7 @@ import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.misc.collections.CollectionUtil;
 import net.minecraft.client.gui.ChatLine;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
@@ -49,6 +47,8 @@ public class Chat extends Module
         super("Chat", Category.Misc);
         register(new BooleanSetting("Clean", false));
         register(new BooleanSetting("Infinite", false));
+        register(new ColorSetting("TimeStampsColor", Color.WHITE));
+        register(new EnumSetting<>("Rainbow", Rainbow.Horizontal));
         this.listeners.add(new ListenerPacket(this));
         this.listeners.add(new ListenerGameLoop(this));
         this.listeners.add(new ListenerLogout(this));
@@ -73,6 +73,12 @@ public class Chat extends Module
         });
 
         this.setData(new ChatData(this));
+    }
+
+    public enum Rainbow {
+        None,
+        Horizontal,
+        Vertical
     }
 
     @Override
