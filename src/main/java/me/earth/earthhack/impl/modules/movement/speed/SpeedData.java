@@ -14,6 +14,7 @@ final class SpeedData extends DefaultData<Speed>
                 " specified by the Speed setting.");
         register(module.inWater, "Move quickly while in water.");
         register(module.speedSet, "Speed for Mode-Vanilla.");
+        register(module.Sneak, "Makes instant mode stop when sneaking");
     }
 
     @Override

@@ -68,6 +68,9 @@ public class Speed extends Module
     protected final Setting<Boolean> noWaterInstant =
             register(new BooleanSetting("NoLiquidInstant", false));
 
+    protected final Setting<Boolean> Sneak =
+            register(new BooleanSetting("Sneak", false));
+
     protected final StopWatch expTimer = new StopWatch();
 
     protected boolean stop;

@@ -16,6 +16,8 @@ public enum SpeedMode implements Globals
         {
             if (mc.player.isElytraFlying()) return;
             if (module.LONG_JUMP.isEnabled()) return;
+            if (!module.Sneak.getValue()
+                    || (!mc.player.isSneaking()))
             if (!module.noWaterInstant.getValue()
                     || (!mc.player.isInWater() && !mc.player.isInLava()))
             {
