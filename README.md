@@ -1,2 +1,1 @@
-# 3arthh4ck
-I fix stuff here from time to time.
+real compatabilitty fix works with futre trust 
