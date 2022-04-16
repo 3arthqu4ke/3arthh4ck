@@ -25,7 +25,6 @@ public class Earthhack implements Globals
     {
         LOGGER.info("\n\nInitializing 3arthh4ck.");
         Display.setTitle("3arthh4ck - " + VERSION);
-        DiscordPresence.start();
         Managers.load();
         LOGGER.info("\n3arthh4ck initialized.\n");
     }
