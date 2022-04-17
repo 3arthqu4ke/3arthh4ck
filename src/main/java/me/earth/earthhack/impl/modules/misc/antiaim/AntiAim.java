@@ -30,6 +30,10 @@ public class AntiAim extends Module
             register(new NumberSetting<>("Pitch", 0.0f, -90.0f, 90.0f));
     protected final Setting<Integer> skip =
             register(new NumberSetting<>("Skip", 1, 1, 20));
+    protected final Setting<Boolean> flipYaw =
+            register(new BooleanSetting("FlipYaw", true));
+    protected final Setting<Boolean> flipPitch =
+            register(new BooleanSetting("FlipPitch", true));
 
     protected final StopWatch timer = new StopWatch();
     protected float lastYaw;

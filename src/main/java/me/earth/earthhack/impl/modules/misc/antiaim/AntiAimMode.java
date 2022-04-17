@@ -7,5 +7,6 @@ public enum AntiAimMode
     Down,
     Horizontal,
     Headbang,
-    Constant
+    Constant,
+    Flip
 }
