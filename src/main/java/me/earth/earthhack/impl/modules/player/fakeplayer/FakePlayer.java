@@ -85,7 +85,6 @@ public class FakePlayer extends DisablingModule
     protected void onDisable()
     {
         PlayerUtil.removeFakePlayer(fakePlayer);
-        fakePlayer.isDead = true;
         playRecording.setValue(false);
         record.setValue(false);
         fakePlayer = null;
