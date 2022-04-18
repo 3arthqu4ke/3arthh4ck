@@ -9,7 +9,7 @@ final class AutoArmorData extends DefaultData<AutoArmor>
         super(module);
         register(module.delay, "Delay for for moving around items" +
                 " in your inventory. Low values might cause inventory desync.");
-        register(module.autoMend, "Takes armor of while you're mending and" +
+        register(module.autoMend, "Takes armor off while you're mending and" +
                 " the armor reaches a certain threshold.");
         register(module.helmet, "The automend threshold to take" +
                 " the helmet off.");
