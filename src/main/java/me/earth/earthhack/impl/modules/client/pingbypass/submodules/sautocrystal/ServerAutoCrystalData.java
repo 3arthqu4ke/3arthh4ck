@@ -15,7 +15,7 @@ final class ServerAutoCrystalData extends DefaultData<ServerAutoCrystal>
                 "Max distance from you to the position to place on.");
         register("PlaceTrace",
                 "Max distance through walls, to the position " +
-                "to place on. (Most severs allow the same wall- and " +
+                "to place on. (Most servers allow the same wall- and " +
                 "normal range for placing crystals)");
         register("MinDamage",
                 "Minimum damage a crystal we place has to deal to the enemy.");
@@ -110,7 +110,7 @@ final class ServerAutoCrystalData extends DefaultData<ServerAutoCrystal>
                 "Required when you want to use Multithreading and Rotate.");
         register(("FallBack"), "Due to the Damage calculation crystals" +
                 " that deal no damage to you and the enemy can block" +
-                " high damaging position. This setting will cause the" +
+                " high damaging positions. This setting will cause the" +
                 " AutoCrystal to break such Crystals.");
         register(("FB-Dmg"), "Max Damage a FallBack crystal can deal to you.");
         register(("SoundRemove"), "Explosion sounds arrive before the " +
