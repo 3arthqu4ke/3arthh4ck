@@ -11,8 +11,8 @@ final class AutoTrapData extends ObbyListenerData<AutoTrap>
                 " Almost no servers allow you to place Obsidian" +
                 " further than 6 blocks away.");
         register(module.noScaffold, "Will place an extra block " +
-                "above the enemies head, preventing him to break " +
-                "the block above him and scaffold up or step out " +
+                "above the enemies head, preventing him from breaking " +
+                "the block above him and scaffolding up or stepping out " +
                 "of the AutoTrap.");
         register(module.noStep, "Places additional blocks around " +
                 "the block directly above the players head preventing " +

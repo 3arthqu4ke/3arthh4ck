@@ -8,7 +8,7 @@ final class ServerInventoryData extends DefaultData<ServerInventory>
     {
         super(module);
         register("Delay", "The Delay in seconds to resync" +
-                " your Inventory with.");
+                " your Inventory.");
     }
 
     @Override
@@ -20,7 +20,7 @@ final class ServerInventoryData extends DefaultData<ServerInventory>
     @Override
     public String getDescription()
     {
-        return "Resyncs your Inventory with the PingBypass.";
+        return "Resyncs your Inventory with PingBypass.";
     }
 
 }

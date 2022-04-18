@@ -61,7 +61,7 @@ public class AntiSurround extends ObbyListenerModule<ListenerObby>
     protected final Setting<Double> range =
         register(new NumberSetting<>("Range", 5.25, 0.1, 6.0));
     protected final Setting<Boolean> async =
-        register(new BooleanSetting("Asnyc", false));
+        register(new BooleanSetting("Async", false));
     protected final Setting<Boolean> instant = // TODO
         register(new BooleanSetting("Instant", false));
     protected final Setting<Boolean> persistent =

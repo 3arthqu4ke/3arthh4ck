@@ -23,7 +23,7 @@ public class NoHunger extends Module
         this.listeners.add(new ListenerEntityAction(this));
         this.listeners.addAll(new ListenerPlayerPacket(this).getListeners());
         SimpleData data = new SimpleData(this, "Makes you not get hungry.");
-        data.register(sprint, "Will cancel sprint packets send to the server.");
+        data.register(sprint, "Will cancel sprint packets you send to the server.");
         data.register(ground, "Will make the server think you are not on the" +
                 " ground, which makes it no apply hunger to you. Will build" +
                 " up falldamage over time so watch out.");

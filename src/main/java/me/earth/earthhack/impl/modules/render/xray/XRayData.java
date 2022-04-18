@@ -23,7 +23,7 @@ final class XRayData extends DefaultData<XRay>
     @Override
     public String getDescription()
     {
-        return "Allows you to see through the world.";
+        return "Allows you to see through blocks.";
     }
 
 }
