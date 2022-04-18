@@ -488,7 +488,7 @@ public class ReChams extends Module
                 .addPage(p -> p == ChamsPage.Animals, animalMode, animalColorMixFactor)
                 .addPage(p -> p == ChamsPage.Monsters, monsterMode, monsterColorMixFactor)
                 .register(Visibilities.VISIBILITY_MANAGER);
-        this.setData(new SimpleData(this, "Tha best in the game."));
+        this.setData(new SimpleData(this, "Da best in the game."));
     }
 
     public ChamsMode getModeFromEntity(Entity entity)
