@@ -23,7 +23,7 @@ final class SearchData extends DefaultData<Search>
     @Override
     public String getDescription()
     {
-        return "Search blocks in render distance.";
+        return "Searches for certain blocks in render distance.";
     }
 
 }
