@@ -41,6 +41,7 @@ final class AnnouncerData extends DefaultData<Announcer>
     public String getDescription()
     {
         return "When you want to be really annoying." +
+                "Announces different things you do." +
                 " You'll find configurable files in the earthhack/util folder.";
     }
 
