@@ -7,7 +7,7 @@ final class LongJumpData extends DefaultData<LongJump>
     public LongJumpData(LongJump module)
     {
         super(module);
-        register(module.mode, "-Normal best more for Anarchy\n-Cowabunga ...");
+        register(module.mode, "-Normal best for Anarchy\n-Cowabunga ...");
         register(module.boost, "Amount your jump will be boosted by.");
         register(module.noKick, "Prevents you from getting kicked by" +
                 " disabling this module automatically.");
