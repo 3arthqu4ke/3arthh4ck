@@ -8,6 +8,7 @@ import me.earth.earthhack.impl.managers.config.util.ConfigDeleteException;
 import me.earth.earthhack.impl.managers.config.util.JsonPathWriter;
 import me.earth.earthhack.impl.util.misc.FileUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -16,11 +17,13 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+// TODO: this config system is the worst thing I've ever seen
 public abstract class AbstractConfigHelper<C extends Config>
         implements ConfigHelper<C>
 {
-    protected final Map<String, C> configs = new HashMap<>();
+    protected final Map<String, C> configs = new ConcurrentHashMap<>();
     protected final String name;
     protected final String path;
 
@@ -49,6 +52,12 @@ public abstract class AbstractConfigHelper<C extends Config>
         }
 
         String current = CurrentConfig.getInstance().get(this);
+        if (current != null
+            && !configs.containsKey((current = current.toLowerCase())))
+        {
+            C config = create(current);
+            configs.put(current, config);
+        }
 
         try
         {
@@ -60,7 +69,7 @@ public abstract class AbstractConfigHelper<C extends Config>
                     C config = create(s);
                     configs.put(s, config);
                     JsonObject object = toJson(config);
-                    JsonPathWriter.write(Paths.get(path + "/" + s + ".json"),
+                    JsonPathWriter.write(Paths.get(path + File.separator + s + ".json"),
                                          object);
                     continue;
                 }
@@ -128,7 +137,7 @@ public abstract class AbstractConfigHelper<C extends Config>
         }
 
         JsonObject object = toJson(config);
-        JsonPathWriter.write(Paths.get(path + "/" + name + ".json"), object);
+        JsonPathWriter.write(Paths.get(path + File.separator + name + ".json"), object);
         CurrentConfig.getInstance().set(this, name);
     }
 
