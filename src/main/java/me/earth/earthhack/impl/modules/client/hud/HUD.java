@@ -127,7 +127,7 @@ public class HUD extends Module {
     }
 
     protected void renderLogo() {
-        if (logo.getValue() || logover.getValue()) {
+        if (logo.getValue()) {
             renderText(logostring.getValue() + (logover.getValue() ? (" " + Earthhack.VERSION) : ""), 2, 2);
         }
     }
