@@ -25,15 +25,14 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(RenderEnderCrystal.class)
 public abstract class MixinRenderEnderCrystal
     extends MixinRender<EntityEnderCrystal> {
+    private static final ModuleCache<CrystalScale> SCALE =
+        Caches.getModule(CrystalScale.class);
     @Shadow
     @Final
     private ModelBase modelEnderCrystal;
     @Shadow
     @Final
     private ModelBase modelEnderCrystalNoBase;
-    private static final ModuleCache<CrystalScale> SCALE =
-        Caches.getModule(CrystalScale.class);
-
     private float scale;
 
     @Inject(
@@ -87,22 +86,12 @@ public abstract class MixinRenderEnderCrystal
                                                                 headPitch,
                                                                 scale);
         Bus.EVENT_BUS.post(pre);
-        if (!pre.isCancelled()) {
-            modelBase.render(entity, limbSwing, limbSwingAmount, ageInTicks,
-                             netHeadYaw, headPitch, scale);
-        }
-
-        CrystalRenderEvent.Post post = new CrystalRenderEvent.Post(renderLiving,
-                                                                   entity,
-                                                                   modelBase,
-                                                                   limbSwing,
-                                                                   limbSwingAmount,
-                                                                   ageInTicks,
-                                                                   netHeadYaw,
-                                                                   headPitch,
-                                                                   scale);
-        Bus.EVENT_BUS.post(post);
         if (pre.isCancelled()) {
+            CrystalRenderEvent.Post post = new CrystalRenderEvent.Post(
+                renderLiving, entity, modelBase, limbSwing, limbSwingAmount,
+                ageInTicks, netHeadYaw, headPitch, scale);
+            Bus.EVENT_BUS.post(post);
+
             exitDoRender(entity, x, y, z, entityYaw, partialTicks, f1);
             ci.cancel();
         }
@@ -114,12 +103,25 @@ public abstract class MixinRenderEnderCrystal
             value = "FIELD",
             target = "Lnet/minecraft/client/renderer/entity/RenderEnderCrystal;renderOutlines:Z",
             ordinal = 1,
-            shift = At.Shift.BEFORE))
-    private void handler$postRenderHook$zga000(EntityEnderCrystal entity,
-                                               double x, double y, double z,
-                                               float entityYaw,
-                                               float partialTicks,
-                                               CallbackInfo ci) {
+            shift = At.Shift.BEFORE),
+        locals = LocalCapture.CAPTURE_FAILHARD)
+    private void handler$handler$postRenderHook$zga000$zem000(
+        EntityEnderCrystal entity, double x, double y, double z,
+        float entityYaw, float partialTicks, CallbackInfo ci,
+        float f, float f1) {
+
+        float limbSwingAmount = f * 3.0F;
+        float ageInTicks = f1 * 0.2F;
+        ModelBase modelBase = entity.shouldShowBottom()
+            ? modelEnderCrystal : modelEnderCrystalNoBase;
+        RenderEnderCrystal renderLiving = RenderEnderCrystal.class.cast(this);
+
+        CrystalRenderEvent.Post post = new CrystalRenderEvent.Post(
+            renderLiving, entity, modelBase, 0.0F, limbSwingAmount,
+            ageInTicks, 0.0F, 0.0F, 0.0625F);
+
+        Bus.EVENT_BUS.post(post);
+
         if (SCALE.isEnabled()) {
             GlStateManager.scale(1 / scale, 1 / scale, 1 / scale);
         }
