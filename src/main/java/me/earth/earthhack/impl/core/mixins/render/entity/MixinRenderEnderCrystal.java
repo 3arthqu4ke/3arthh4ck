@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.core.mixins.render.entity;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.event.bus.instance.Bus;
-import me.earth.earthhack.impl.core.mixins.render.MixinRender;
 import me.earth.earthhack.impl.event.events.render.CrystalRenderEvent;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.render.crystalscale.CrystalScale;
@@ -10,8 +9,10 @@ import me.earth.earthhack.impl.util.animation.TimeAnimation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderDragon;
 import net.minecraft.client.renderer.entity.RenderEnderCrystal;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Final;
@@ -24,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(RenderEnderCrystal.class)
 public abstract class MixinRenderEnderCrystal
-    extends MixinRender<EntityEnderCrystal> {
+    extends Render<EntityEnderCrystal> {
     private static final ModuleCache<CrystalScale> SCALE =
         Caches.getModule(CrystalScale.class);
     @Shadow
@@ -35,6 +36,11 @@ public abstract class MixinRenderEnderCrystal
     private ModelBase modelEnderCrystalNoBase;
     private float scale;
 
+    @Deprecated
+    protected MixinRenderEnderCrystal(RenderManager renderManager) {
+        super(renderManager);
+    }
+
     @Inject(
         method = "doRender(Lnet/minecraft/entity/item/EntityEnderCrystal;DDDFF)V",
         locals = LocalCapture.CAPTURE_FAILHARD,
@@ -43,12 +49,12 @@ public abstract class MixinRenderEnderCrystal
             target = "Lnet/minecraft/entity/item/EntityEnderCrystal;shouldShowBottom()Z",
             shift = At.Shift.BEFORE),
         cancellable = true)
-    private void handler$preRenderHook$zga000(EntityEnderCrystal entity,
-                                              double x, double y, double z,
-                                              float entityYaw,
-                                              float partialTicks,
-                                              CallbackInfo ci, float f,
-                                              float f1) {
+    private void preRenderHook(EntityEnderCrystal entity,
+                               double x, double y, double z,
+                               float entityYaw,
+                               float partialTicks,
+                               CallbackInfo ci, float f,
+                               float f1) {
         if (SCALE.isEnabled()) {
             scale = SCALE.get().animate.getValue()
                 ? (float) (SCALE.get().scaleMap.containsKey(
@@ -105,7 +111,7 @@ public abstract class MixinRenderEnderCrystal
             ordinal = 1,
             shift = At.Shift.BEFORE),
         locals = LocalCapture.CAPTURE_FAILHARD)
-    private void handler$handler$postRenderHook$zga000$zem000(
+    private void postRenderHook(
         EntityEnderCrystal entity, double x, double y, double z,
         float entityYaw, float partialTicks, CallbackInfo ci,
         float f, float f1) {

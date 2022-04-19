@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+// TODO: why is there two renderlivingbase mixins?
 @Mixin(RenderLivingBase.class)
 public abstract class MixinRenderLivingBase
 {
