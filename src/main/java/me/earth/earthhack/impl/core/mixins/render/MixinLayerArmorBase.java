@@ -40,8 +40,8 @@ public abstract class MixinLayerArmorBase {
         Bus.EVENT_BUS.post(pre);
         if (!pre.isCancelled())
         {
-            Color color = CHAMS.get().getArmorVisibleColor(entityIn);
             if (CHAMS.get().shouldArmorChams() && CHAMS.isEnabled()) {
+                Color color = CHAMS.get().getArmorVisibleColor(entityIn);
                 glPushMatrix();
                 GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
                 GL11.glPolygonOffset(1.0F, -2000000F);

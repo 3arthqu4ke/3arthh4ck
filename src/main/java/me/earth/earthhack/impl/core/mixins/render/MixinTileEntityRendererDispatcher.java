@@ -1,16 +1,13 @@
 package me.earth.earthhack.impl.core.mixins.render;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+// TODO: remove
 @Mixin(TileEntityRendererDispatcher.class)
 public abstract class MixinTileEntityRendererDispatcher
 {
-
+    /*
     @Inject(
             method = "render(Lnet/minecraft/tileentity/TileEntity;DDDFIF)V",
             at = @At("HEAD")
@@ -20,5 +17,5 @@ public abstract class MixinTileEntityRendererDispatcher
 
         // GlStateManager.color();
     }
-
+    */
 }
