@@ -9,7 +9,7 @@ final class NukerData extends DefaultData<Nuker>
         super(module);
         register(module.nuke, "Classical Nuker. Other options would be" +
                 " the Shulkers and Hoppers setting down below.");
-        register(module.blocks, "Blocks that should be attacked in one tick.");
+        register(module.blocks, "Amount of blocks that should be attacked in one tick.");
         register(module.delay, "Helps you not to accidentally spam the Nuker.");
         register(module.rotate, "-None no rotations\n-Normal normal legit" +
                 " rotations, you can only break 1 block per" +

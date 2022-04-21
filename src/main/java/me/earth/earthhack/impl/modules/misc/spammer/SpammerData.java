@@ -8,7 +8,7 @@ final class SpammerData extends DefaultData<Spammer>
     {
         super(module);
         register(module.delay,
-                "The interval in seconds that messages get send in.");
+                "The interval in seconds that messages get sent in.");
         register(module.random,
                 "Randomly selects a line from your spammer file.");
         register(module.antiKick,

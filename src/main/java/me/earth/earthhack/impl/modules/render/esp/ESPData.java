@@ -19,8 +19,8 @@ final class ESPData extends DefaultData<ESP>
         register(module.lineWidth, "Line width for the Outline-ESP.");
         register(module.hurt, "Turn the ESP dark when the entity is hurt.");
         register(module.color, "Select the color for the esp.");
-        register(module.invisibleColor, "Select the color for invisible players for the esp.");
-        register(module.friendColor, "Select the color for friends for the esp.");
+        register(module.invisibleColor, "Select the color of invisible players for the esp.");
+        register(module.friendColor, "Select the color of friends for the esp.");
     }
 
     @Override

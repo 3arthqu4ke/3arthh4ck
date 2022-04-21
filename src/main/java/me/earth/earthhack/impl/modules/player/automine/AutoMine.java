@@ -139,7 +139,7 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         data.register(range, "Range in which blocks will be mined.");
         data.register(head, "Mines the Block above the Target.");
         data.register(rotate, "Rotates to mine the block.");
-        data.register(self, "Touches Blocks in the own Surround so they can" +
+        data.register(self, "Touches Blocks in your own Surround so it can" +
                             " be mined quickly if an enemy jumps in.");
         data.register(prioSelf, "Prioritizes untrapping yourself.");
         data.register(constellationCheck, "Dev Setting, should be on.");
@@ -147,7 +147,7 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         data.register(newV, "Takes 1.13+ crystal mechanics into account.");
         data.register(checkCurrent, "Dev Setting, should be on.");
         data.register(improve, "Will actively search for a better position.");
-        data.register(mineL, "For Combat: Mines out L-Shape Holes");
+        data.register(mineL, "For Combat: Mines out L-Shaped Holes");
         data.register(offset, "Time to wait after a block has been destroyed.");
         data.register(shouldBlackList,
                 "Blacklists blocks that you reset by touching them again.");

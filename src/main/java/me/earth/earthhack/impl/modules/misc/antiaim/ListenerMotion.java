@@ -71,6 +71,16 @@ final class ListenerMotion extends ModuleListener<AntiAim, MotionUpdateEvent>
                 event.setYaw(module.yaw.getValue());
                 event.setPitch(module.pitch.getValue());
                 return;
+            case Flip:
+                if (module.flipYaw.getValue())
+                {
+                    module.lastYaw = (event.getYaw() + 180) % 360;
+                }
+
+                if (module.flipPitch.getValue())
+                {
+                    module.lastPitch = -event.getPitch();
+                }
             default:
         }
 

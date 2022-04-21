@@ -9,6 +9,7 @@ final class AntiAimData extends DefaultData<AntiAim>
         super(module);
         register(module.strict, "Doesn't rotate when you place/attack.");
         register(module.skip, "Skips every Nth tick, off if value is 1.");
+        register(module.flipYaw, "If you want to flip your yaw.");
     }
 
     @Override

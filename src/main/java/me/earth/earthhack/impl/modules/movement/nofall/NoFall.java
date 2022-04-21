@@ -25,7 +25,7 @@ public class NoFall extends Module
         data.register(mode, "-Packet standard NoFall." +
                 "\n-AAC a NoFall for the AAC anticheat." +
                 "\n-Anti prevents damage by elevating your position silently." +
-                "\n-Bucket uses a water bucket if you have on in your hotbar.");
+                "\n-Bucket uses a water bucket if you have one in your hotbar.");
         this.setData(data);
     }
 

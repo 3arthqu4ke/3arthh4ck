@@ -15,7 +15,10 @@ final class ListenerModel extends ModuleListener<ESP, ModelRenderEvent.Pre> {
     @Override
     public void invoke(ModelRenderEvent.Pre event) {
         if (module.mode.getValue() == EspMode.Outline) {
-            if (!module.isValid(event.getEntity())) return;
+            if (!module.isValid(event.getEntity())) {
+                return;
+            }
+
             render(event);
 
             final Color clr = module.getEntityColor(event.getEntity());
@@ -46,6 +49,6 @@ final class ListenerModel extends ModuleListener<ESP, ModelRenderEvent.Pre> {
                 event.getHeadPitch(),
                 event.getScale()
         );
-
     }
+
 }

@@ -44,8 +44,8 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
             " of the normal PlaceDelay.");
         register(module.slowPlaceDelay,
             "Delay for placing less damaging Crystals.");
-        register(module.override, "Places crystals that damage you more " +
-            "than the MaxSelfPlace value, but only if they can kill an Enemy.");
+        register(module.override, "Places crystals that exceed " +
+            "the MaxSelfPlace value, but only if they can kill an Enemy.");
         register(module.newVer,
             "Takes 1.13+ Mechanics (1 high spaces into account).");
         register(module.newVerEntities, "This is actually not a 1.13+ " +
@@ -69,7 +69,7 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
             "Only Crystals within this range will be attacked.");
         register(module.breakDelay, "Delay between two attacks.");
         register(module.breakTrace, "Crystals will only be attacked through " +
-            "walls, if the lie within this range.");
+            "walls, if they lie within this range.");
         register(module.minBreakDamage,
             "Minimum Damage a crystal needs to deal in order to be broken.");
         register(module.maxSelfBreak,
@@ -263,7 +263,7 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
         register(module.obbyPreSelf, "Tries to make the calculation easier. " +
             "Good for high HelpingBlocks values.");
         register(module.fastObby, "Limits the Obsidian Calculation to only" +
-            " the blocks around the target. Useful when you PC" +
+            " the blocks around the target. Useful when your PC" +
             " can't deal with it.");
         register(module.maxDiff, "When evaluating the best Obsidian position" +
             " the difference of the amount of HelpingBlocks needed is taken" +

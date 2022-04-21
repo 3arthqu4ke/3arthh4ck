@@ -18,7 +18,7 @@ final class AntiPotionData extends DefaultData<AntiPotion>
     @Override
     public String getDescription()
     {
-        return "Allows you to remove potions on the client side." +
+        return "Allows you to remove potions client-sided." +
                 " Only works for some potions like levitation.";
     }
 

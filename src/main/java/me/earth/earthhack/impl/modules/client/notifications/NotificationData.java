@@ -14,7 +14,7 @@ final class NotificationData extends DefaultData<Notifications>
         this.descriptions.put(module.categories,
                 "Click through the module categories.");
         this.descriptions.put(module.totems,
-                "Announces when players in visual range pops a totem.");
+                "Announces when players in visual range pop a totem.");
         this.register(module.totemAmountColor,
                 "Color of the TotemPop Amount in the TotemPop Message.");
         this.register(module.totemColor,

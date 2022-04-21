@@ -35,7 +35,7 @@ apply plugin: 'eclipse'
 
 mainClassName = "me.earth.earthhack.installer.main.Main"
 group project.modGroup //http://maven.apache.org/guides/mini/guide-naming-conventions.html
-project.version = '1.5.0'
+project.version = '1.5.2'
 
 boolean VANILLA = false
 //noinspection GroovyUnusedAssignment

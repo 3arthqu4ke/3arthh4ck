@@ -34,7 +34,7 @@ public class Blink extends DisablingModule
         this.listeners.add(new ListenerPosLook(this));
         this.listeners.add(new ListenerPacket(this));
         SimpleData data = new SimpleData(this,
-            "Suppresses all movement packets send to the server. It will look" +
+            "Suppresses all movement packets you send to the server. It will look" +
             " like you don't move at all and then teleport when" +
             " you disable this module.");
         data.register(packetMode,

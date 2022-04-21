@@ -22,7 +22,7 @@ final class SafetyData extends DefaultData<Safety>
                 " in range of a damaging crystal/position can be found." +
                 " Be careful not to blow yourself up!");
         register("Updates", "Tick: will update each tick (~50ms), Delay:" +
-                " will updated in Intervals specified by the Delay setting.");
+                " will update in Intervals specified by the Delay setting.");
         register("Delay", "The interval in milliseconds to check your" +
                 " position with if Updates is set to Delay. The lower this " +
                 "setting the higher the workload on your CPU.");
@@ -34,7 +34,7 @@ final class SafetyData extends DefaultData<Safety>
                 "order to prevent MultiThreading problems.");
         register("Terrain", "If Terrain should be taken into account.");
         register("Anvils",
-                "Only use when u expected to get Anvil - AntiSurrounded.");
+                "Only use when u expect to get Anvil - AntiSurrounded.");
     }
 
     @Override

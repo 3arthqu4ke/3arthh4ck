@@ -76,6 +76,7 @@ public class ESP extends Module {
         super("ESP", Category.Render);
         this.listeners.add(new ListenerRender(this));
         this.listeners.add(new ListenerModel(this));
+        this.listeners.add(new ListenerRenderCrystal(this));
         this.setData(new ESPData(this));
     }
 
