@@ -3,7 +3,6 @@ package me.earth.earthhack.impl.util.math;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Vector3f;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

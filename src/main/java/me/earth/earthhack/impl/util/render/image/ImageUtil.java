@@ -1,21 +1,10 @@
 package me.earth.earthhack.impl.util.render.image;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
-import me.earth.earthhack.impl.commands.packet.util.BufferUtil;
 import me.earth.earthhack.impl.core.ducks.render.ITextureManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.client.model.obj.OBJModel;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
-import org.newdawn.slick.Animation;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.imageout.ImageWriterFactory;
-import org.newdawn.slick.opengl.TextureLoader;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -24,17 +13,13 @@ import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
-import java.io.*;
-import java.net.URI;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.WritableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
@@ -143,24 +128,6 @@ public class ImageUtil implements Globals
             reader.dispose();
             stream.close();
         }
-    }
-
-    public static Image bufferedImageToSlickImage(BufferedImage image, String format) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, format, baos);
-        InputStream is = new ByteArrayInputStream(baos.toByteArray());
-        return new Image(TextureLoader.getTexture(format, is));
-    }
-
-    public static BufferedImage slickImageToBufferedImage(Image image, String format) throws SlickException, IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageWriterFactory.getWriterForFormat(format).saveImage(image, format, baos, true);
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-        return ImageIO.read(bais);
-    }
-
-    public static BufferedImage getCurrentAnimationFrame(Animation animation) throws SlickException, IOException {
-        return slickImageToBufferedImage(animation.getCurrentFrame(), "GIF");
     }
 
     public static int loadImage(BufferedImage image) throws IOException, URISyntaxException {

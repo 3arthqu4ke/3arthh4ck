@@ -1,6 +1,6 @@
 package me.earth.earthhack.impl.util.render.entity;
 
-import org.joml.Vector3f;
+import me.earth.earthhack.impl.util.math.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
