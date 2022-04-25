@@ -153,11 +153,11 @@ public abstract class MixinRenderManager implements IRenderManager
             shift = At.Shift.AFTER),
         locals = LocalCapture.CAPTURE_FAILHARD,
         cancellable = true)
-    private void handler$preRenderEntityHook$zfk000(Entity entityIn, double x, double y, double z, float yaw, float partialTicks, boolean p_188391_10_, CallbackInfo ci, Render<Entity> render) {
+    private void preRenderEntityHook(Entity entityIn, double x, double y, double z, float yaw, float partialTicks, boolean p_188391_10_, CallbackInfo ci, Render<Entity> render) {
         RenderEntityEvent pre = new RenderEntityEvent.Pre(render, entityIn, x, y, z, yaw, partialTicks);
         Bus.EVENT_BUS.post(pre);
         if (pre.isCancelled()) {
-            final RenderEntityEvent post = new RenderEntityEvent.Post(render, entityIn);
+            RenderEntityEvent post = new RenderEntityEvent.Post(render, entityIn);
             Bus.EVENT_BUS.post(post);
 
             try
@@ -198,7 +198,7 @@ public abstract class MixinRenderManager implements IRenderManager
             ordinal = 1,
             shift = At.Shift.BEFORE),
         locals = LocalCapture.CAPTURE_FAILHARD)
-    private void handler$postRenderEntityHook$zfk000(Entity entityIn, double x, double y, double z, float yaw, float partialTicks, boolean p_188391_10_, CallbackInfo ci, Render<Entity> render) {
+    private void postRenderEntityHook(Entity entityIn, double x, double y, double z, float yaw, float partialTicks, boolean p_188391_10_, CallbackInfo ci, Render<Entity> render) {
         RenderEntityEvent post = new RenderEntityEvent.Post(render, entityIn);
         Bus.EVENT_BUS.post(post);
     }
