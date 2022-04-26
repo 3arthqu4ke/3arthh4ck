@@ -34,6 +34,10 @@ final class ListenerMotion extends
 
             double d;
             boolean see;
+            double x;
+            double y;
+            double z;
+            boolean noPosition = false;
             //noinspection ConstantConditions
             if (r.typeOfHit == RayTraceResult.Type.BLOCK
                     && r.getBlockPos() != null)
@@ -49,6 +53,10 @@ final class ListenerMotion extends
                      new Vec3d(p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5));
                 }
 
+                x = p.getX();
+                y = p.getY();
+                z = p.getZ();
+
                 see = canSee(r.hitVec, Managers.POSITION);
             }
             else if (r.typeOfHit == RayTraceResult.Type.ENTITY
@@ -62,11 +70,18 @@ final class ListenerMotion extends
                 see = canSee(
                     new Vec3d(e.posX, e.posY + e.getEyeHeight(), e.posZ),
                     Managers.POSITION);
+
+                x = e.posX;
+                y = e.posY;
+                z = e.posZ;
             }
             else
             {
                 d = Managers.POSITION.getVec().distanceTo(r.hitVec);
                 see = canSee(r.hitVec, Managers.POSITION);
+
+                x = y = z = 0.0;
+                noPosition = true;
             }
 
             StringBuilder builder = new StringBuilder(module.current);
@@ -86,6 +101,13 @@ final class ListenerMotion extends
             }
 
             builder.append(MathUtil.round(d, 2));
+            if (module.position.getValue() && !noPosition)
+            {
+                builder.append(TextColor.WHITE).append(", ").append(MathUtil.round(x, 2)).append(TextColor.GRAY).append("x")
+                       .append(TextColor.WHITE).append(", ").append(MathUtil.round(y, 2)).append(TextColor.GRAY).append("y")
+                       .append(TextColor.WHITE).append(", ").append(MathUtil.round(z, 2)).append(TextColor.GRAY).append("z");
+            }
+
             module.current = builder.toString();
         }
     }

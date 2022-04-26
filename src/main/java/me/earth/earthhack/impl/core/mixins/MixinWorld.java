@@ -3,6 +3,8 @@ package me.earth.earthhack.impl.core.mixins;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.impl.core.ducks.IWorld;
+import me.earth.earthhack.impl.core.ducks.world.IChunk;
+import me.earth.earthhack.impl.event.events.misc.BlockStateChangeEvent;
 import me.earth.earthhack.impl.event.events.misc.UpdateEntitiesEvent;
 import me.earth.earthhack.impl.event.events.movement.WaterPushEvent;
 import me.earth.earthhack.impl.managers.Managers;
@@ -10,7 +12,6 @@ import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.misc.packets.Packets;
 import me.earth.earthhack.impl.modules.player.blocktweaks.BlockTweaks;
 import me.earth.earthhack.impl.modules.render.norender.NoRender;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -20,6 +21,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.util.BlockSnapshot;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -28,16 +32,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import javax.annotation.Nullable;
-import java.util.List;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(World.class)
 public abstract class MixinWorld implements IWorld
 {
-    @Shadow public abstract List<Entity> getEntitiesWithinAABBExcludingEntity(@Nullable Entity entityIn, AxisAlignedBB bb);
-
-    @Shadow public abstract World init();
+    @Shadow
+    @Final
+    public boolean isRemote;
 
     private static final ModuleCache<NoRender> NO_RENDER =
             Caches.getModule(NoRender.class);
@@ -145,6 +147,27 @@ public abstract class MixinWorld implements IWorld
         }
 
         return entity;
+    }
+
+    @Inject(
+            method = "setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/state/IBlockState;I)Z",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/block/state/IBlockState;getLightOpacity(Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/util/math/BlockPos;)I",
+                    shift = At.Shift.BEFORE,
+                    ordinal = 1),
+            locals = LocalCapture.CAPTURE_FAILHARD)
+    private void onSetBlockState(
+            BlockPos pos, IBlockState newState, int flags,
+            CallbackInfoReturnable<Boolean> cir, Chunk chunk,
+            BlockSnapshot blockSnapshot, IBlockState oldState,
+            int oldLight, int oldOpacity, IBlockState iblockstate)
+    {
+        if (isRemote)
+        {
+            BlockStateChangeEvent event = new BlockStateChangeEvent(pos, newState, (IChunk) chunk);
+            Bus.EVENT_BUS.post(event);
+        }
     }
 
     @Inject(

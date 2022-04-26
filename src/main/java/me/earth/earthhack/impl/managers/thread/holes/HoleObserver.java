@@ -35,6 +35,10 @@ public interface HoleObserver extends Comparable<HoleObserver>
      */
     int get2x2Holes();
 
+    default boolean isThisHoleObserverActive() {
+        return true;
+    }
+
     @Override
     default int compareTo(HoleObserver o)
     {

@@ -229,7 +229,7 @@ public class RotationUtil implements Globals
 
          */
 
-        return getAngle(x, y, z) < mc.gameSettings.fovSetting / 2;
+        return getAngle(x, y, z) < mc.gameSettings.fovSetting / 2.0f;
     }
 
     /**

@@ -7,6 +7,7 @@ import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import me.earth.earthhack.impl.event.events.network.WorldClientEvent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.minecraft.blocks.HoleUtil;
+import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 
@@ -145,7 +146,7 @@ public class HoleManager extends SubscriberImpl implements Globals, IHoleManager
         if (mc.player != null
                 && mc.world != null
                 && finished.get()
-                && !observers.isEmpty())
+                && observers.stream().anyMatch(HoleObserver::isThisHoleObserverActive))
         {
             double maxRange = getMaxRange();
             if (maxRange == 0)
@@ -179,6 +180,7 @@ public class HoleManager extends SubscriberImpl implements Globals, IHoleManager
 
             if (safes != 0 || unsafes != 0 || longs != 0 || bigs != 0)
             {
+                ChatUtil.sendMessage("Using HoleManager!");
                 finished.set(false);
                 calc(maxRange, safes, unsafes, longs, bigs);
             }

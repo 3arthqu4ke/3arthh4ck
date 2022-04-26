@@ -11,22 +11,10 @@ import me.earth.earthhack.impl.managers.client.*;
 import me.earth.earthhack.impl.managers.client.macro.MacroManager;
 import me.earth.earthhack.impl.managers.config.ConfigManager;
 import me.earth.earthhack.impl.managers.minecraft.*;
-import me.earth.earthhack.impl.managers.minecraft.combat.CombatManager;
-import me.earth.earthhack.impl.managers.minecraft.combat.HealthManager;
-import me.earth.earthhack.impl.managers.minecraft.combat.PotionService;
-import me.earth.earthhack.impl.managers.minecraft.combat.SetDeadManager;
-import me.earth.earthhack.impl.managers.minecraft.combat.SwitchManager;
-import me.earth.earthhack.impl.managers.minecraft.combat.TargetManager;
-import me.earth.earthhack.impl.managers.minecraft.combat.TotemDebugService;
-import me.earth.earthhack.impl.managers.minecraft.movement.ActionManager;
-import me.earth.earthhack.impl.managers.minecraft.movement.NCPManager;
-import me.earth.earthhack.impl.managers.minecraft.movement.NoMotionUpdateService;
-import me.earth.earthhack.impl.managers.minecraft.movement.PositionManager;
-import me.earth.earthhack.impl.managers.minecraft.movement.RotationManager;
-import me.earth.earthhack.impl.managers.minecraft.movement.SpeedManager;
+import me.earth.earthhack.impl.managers.minecraft.combat.*;
+import me.earth.earthhack.impl.managers.minecraft.movement.*;
 import me.earth.earthhack.impl.managers.minecraft.timer.TimerManager;
 import me.earth.earthhack.impl.managers.render.ColorManager;
-import me.earth.earthhack.impl.managers.render.HandRenderManager;
 import me.earth.earthhack.impl.managers.render.TextRenderer;
 import me.earth.earthhack.impl.managers.thread.EntityProvider;
 import me.earth.earthhack.impl.managers.thread.ThreadManager;
@@ -83,9 +71,10 @@ public class Managers
         Earthhack.getLogger().info("Subscribing Managers.");
 
         subscribe(TIMER, CONNECT, CHAT, COMBAT, POSITION, ROTATION, SERVER,
-                  ACTION, SPEED, SWITCH, TPS, HOLES, SAFETY, KEYBOARD, COLOR,
-                  WRAP, MACRO, NCP, SET_DEAD, BLOCKS, ENTITIES, HEALTH, TICK, FILES,
-                  new NoMotionUpdateService(), new PotionService());
+                ACTION, SPEED, SWITCH, TPS, HOLES, SAFETY, KEYBOARD, COLOR,
+                WRAP, MACRO, NCP, SET_DEAD, BLOCKS, ENTITIES, HEALTH, TICK,
+                FILES, new NoMotionUpdateService(),
+                new PotionService());
         TotemDebugService.trySubscribe(Bus.EVENT_BUS);
 
         COMMANDS.init();

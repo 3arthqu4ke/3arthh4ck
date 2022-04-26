@@ -80,6 +80,7 @@
     "network.server.ISPacketEntityStatus",
     "network.server.ISPacketEntityVelocity",
     "network.server.ISPacketExplosion",
+    "network.server.ISPacketMultiBlockChange",
     "network.server.ISPacketPlayerPosLook",
     "network.server.ISPacketSetSlot",
     "network.server.MixinSPacketResourcePack",
@@ -123,7 +124,9 @@
     "util.MixinStyle",
     "util.MixinTabCompleter",
     "util.MixinTextComponentBase",
-    "util.MixinTextFormatting"
+    "util.MixinTextFormatting",
+    "world.MixinChunk",
+    "world.MixinEmptyChunk"
   ],
   "injectors": {
     "maxShiftBy": 10

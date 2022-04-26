@@ -54,6 +54,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 // TODO: AutoTakeOff?
 // TODO: ShiftClick option
+// TODO: Take of all pieces and then mend them piece by piece to prevent desync
 public class AutoArmor extends Module
 {
     private static final ModuleCache<ExpTweaks> EXP_TWEAKS =
