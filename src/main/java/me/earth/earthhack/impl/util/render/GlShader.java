@@ -3,9 +3,6 @@ package me.earth.earthhack.impl.util.render;
 import me.earth.earthhack.api.util.interfaces.Nameable;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector4f;
@@ -144,12 +141,6 @@ public class GlShader implements Nameable {
         glUniform1i(createUniform(uniformName), value);
     }
 
-    public void set(String uniformName, Matrix4f value) {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-        buffer = value.get(buffer);
-        glUniformMatrix4(createUniform(uniformName), false, buffer);
-    }
-
     public void set(String uniformName, float value) {
         glUniform1f(createUniform(uniformName), value);
     }
@@ -168,14 +159,6 @@ public class GlShader implements Nameable {
 
     public void set(String uniformName, Vector4f value) {
         glUniform4f(createUniform(uniformName), value.x, value.y, value.z, value.w);
-    }
-
-    public void set(String uniformName, org.joml.Vector4f value) {
-        glUniform4f(createUniform(uniformName), value.x, value.y, value.z, value.w);
-    }
-
-    public void set(String uniformName, Vector3f value) {
-        glUniform3f(createUniform(uniformName), value.x, value.y, value.z);
     }
 
     public void set(String uniformName, Color value) {

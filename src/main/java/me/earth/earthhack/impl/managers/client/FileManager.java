@@ -1,14 +1,10 @@
 package me.earth.earthhack.impl.managers.client;
 
-import jassimp.AiScene;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.util.render.image.GifConverter;
 import me.earth.earthhack.impl.util.render.image.GifImage;
 import me.earth.earthhack.impl.util.render.image.ImageUtil;
 import me.earth.earthhack.impl.util.render.image.NameableImage;
-import me.earth.earthhack.impl.util.render.model.IModel;
-import me.earth.earthhack.impl.util.render.model.Mesh;
-import me.earth.earthhack.impl.util.render.model.ModelUtil;
 import me.earth.earthhack.impl.util.render.shader.SettingShader;
 
 import java.awt.image.BufferedImage;
@@ -34,12 +30,10 @@ public class FileManager
 
     private final Map<String, GifImage> gifs = new ConcurrentHashMap<>();
     private final Map<String, NameableImage> textures = new ConcurrentHashMap<>();
-    private final Map<String, IModel> models = new ConcurrentHashMap<>();
     private final Map<String, SettingShader> shaders = new ConcurrentHashMap<>();
 
     private final List<GifImage> gifList = new ArrayList<>();
     private final List<NameableImage> imageList = new ArrayList<>();
-    private final List<IModel> modelList = new ArrayList<>();
     private final List<SettingShader> shaderList = new ArrayList<>();
 
     public FileManager()
@@ -68,12 +62,6 @@ public class FileManager
         for (File file : IMAGES.listFiles())
         {
             if (file.isDirectory()) handleImageDir(file);
-        }
-
-        handleModelDir(MODELS);
-        for (File file : MODELS.listFiles())
-        {
-            if (file.isDirectory()) handleModelDir(file);
         }
     }
 
@@ -127,38 +115,6 @@ public class FileManager
         }
     }
 
-    private void handleModelDir(File dir)
-    {
-        if (dir.isDirectory())
-        {
-            for (File file : Objects.requireNonNull(dir.listFiles()))
-            {
-                if (!file.isDirectory())
-                {
-                    try
-                    {
-                        if (!models.containsKey(file.getName())
-                                && !(file.getName().endsWith("gif")
-                                    || file.getName().endsWith("png")
-                                    || file.getName().endsWith("jpg")
-                                    || file.getName().endsWith("jpg")))
-                        {
-                            IModel model = ModelUtil.loadModel(file.getAbsolutePath(), file.getParent(), true);
-                            model.setName(file.getName());
-                            modelList.add(model);
-                            models.put(file.getName(), model);
-                        }
-                    }
-                    catch (IOException e)
-                    {
-                        Earthhack.getLogger().error("Failed to load model: " + file.getName() + "!");
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
-
     private void handleShaderDir(File dir)
     {
         if (dir.isDirectory()) {
@@ -192,11 +148,6 @@ public class FileManager
         return textures.get(image);
     }
 
-    public IModel getModel(String model)
-    {
-        return models.get(model);
-    }
-
     public List<GifImage> getGifs()
     {
         return gifList;
@@ -207,55 +158,9 @@ public class FileManager
         return imageList;
     }
 
-    public List<IModel> getModels()
-    {
-        return modelList;
-    }
-
     public List<SettingShader> getShaders()
     {
         return shaderList;
-    }
-
-    public IModel getInitialModel()
-    {
-        if (!modelList.isEmpty())
-        {
-            return modelList.get(0);
-        }
-        else
-        {
-            return new IModel()
-            {
-                @Override
-                public void setupMesh(Mesh mesh) {
-
-                }
-
-                @Override
-                public Mesh[] genMeshes(AiScene scene) {
-                    return new Mesh[0];
-                }
-
-                @Override
-                public void render(double x, double y, double z, double partialTicks) {
-
-                }
-
-                @Override
-                public Mesh[] getMeshes() {
-                    return new Mesh[0];
-                }
-
-                @Override
-                public String getName() {
-                    return "None!";
-                }
-
-                @Override
-                public void setName(String name) {}
-            };
-        }
     }
 
     public NameableImage getInitialImage()

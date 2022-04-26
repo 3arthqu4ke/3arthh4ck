@@ -1,14 +1,10 @@
 package me.earth.earthhack.impl.util.render.entity;
 
-import net.minecraft.client.model.PositionTextureVertex;
+import me.earth.earthhack.impl.util.math.Vector3f;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.math.Vec3d;
-import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.FloatBuffer;

@@ -9,9 +9,6 @@ import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
 import me.earth.earthhack.impl.util.minecraft.EntityType;
 import me.earth.earthhack.impl.util.render.GlShader;
 import me.earth.earthhack.impl.util.render.RenderUtil;
-import me.earth.earthhack.impl.util.render.image.GifConverter;
-import me.earth.earthhack.impl.util.render.image.GifImage;
-import me.earth.earthhack.impl.util.render.image.ImageUtil;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.shader.Framebuffer;
@@ -20,22 +17,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.EXTPackedDepthStencil;
-import org.newdawn.slick.Animation;
-import scala.Dynamic;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.NoSuchAlgorithmException;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class Chams extends Module
 {
