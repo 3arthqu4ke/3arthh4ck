@@ -11,18 +11,13 @@ import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.impl.core.ducks.network.INetworkManager;
 import me.earth.earthhack.impl.event.events.network.DisconnectEvent;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
-import me.earth.earthhack.impl.managers.thread.scheduler.Scheduler;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.misc.logger.Logger;
 import me.earth.earthhack.impl.modules.misc.logger.util.LoggerMode;
 import me.earth.earthhack.impl.modules.misc.packetdelay.PacketDelay;
 import me.earth.earthhack.impl.util.mcp.MappingProvider;
-import me.earth.earthhack.impl.util.network.NetworkUtil;
-import net.minecraft.network.EnumConnectionState;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.ThreadQuickExitException;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.*;
 import net.minecraft.util.text.ITextComponent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -161,7 +156,7 @@ public abstract class MixinNetworkManager implements INetworkManager
      * target = {@link Packet#processPacket(INetHandler)}
      */
     @Inject(
-        method = "channelRead0",
+        method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/network/Packet;processPacket" +
@@ -202,7 +197,9 @@ public abstract class MixinNetworkManager implements INetworkManager
 
             for (Runnable runnable : event.getPostEvents())
             {
-                Scheduler.getInstance().scheduleAsynchronously(runnable);
+                // TODO: check that this fix didn't break anything
+                // Scheduler.getInstance().scheduleAsynchronously(runnable);
+                Minecraft.getMinecraft().addScheduledTask(runnable);
             }
 
             info.cancel();

@@ -5,12 +5,18 @@ import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.ColorSetting;
+import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.thread.holes.HoleObserver;
+import me.earth.earthhack.impl.modules.render.holeesp.invalidation.Hole;
+import me.earth.earthhack.impl.modules.render.holeesp.invalidation.InvalidationConfig;
+import me.earth.earthhack.impl.modules.render.holeesp.invalidation.InvalidationHoleManager;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
+import me.earth.earthhack.impl.util.render.mutables.BBRender;
+import me.earth.earthhack.impl.util.render.mutables.MutableBB;
 import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
@@ -18,17 +24,20 @@ import java.util.List;
 
 //TODO: colors etc. gradient
 //TODO: Make HoleManager put 2x1s and 2x2s together so we can draw 1 bb
-public class HoleESP extends Module implements HoleObserver
+public class HoleESP extends Module implements HoleObserver, InvalidationConfig
 {
-    protected final Setting<Float> range      =
+    protected final Setting<CalcMode> mode =
+            register(new EnumSetting<>("Mode", CalcMode.Polling));
+
+    protected final Setting<Float> range =
             register(new NumberSetting<>("Range", 6.0f, 0.0f, 100.0f));
-    protected final Setting<Integer> holes    =
+    protected final Setting<Integer> holes =
             register(new NumberSetting<>("Holes", 10, 0, 1000));
     protected final Setting<Integer> safeHole =
             register(new NumberSetting<>("S-Holes", 10, 0, 1000));
-    protected final Setting<Integer> wide     =
+    protected final Setting<Integer> wide =
             register(new NumberSetting<>("2x1-Holes", 1, 0, 1000));
-    protected final Setting<Integer> big      =
+    protected final Setting<Integer> big =
             register(new NumberSetting<>("2x2-Holes", 1, 0, 1000));
     protected final Setting<Boolean> fov      =
             register(new BooleanSetting("Fov", true));
@@ -61,12 +70,26 @@ public class HoleESP extends Module implements HoleObserver
     protected final Setting<Color> bigColor =
             register(new ColorSetting("2x2-Color", new Color(0, 80, 255)));
 
-    private final BlockPos.MutableBlockPos mPos = new BlockPos.MutableBlockPos();
+    protected final Setting<Boolean> async =
+            register(new BooleanSetting("Async", true));
+    protected final Setting<Integer> chunk_height =
+            register(new NumberSetting<>("Height", 256, 0, 256));
+    protected final Setting<Boolean> limit =
+            register(new BooleanSetting("Limit", true));
+    protected final Setting<Integer> sort_time =
+            register(new NumberSetting<>("SortTime", 100, 0, 10_000));
+    protected final Setting<Integer> remove_time =
+            register(new NumberSetting<>("RemoveTime", 5000, 0, 60_000));
+
+    protected final BlockPos.MutableBlockPos mPos = new BlockPos.MutableBlockPos();
+    protected final InvalidationHoleManager invalidationHoleManager = new InvalidationHoleManager(this);
+    protected final MutableBB bb = new MutableBB();
 
     public HoleESP()
     {
         super("HoleESP", Category.Render);
         this.listeners.add(new ListenerRender(this));
+        this.listeners.addAll(invalidationHoleManager.getListeners());
         this.setData(new HoleESPData(this));
     }
 
@@ -89,90 +112,84 @@ public class HoleESP extends Module implements HoleObserver
     public void onDisable()
     {
         Managers.HOLES.unregister(this);
+        invalidationHoleManager.get1x1().clear();
+        invalidationHoleManager.getHoles().clear();
+        invalidationHoleManager.get1x1Unsafe().clear();
+        invalidationHoleManager.get2x1().clear();
+        invalidationHoleManager.get2x2().clear();
     }
 
-    protected void onRender3D()
+    public void renderListNew(List<Hole> holes,
+                              Color color,
+                              float height,
+                              int max)
     {
-        renderList(Managers.HOLES.getUnsafe(),
-                   unsafeColor.getValue(),
-                   unsafeHeight.getValue(),
-                   holes.getValue());
-
-        renderList(Managers.HOLES.getSafe(),
-                   safeColor.getValue(),
-                   height.getValue(),
-                   safeHole.getValue());
-
-        renderList(Managers.HOLES.getLongHoles(),
-                   wideColor.getValue(),
-                   wideHeight.getValue(),
-                   wide.getValue());
-
         BlockPos playerPos = new BlockPos(mc.player);
-        if (big.getValue() != 0 && !Managers.HOLES.getBigHoles().isEmpty())
+        if (max != 0 && !holes.isEmpty())
         {
             int i = 1;
-            for (BlockPos pos : Managers.HOLES.getBigHoles())
+            for (Hole hole : holes)
             {
-                if (i > big.getValue())
+                if (i > max)
                 {
                     return;
                 }
 
-                if (checkPos(pos, playerPos))
+                if (checkPos(hole, playerPos))
                 {
-                    Color bC = bigColor.getValue();
-                    float bH = bigHeight.getValue();
-
+                    bb.setBB(
+                            hole.getX() - mc.getRenderManager().viewerPosX,
+                            hole.getY() - mc.getRenderManager().viewerPosY,
+                            hole.getZ() - mc.getRenderManager().viewerPosZ,
+                            hole.getMaxX() - mc.getRenderManager().viewerPosX,
+                            hole.getY() + height - mc.getRenderManager().viewerPosY,
+                            hole.getMaxZ() - mc.getRenderManager().viewerPosZ);
                     if (fade.getValue())
                     {
-                        double distance = mc.player.getDistanceSq(
-                                pos.getX() + 1, pos.getY(), pos.getZ() + 1);
                         double alpha = (MathUtil.square(fadeRange.getValue())
                                 + MathUtil.square(minFade.getValue())
-                                - distance)
+                                - mc.player.getDistanceSq(hole.getX(), hole.getY(),
+                                hole.getZ()))
                                 / MathUtil.square(fadeRange.getValue());
 
                         if (alpha > 0 && alpha < 1)
                         {
-                            int alphaInt = MathUtil.clamp((int) (alpha * 255), 0, 255);
-                            Color bC1 = new Color(bC.getRed(),
-                                                     bC.getGreen(),
-                                                     bC.getBlue(),
-                                                     alphaInt);
-
-                            int boxInt = (int) (alphaInt * alphaFactor.getValue());
-                            RenderUtil.renderBox(pos, bC1, bH, boxInt);
-                            mPos.setPos(pos.getX(), pos.getY(), pos.getZ() + 1);
-                            RenderUtil.renderBox(mPos, bC1, bH, boxInt);
-                            mPos.setPos(pos.getX() + 1, pos.getY(), pos.getZ());
-                            RenderUtil.renderBox(mPos, bC1, bH, boxInt);
-                            mPos.setPos(pos.getX() + 1, pos.getY(), pos.getZ() + 1);
-                            RenderUtil.renderBox(mPos, bC1, bH, boxInt);
+                            int alphaInt =
+                                    MathUtil.clamp((int) (alpha * 255), 0, 255);
+                            // TODO: mutable color or something?
+                            BBRender.renderBox(bb,
+                                    new Color(color.getRed(),
+                                            color.getGreen(),
+                                            color.getBlue(),
+                                            (int) (alphaInt * alphaFactor.getValue())),
+                                    new Color(color.getRed(),
+                                            color.getGreen(),
+                                            color.getBlue(),
+                                            alphaInt),
+                                    1.5f);
                         }
-                        else if (alpha < 0)
+                        else if (alpha >= 1)
                         {
+                            BBRender.renderBox(bb,
+                                    color,
+                                    1.5f);
                             continue;
                         }
+
+                        continue;
                     }
 
-                    RenderUtil.renderBox(pos, bC, bH);
-                    mPos.setPos(pos.getX(), pos.getY(), pos.getZ() + 1);
-                    RenderUtil.renderBox(mPos, bC, bH);
-                    mPos.setPos(pos.getX() + 1, pos.getY(), pos.getZ());
-                    RenderUtil.renderBox(mPos, bC, bH);
-                    mPos.setPos(pos.getX() + 1, pos.getY(), pos.getZ() + 1);
-                    RenderUtil.renderBox(mPos, bC, bH);
+                    BBRender.renderBox(bb, color, 1.5f);
                     i++;
                 }
             }
         }
     }
 
-    private void renderList(List<BlockPos> positions,
-                            Color color,
-                            float height,
-                            int max)
+    public void renderListOld(List<BlockPos> positions,
+                               Color color,
+                               float height,
+                               int max)
     {
         BlockPos playerPos = new BlockPos(mc.player);
         if (max != 0 && !positions.isEmpty())
@@ -221,10 +238,60 @@ public class HoleESP extends Module implements HoleObserver
         }
     }
 
-    private boolean checkPos(BlockPos pos, BlockPos playerPos)
+    protected boolean checkPos(BlockPos pos, BlockPos playerPos)
     {
         return (!fov.getValue() || RotationUtil.inFov(pos))
                 && (own.getValue() || !pos.equals(playerPos));
+    }
+
+    protected boolean checkPos(Hole hole, BlockPos playerPos)
+    {
+        // TODO: improve FOV to use mutable vec3ds
+        // TODO: improve FOV in general
+        return hole.isValid() && (!fov.getValue() || RotationUtil.inFov(hole.getX(), hole.getY(), hole.getZ()))
+                && (own.getValue() || playerPos.getX() != hole.getX() || playerPos.getY() != hole.getY() || playerPos.getZ() != hole.getZ());
+    }
+
+    @Override
+    public boolean isThisHoleObserverActive()
+    {
+        return !isUsingInvalidationHoleManager();
+    }
+
+    @Override
+    public boolean isUsingInvalidationHoleManager()
+    {
+        return mode.getValue() == CalcMode.Invalidation;
+    }
+
+    @Override
+    public boolean shouldCalcChunksAsnyc()
+    {
+        return async.getValue();
+    }
+
+    @Override
+    public boolean limitChunkThreads()
+    {
+        return limit.getValue();
+    }
+
+    @Override
+    public int getHeight()
+    {
+        return chunk_height.getValue();
+    }
+
+    @Override
+    public int getSortTime()
+    {
+        return sort_time.getValue();
+    }
+
+    @Override
+    public int getRemoveTime()
+    {
+        return remove_time.getValue();
     }
 
     @Override
@@ -255,6 +322,12 @@ public class HoleESP extends Module implements HoleObserver
     public int get2x2Holes()
     {
         return big.getValue();
+    }
+
+    public enum CalcMode
+    {
+        Polling,
+        Invalidation
     }
 
 }

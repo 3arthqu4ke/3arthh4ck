@@ -1,5 +1,6 @@
 package me.earth.earthhack.impl.util.minecraft.blocks;
 
+import com.google.common.collect.Sets;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -8,7 +9,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,13 +31,18 @@ public class HoleUtil implements Globals
     };
 
     /** Blocks that are blast resistant. Not all of them ofc. */
-    private static final Block[] NO_BLAST = new Block[]
-    {
+    public static final Set<Block> NO_BLAST = Sets.newHashSet(
         Blocks.BEDROCK,
         Blocks.OBSIDIAN,
         Blocks.ANVIL,
         Blocks.ENDER_CHEST
-    };
+    );
+
+    public static final Set<Block> UNSAFE = Sets.newHashSet(
+        Blocks.OBSIDIAN,
+        Blocks.ANVIL,
+        Blocks.ENDER_CHEST
+    );
 
     /**
      * Returns a boolean array of length 2,
@@ -75,8 +80,7 @@ public class HoleUtil implements Globals
                 IBlockState state = mc.world.getBlockState(offset);
                 if (state.getBlock() != Blocks.BEDROCK)
                 {
-                    if (Arrays.stream(NO_BLAST)
-                            .noneMatch(b -> b == state.getBlock()))
+                    if (!NO_BLAST.contains(state.getBlock()))
                     {
                         return result;
                     }
@@ -133,9 +137,7 @@ public class HoleUtil implements Globals
                                 IBlockState state = mc.world.getBlockState(
                                         offset.offset(offsetFacing));
 
-                                if (Arrays.stream(NO_BLAST)
-                                        .noneMatch(b ->
-                                                b == state.getBlock()))
+                                if (!NO_BLAST.contains(state.getBlock()))
                                 {
                                     return false;
                                 }
@@ -198,9 +200,7 @@ public class HoleUtil implements Globals
                     if (!positions.contains(offset))
                     {
                         IBlockState state = mc.world.getBlockState(offset);
-                        if (Arrays.stream(NO_BLAST)
-                                .noneMatch(b ->
-                                        b == state.getBlock()))
+                        if (!NO_BLAST.contains(state.getBlock()))
                         {
                             return false;
                         }

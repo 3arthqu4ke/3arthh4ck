@@ -202,8 +202,6 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new BowKiller());
         this.forceRegister(new Criticals());
         this.forceRegister(new CrystalBomber());
-        //this.forceRegister(new BowKiller());
-        //this.forceRegister(new HoleFiller());
         this.forceRegister(new HoleFiller());
         this.forceRegister(new KillAura());
         this.forceRegister(new LegSwitch());

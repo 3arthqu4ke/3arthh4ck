@@ -165,7 +165,11 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
                     glPushMatrix();
                     glPushAttrib(GL_ALL_ATTRIB_BITS);
                     glDisable(GL_ALPHA_TEST);
-                    glDisable(GL_TEXTURE_2D);
+                    if (!module.texture.getValue())
+                    {
+                        glDisable(GL_TEXTURE_2D);
+                    }
+
                     glDisable(GL_LIGHTING);
                     glEnable(GL_BLEND);
                     glLineWidth(1.5f);
@@ -178,7 +182,11 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
                     render(event);
                     glDepthMask(true);
                     glEnable(GL_DEPTH_TEST);
-                    glEnable(GL_TEXTURE_2D);
+                    if (!module.texture.getValue())
+                    {
+                        glEnable(GL_TEXTURE_2D);
+                    }
+
                     glEnable(GL_LIGHTING);
                     glDisable(GL_BLEND);
                     glEnable(GL_ALPHA_TEST);

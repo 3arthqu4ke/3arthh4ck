@@ -21,7 +21,7 @@ public class HoleFiller extends ObbyListenerModule<ListenerObby>
     protected final Setting<Double> range =
         register(new NumberSetting<>("Range", 5.25, 0.0, 6.0));
     protected final Setting<Integer> disable =
-        register(new NumberSetting<>("Disable", 250, 0, 1000));
+        register(new NumberSetting<>("Disable", 250, 0, 10_000));
     protected final Setting<Boolean> longHoles =
         register(new BooleanSetting("2x1s", false));
     protected final Setting<Boolean> bigHoles =
