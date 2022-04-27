@@ -180,7 +180,6 @@ public class HoleManager extends SubscriberImpl implements Globals, IHoleManager
 
             if (safes != 0 || unsafes != 0 || longs != 0 || bigs != 0)
             {
-                ChatUtil.sendMessage("Using HoleManager!");
                 finished.set(false);
                 calc(maxRange, safes, unsafes, longs, bigs);
             }

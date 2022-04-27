@@ -125,6 +125,7 @@ public class HoleESP extends Module implements HoleObserver, InvalidationConfig
                               int max)
     {
         BlockPos playerPos = new BlockPos(mc.player);
+        float rangeSq = MathUtil.square(range.getValue());
         if (max != 0 && !holes.isEmpty())
         {
             int i = 1;
@@ -135,7 +136,8 @@ public class HoleESP extends Module implements HoleObserver, InvalidationConfig
                     return;
                 }
 
-                if (checkPos(hole, playerPos))
+                if (mc.player.getDistanceSq(hole.getX(), hole.getY(), hole.getZ()) < rangeSq
+                        && checkPos(hole, playerPos))
                 {
                     bb.setBB(
                             hole.getX() - mc.getRenderManager().viewerPosX,
