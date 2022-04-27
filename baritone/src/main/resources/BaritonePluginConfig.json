@@ -1,0 +1,5 @@
+{
+  "name": "BaritonePlugin",
+  "mainClass": "me.earth.baritoneplugin.BaritonePlugin",
+  "mixinConfig": "mixins.baritone.json"
+}

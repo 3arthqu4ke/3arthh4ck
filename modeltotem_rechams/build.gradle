@@ -1,0 +1,109 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            name = 'forge'
+            url = 'https://files.minecraftforge.net/maven'
+        }
+        maven {
+            name = "jitpack.io"
+            url = "https://jitpack.io"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+version = '1.0.0'
+group = 'me.earth'
+archivesBaseName = 'modeltotem'
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = '1.12.2-14.23.5.2768'
+    runDir = 'run'
+    mappings = 'stable_39'
+    makeObfSourceJar = false
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name = "jitpack.io"
+        url  = "https://jitpack.io"
+    }
+
+    jcenter()
+}
+
+dependencies {
+    compileOnly('com.github.3arthqu4ke:3arthh4ck:996e3b76') {
+        exclude module: 'mixin'
+    }
+
+    compile group: 'org.slick2d', name: 'slick2d-core', version: '1.0.2'
+    compile group: 'org.joml', name: 'joml', version: '1.10.2'
+    compile group: 'us.ihmc', name: 'jassimp', version: '4.0.0-ihmc6'
+    compile group: 'us.ihmc', name: 'ihmc-native-library-loader', version: '1.3.1'
+    compile group: 'com.github.stephengold', name: 'Libbulletjme', version: '12.5.0'
+    compile group: 'de.fabmax', name: 'physx-jni', version: '0.4.15'
+    compile group: 'de.fabmax', name: 'physx-jni', version: '0.4.15:native-win64'
+
+    compile group: 'net.java.dev.jna', name: 'jna', version: '5.8.0'
+    compile group: 'net.java.dev.jna', name: 'jna-platform', version: '5.8.0'
+
+    compile group: 'com.badlogicgames.gdx', name: 'gdx', version: '1.10.0'
+    compile group: 'com.badlogicgames.gdx', name: 'gdx-bullet', version: '1.10.0'
+    compile group: 'com.badlogicgames.gdx', name: 'gdx-backend-lwjgl', version: '1.10.0'
+    compile "com.badlogicgames.gdx:gdx-platform:1.10.0:natives-desktop"
+    compile "com.badlogicgames.gdx:gdx-bullet-platform:1.10.0:natives-desktop"
+}
+
+
+shadowJar {
+    configurations = [project.configurations.compile]
+    dependencies {
+        //noinspection GroovyAssignabilityCheck
+        include(dependency('org.slick2d:slick2d-core'))
+        include(dependency('org.joml:joml'))
+        include(dependency('us.ihmc:jassimp'))
+        include(dependency('us.ihmc:ihmc-native-library-loader'))
+        include(dependency('org.apache.commons:commons-lang3'))
+
+        /* megyn: Below this line is stuff necessary for unfinished stuff on my local branch. */
+        include(dependency('com.github.stephengold:Libbulletjme'))
+        include(dependency('de.fabmax:physx-jni'))
+        include(dependency('com.badlogicgames.gdx:gdx-backend-lwjgl'))
+        include(dependency('com.badlogicgames.gdx:gdx'))
+        include(dependency('com.badlogicgames.gdx:gdx-bullet'))
+        include(dependency('com.badlogicgames.gdx:gdx-platform'))
+        include(dependency('com.badlogicgames.gdx:gdx-bullet-platform'))
+
+        include(dependency('net.java.dev.jna:jna'))
+        include(dependency('net.java.dev.jna:jna-platform'))
+    }
+    exclude 'dummyThing'
+    exclude 'LICENSE.txt'
+    classifier = 'release'
+}
+
+jar {
+    manifest {
+        attributes(
+            '3arthh4ckConfig': 'ModelTotemPluginConfig.json'
+        )
+    }
+}
+
+build.dependsOn(shadowJar)

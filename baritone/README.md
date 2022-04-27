@@ -1,0 +1,2 @@
+Note that this plugin won't work when running the game from an IDE because baritone uses vanilla mappings.
+The old plugin [here](https://github.com/colorblindness/3arthh4ck/tree/main/misc) can do that, but I don't have the src.

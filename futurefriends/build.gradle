@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'forge'
+            url = 'http://files.minecraftforge.net/maven'
+        }
+        maven {
+            name = "jitpack.io"
+            url = "https://jitpack.io"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = '1.0.0'
+group = 'me.earth.futurefriends'
+archivesBaseName = 'futurefriends'
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = '1.12.2-14.23.5.2768'
+    runDir = 'run'
+    mappings = 'stable_39'
+    makeObfSourceJar = false
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name = "jitpack.io"
+        url = "https://jitpack.io"
+    }
+
+    jcenter()
+}
+
+dependencies {
+    compileOnly('com.github.3arthqu4ke:3arthh4ck:996e3b76') {
+        exclude module: 'mixin'
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+            '3arthh4ckConfig': 'FutureFriendsPluginConfig.json'
+        )
+    }
+}

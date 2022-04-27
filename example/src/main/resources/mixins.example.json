@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "me.earth.exampleplugin.mixin",
+  "refmap": "mixins.exampleplugin.refmap.json",
+  "mixins": [
+    "MixinExample"
+  ]
+}

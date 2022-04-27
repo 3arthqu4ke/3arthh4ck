@@ -1,0 +1,5 @@
+{
+  "name": "ExamplePlugin",
+  "mainClass": "me.earth.exampleplugin.PluginExample",
+  "mixinConfig": null
+}

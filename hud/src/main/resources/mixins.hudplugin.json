@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "me.earth.hudplugin.mixin",
+  "refmap": "mixins.hudplugin.refmap.json",
+  "mixins": [
+    "IMinecraft",
+    "IRenderGlobal",
+    "MixinEntityPlayerSP"
+  ]
+}

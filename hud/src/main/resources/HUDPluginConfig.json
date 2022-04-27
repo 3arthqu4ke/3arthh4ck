@@ -1,0 +1,5 @@
+{
+  "name": "HUDPlugin",
+  "mainClass": "me.earth.hudplugin.HUDPlugin",
+  "mixinConfig": "mixins.hudplugin.json"
+}

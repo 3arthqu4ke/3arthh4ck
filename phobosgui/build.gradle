@@ -1,0 +1,42 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "1.0"
+group = "me.earth" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "phobos-gui-plugin"
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "1.12.2-14.23.5.2768"
+    runDir = "run"
+    //mappings = "snapshot_20171003"
+    mappings = "stable_39"
+}
+
+repositories {
+    maven {
+        name = "jitpack.io"
+        url = "https://jitpack.io"
+    }
+}
+
+dependencies {
+    compileOnly('com.github.3arthqu4ke:3arthh4ck:996e3b76') {
+        exclude module: 'mixin'
+    }
+}
+
+processResources {
+}

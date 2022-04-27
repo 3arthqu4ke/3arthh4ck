@@ -1,0 +1,5 @@
+{
+  "name": "FutureFriends",
+  "mainClass": "me.earth.futurefriends.FutureFriendsPlugin",
+  "mixinConfig": null
+}

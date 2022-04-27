@@ -1,0 +1,5 @@
+{
+  "name": "ModelTotem",
+  "mainClass": "me.earth.modeltotem.ModelTotemPlugin",
+  "mixinConfig": null
+}

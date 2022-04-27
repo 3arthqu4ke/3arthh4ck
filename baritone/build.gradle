@@ -1,0 +1,103 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            name = 'forge'
+            url = 'https://files.minecraftforge.net/maven'
+        }
+        maven {
+            name = 'SpongePowered'
+            url = 'https://repo.spongepowered.org/maven'
+        }
+        maven {
+            name = "jitpack.io"
+            url = "https://jitpack.io"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+apply plugin: 'org.spongepowered.mixin'
+
+version = '1.0.0'
+group = 'me.earth'
+archivesBaseName = 'baritoneplugin'
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = '1.12.2'
+    runDir = 'run'
+    makeObfSourceJar = false
+    mappings = 'stable_39'
+    tweakClass = 'baritone.launch.BaritoneTweaker'
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name = 'spongepowered-repo'
+        url = 'https://repo.spongepowered.org/maven/'
+    }
+
+    maven {
+        name = "jitpack.io"
+        url  = "https://jitpack.io"
+    }
+
+    jcenter()
+}
+
+configurations {
+    jarLibs
+}
+
+dependencies {
+    compileOnly('com.github.3arthqu4ke:3arthh4ck:996e3b76') {
+        exclude module: 'mixin'
+    }
+
+    compileOnly('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+    }
+
+    jarLibs('com.github.cabaletta:baritone:v1.2.15') {
+        exclude module: 'mixin'
+        exclude module: 'launchwrapper'
+    }
+
+    compile configurations.jarLibs
+}
+
+jar {
+    manifest {
+        attributes(
+            'MixinConfigs': 'mixins.baritone.json',
+            '3arthh4ckConfig': 'BaritonePluginConfig.json'
+        )
+    }
+
+    from {
+        duplicatesStrategy = 'EXCLUDE'
+        configurations.jarLibs.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+
+    exclude "**/rr.class"
+    exclude '**/org/'
+    exclude '**/services/org.**'
+    exclude '**/services/javax.**'
+}
