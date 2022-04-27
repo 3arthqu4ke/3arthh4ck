@@ -271,10 +271,10 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
         if (CHAT.isEnabled() && TIME_STAMPS.getValue() && currentLine != null)
         {
             String t = ((IChatLine) currentLine).getTimeStamp() + s;
-            return renderer.drawStringWithShadow(t, (float) (x + ((animation != null && CHAT.get().animated.getValue()) ? animation.getCurrent() : 0)), y, color);
+            return renderer.drawStringWithShadow(t, (float) (x + ((animation != null && CHAT.isEnabled() && CHAT.get().animated.getValue()) ? animation.getCurrent() : 0)), y, color);
         }
 
-        return renderer.drawStringWithShadow(s, (float) (x + ((animation != null && CHAT.get().animated.getValue()) ? animation.getCurrent() : 0)), y, color);
+        return renderer.drawStringWithShadow(s, (float) (x + ((animation != null && CHAT.isEnabled() && CHAT.get().animated.getValue()) ? animation.getCurrent() : 0)), y, color);
     }
 
     @Inject(method = "getChatOpen", at = @At("HEAD"), cancellable = true)

@@ -148,14 +148,12 @@ import me.earth.earthhack.impl.modules.render.holeesp.HoleESP;
 import me.earth.earthhack.impl.modules.render.itemchams.ItemChams;
 import me.earth.earthhack.impl.modules.render.lagometer.LagOMeter;
 import me.earth.earthhack.impl.modules.render.logoutspots.LogoutSpots;
-import me.earth.earthhack.impl.modules.render.modeltotem.ModelTotem;
 import me.earth.earthhack.impl.modules.render.nametags.Nametags;
 import me.earth.earthhack.impl.modules.render.newchunks.NewChunks;
 import me.earth.earthhack.impl.modules.render.norender.NoRender;
 import me.earth.earthhack.impl.modules.render.penis.Penis;
 import me.earth.earthhack.impl.modules.render.popchams.PopChams;
 import me.earth.earthhack.impl.modules.render.rainbowenchant.RainbowEnchant;
-import me.earth.earthhack.impl.modules.render.rechams.ReChams;
 import me.earth.earthhack.impl.modules.render.search.Search;
 import me.earth.earthhack.impl.modules.render.skeleton.Skeleton;
 import me.earth.earthhack.impl.modules.render.sounds.Sounds;
@@ -339,8 +337,6 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new PopChams());
         this.forceRegister(new ItemChams());
         this.forceRegister(new Ambience());
-        this.forceRegister(new ReChams());
-        this.forceRegister(new ModelTotem());
 
         this.forceRegister(new PingBypass());
 
