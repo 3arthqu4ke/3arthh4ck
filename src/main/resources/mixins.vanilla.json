@@ -7,13 +7,14 @@
   "mixinPriority": 2147483645,
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinActiveRenderInfo",
     "MixinGuiScreen",
     "MixinItemBlock",
     "MixinItemStack",
     "MixinPlayerControllerMP",
     "MixinRenderChunk",
     "MixinRenderGlobal",
-    "MixinActiveRenderInfo"
+    "MixinWorld"
   ],
   "injectors": {
     "maxShiftBy": 10

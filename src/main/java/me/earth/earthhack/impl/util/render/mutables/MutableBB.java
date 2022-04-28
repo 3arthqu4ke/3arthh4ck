@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.util.render.mutables;
 
 import com.google.common.annotations.VisibleForTesting;
+import me.earth.earthhack.installer.srg2notch.RemapFieldName;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -11,21 +12,41 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class MutableBB extends AxisAlignedBB implements BB {
-    /** The minimum X coordinate of this bounding box. Guaranteed to always be less than or equal to {@link #maxX}. */
+public class MutableBB extends AxisAlignedBB implements BB
+{
+    /**
+     * The minimum X coordinate of this bounding box. Guaranteed to always be less than or equal to {@link #maxX}.
+     */
+    @RemapFieldName
     public double minX;
-    /** The minimum Y coordinate of this bounding box. Guaranteed to always be less than or equal to {@link #maxY}. */
+    /**
+     * The minimum Y coordinate of this bounding box. Guaranteed to always be less than or equal to {@link #maxY}.
+     */
+    @RemapFieldName
     public double minY;
-    /** The minimum Y coordinate of this bounding box. Guaranteed to always be less than or equal to {@link #maxZ}. */
+    /**
+     * The minimum Y coordinate of this bounding box. Guaranteed to always be less than or equal to {@link #maxZ}.
+     */
+    @RemapFieldName
     public double minZ;
-    /** The maximum X coordinate of this bounding box. Guaranteed to always be greater than or equal to {@link #minX}. */
+    /**
+     * The maximum X coordinate of this bounding box. Guaranteed to always be greater than or equal to {@link #minX}.
+     */
+    @RemapFieldName
     public double maxX;
-    /** The maximum Y coordinate of this bounding box. Guaranteed to always be greater than or equal to {@link #minY}. */
+    /**
+     * The maximum Y coordinate of this bounding box. Guaranteed to always be greater than or equal to {@link #minY}.
+     */
+    @RemapFieldName
     public double maxY;
-    /** The maximum Z coordinate of this bounding box. Guaranteed to always be greater than or equal to {@link #minZ}. */
+    /**
+     * The maximum Z coordinate of this bounding box. Guaranteed to always be greater than or equal to {@link #minZ}.
+     */
+    @RemapFieldName
     public double maxZ;
 
-    public MutableBB() {
+    public MutableBB()
+    {
         this(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     }
 

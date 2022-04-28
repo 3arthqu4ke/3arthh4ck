@@ -6,7 +6,6 @@ import me.earth.earthhack.api.command.PossibleInputs;
 import me.earth.earthhack.impl.commands.packet.AbstractArgument;
 import me.earth.earthhack.impl.commands.packet.exception.ArgParseException;
 import me.earth.earthhack.impl.util.helpers.command.CustomCompleterResult;
-import scala.collection.parallel.immutable.HashMapCombiner;
 
 import java.util.UUID;
 

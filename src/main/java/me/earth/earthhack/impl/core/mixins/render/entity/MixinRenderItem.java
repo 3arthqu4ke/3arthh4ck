@@ -75,6 +75,7 @@ public abstract class MixinRenderItem implements IRenderItem
         Bus.EVENT_BUS.post(pre);
         if (!pre.isCancelled())
         {
+            // TODO: event doesnt seem to be in use rn, but this is incompatible with vanilla
             itemStackIn.getItem().getTileEntityItemStackRenderer().renderByItem(itemStackIn);
         }
         RenderHeldItemEvent.BuiltInRenderer.Post post = new RenderHeldItemEvent.BuiltInRenderer.Post(itemStackIn, tileEntityItemStackRenderer);

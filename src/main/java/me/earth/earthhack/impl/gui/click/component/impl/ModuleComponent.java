@@ -1,6 +1,5 @@
 package me.earth.earthhack.impl.gui.click.component.impl;
 
-import io.netty.util.internal.StringUtil;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.data.ModuleData;
@@ -13,12 +12,9 @@ import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
-import org.codehaus.plexus.util.StringUtils;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class ModuleComponent extends Component {
     private static final SettingCache<Boolean, BooleanSetting, ClickGui> WHITE =

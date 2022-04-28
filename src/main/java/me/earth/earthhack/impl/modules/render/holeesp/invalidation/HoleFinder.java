@@ -169,7 +169,12 @@ class HoleFinder implements Runnable, Globals
             holeManager.get1x1().addAll(_1x1_safe);
             holeManager.get2x1().addAll(_2x1);
             holeManager.get2x2().addAll(_2x2);
-            holeManager.getHoles().putAll(map);
+            map.forEach((pos, hole) -> {
+                Hole before = holeManager.getHoles().put(pos, hole);
+                if (before != null && before.isAirPart(pos)) {
+                    before.invalidate();
+                }
+            });
         });
 
         Earthhack.getLogger().debug(String.format(
@@ -369,7 +374,7 @@ class HoleFinder implements Runnable, Globals
                         this._2x2.add(hole);
                         for (Vec3i offset : OFFSETS_2x2)
                         {
-                            map.put(pos.add(offset), hole);
+                            putHole(pos.add(offset), hole);
                         }
                     }
 
@@ -390,7 +395,7 @@ class HoleFinder implements Runnable, Globals
                 this._2x1.add(hole);
                 for (Vec3i offset : OFFSETS_2x1_z)
                 {
-                    map.put(pos.add(offset), hole);
+                    putHole(pos.add(offset), hole);
                 }
 
                 return;
@@ -417,7 +422,7 @@ class HoleFinder implements Runnable, Globals
                 this._2x1.add(hole);
                 for (Vec3i offset : OFFSETS_2x1_x)
                 {
-                    map.put(pos.add(offset), hole);
+                    putHole(pos.add(offset), hole);
                 }
             }
 
@@ -431,7 +436,7 @@ class HoleFinder implements Runnable, Globals
         (safe ? _1x1_safe : _1x1_unsafe).add(hole);
         for (Vec3i offset : OFFSETS_1x1)
         {
-            map.put(pos.add(offset), hole);
+            putHole(pos.add(offset), hole);
         }
     }
 
@@ -474,6 +479,14 @@ class HoleFinder implements Runnable, Globals
 
         pos.setY(pos.getY() + 1);
         return false;
+    }
+
+
+    private void putHole(BlockPos pos, Hole hole) {
+        Hole before = map.put(pos.toImmutable(), hole);
+        if (before != null && before.isAirPart(pos)) {
+            before.invalidate();
+        }
     }
 
     public IChunk getChunk()

@@ -23,9 +23,16 @@ buildscript {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
-// TODO: double check if there's forge methods we missed with vanilla source
-// apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+// project will not compile when set to true but we can see incompatibilities with vanilla mc.
+boolean TWEAKER = false
+
+// TODO: double check from time to time if there's forge methods we missed with vanilla source
+if (TWEAKER) {
+    apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+} else {
+    apply plugin: 'net.minecraftforge.gradle.forge'
+}
+
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
@@ -45,12 +52,16 @@ compileJava {
 }
 
 minecraft {
-    //noinspection GroovyAssignabilityCheck
-    version = project.forgeVersion
+    if (TWEAKER) {
+        version = '1.12.2'
+        tweakClass = 'me.earth.earthhack.tweaker.EarthhackTweaker'
+    } else {
+        version = project.forgeVersion
+    }
+
     runDir = 'run'
     mappings = project.mcpVersion
     makeObfSourceJar = false
-    // tweakClass = 'me.earth.earthhack.tweaker.EarthhackTweaker'
 }
 
 repositories {
