@@ -17,4 +17,13 @@ public interface HoleManager
 
     List<Hole> get2x2();
 
+    default void reset()
+    {
+        getHoles().clear();
+        get1x1().clear();
+        get1x1Unsafe().clear();
+        get2x1().clear();
+        get2x2().clear();
+    }
+
 }

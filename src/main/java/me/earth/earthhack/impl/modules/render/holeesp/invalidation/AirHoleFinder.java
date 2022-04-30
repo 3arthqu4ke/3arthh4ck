@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Finds holes which could've been created when a block turned into air.
  */
-class AirHoleFinder extends HoleFinder
+public class AirHoleFinder extends HoleFinder
 {
     private IChunk chunk;
     private int minX;

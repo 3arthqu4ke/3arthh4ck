@@ -36,7 +36,7 @@ public interface Hole {
             && z < getMaxZ();
     }
 
-    default double getDistance(double x, double y, double z) {
+    default double getDistanceSq(double x, double y, double z) {
         double xDiff = getX() - x;
         double yDiff = getY() - y;
         double zDiff = getZ() - z;

@@ -9,7 +9,6 @@ import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.movement.blocklag.BlockLag;
-import me.earth.earthhack.impl.modules.movement.holetp.HoleTP;
 import me.earth.earthhack.impl.modules.movement.longjump.LongJump;
 import me.earth.earthhack.impl.modules.movement.packetfly.PacketFly;
 import me.earth.earthhack.impl.modules.movement.speed.Speed;
@@ -18,9 +17,7 @@ import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityEnderPearl;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
-import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
@@ -35,8 +32,6 @@ final class ListenerMotion extends ModuleListener<ReverseStep, MotionUpdateEvent
             Caches.getModule(Speed.class);
     private static final ModuleCache<LongJump> LONGJUMP =
             Caches.getModule(LongJump.class);
-    private static final ModuleCache<HoleTP> HOLETP =
-            Caches.getModule(HoleTP.class);
     private static final SettingCache<SpeedMode, EnumSetting<SpeedMode>, Speed>
             SPEED_MODE = Caches.getSetting(
                     Speed.class, Setting.class, "Mode", SpeedMode.Instant);
@@ -55,7 +50,6 @@ final class ListenerMotion extends ModuleListener<ReverseStep, MotionUpdateEvent
                     || PACKET_FLY.isEnabled()
                     || BLOCK_LAG.isEnabled()
                     || LONGJUMP.isEnabled()
-                    || (HOLETP.get().isInHole() && HOLETP.isEnabled())
                     || SPEED.isEnabled()
                         && SPEED_MODE.getValue() != SpeedMode.Instant) {
                 reset = true;
