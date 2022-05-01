@@ -6,6 +6,7 @@ import me.earth.earthhack.impl.util.client.ModuleUtil;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.PlayerUtil;
+import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -27,9 +28,10 @@ final class ListenerTick extends ModuleListener<Tracker, TickEvent>
                 for (EntityPlayer player : mc.world.playerEntities)
                 {
                     if (player == null
-                        || player.equals(mc.player)
-                        || player.equals(RotationUtil.getRotationPlayer())
-                        || PlayerUtil.isFakePlayer(player))
+                            || player.equals(mc.player)
+                            || player.equals(RotationUtil.getRotationPlayer())
+                            || EntityUtil.isDead(player)
+                            || PlayerUtil.isFakePlayer(player))
                     {
                         continue;
                     }

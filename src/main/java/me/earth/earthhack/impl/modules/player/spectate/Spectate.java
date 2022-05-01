@@ -12,6 +12,7 @@ import me.earth.earthhack.impl.util.client.SimpleData;
 import me.earth.earthhack.impl.util.helpers.command.CustomCommandModule;
 import me.earth.earthhack.impl.util.helpers.command.CustomCompleterResult;
 import me.earth.earthhack.impl.util.helpers.disabling.DisablingModule;
+import me.earth.earthhack.impl.util.minecraft.PlayerUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.impl.util.thread.LookUpUtil;
@@ -176,6 +177,7 @@ public class Spectate extends DisablingModule implements CustomCommandModule
         fakePlayer.inventoryContainer = mc.player.inventoryContainer;
 
         mc.world.addEntityToWorld(-10000, fakePlayer);
+        PlayerUtil.FAKE_PLAYERS.put(-10000, fakePlayer);
         mc.entityRenderer.loadEntityShader(null);
     }
 
@@ -221,6 +223,7 @@ public class Spectate extends DisablingModule implements CustomCommandModule
                 {
                     this.player = null;
                     mc.world.removeEntity(fakePlayer);
+                    PlayerUtil.FAKE_PLAYERS.remove(fakePlayer.getEntityId());
                 }
             });
         }
