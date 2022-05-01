@@ -7,7 +7,7 @@ import net.minecraft.util.math.Vec3i;
 /**
  * Finds holes which could have been created when a block was placed.
  */
-class BlockHoleFinder extends HoleFinder
+public class BlockHoleFinder extends HoleFinder
 {
     private static final Vec3i[] OFFSETS = new Vec3i[]
             {

@@ -82,6 +82,7 @@ import me.earth.earthhack.impl.modules.misc.tooltips.ToolTips;
 import me.earth.earthhack.impl.modules.misc.tpssync.TpsSync;
 import me.earth.earthhack.impl.modules.misc.tracker.Tracker;
 import me.earth.earthhack.impl.modules.misc.truedurability.TrueDurability;
+import me.earth.earthhack.impl.modules.movement.anchor.Anchor;
 import me.earth.earthhack.impl.modules.movement.antimove.NoMove;
 import me.earth.earthhack.impl.modules.movement.autosprint.AutoSprint;
 import me.earth.earthhack.impl.modules.movement.blocklag.BlockLag;
@@ -92,7 +93,6 @@ import me.earth.earthhack.impl.modules.movement.entityspeed.EntitySpeed;
 import me.earth.earthhack.impl.modules.movement.fastswim.FastSwim;
 import me.earth.earthhack.impl.modules.movement.flight.Flight;
 import me.earth.earthhack.impl.modules.movement.highjump.HighJump;
-import me.earth.earthhack.impl.modules.movement.holetp.HoleTP;
 import me.earth.earthhack.impl.modules.movement.icespeed.IceSpeed;
 import me.earth.earthhack.impl.modules.movement.jesus.Jesus;
 import me.earth.earthhack.impl.modules.movement.longjump.LongJump;
@@ -249,6 +249,7 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new PacketDelay());
         this.forceRegister(new RPC());
 
+        this.forceRegister(new Anchor());
         this.forceRegister(new AutoSprint());
         this.forceRegister(new BlockLag());
         this.forceRegister(new BoatFly());
@@ -258,7 +259,6 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new FastSwim());
         this.forceRegister(new Flight());
         this.forceRegister(new HighJump());
-        this.forceRegister(new HoleTP());
         this.forceRegister(new ReverseStep());
         this.forceRegister(new IceSpeed());
         this.forceRegister(new Jesus());

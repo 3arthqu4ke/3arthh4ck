@@ -71,11 +71,7 @@ public class InvalidationHoleManager extends SubscriberImpl implements Globals, 
 
             if (mc.player == null || mc.world == null)
             {
-                holes.clear();
-                _1x1_safe.clear();
-                _1x1_unsafe.clear();
-                _2x1.clear();
-                _2x2.clear();
+                reset();
             }
             else
             {
@@ -85,13 +81,13 @@ public class InvalidationHoleManager extends SubscriberImpl implements Globals, 
                     double y = mc.player.posY;
                     double z = mc.player.posZ;
                     _1x1_safe.sort(Comparator.comparingDouble(
-                            h -> h.getDistance(x, y, z)));
+                            h -> h.getDistanceSq(x, y, z)));
                     _1x1_unsafe.sort(Comparator.comparingDouble(
-                            h -> h.getDistance(x, y, z)));
+                            h -> h.getDistanceSq(x, y, z)));
                     _2x1.sort(Comparator.comparingDouble(
-                            h -> h.getDistance(x, y, z)));
+                            h -> h.getDistanceSq(x, y, z)));
                     _2x2.sort(Comparator.comparingDouble(
-                            h -> h.getDistance(x, y, z)));
+                            h -> h.getDistanceSq(x, y, z)));
                     sortTimer.reset();
                 }
 

@@ -23,7 +23,7 @@ import java.util.function.BiFunction;
 
 // TODO: THIS IS CHINESE
 public class PlayerUtil implements Globals {
-    private static final Map<Integer, EntityOtherPlayerMP> FAKE_PLAYERS =
+    public static final Map<Integer, EntityOtherPlayerMP> FAKE_PLAYERS =
             new HashMap<>();
 
     public static EntityOtherPlayerMP createFakePlayerAndAddToWorld(GameProfile profile) {

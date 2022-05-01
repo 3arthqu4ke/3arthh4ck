@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Finds all holes in a chunk.
  */
-class HoleFinder implements Runnable, Globals
+public class HoleFinder implements Runnable, Globals
 {
     //     x <-
     //   x a x

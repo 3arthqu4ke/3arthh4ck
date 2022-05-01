@@ -2,7 +2,7 @@ package me.earth.earthhack.impl.modules.render.holeesp.invalidation;
 
 import java.util.Objects;
 
-class HoleImpl implements Hole
+public class HoleImpl implements Hole
 {
     private boolean valid = true;
     private final int x;
