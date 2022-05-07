@@ -42,7 +42,7 @@ apply plugin: 'eclipse'
 
 mainClassName = "me.earth.earthhack.installer.main.Main"
 group project.modGroup //http://maven.apache.org/guides/mini/guide-naming-conventions.html
-project.version = '1.5.6'
+project.version = '1.6.0'
 
 boolean VANILLA = false
 //noinspection GroovyUnusedAssignment
@@ -121,6 +121,8 @@ shadowJar {
     }
     exclude 'dummyThing'
     exclude 'LICENSE.txt'
+    exclude '**/*module-info.class'
+    exclude '**/META-INF/versions/9/**'
     classifier = 'release'
 }
 

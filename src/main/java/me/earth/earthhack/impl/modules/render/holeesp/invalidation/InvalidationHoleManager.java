@@ -22,6 +22,7 @@ import net.minecraft.network.play.server.SPacketMultiBlockChange;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.EmptyChunk;
 
 import java.util.*;
 
@@ -93,6 +94,8 @@ public class InvalidationHoleManager extends SubscriberImpl implements Globals, 
 
                 if (removeTimer.passed(config.getRemoveTime()))
                 {
+                    // TODO: the map might not need to get cleaned as often?
+                    holes.entrySet().removeIf(e -> !e.getValue().isValid());
                     _1x1_safe.removeIf(h -> !h.isValid());
                     _1x1_unsafe.removeIf(h -> !h.isValid());
                     _2x1.removeIf(h -> !h.isValid());
@@ -136,6 +139,7 @@ public class InvalidationHoleManager extends SubscriberImpl implements Globals, 
 
         listeners.add(new LambdaListener<>(UnloadChunkEvent.class, event ->
         {
+            ((IChunk) event.getChunk()).setHoleVersion(((IChunk) event.getChunk()).getHoleVersion() + 1);
             if (config.isUsingInvalidationHoleManager() && mc.world != null)
             {
                 holes.entrySet().removeIf(e ->
@@ -159,6 +163,7 @@ public class InvalidationHoleManager extends SubscriberImpl implements Globals, 
                 Chunk chunk = mc.world.getChunk(p.getChunkX(), p.getChunkZ());
                 HoleFinder compiler = new HoleFinder(chunk, config.getHeight(), this);
                 ((IChunk) chunk).setCompilingHoles(true);
+                ((IChunk) chunk).setHoleVersion(((IChunk) chunk).getHoleVersion() + 1);
                 if (config.shouldCalcChunksAsnyc())
                 {
                     if (config.limitChunkThreads())

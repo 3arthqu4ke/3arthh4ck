@@ -676,7 +676,7 @@ public class HelperRotation implements Globals
         });
     }
 
-    private void swing(EnumHand hand, boolean breaking)
+    public void swing(EnumHand hand, boolean breaking)
     {
         Swing.Packet.swing(hand);
         EnumHand swingHand = breaking

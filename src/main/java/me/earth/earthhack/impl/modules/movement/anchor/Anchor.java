@@ -8,8 +8,10 @@ import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
+import me.earth.earthhack.impl.core.ducks.world.IChunk;
 import me.earth.earthhack.impl.event.events.movement.MoveEvent;
 import me.earth.earthhack.impl.event.listeners.LambdaListener;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.movement.blocklag.BlockLag;
 import me.earth.earthhack.impl.modules.movement.longjump.LongJump;
@@ -47,6 +49,8 @@ public class Anchor extends Module
     private final Setting<Mode> xzMode = register(new EnumSetting<>("XZ-Mode", Mode.Constant));
     private final Setting<Double> xz = register(new NumberSetting<>("XZ-Speed", 0.2, 0.0, 10.0));
     private final Setting<Double> yOffset = register(new NumberSetting<>("Y-Offset", 1.0, 0.0, 1.0));
+    private final Setting<Integer> lagTime = register(new NumberSetting<>("Lag-Time", 1000, 0, 10_000));
+    private final Setting<Boolean> sneaking = register(new BooleanSetting("Sneaking", false));
     private final Setting<Boolean> withSpeed = register(new BooleanSetting("UseWithSpeed", false));
     private final Setting<Boolean> withSpeedInstant = register(new BooleanSetting("UseWithSpeedInstant", true));
     private final Setting<Boolean> withStep = register(new BooleanSetting("UseWithStep", false));
@@ -62,8 +66,14 @@ public class Anchor extends Module
         super("Anchor", Category.Movement);
         this.listeners.add(new LambdaListener<>(MoveEvent.class, event ->
         {
+            if (!Managers.NCP.passed(lagTime.getValue()) || !sneaking.getValue() && mc.player.isSneaking())
+            {
+                return;
+            }
+
             holeManager.reset();
             BlockPos pos = mc.player.getPosition();
+            holeFinder.setChunk((IChunk) mc.world.getChunk(pos));
             holeFinder.setMaxX(pos.getX() + 1);
             holeFinder.setMinX(pos.getX() - 1);
             holeFinder.setMaxY(pos.getY());

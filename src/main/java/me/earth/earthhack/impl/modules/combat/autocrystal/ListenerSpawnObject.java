@@ -66,7 +66,7 @@ final class ListenerSpawnObject extends
 
     private void onEvent(PacketEvent.Receive<SPacketSpawnObject> event)
     {
-        if (!module.spectator.getValue() && mc.player.isSpectator())
+        if (mc.player == null || mc.world == null || !module.spectator.getValue() && mc.player.isSpectator())
         {
             return;
         }

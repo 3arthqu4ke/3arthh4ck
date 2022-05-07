@@ -129,7 +129,7 @@ public class AutoCrystal extends Module
             register(new BooleanSetting("1.13+", false));
     protected final Setting<Boolean> newVerEntities =
             register(new BooleanSetting("1.13-Entities", false));
-    protected final Setting<SwingTime> placeSwing =
+    public final Setting<SwingTime> placeSwing =
             register(new EnumSetting<>("PlaceSwing", SwingTime.Post));
     protected final Setting<Boolean> smartTrace =
             register(new BooleanSetting("Smart-Trace", false));
@@ -263,6 +263,8 @@ public class AutoCrystal extends Module
             register(new BooleanSetting("AntiFeetPlace", false));
     protected final Setting<Integer> feetBuffer =
             register(new NumberSetting<>("FeetBuffer", 5, 0, 50));
+    protected final Setting<Boolean> dangerFacePlace =
+        register(new BooleanSetting("Danger-FacePlace", false));
     protected final Setting<Boolean> motionCalc =
             register(new BooleanSetting("Motion-Calc", false));
 
@@ -566,7 +568,7 @@ public class AutoCrystal extends Module
     protected final Setting<Integer> removeTime =
             register(new NumberSetting<>("Remove-Time", 1000, 0, 2500));
     /* ---------------- Fields -------------- */
-    protected final Map<BlockPos, CrystalTimeStamp> placed =
+    public final Map<BlockPos, CrystalTimeStamp> placed =
             new ConcurrentHashMap<>();
     protected final ListenerSound soundObserver =
             new ListenerSound(this);
@@ -665,7 +667,7 @@ public class AutoCrystal extends Module
     protected final FakeCrystalRender crystalRender =
             new FakeCrystalRender(simulatePlace);
 
-    protected final HelperRotation rotationHelper =
+    public final HelperRotation rotationHelper =
             new HelperRotation(this);
 
     protected final ServerTimeHelper serverTimeHelper =
@@ -841,6 +843,7 @@ public class AutoCrystal extends Module
                 && (!(mc.player.getHeldItemMainhand().getItem()
                             instanceof ItemPickaxe)
                     || pickAxeHold.getValue())
+                || dangerFacePlace.getValue() && !Managers.SAFETY.isSafe()
                         ? minFaceDmg.getValue()
                         : minDamage.getValue();
     }

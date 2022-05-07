@@ -13,6 +13,7 @@ public abstract class MixinChunk implements IChunk
 {
     private final Deque<Runnable> postHoleCompilationTasks = new ArrayDeque<>();
     private boolean compilingHoles = false;
+    private int holeVersion;
 
     @Override
     public void setCompilingHoles(boolean compilingHoles)
@@ -43,4 +44,15 @@ public abstract class MixinChunk implements IChunk
         }
     }
 
+    @Override
+    public int getHoleVersion()
+    {
+        return holeVersion;
+    }
+
+    @Override
+    public void setHoleVersion(int version)
+    {
+        this.holeVersion = version;
+    }
 }

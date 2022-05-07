@@ -11,8 +11,10 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.autoarmor.modes.ArmorMode;
 import me.earth.earthhack.impl.modules.combat.autoarmor.util.DesyncClick;
+import me.earth.earthhack.impl.modules.combat.autoarmor.util.SingleMendingSlot;
 import me.earth.earthhack.impl.modules.combat.autoarmor.util.WindowClick;
 import me.earth.earthhack.impl.modules.player.exptweaks.ExpTweaks;
+import me.earth.earthhack.impl.modules.player.noinventorydesync.MendingStage;
 import me.earth.earthhack.impl.modules.player.suicide.Suicide;
 import me.earth.earthhack.impl.modules.player.xcarry.XCarry;
 import me.earth.earthhack.impl.util.math.DiscreteTimer;
@@ -45,12 +47,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.input.Mouse;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 // TODO: AutoTakeOff?
 // TODO: ShiftClick option
@@ -65,25 +64,31 @@ public class AutoArmor extends Module
             Caches.getModule(Suicide.class);
 
     protected final Setting<ArmorMode> mode =
-        register(new EnumSetting<>("Mode", ArmorMode.Blast));
-    protected final Setting<Boolean> fast   =
-        register(new BooleanSetting("Fast", true));
-    protected final Setting<Boolean> safe   =
-        register(new BooleanSetting("Safe", true));
-    protected final Setting<Integer> delay      =
-        register(new NumberSetting<>("Delay", 50, 0, 500));
-    protected final Setting<Boolean> autoMend   =
-        register(new BooleanSetting("AutoMend", false));
-    protected final Setting<Integer> helmet     =
-        register(new NumberSetting<>("Helmet%", 80, 1, 100));
-    protected final Setting<Integer> chest      =
-        register(new NumberSetting<>("Chest%", 85, 1, 100));
-    protected final Setting<Integer> legs       =
-        register(new NumberSetting<>("Legs%", 84, 1, 100));
-    protected final Setting<Integer> boots      =
-        register(new NumberSetting<>("Boots%", 80, 1, 100));
-    protected final Setting<Boolean> curse      =
-        register(new BooleanSetting("CurseOfBinding", false));
+            register(new EnumSetting<>("Mode", ArmorMode.Blast));
+    protected final Setting<Boolean> fast =
+            register(new BooleanSetting("Fast", true));
+    protected final Setting<Boolean> safe =
+            register(new BooleanSetting("Safe", true));
+    protected final Setting<Integer> delay =
+            register(new NumberSetting<>("Delay", 50, 0, 500));
+    protected final Setting<Boolean> autoMend =
+            register(new BooleanSetting("AutoMend", false));
+    protected final Setting<Boolean> singleMend =
+            register(new BooleanSetting("SingleMend", false));
+    protected final Setting<Integer> mendBlock =
+            register(new NumberSetting<>("MendBlock", 0, 0, 500));
+    protected final Setting<Integer> postBlock =
+            register(new NumberSetting<>("PostBlock", 50, 0, 500));
+    protected final Setting<Integer> helmet =
+            register(new NumberSetting<>("Helmet%", 80, 1, 100));
+    protected final Setting<Integer> chest =
+            register(new NumberSetting<>("Chest%", 85, 1, 100));
+    protected final Setting<Integer> legs =
+            register(new NumberSetting<>("Legs%", 84, 1, 100));
+    protected final Setting<Integer> boots =
+            register(new NumberSetting<>("Boots%", 80, 1, 100));
+    protected final Setting<Boolean> curse =
+            register(new BooleanSetting("CurseOfBinding", false));
     protected final Setting<Float> closest      =
         register(new NumberSetting<>("Closest", 12.0f, 0.0f, 30.0f));
     protected final Setting<Float> maxDmg       =
@@ -124,6 +129,8 @@ public class AutoArmor extends Module
         register(new BooleanSetting("NoDuraDesync", true));
     protected final Setting<Integer> removeTime =
         register(new NumberSetting<>("Remove-Time", 250, 0, 1000));
+    protected final Setting<Boolean> dontBlockWhenFull =
+        register(new BooleanSetting("DontBlockWhenFull", false));
 
     protected final Map<Integer, DesyncClick> desyncMap = new ConcurrentHashMap<>();
     /** Queue that manages the windowClicks */
@@ -134,16 +141,34 @@ public class AutoArmor extends Module
     protected final StopWatch desyncTimer = new StopWatch();
     /** Timer to manage the delay */
     protected final DiscreteTimer timer = new GuardTimer();
-    /** Manages the queued slots */
+    /**
+     * Manages the queued slots
+     */
     protected Set<Integer> queuedSlots = new HashSet<>();
-    /** Last clicked Type, for NoDesync. */
+    /**
+     * Last clicked Type, for NoDesync.
+     */
     protected EntityEquipmentSlot lastType;
-    /** Manages the damage settings */
+    /**
+     * Manages the damage settings
+     */
     protected final Setting<?>[] damages;
-    /** Manages PutBack. */
+    /**
+     * Manages PutBack.
+     */
     protected WindowClick putBackClick;
-    /** Manages if the inventory itemStack has been set. */
+    /**
+     * Manages if the inventory itemStack has been set.
+     */
     protected boolean stackSet;
+    protected MendingStage stage = MendingStage.MENDING;
+    protected final StopWatch mendingTimer = new StopWatch();
+    protected final SingleMendingSlot[] singleMendingSlots = {
+            new SingleMendingSlot(EntityEquipmentSlot.HEAD),
+            new SingleMendingSlot(EntityEquipmentSlot.CHEST),
+            new SingleMendingSlot(EntityEquipmentSlot.LEGS),
+            new SingleMendingSlot(EntityEquipmentSlot.FEET)
+    };
 
     public AutoArmor()
     {
@@ -154,6 +179,7 @@ public class AutoArmor extends Module
         this.listeners.add(new ListenerEntityProperties(this));
         this.listeners.add(new ListenerWorldClient(this));
         this.listeners.add(new ListenerSetSlot(this));
+        this.listeners.add(new ListenerCPacketUseItem(this));
         this.setData(new AutoArmorData(this));
         timer.reset(delay.getValue());
     }
@@ -161,23 +187,40 @@ public class AutoArmor extends Module
     @Override
     protected void onEnable()
     {
+        stage = MendingStage.MENDING;
         windowClicks.clear();
         queuedSlots.clear();
         putBackClick = null;
+        unblockMendingSlots();
     }
 
     @Override
     protected void onDisable()
     {
+        stage = MendingStage.MENDING;
         windowClicks.clear();
         queuedSlots.clear();
         putBackClick = null;
+        unblockMendingSlots();
     }
 
     @Override
     public String getDisplayInfo()
     {
         return mode.getValue().name();
+    }
+
+    public void unblockMendingSlots()
+    {
+        for (SingleMendingSlot mendingSlot : singleMendingSlots)
+        {
+            mendingSlot.setBlocked(false);
+        }
+    }
+
+    public boolean isBlockingMending()
+    {
+        return isEnabled() && mendBlock.getValue() > 0 && stage != MendingStage.MENDING;
     }
 
     /**
@@ -563,6 +606,38 @@ public class AutoArmor extends Module
             {
                 ItemStack stack = InventoryUtil.get(i);
                 if (stack.getItem() == item && !blackList.contains(i))
+                {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    public static int iterateItems(boolean xCarry, Set<Integer> blackList, Function<ItemStack, Boolean> accept)
+    {
+        ItemStack drag = mc.player.inventory.getItemStack();
+        if (!drag.isEmpty() && !blackList.contains(-2) && accept.apply(drag))
+        {
+            return -2;
+        }
+
+        for (int i = 9; i < 45; i++)
+        {
+            ItemStack stack = InventoryUtil.get(i);
+            if (!blackList.contains(i) && accept.apply(stack))
+            {
+                return i;
+            }
+        }
+
+        if (xCarry)
+        {
+            for (int i = 1; i < 5; i++)
+            {
+                ItemStack stack = InventoryUtil.get(i);
+                if (!blackList.contains(i) && accept.apply(stack))
                 {
                     return i;
                 }

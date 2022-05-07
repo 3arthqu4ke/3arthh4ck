@@ -91,35 +91,79 @@ public class Speedmine extends Module
             register(new BooleanSetting("Limit-Rotations", true));
     protected final Setting<Integer> confirm =
             register(new NumberSetting<>("Confirm", 500, 0, 1000));
+    protected final Setting<Double> crystalRange =
+            register(new NumberSetting<>("CrystalRange", 6.0, 0.0, 10.0));
+    protected final Setting<Double> crystalTrace =
+            register(new NumberSetting<>("CrystalTrace", 6.0, 0.0, 10.0));
+    protected final Setting<Double> crystalBreakTrace =
+            register(new NumberSetting<>("CrystalTrace", 3.0, 0.0, 10.0));
+    protected final Setting<Double> minDmg =
+            register(new NumberSetting<>("MinDamage", 10.0, 0.0, 36.0));
+    protected final Setting<Double> maxSelfDmg =
+            register(new NumberSetting<>("MaxSelfDamage", 10.0, 0.0, 36.0));
+    protected final Setting<Boolean> newVer =
+            register(new BooleanSetting("1.13", false));
+    protected final Setting<Boolean> newVerEntities =
+            register(new BooleanSetting("1.13-Entities", false));
+    protected final Setting<Boolean> growRender =
+            register(new BooleanSetting("GrowRender", false));
 
-    /** Damage dealt to block for each hotbarSlot. */
+    /**
+     * Damage dealt to block for each hotbarSlot.
+     */
     public final float[] damages =
             new float[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-    /** A StopWatch to handle ClickDelay. */
+    /**
+     * A StopWatch to handle ClickDelay.
+     */
     protected final StopWatch timer = new StopWatch();
-    /** A StopWatch to handle Resetting after sending a Packet. */
+    /**
+     * A StopWatch to handle Resetting after sending a Packet.
+     */
     protected final StopWatch resetTimer = new StopWatch();
-    /** The Pos we are currently mining. */
+    /**
+     * The Pos we are currently mining.
+     */
     protected BlockPos pos;
-    /** The facing we hit the current pos int. */
+    /**
+     * The facing we hit the current pos int.
+     */
     protected EnumFacing facing;
-    /** Cached boundingBox for the currentPos. */
+    /**
+     * Cached boundingBox for the currentPos.
+     */
     protected AxisAlignedBB bb;
-    /** Rotations to the current pos. */
+    /**
+     * Rotations to the current pos.
+     */
     protected float[] rotations;
-    /** Maximum damage dealt to the current Pos. */
+    /**
+     * Maximum damage dealt to the current Pos.
+     */
     public float maxDamage;
-    /** <tt>true</tt> if we sent the STOP_DESTROY packet. */
+    /**
+     * <tt>true</tt> if we sent the STOP_DESTROY packet.
+     */
     protected boolean sentPacket;
-    /** true if we should send an abort packet */
+    /**
+     * true if we should send an abort packet
+     */
     protected boolean shouldAbort;
-    /** true if the module should not send destroy block packets right now */
+    /**
+     * true if the module should not send destroy block packets right now
+     */
     protected boolean pausing;
-    /** timer for delays */
+    /**
+     * timer for delays
+     */
     protected final StopWatch delayTimer = new StopWatch();
-    /** Packet to send after we limited our rotations. */
+    /**
+     * Packet to send after we limited our rotations.
+     */
     protected Packet<?> limitRotationPacket;
-    /** Slot for LimitRotations. */
+    /**
+     * Slot for LimitRotations.
+     */
     protected int limitRotationSlot = -1;
 
     public Speedmine()
@@ -378,7 +422,7 @@ public class Speedmine extends Module
         if (sentPacket
                 && resetTimer.passed(confirm.getValue())
                 && (mode.getValue() == MineMode.Packet
-                    || mode.getValue() == MineMode.Smart))
+                || mode.getValue() == MineMode.Smart))
         {
             reset();
         }
@@ -388,6 +432,12 @@ public class Speedmine extends Module
     {
         sentPacket = true;
         resetTimer.reset();
+    }
+
+    public enum PlaceCrystalMode {
+        Off,
+        Old,
+        New
     }
 
 }

@@ -48,6 +48,8 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("ConstCheck", true));
     protected final Setting<Boolean> improve =
         register(new BooleanSetting("Improve", false));
+    protected final Setting<Boolean> improveInvalid =
+        register(new BooleanSetting("ImproveInvalid", false));
     protected final Setting<Integer> delay =
         register(new NumberSetting<>("Delay", 100, 0, 10000));
     protected final Setting<Boolean> newV =
@@ -72,6 +74,8 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new NumberSetting<>("PlaceTrace", 6.0f, 0.1f, 100.0f));
     protected final Setting<Float> breakTrace =
         register(new NumberSetting<>("BreakTrace", 3.5f, 0.1f, 100.0f));
+    protected final Setting<Boolean> crystal =
+        register(new BooleanSetting("Crystal", false));
     protected final Setting<Boolean> selfEchestMine =
         register(new BooleanSetting("Self-EchestBurrow-Mine", false));
     protected final Setting<Boolean> mineBurrow =
@@ -337,6 +341,12 @@ public class AutoMine extends BlockAddingModule implements IAutomine
     public boolean canBigCalcsBeImproved()
     {
         return improveCalcs.getValue();
+    }
+
+    public boolean isValidCrystalPos(BlockPos pos)
+    {
+        return BlockUtil.canPlaceCrystal(pos, true, newV.getValue(), mc.world.loadedEntityList, newVEntities.getValue(), 0L)
+                && BlockUtil.isCrystalPosInRange(pos, placeRange.getValue(), placeTrace.getValue(), breakTrace.getValue());
     }
 
 }

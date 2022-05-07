@@ -34,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(PlayerControllerMP.class)
 public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
@@ -244,6 +245,18 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
         {
             cir.setReturnValue(event.getStack());
         }
+    }
+
+    @Inject(
+        method = "windowClick",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/inventory/Container;slotClick(IILnet/minecraft/inventory/ClickType;Lnet/minecraft/entity/player/EntityPlayer;)Lnet/minecraft/item/ItemStack;",
+            shift = At.Shift.BEFORE),
+        locals = LocalCapture.CAPTURE_FAILHARD)
+    private void postGetTransactionId(int windowId, int slotId, int mouseButton, ClickType type, EntityPlayer player, CallbackInfoReturnable<ItemStack> cir, short short1)
+    {
+        Bus.EVENT_BUS.post(new PreSlotClickEvent(windowId, slotId, mouseButton, type, player, short1));
     }
 
 }

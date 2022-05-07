@@ -13,7 +13,7 @@ public class Earthhack implements Globals
 {
     private static final Logger LOGGER = LogManager.getLogger("3arthh4ck");
     public static final String NAME = "3arthh4ck";
-    public static final String VERSION = "1.5.6";
+    public static final String VERSION = "1.6.0";
 
     public static void preInit()
     {
@@ -40,7 +40,7 @@ public class Earthhack implements Globals
 
     public static boolean isRunning()
     {
-        return ((IMinecraft )mc).isEarthhackRunning();
+        return ((IMinecraft) mc).isEarthhackRunning();
     }
 
 }

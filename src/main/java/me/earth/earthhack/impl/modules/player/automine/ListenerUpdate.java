@@ -10,6 +10,7 @@ import me.earth.earthhack.impl.modules.combat.anvilaura.AnvilAura;
 import me.earth.earthhack.impl.modules.player.automine.mode.AutoMineMode;
 import me.earth.earthhack.impl.modules.player.automine.util.BigConstellation;
 import me.earth.earthhack.impl.modules.player.automine.util.Constellation;
+import me.earth.earthhack.impl.modules.player.automine.util.CrystalConstellation;
 import me.earth.earthhack.impl.modules.player.automine.util.EchestConstellation;
 import me.earth.earthhack.impl.modules.player.speedmine.Speedmine;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.MineMode;
@@ -30,6 +31,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityEnderChest;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
@@ -117,6 +119,8 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
 
         if (!module.improve.getValue()
             && module.constellation != null
+            && (!module.improveInvalid.getValue()
+                || module.constellation.isValid(mc.world, module.checkPlayerState.getValue()))
             && module.constellation.cantBeImproved())
         {
             return;
@@ -335,80 +339,117 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                 .getBlock()
                                 .getExplosionResistance(mc.player) < 100)
                 {
-                    if (module.head.getValue())
+                    // TODO: up in case player phases
+                    BlockPos upUp = playerPos.up(2);
+                    IBlockState headState = mc.world.getBlockState(upUp);
+                    if (module.head.getValue() || module.crystal.getValue())
                     {
-                        BlockPos upUp = playerPos.up(2);
-                        IBlockState state = mc.world.getBlockState(upUp);
-                        if (isValid(upUp, state))
+                        if (module.head.getValue() && isValid(upUp, headState)
+                                || module.crystal.getValue()
+                                    && headState.getBlock() == Blocks.OBSIDIAN
+                                    && module.isValidCrystalPos(upUp))
                         {
                             attackPos(upUp,
-                                      new Constellation(mc.world,
+                                      new CrystalConstellation(mc.world,
                                                         player,
                                                         upUp,
                                                         playerPos,
-                                                        state));
+                                                        headState,
+                                                        module));
                             return true;
                         }
                     }
 
                     for (EnumFacing facing : EnumFacing.HORIZONTALS)
                     {
+                        BlockPos tempUpUp;
+                        IBlockState tempHeadState = headState;
+
                         BlockPos offset = playerPos.offset(facing);
+                        IBlockState state = mc.world.getBlockState(offset);
+                        // in a 2x1 this won't cover these blocks (p)
+                        //      p x
+                        //    x a a x
+                        //      p x
+                        // but its fine, because that's covered by mineL
+                        if (state.getBlock() == Blocks.AIR
+                                && player.getEntityBoundingBox().intersects(new AxisAlignedBB(offset)))
+                        {
+                            // TODO: we should also take offset.up(1) for crystal kinda
+                            tempUpUp  = offset.up(2);
+                            tempHeadState = mc.world.getBlockState(tempUpUp);
+                            offset = offset.offset(facing);
+                            state = mc.world.getBlockState(offset);
+                        }
+
                         double dist = mc.player.getDistanceSq(offset);
                         if (dist >= distance)
                         {
                             continue;
                         }
 
-                        IBlockState state = mc.world.getBlockState(offset);
-                        if (!isValid(offset, state))
+                        boolean valid = isValid(offset, state);
+                        if (valid)
                         {
-                            continue;
-                        }
-
-                        if (module.mineL.getValue()
-                                && mc.world.getBlockState(offset.up())
-                                           .getMaterial()
-                                           .isReplaceable())
-                        {
-                            boolean found = false;
-                            for (EnumFacing l : EnumFacing.HORIZONTALS)
+                            if (module.mineL.getValue()
+                                    && mc.world.getBlockState(offset.up())
+                                               .getMaterial()
+                                               .isReplaceable())
                             {
-                                if (l == facing || l == facing.getOpposite())
+                                boolean found = false;
+                                for (EnumFacing l : EnumFacing.HORIZONTALS)
+                                {
+                                    if (l == facing || l == facing.getOpposite())
+                                    {
+                                        continue;
+                                    }
+
+                                    if (module.checkCrystalPos(offset.offset(l)
+                                                                     .down()))
+                                    {
+                                        closestPos = offset;
+                                        closest = new Constellation(mc.world,
+                                                player,
+                                                offset,
+                                                playerPos,
+                                                state);
+                                        distance = dist;
+                                        found = true;
+                                        break;
+                                    }
+                                }
+
+                                if (found)
                                 {
                                     continue;
                                 }
-
-                                if (module.checkCrystalPos(offset.offset(l)
-                                                                 .down()))
-                                {
-                                    closestPos = offset;
-                                    closest = new Constellation(mc.world,
-                                                                player,
-                                                                offset,
-                                                                playerPos,
-                                                                state);
-                                    distance = dist;
-                                    found = true;
-                                    break;
-                                }
                             }
 
-                            if (found)
+                            if (module.checkCrystalPos(offset.offset(facing)
+                                                             .down()))
                             {
-                                continue;
+                                closestPos = offset;
+                                closest = new Constellation(mc.world,
+                                        player,
+                                        offset,
+                                        playerPos,
+                                        state);
+                                distance = dist;
                             }
                         }
 
-                        if (module.checkCrystalPos(offset.offset(facing)
-                                                         .down()))
+                        if (module.crystal.getValue() && (valid && module.isValidCrystalPos(offset)
+                                || module.isValidCrystalPos((offset = offset.up()))
+                                    && tempHeadState.getBlock() == Blocks.AIR
+                                    && isValid(offset, (state = mc.world.getBlockState(offset)))))
                         {
                             closestPos = offset;
-                            closest = new Constellation(mc.world,
-                                                        player,
-                                                        offset,
-                                                        playerPos,
-                                                        state);
+                            closest = new CrystalConstellation(mc.world,
+                                                                player,
+                                                                offset,
+                                                                playerPos,
+                                                                state,
+                                                                module);
                             distance = dist;
                         }
                     }

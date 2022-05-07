@@ -1,9 +1,13 @@
 package me.earth.earthhack.impl.modules.render.holeesp.invalidation;
 
+import me.earth.earthhack.impl.core.ducks.world.IChunk;
+
 import java.util.Objects;
 
 public class HoleImpl implements Hole
 {
+    private final IChunk chunk;
+    private final int version;
     private boolean valid = true;
     private final int x;
     private final int y;
@@ -14,8 +18,11 @@ public class HoleImpl implements Hole
     private final boolean _2x2;
     private final boolean safe;
 
-    public HoleImpl(int x, int y, int z, int maxX, int maxZ, boolean is2x1, boolean is2x2, boolean safe)
+    public HoleImpl(IChunk chunk, int x, int y, int z, int maxX, int maxZ, boolean is2x1, boolean is2x2, boolean safe)
     {
+        this.chunk = chunk;
+        // TODO: this is not super safe, if this happens on another thread and we get another SPacketChunkData...
+        this.version = chunk.getHoleVersion();
         this.x = x;
         this.y = y;
         this.z = z;
@@ -83,7 +90,7 @@ public class HoleImpl implements Hole
     @Override
     public boolean isValid()
     {
-        return valid;
+        return valid && chunk.getHoleVersion() == this.version;
     }
 
     @Override

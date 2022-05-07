@@ -14,14 +14,19 @@ import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.KeyBoardUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.input.Mouse;
 
 import java.util.List;
+
+import static net.minecraft.enchantment.EnchantmentHelper.getEnchantmentLevel;
 
 public class ExpTweaks extends Module
 {
@@ -31,6 +36,10 @@ public class ExpTweaks extends Module
         register(new NumberSetting<>("ExpPackets", 0, 0, 64));
     protected final Setting<Boolean> wasteStop =
         register(new BooleanSetting("WasteStop", false));
+    protected final Setting<Boolean> simpleWasteStop =
+        register(new BooleanSetting("SimpleWasteStop", false));
+    protected final Setting<Boolean> wasteIfFull =
+        register(new BooleanSetting("WasteIfInvFull", false));
     protected final Setting<Integer> stopDura =
         register(new NumberSetting<>("Stop-Dura", 100, 0, 100));
     protected final Setting<Integer> wasteIf =
@@ -49,6 +58,10 @@ public class ExpTweaks extends Module
         register(new BooleanSetting("Silent", true));
     protected final Setting<Boolean> whileEating =
         register(new BooleanSetting("WhileEating", true));
+    protected final Setting<Boolean> xCarry =
+        register(new BooleanSetting("XCarry", false));
+    protected final Setting<Boolean> allowDragSlot =
+        register(new BooleanSetting("AllowDragSlot", false));
     protected final Setting<Bind> mceBind =
         register(new BindSetting("MCE-Bind", Bind.none()));
 
@@ -77,6 +90,7 @@ public class ExpTweaks extends Module
                 " armor pieces has less durability (%) than this value.");
         data.register(wasteLoot,
                 "Wastes Exp when you are standing in Exp Bottles.");
+        data.register(simpleWasteStop, "Stops you from wasting EXP when you don't hold any items with Mending.");
 
         this.setData(data);
     }
@@ -134,8 +148,30 @@ public class ExpTweaks extends Module
         return false;
     }
 
+    public boolean isSimpleWasting()
+    {
+        return getEnchantmentLevel(Enchantments.MENDING, mc.player.getHeldItem(EnumHand.OFF_HAND)) == 0
+            && getEnchantmentLevel(Enchantments.MENDING, mc.player.getHeldItem(EnumHand.MAIN_HAND)) == 0
+            && getEnchantmentLevel(Enchantments.MENDING, InventoryUtil.get(5)) == 0
+            && getEnchantmentLevel(Enchantments.MENDING, InventoryUtil.get(6)) == 0
+            && getEnchantmentLevel(Enchantments.MENDING, InventoryUtil.get(7)) == 0
+            && getEnchantmentLevel(Enchantments.MENDING, InventoryUtil.get(8)) == 0;
+    }
+
     public boolean isWasting()
     {
+        if (isSimpleWasting())
+        {
+            return true;
+        }
+
+        int airSlot;
+        if (wasteIfFull.getValue() && ((airSlot = InventoryUtil.findItem(Items.AIR, xCarry.getValue())) == -1
+                || !allowDragSlot.getValue() && airSlot < 0))
+        {
+            return false;
+        }
+
         if (wasteLoot.getValue())
         {
             List<Entity> entities = Managers.ENTITIES.getEntitiesAsync();

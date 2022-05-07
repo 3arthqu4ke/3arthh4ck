@@ -369,7 +369,7 @@ public class HoleFinder implements Runnable, Globals
                             return;
                         }
 
-                        Hole hole = new HoleImpl(pos.getX() - 2, pos.getY(), pos.getZ() - 1, pos.getX(), pos.getZ() + 1,
+                        Hole hole = new HoleImpl(getChunk(), pos.getX() - 2, pos.getY(), pos.getZ() - 1, pos.getX(), pos.getZ() + 1,
                                 false, true, false);
                         this._2x2.add(hole);
                         for (Vec3i offset : OFFSETS_2x2)
@@ -390,7 +390,7 @@ public class HoleFinder implements Runnable, Globals
                 //    x a x <- reminder, we are here
                 //    x a x
                 //      x
-                Hole hole = new HoleImpl(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX(), pos.getZ() + 1, true,
+                Hole hole = new HoleImpl(getChunk(), pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX(), pos.getZ() + 1, true,
                         false, false);
                 this._2x1.add(hole);
                 for (Vec3i offset : OFFSETS_2x1_z)
@@ -417,7 +417,7 @@ public class HoleFinder implements Runnable, Globals
             state = mc.world.getBlockState(pos);
             if (HoleUtil.NO_BLAST.contains(state.getBlock()))
             {
-                Hole hole = new HoleImpl(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 1, pos.getZ(),
+                Hole hole = new HoleImpl(getChunk(), pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 1, pos.getZ(),
                         true, false, false);
                 this._2x1.add(hole);
                 for (Vec3i offset : OFFSETS_2x1_x)
@@ -431,7 +431,7 @@ public class HoleFinder implements Runnable, Globals
         //     x <- reminder, we are here rn
         //   x a x
         //     x
-        Hole hole = new HoleImpl(pos.getX(), pos.getY(), pos.getZ() - 1, pos.getX() + 1, pos.getZ(), false, false,
+        Hole hole = new HoleImpl(getChunk(), pos.getX(), pos.getY(), pos.getZ() - 1, pos.getX() + 1, pos.getZ(), false, false,
                 safe);
         (safe ? _1x1_safe : _1x1_unsafe).add(hole);
         for (Vec3i offset : OFFSETS_1x1)

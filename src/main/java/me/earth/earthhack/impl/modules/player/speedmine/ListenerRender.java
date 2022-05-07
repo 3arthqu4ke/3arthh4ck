@@ -26,7 +26,13 @@ final class ListenerRender extends ModuleListener<Speedmine, Render3DEvent>
             GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 
             float max = Math.min(module.maxDamage, 1.0f);
-            AxisAlignedBB bb = Interpolation.interpolateAxis(module.bb);
+            AxisAlignedBB renderBB = module.bb;
+            if (module.growRender.getValue() && max < 1.0f)
+            {
+                renderBB = renderBB.grow(-0.5 + (max / 2.0));
+            }
+
+            AxisAlignedBB bb = Interpolation.interpolateAxis(renderBB);
             module.esp.getValue().drawEsp(module, bb, max);
 
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

@@ -6,13 +6,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
+// TODO: more generic approach maybe map BlockPositions to BlockStates
 public class Constellation implements IConstellation
 {
     private final EntityPlayer player;
     private final BlockPos playerPos;
     private final IBlockState state;
     private final IBlockState playerState;
-    private final BlockPos pos;
+    protected final BlockPos pos;
 
     public Constellation(IBlockAccess world,
                          EntityPlayer player,
