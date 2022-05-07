@@ -248,7 +248,7 @@ public class KitCommand extends AbstractStackCommand implements Globals
 
             stack = buffer.readItemStack();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             stack = new ItemStack(Blocks.RED_SHULKER_BOX);
             stack.setStackDisplayName(TextColor.RED + "ERROR");
