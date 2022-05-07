@@ -47,7 +47,7 @@ public class ModelTotemPlugin implements Plugin {
                         if (attributes.getValue("3arthh4ckConfig").equals("ModelTotemPluginConfig.json")) {
                             Earthhack.getLogger().debug("Adding " + file.getAbsolutePath() + " to classpath");
                             ReflectionUtil.addToClassPath((URLClassLoader) ClassLoader.getSystemClassLoader(), file);
-                            break;
+                            // break; vanilla mapped plugin could exist TODO: detect
                         }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
