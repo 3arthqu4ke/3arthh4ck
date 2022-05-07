@@ -104,6 +104,7 @@ import me.earth.earthhack.impl.modules.movement.reversestep.ReverseStep;
 import me.earth.earthhack.impl.modules.movement.safewalk.SafeWalk;
 import me.earth.earthhack.impl.modules.movement.speed.Speed;
 import me.earth.earthhack.impl.modules.movement.step.Step;
+import me.earth.earthhack.impl.modules.movement.tickshift.TickShift;
 import me.earth.earthhack.impl.modules.movement.velocity.Velocity;
 import me.earth.earthhack.impl.modules.player.arrows.Arrows;
 import me.earth.earthhack.impl.modules.player.automine.AutoMine;
@@ -271,6 +272,7 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new SafeWalk());
         this.forceRegister(new Speed());
         this.forceRegister(new Step());
+        this.forceRegister(new TickShift());
         this.forceRegister(new Velocity());
 
         this.forceRegister(new AutoMine());
