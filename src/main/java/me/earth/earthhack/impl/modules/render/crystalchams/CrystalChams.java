@@ -6,6 +6,7 @@ import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
+import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.event.events.render.CrystalRenderEvent;
 import me.earth.earthhack.impl.event.listeners.LambdaListener;
 import me.earth.earthhack.impl.modules.render.handchams.modes.ChamsMode;
@@ -30,6 +31,8 @@ public class CrystalChams extends Module {
             register(new BooleanSetting("WireThroughWalls", false));
     public final Setting<Boolean> texture    =
             register(new BooleanSetting("Texture", false));
+    public final NumberSetting<Float> lineWidth =
+            register(new NumberSetting<>("lineWidth" , 1f , 0.1f , 4f));
     public final Setting<Color> color          =
             register(new ColorSetting("Color", new Color(255, 255, 255, 255)));
     public final Setting<Color> wireFrameColor =
@@ -93,6 +96,7 @@ public class CrystalChams extends Module {
                     glDisable(GL_LIGHTING);
                     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                    glLineWidth(lineWidth.getValue());
                     if (wireWalls.getValue()) {
                         glDepthMask(false);
                         glDisable(GL_DEPTH_TEST);
