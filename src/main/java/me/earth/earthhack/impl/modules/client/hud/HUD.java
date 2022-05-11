@@ -73,6 +73,8 @@ public class HUD extends Module {
             register(new BooleanSetting("FPS", false));
     protected final Setting<Boolean> tps =
             register(new BooleanSetting("TPS", false));
+    protected final Setting<Boolean> currentTps =
+            register(new BooleanSetting("CurrentTps", true));
     protected final Setting<Boolean> animations =
             register(new BooleanSetting("Animations", true));
 
@@ -157,6 +159,11 @@ public class HUD extends Module {
         }
         if (tps.getValue()) {
             String tps = "TPS " + TextColor.GRAY + MathUtil.round(Managers.TPS.getTps(), 2);
+            if (currentTps.getValue())
+            {
+                tps += TextColor.WHITE + " [" + TextColor.GRAY + MathUtil.round(Managers.TPS.getCurrentTps(), 2) + TextColor.WHITE + "]";
+            }
+
             renderText(tps, width - 2 - RENDERER.getStringWidth(tps), height - 2 - RENDERER.getStringHeight() - offset - animationY);
             offset += RENDERER.getStringHeight() + 3;
         }

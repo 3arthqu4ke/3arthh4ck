@@ -64,6 +64,31 @@ public class Interpolation implements Globals
         return new Vec3d(x, y, z);
     }
 
+    public static Vec3d interpolateEntityNoRenderPos(Entity entity)
+    {
+        double x;
+        double y;
+        double z;
+
+        if (NOINTERP.isEnabled()
+                && NOINTERP.get().isSilent()
+                && entity instanceof IEntityNoInterp
+                && ((IEntityNoInterp) entity).isNoInterping())
+        {
+            x = interpolateLastTickPos(((IEntityNoInterp) entity).getNoInterpX(), entity.lastTickPosX);
+            y = interpolateLastTickPos(((IEntityNoInterp) entity).getNoInterpY(), entity.lastTickPosY);
+            z = interpolateLastTickPos(((IEntityNoInterp) entity).getNoInterpZ(), entity.lastTickPosZ);
+        }
+        else
+        {
+            x = interpolateLastTickPos(entity.posX, entity.lastTickPosX);
+            y = interpolateLastTickPos(entity.posY, entity.lastTickPosY);
+            z = interpolateLastTickPos(entity.posZ, entity.lastTickPosZ);
+        }
+
+        return new Vec3d(x, y, z);
+    }
+
     public static Vec3d interpolateVectors(Vec3d current, Vec3d last) {
         double x = interpolateLastTickPos(current.x, last.x);
         double y = interpolateLastTickPos(current.y, last.y);
@@ -124,13 +149,18 @@ public class Interpolation implements Globals
     {
         Frustum frustum = new Frustum();
         // NoInterp shouldn't really be required here
+        setFrustum(frustum, entity);
+        return frustum;
+    }
+
+    public static void setFrustum(Frustum frustum, Entity entity)
+    {
         double x = interpolateLastTickPos(entity.posX, entity.lastTickPosX);
         double y = interpolateLastTickPos(entity.posY, entity.lastTickPosY);
         double z = interpolateLastTickPos(entity.posZ, entity.lastTickPosZ);
 
         frustum.setPosition(x, y, z);
 
-        return frustum;
     }
 
 }

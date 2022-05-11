@@ -3,10 +3,13 @@ package me.earth.earthhack.impl.util.render;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector4f;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+
+// TODO: license????????????????
 /**
  * Helper class to project world space coordinates to screen space coordinates with {@link GLU#gluProject(float, float, float, FloatBuffer, FloatBuffer, IntBuffer, FloatBuffer)}
  * Author TheCyberBrick
@@ -319,11 +322,13 @@ public final class GLUProjection {
         } else {
             pitch = -Math.toDegrees(Math.atan2(nuv.cross(uv).length(), nuv.dot(uv)));
         }
-        this.lookVec = this.getRotationVector(yaw, pitch);
         //Get modelview matrix and invert it
         Matrix4f modelviewMatrix = new Matrix4f();
         modelviewMatrix.load(this.modelview.asReadOnlyBuffer());
         modelviewMatrix.invert();
+        //Get look vector (forward) from modelview matrix
+        Vector4f forward = Matrix4f.transform(modelviewMatrix, new Vector4f(0, 0, -1, 0), null);
+        this.lookVec = new Vector3D(forward.x, forward.y, forward.z).snormalize();
         //Get frustum position
         this.frustumPos = new Vector3D(modelviewMatrix.m30, modelviewMatrix.m31, modelviewMatrix.m32);
         this.frustum = this.getFrustum(this.frustumPos.x, this.frustumPos.y, this.frustumPos.z, yaw, pitch, fov, 1.0F, displayWidth / displayHeight);
@@ -580,6 +585,15 @@ public final class GLUProjection {
     }
 
     /**
+     * Returns the camera position (frustumPos) updated with {@link GLUProjection#updateMatrices(IntBuffer, FloatBuffer, FloatBuffer, double, double)}
+     *
+     * @return
+     */
+    public Vector3D getCamPos() {
+        return this.frustumPos;
+    }
+
+    /**
      * Returns a rotated vector with the given yaw and pitch.
      *
      * @param rotYaw   Yaw
@@ -593,4 +607,5 @@ public final class GLUProjection {
         double ns = Math.sin(-rotPitch * 0.017453292F);
         return new Vector3D((double) (s * nc), (double) ns, (double) (c * nc));
     }
+
 }

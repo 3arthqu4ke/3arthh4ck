@@ -76,7 +76,8 @@ public abstract class MixinNettyPacketEncoder
                                 "Originally: " + p_encode_2_.getClass()
                                                             .getName()
                                 + ", ",
-                                false);
+                                false,
+                                true);
                     }
                     else
                     {

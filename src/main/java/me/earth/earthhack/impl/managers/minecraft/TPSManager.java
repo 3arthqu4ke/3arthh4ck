@@ -2,15 +2,17 @@ package me.earth.earthhack.impl.managers.minecraft;
 
 import me.earth.earthhack.api.event.bus.EventListener;
 import me.earth.earthhack.api.event.bus.SubscriberImpl;
+import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import net.minecraft.network.play.server.SPacketTimeUpdate;
 
 import java.util.ArrayDeque;
 
 //TODO: Average/Current!
-public class TPSManager extends SubscriberImpl
+public class TPSManager extends SubscriberImpl implements Globals
 {
     private final ArrayDeque<Float> queue = new ArrayDeque<>(20);
+    private float currentTps;
     private long time;
     private float tps;
 
@@ -30,22 +32,30 @@ public class TPSManager extends SubscriberImpl
                         queue.poll();
                     }
 
-                    queue.add(20.0f
-                            * (1000.0f / (System.currentTimeMillis() - time)));
-
+                    currentTps = Math.max(0.0f, Math.min(20.0f, 20.0f * (1000.0f / (System.currentTimeMillis() - time))));
+                    queue.add(currentTps);
                     float factor = 0.0f;
                     for (Float qTime : queue)
                     {
                         factor += Math.max(0.0f, Math.min(20.0f, qTime));
                     }
 
-                    factor /= queue.size();
+                    if (queue.size() > 0)
+                    {
+                        factor /= queue.size();
+                    }
+
                     tps = factor;
                 }
 
                 time = System.currentTimeMillis();
             }
         });
+    }
+
+    public float getCurrentTps()
+    {
+        return currentTps;
     }
 
     public float getTps()
