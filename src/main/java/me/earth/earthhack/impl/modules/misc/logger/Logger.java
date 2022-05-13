@@ -6,7 +6,6 @@ import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.impl.Earthhack;
-import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.misc.logger.util.LoggerMode;
 import me.earth.earthhack.impl.util.helpers.addable.RegisteringModule;
 import me.earth.earthhack.impl.util.helpers.addable.setting.SimpleRemovingSetting;
@@ -14,8 +13,7 @@ import me.earth.earthhack.impl.util.mcp.MappingProvider;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
-import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
+import net.minecraft.network.play.server.SPacketEntityEquipment;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -26,13 +24,13 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
 {
     protected final Setting<LoggerMode> mode =
             register(new EnumSetting<>("Mode", LoggerMode.Normal));
-    protected final Setting<Boolean> incoming    =
+    protected final Setting<Boolean> incoming =
             register(new BooleanSetting("Incoming", true));
-    protected final Setting<Boolean> outgoing    =
+    protected final Setting<Boolean> outgoing =
             register(new BooleanSetting("Outgoing", true));
-    protected final Setting<Boolean> info        =
+    protected final Setting<Boolean> info =
             register(new BooleanSetting("Info", true));
-    protected final Setting<Boolean> chat        =
+    protected final Setting<Boolean> chat =
             register(new BooleanSetting("Chat", false));
     protected final Setting<Boolean> deobfuscate =
             register(new BooleanSetting("Deobfuscate", true));
@@ -40,11 +38,14 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
             register(new BooleanSetting("StackTrace", false));
     protected final Setting<Boolean> statics =
             register(new BooleanSetting("Static", false));
+    protected final Setting<Boolean> delay =
+            register(new BooleanSetting("Delay", true));
 
     protected final Setting<Boolean> filter =
             registerBefore(new BooleanSetting("Filter", false), listType);
-
     protected final List<String> packetNames;
+    protected long lastTimeOut;
+    protected long lastTimeIn;
     protected boolean cancel;
 
     public Logger()
@@ -57,9 +58,9 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                 s -> "Filter " + s.getName() + " packets.");
 
         packetNames = PacketUtil.getAllPackets()
-                                .stream()
-                                .map(MappingProvider::simpleName)
-                                .collect(Collectors.toList());
+                .stream()
+                .map(MappingProvider::simpleName)
+                .collect(Collectors.toList());
         this.listeners.add(new ListenerChatLog(this));
         this.listeners.add(new ListenerReceive(this));
         this.listeners.add(new ListenerSend(this));
@@ -102,7 +103,7 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
         return null;
     }
 
-    public void logPacket(Packet<?> packet, String message, boolean cancelled)
+    public void logPacket(Packet<?> packet, String message, boolean cancelled, boolean out)
     {
         String simpleName = MappingProvider.simpleName(packet.getClass());
         if (filter.getValue() && !isValid(simpleName))
@@ -111,10 +112,31 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
         }
 
         StringBuilder outPut = new StringBuilder(message)
-                                        .append(simpleName)
-                                        .append(", cancelled : ")
-                                        .append(cancelled)
-                                        .append("\n");
+                .append(simpleName)
+                .append(", cancelled : ")
+                .append(cancelled);
+
+        if (delay.getValue())
+        {
+            long difference;
+            long currentTime = System.currentTimeMillis();
+            if (out)
+            {
+                difference = currentTime - lastTimeOut;
+                lastTimeOut = currentTime;
+            }
+            else
+            {
+                difference = currentTime - lastTimeIn;
+                lastTimeIn = currentTime;
+            }
+
+            outPut.append(", last : ")
+                    .append(difference)
+                    .append("ms");
+        }
+
+        outPut.append("\n");
         if (info.getValue())
         {
             try
@@ -134,17 +156,16 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
 
                             field.setAccessible(true);
                             outPut.append("     ")
-                                  .append(getName(clazz, field))
-                                  .append(" : ")
-                                  .append(field.get(packet))
-                                  .append("\n");
+                                    .append(getName(clazz, field))
+                                    .append(" : ")
+                                    .append(field.get(packet))
+                                    .append("\n");
                         }
                     }
 
                     clazz = clazz.getSuperclass();
                 }
-            }
-            catch (IllegalAccessException e)
+            } catch (IllegalAccessException e)
             {
                 e.printStackTrace();
             }
@@ -159,8 +180,7 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                 try
                 {
                     ChatUtil.sendMessage(s);
-                }
-                finally
+                } finally
                 {
                     cancel = false;
                 }

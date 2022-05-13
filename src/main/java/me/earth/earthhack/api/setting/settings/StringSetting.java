@@ -25,6 +25,12 @@ public class StringSetting extends Setting<String>
     }
 
     @Override
+    public String toJson()
+    {
+        return value == null ? "null" : value.replace("\\", "\\\\");
+    }
+
+    @Override
     public String getInputs(String string)
     {
         if (string == null || string.isEmpty())

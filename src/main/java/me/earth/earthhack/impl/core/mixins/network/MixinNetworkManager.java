@@ -80,7 +80,7 @@ public abstract class MixinNetworkManager implements INetworkManager
                 && LOGGER_MODULE.get().getMode() == LoggerMode.Normal)
         {
             LOGGER_MODULE.get().logPacket(packet,
-                    "Sending (No Event) Post: " + post + ", ", false);
+                    "Sending (No Event) Post: " + post + ", ", false, true);
         }
 
         PacketEvent.NoEvent<?> event = new PacketEvent.NoEvent<>(packet, post);

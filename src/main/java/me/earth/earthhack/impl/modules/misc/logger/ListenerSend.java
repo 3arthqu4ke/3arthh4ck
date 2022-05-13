@@ -19,7 +19,8 @@ final class ListenerSend extends ModuleListener<Logger, PacketEvent.Send<?>>
         {
             module.logPacket(event.getPacket(),
                              "Sending ",
-                             event.isCancelled());
+                             event.isCancelled(),
+                             true);
         }
     }
 

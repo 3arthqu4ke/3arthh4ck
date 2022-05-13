@@ -18,7 +18,8 @@ final class ListenerReceive extends
         {
             module.logPacket(event.getPacket(),
                              "Receiving ",
-                             event.isCancelled());
+                             event.isCancelled(),
+                             false);
         }
     }
 

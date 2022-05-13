@@ -11,6 +11,7 @@ import me.earth.earthhack.impl.util.misc.MutableWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -56,6 +57,8 @@ public class RenderUtil implements Globals
     public final static FloatBuffer modelView = BufferUtils.createFloatBuffer(16);
     public final static FloatBuffer projection = BufferUtils.createFloatBuffer(16);
 
+    private static final Frustum FRUSTUM = new Frustum();
+
     static
     {
         res = new ScaledResolution(mc);
@@ -68,8 +71,10 @@ public class RenderUtil implements Globals
         GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, projection);
         // GL11.glGetFloat(GL_VIEWPORT, viewportFloat);
         GL11.glGetInteger(GL11.GL_VIEWPORT, viewport);
-        final ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-        GLUProjection.getInstance().updateMatrices(viewport, modelView, projection, (float) res.getScaledWidth() / (float) Minecraft.getMinecraft().displayWidth, (float) res.getScaledHeight() / (float) Minecraft.getMinecraft().displayHeight);
+        final ScaledResolution res = new ScaledResolution(mc);
+        GLUProjection.getInstance().updateMatrices(viewport, modelView, projection,
+                (float) res.getScaledWidth() / (float) mc.displayWidth,
+                (float) res.getScaledHeight() / (float) mc.displayHeight);
     }
 
     public static Entity getEntity()
@@ -824,7 +829,7 @@ public class RenderUtil implements Globals
 
     public static void blurBlock(AxisAlignedBB bb, float intensity, float blurWidth, float blurHeight)
     {
-        ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
+        ScaledResolution scale = new ScaledResolution(mc);
         int factor = scale.getScaleFactor();
         int factor2 = scale.getScaledWidth();
         int factor3 = scale.getScaledHeight();
@@ -883,6 +888,18 @@ public class RenderUtil implements Globals
         EXTFramebufferObject.glRenderbufferStorageEXT(EXTFramebufferObject.GL_RENDERBUFFER_EXT, EXTPackedDepthStencil.GL_DEPTH_STENCIL_EXT, mc.displayWidth, mc.displayHeight);
         EXTFramebufferObject.glFramebufferRenderbufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, EXTFramebufferObject.GL_STENCIL_ATTACHMENT_EXT, EXTFramebufferObject.GL_RENDERBUFFER_EXT, stencilDepthBufferID);
         EXTFramebufferObject.glFramebufferRenderbufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, EXTFramebufferObject.GL_DEPTH_ATTACHMENT_EXT, EXTFramebufferObject.GL_RENDERBUFFER_EXT, stencilDepthBufferID);
+    }
+
+    public static boolean isInFrustum(AxisAlignedBB bb)
+    {
+        Entity renderEntity = getEntity();
+        if (renderEntity == null)
+        {
+            return false;
+        }
+
+        Interpolation.setFrustum(FRUSTUM, renderEntity);
+        return FRUSTUM.isBoundingBoxInFrustum(bb);
     }
 
 }

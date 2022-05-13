@@ -161,6 +161,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
         final AspectRatioEvent event = new AspectRatioEvent(mc.displayWidth / (float) mc.displayHeight);
         Bus.EVENT_BUS.post(event);
         Project.gluPerspective(fovy, event.getAspectRatio(), zNear, zFar);
+        /*Project.gluPerspective(fovy, event.getAspectRatio(), zNear, zFar);
         final GLUProjection projection = GLUProjection.getInstance();
         final IntBuffer viewPort = GLAllocation.createDirectIntBuffer(16);
         final FloatBuffer modelView = GLAllocation.createDirectFloatBuffer(16);
@@ -170,7 +171,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
         GL11.glGetInteger(GL11.GL_VIEWPORT, viewPort);
         final ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         projection.updateMatrices(viewPort, modelView, projectionPort, scaledResolution.getScaledWidth() / (double) Minecraft.getMinecraft().displayWidth,
-                scaledResolution.getScaledHeight() / (double) Minecraft.getMinecraft().displayHeight);
+                scaledResolution.getScaledHeight() / (double) Minecraft.getMinecraft().displayHeight);*/
     }
 
     @Redirect(
