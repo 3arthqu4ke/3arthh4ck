@@ -112,6 +112,8 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("CheckCrystalDownTime", false));
     protected final Setting<Integer> downTime =
         register(new NumberSetting<>("AutoCrystalDownTime", 500, 0, 5000));
+    protected final Setting<Boolean> noSelfMine =
+        register(new BooleanSetting("NoSelfMine", false));
 
     protected final Map<BlockPos, Long> blackList = new HashMap<>();
     protected final StopWatch constellationTimer = new StopWatch();

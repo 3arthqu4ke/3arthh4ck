@@ -32,7 +32,7 @@ public class CrystalChams extends Module {
     public final Setting<Boolean> texture    =
             register(new BooleanSetting("Texture", false));
     public final NumberSetting<Float> lineWidth =
-            register(new NumberSetting<>("lineWidth" , 1f , 0.1f , 4f));
+            register(new NumberSetting<>("LineWidth" , 1f , 0.1f , 4f));
     public final Setting<Color> color          =
             register(new ColorSetting("Color", new Color(255, 255, 255, 255)));
     public final Setting<Color> wireFrameColor =

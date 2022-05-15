@@ -7,6 +7,7 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.antisurround.AntiSurround;
 import me.earth.earthhack.impl.modules.combat.anvilaura.AnvilAura;
+import me.earth.earthhack.impl.modules.combat.surround.Surround;
 import me.earth.earthhack.impl.modules.player.automine.mode.AutoMineMode;
 import me.earth.earthhack.impl.modules.player.automine.util.BigConstellation;
 import me.earth.earthhack.impl.modules.player.automine.util.Constellation;
@@ -34,9 +35,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
@@ -47,6 +46,10 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
             Caches.getModule(AnvilAura.class);
     private static final ModuleCache<AntiSurround> ANTISURROUND =
             Caches.getModule(AntiSurround.class);
+    private static final ModuleCache<Surround> SURROUND =
+            Caches.getModule(Surround.class);
+
+    private Set<BlockPos> surrounding = Collections.emptySet();
 
     public ListenerUpdate(AutoMine module)
     {
@@ -56,6 +59,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
     @Override
     public void invoke(UpdateEvent event)
     {
+        surrounding = Collections.emptySet();
         if (ANTISURROUND.returnIfPresent(AntiSurround::isActive, false)
             || ANVIL_AURA.isEnabled() && ANVIL_AURA.get().isMining())
         {
@@ -132,6 +136,12 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
 
         if (module.mode.getValue() == AutoMineMode.Combat)
         {
+            if (module.noSelfMine.getValue() && SURROUND.isPresent())
+            {
+                surrounding = SURROUND.get().createSurrounding(SURROUND.get().createBlocked(),
+                                                               Managers.ENTITIES.getPlayers());
+            }
+
             if (module.prioSelf.getValue() && checkSelfTrap()
                     || checkEnemies(false))
             {
@@ -266,6 +276,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                 AutoMineCalc calc = new AutoMineCalc(
                                                 module,
                                                 players,
+                                                surrounding,
                                                 entities,
                                                 best,
                                                 module.minDmg.getValue(),
@@ -506,6 +517,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
     private boolean isValid(BlockPos pos, IBlockState state)
     {
         return !module.blackList.containsKey(pos)
+                && !surrounding.contains(pos)
                 && MineUtil.canBreak(state, pos)
                 && module.isValid(state)
                 && mc.player.getDistanceSq(pos) <= MathUtil
