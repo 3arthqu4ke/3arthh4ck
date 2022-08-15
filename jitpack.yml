@@ -1,6 +1,5 @@
 jdk:
   - openjdk8
-install:
+before_install:
+  - chmod +x gradlew
   - ./gradlew setupDecompWorkspace
-  - ./gradlew build
-  - ./gradlew install
