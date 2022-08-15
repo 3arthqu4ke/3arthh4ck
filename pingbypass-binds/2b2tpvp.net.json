@@ -1,0 +1,887 @@
+{
+  "AntiCheat-Bind": {
+    "name": "Bind",
+    "module": "AntiCheat",
+    "value": "NONE"
+  },
+  "AutoConfig-Bind": {
+    "name": "Bind",
+    "module": "AutoConfig",
+    "value": "NONE"
+  },
+  "ClickGui-Bind": {
+    "name": "Bind",
+    "module": "ClickGui",
+    "value": "RSHIFT"
+  },
+  "Colors-Bind": {
+    "name": "Bind",
+    "module": "Colors",
+    "value": "NONE"
+  },
+  "Commands-Bind": {
+    "name": "Bind",
+    "module": "Commands",
+    "value": "NONE"
+  },
+  "Config-Gui-Bind": {
+    "name": "Bind",
+    "module": "Config-Gui",
+    "value": "NONE"
+  },
+  "Debug-Bind": {
+    "name": "Bind",
+    "module": "Debug",
+    "value": "NONE"
+  },
+  "CustomFont-Bind": {
+    "name": "Bind",
+    "module": "CustomFont",
+    "value": "NONE"
+  },
+  "HUD-Bind": {
+    "name": "Bind",
+    "module": "HUD",
+    "value": "NONE"
+  },
+  "Management-Bind": {
+    "name": "Bind",
+    "module": "Management",
+    "value": "NONE"
+  },
+  "Notifications-Bind": {
+    "name": "Bind",
+    "module": "Notifications",
+    "value": "NONE"
+  },
+  "Compatibility-Bind": {
+    "name": "Bind",
+    "module": "Compatibility",
+    "value": "NONE"
+  },
+  "Safety-Bind": {
+    "name": "Bind",
+    "module": "Safety",
+    "value": "NONE"
+  },
+  "Server-Bind": {
+    "name": "Bind",
+    "module": "Server",
+    "value": "NONE"
+  },
+  "PB-Gui-Bind": {
+    "name": "Bind",
+    "module": "PB-Gui",
+    "value": "SLASH"
+  },
+  "Settings-Bind": {
+    "name": "Bind",
+    "module": "Settings",
+    "value": "NONE"
+  },
+  "Tab-Bind": {
+    "name": "Bind",
+    "module": "Tab",
+    "value": "NONE"
+  },
+  "Media-Bind": {
+    "name": "Bind",
+    "module": "Media",
+    "value": "NONE"
+  },
+  "HudEditor-Bind": {
+    "name": "Bind",
+    "module": "HudEditor",
+    "value": "NONE"
+  },
+  "AntiSurround-Bind": {
+    "name": "Bind",
+    "module": "AntiSurround",
+    "value": "NONE"
+  },
+  "AntiTrap-Bind": {
+    "name": "Bind",
+    "module": "AntiTrap",
+    "value": "Q"
+  },
+  "Auto32k-Bind": {
+    "name": "Bind",
+    "module": "Auto32k",
+    "value": "NONE"
+  },
+  "Auto32k-SwitchBind": {
+    "name": "SwitchBind",
+    "module": "Auto32k",
+    "value": "NONE"
+  },
+  "AnvilAura-Bind": {
+    "name": "Bind",
+    "module": "AnvilAura",
+    "value": "NONE"
+  },
+  "AutoArmor-Bind": {
+    "name": "Bind",
+    "module": "AutoArmor",
+    "value": "NONE"
+  },
+  "AutoCrystal-Bind": {
+    "name": "Bind",
+    "module": "AutoCrystal",
+    "value": "R"
+  },
+  "AutoCrystal-SwitchBind": {
+    "name": "SwitchBind",
+    "module": "AutoCrystal",
+    "value": "R"
+  },
+  "AutoTrap-Bind": {
+    "name": "Bind",
+    "module": "AutoTrap",
+    "value": "Y"
+  },
+  "BedBomb-Bind": {
+    "name": "Bind",
+    "module": "BedBomb",
+    "value": "NONE"
+  },
+  "BowSpam-Bind": {
+    "name": "Bind",
+    "module": "BowSpam",
+    "value": "NONE"
+  },
+  "BowKiller-Bind": {
+    "name": "Bind",
+    "module": "BowKiller",
+    "value": "NONE"
+  },
+  "Criticals-Bind": {
+    "name": "Bind",
+    "module": "Criticals",
+    "value": "NONE"
+  },
+  "CrystalBomber-Bind": {
+    "name": "Bind",
+    "module": "CrystalBomber",
+    "value": "NONE"
+  },
+  "HoleFiller-Bind": {
+    "name": "Bind",
+    "module": "HoleFiller",
+    "value": "NONE"
+  },
+  "KillAura-Bind": {
+    "name": "Bind",
+    "module": "KillAura",
+    "value": "NONE"
+  },
+  "LegSwitch-Bind": {
+    "name": "Bind",
+    "module": "LegSwitch",
+    "value": "NONE"
+  },
+  "Offhand-Bind": {
+    "name": "Bind",
+    "module": "Offhand",
+    "value": "NONE"
+  },
+  "Offhand-GappleBind": {
+    "name": "GappleBind",
+    "module": "Offhand",
+    "value": "F"
+  },
+  "Offhand-CrystalBind": {
+    "name": "CrystalBind",
+    "module": "Offhand",
+    "value": "NONE"
+  },
+  "PistonAura-Bind": {
+    "name": "Bind",
+    "module": "PistonAura",
+    "value": "NONE"
+  },
+  "Surround-Bind": {
+    "name": "Bind",
+    "module": "Surround",
+    "value": "TAB"
+  },
+  "Snowballer-Bind": {
+    "name": "Bind",
+    "module": "Snowballer",
+    "value": "NONE"
+  },
+  "SelfTrap-Bind": {
+    "name": "Bind",
+    "module": "SelfTrap",
+    "value": "NONE"
+  },
+  "WebAura-Bind": {
+    "name": "Bind",
+    "module": "WebAura",
+    "value": "NONE"
+  },
+  "Announcer-Bind": {
+    "name": "Bind",
+    "module": "Announcer",
+    "value": "NONE"
+  },
+  "AntiAim-Bind": {
+    "name": "Bind",
+    "module": "AntiAim",
+    "value": "NONE"
+  },
+  "AntiPackets-Bind": {
+    "name": "Bind",
+    "module": "AntiPackets",
+    "value": "NONE"
+  },
+  "AntiPotion-Bind": {
+    "name": "Bind",
+    "module": "AntiPotion",
+    "value": "NONE"
+  },
+  "AntiVanish-Bind": {
+    "name": "Bind",
+    "module": "AntiVanish",
+    "value": "NONE"
+  },
+  "AutoEat-Bind": {
+    "name": "Bind",
+    "module": "AutoEat",
+    "value": "NONE"
+  },
+  "AutoFish-Bind": {
+    "name": "Bind",
+    "module": "AutoFish",
+    "value": "NONE"
+  },
+  "AutoLog-Bind": {
+    "name": "Bind",
+    "module": "AutoLog",
+    "value": "NONE"
+  },
+  "AutoReconnect-Bind": {
+    "name": "Bind",
+    "module": "AutoReconnect",
+    "value": "NONE"
+  },
+  "AutoRespawn-Bind": {
+    "name": "Bind",
+    "module": "AutoRespawn",
+    "value": "NONE"
+  },
+  "BuildHeight-Bind": {
+    "name": "Bind",
+    "module": "BuildHeight",
+    "value": "NONE"
+  },
+  "Chat-Bind": {
+    "name": "Bind",
+    "module": "Chat",
+    "value": "NONE"
+  },
+  "ExtraTab-Bind": {
+    "name": "Bind",
+    "module": "ExtraTab",
+    "value": "NONE"
+  },
+  "Logger-Bind": {
+    "name": "Bind",
+    "module": "Logger",
+    "value": "NONE"
+  },
+  "MCF-Bind": {
+    "name": "Bind",
+    "module": "MCF",
+    "value": "NONE"
+  },
+  "MobOwner-Bind": {
+    "name": "Bind",
+    "module": "MobOwner",
+    "value": "NONE"
+  },
+  "NoAFK-Bind": {
+    "name": "Bind",
+    "module": "NoAFK",
+    "value": "NONE"
+  },
+  "NoHandShake-Bind": {
+    "name": "Bind",
+    "module": "NoHandShake",
+    "value": "NONE"
+  },
+  "NoInteract-Bind": {
+    "name": "Bind",
+    "module": "NoInteract",
+    "value": "NONE"
+  },
+  "NoInterp-Bind": {
+    "name": "Bind",
+    "module": "NoInterp",
+    "value": "NONE"
+  },
+  "NoSoundLag-Bind": {
+    "name": "Bind",
+    "module": "NoSoundLag",
+    "value": "NONE"
+  },
+  "Nuker-Bind": {
+    "name": "Bind",
+    "module": "Nuker",
+    "value": "NONE"
+  },
+  "Packets-Bind": {
+    "name": "Bind",
+    "module": "Packets",
+    "value": "NONE"
+  },
+  "PingSpoof-Bind": {
+    "name": "Bind",
+    "module": "PingSpoof",
+    "value": "NONE"
+  },
+  "Portals-Bind": {
+    "name": "Bind",
+    "module": "Portals",
+    "value": "NONE"
+  },
+  "SettingSpoof-Bind": {
+    "name": "Bind",
+    "module": "SettingSpoof",
+    "value": "NONE"
+  },
+  "SkinBlink-Bind": {
+    "name": "Bind",
+    "module": "SkinBlink",
+    "value": "NONE"
+  },
+  "Spammer-Bind": {
+    "name": "Bind",
+    "module": "Spammer",
+    "value": "NONE"
+  },
+  "ToolTips-Bind": {
+    "name": "Bind",
+    "module": "ToolTips",
+    "value": "NONE"
+  },
+  "ToolTips-PeekBind": {
+    "name": "PeekBind",
+    "module": "ToolTips",
+    "value": "LCONTROL"
+  },
+  "TpsSync-Bind": {
+    "name": "Bind",
+    "module": "TpsSync",
+    "value": "NONE"
+  },
+  "Tracker-Bind": {
+    "name": "Bind",
+    "module": "Tracker",
+    "value": "NONE"
+  },
+  "TrueDurability-Bind": {
+    "name": "Bind",
+    "module": "TrueDurability",
+    "value": "NONE"
+  },
+  "AutoCraft-Bind": {
+    "name": "Bind",
+    "module": "AutoCraft",
+    "value": "NONE"
+  },
+  "AutoRegear-Bind": {
+    "name": "Bind",
+    "module": "AutoRegear",
+    "value": "NONE"
+  },
+  "AutoRegear-Regear": {
+    "name": "Regear",
+    "module": "AutoRegear",
+    "value": "NONE"
+  },
+  "PacketDelay-Bind": {
+    "name": "Bind",
+    "module": "PacketDelay",
+    "value": "NONE"
+  },
+  "RPC-Bind": {
+    "name": "Bind",
+    "module": "RPC",
+    "value": "NONE"
+  },
+  "Anchor-Bind": {
+    "name": "Bind",
+    "module": "Anchor",
+    "value": "NONE"
+  },
+  "Sprint-Bind": {
+    "name": "Bind",
+    "module": "Sprint",
+    "value": "NONE"
+  },
+  "BlockLag-Bind": {
+    "name": "Bind",
+    "module": "BlockLag",
+    "value": "NONE"
+  },
+  "BoatFly-Bind": {
+    "name": "Bind",
+    "module": "BoatFly",
+    "value": "NONE"
+  },
+  "BoatFly-Down-Bind": {
+    "name": "Down-Bind",
+    "module": "BoatFly",
+    "value": "NONE"
+  },
+  "ElytraFlight-Bind": {
+    "name": "Bind",
+    "module": "ElytraFlight",
+    "value": "NONE"
+  },
+  "EntityControl-Bind": {
+    "name": "Bind",
+    "module": "EntityControl",
+    "value": "NONE"
+  },
+  "EntitySpeed-Bind": {
+    "name": "Bind",
+    "module": "EntitySpeed",
+    "value": "NONE"
+  },
+  "FastSwim-Bind": {
+    "name": "Bind",
+    "module": "FastSwim",
+    "value": "NONE"
+  },
+  "Flight-Bind": {
+    "name": "Bind",
+    "module": "Flight",
+    "value": "NONE"
+  },
+  "HighJump-Bind": {
+    "name": "Bind",
+    "module": "HighJump",
+    "value": "NONE"
+  },
+  "ReverseStep-Bind": {
+    "name": "Bind",
+    "module": "ReverseStep",
+    "value": "NONE"
+  },
+  "IceSpeed-Bind": {
+    "name": "Bind",
+    "module": "IceSpeed",
+    "value": "NONE"
+  },
+  "Jesus-Bind": {
+    "name": "Bind",
+    "module": "Jesus",
+    "value": "NONE"
+  },
+  "LongJump-Bind": {
+    "name": "Bind",
+    "module": "LongJump",
+    "value": "NONE"
+  },
+  "LongJump-Invalid": {
+    "name": "Invalid",
+    "module": "LongJump",
+    "value": "M"
+  },
+  "NoFall-Bind": {
+    "name": "Bind",
+    "module": "NoFall",
+    "value": "NONE"
+  },
+  "Static-Bind": {
+    "name": "Bind",
+    "module": "Static",
+    "value": "NONE"
+  },
+  "NoSlowDown-Bind": {
+    "name": "Bind",
+    "module": "NoSlowDown",
+    "value": "NONE"
+  },
+  "PacketFly-Bind": {
+    "name": "Bind",
+    "module": "PacketFly",
+    "value": "NONE"
+  },
+  "Phase-Bind": {
+    "name": "Bind",
+    "module": "Phase",
+    "value": "NONE"
+  },
+  "SafeWalk-Bind": {
+    "name": "Bind",
+    "module": "SafeWalk",
+    "value": "NONE"
+  },
+  "Speed-Bind": {
+    "name": "Bind",
+    "module": "Speed",
+    "value": "NONE"
+  },
+  "Step-Bind": {
+    "name": "Bind",
+    "module": "Step",
+    "value": "NONE"
+  },
+  "TickShift-Bind": {
+    "name": "Bind",
+    "module": "TickShift",
+    "value": "NONE"
+  },
+  "Velocity-Bind": {
+    "name": "Bind",
+    "module": "Velocity",
+    "value": "NONE"
+  },
+  "AutoMine-Bind": {
+    "name": "Bind",
+    "module": "AutoMine",
+    "value": "NONE"
+  },
+  "AutoTool-Bind": {
+    "name": "Bind",
+    "module": "AutoTool",
+    "value": "NONE"
+  },
+  "Blink-Bind": {
+    "name": "Bind",
+    "module": "Blink",
+    "value": "NONE"
+  },
+  "BlockTweaks-Bind": {
+    "name": "Bind",
+    "module": "BlockTweaks",
+    "value": "NONE"
+  },
+  "Cleaner-Bind": {
+    "name": "Bind",
+    "module": "Cleaner",
+    "value": "NONE"
+  },
+  "ExpTweaks-Bind": {
+    "name": "Bind",
+    "module": "ExpTweaks",
+    "value": "NONE"
+  },
+  "ExpTweaks-MCE-Bind": {
+    "name": "MCE-Bind",
+    "module": "ExpTweaks",
+    "value": "NONE"
+  },
+  "FakePlayer-Bind": {
+    "name": "Bind",
+    "module": "FakePlayer",
+    "value": "NONE"
+  },
+  "FastPlace-Bind": {
+    "name": "Bind",
+    "module": "FastPlace",
+    "value": "NONE"
+  },
+  "FastEat-Bind": {
+    "name": "Bind",
+    "module": "FastEat",
+    "value": "NONE"
+  },
+  "Freecam-Bind": {
+    "name": "Bind",
+    "module": "Freecam",
+    "value": "NONE"
+  },
+  "LiquidInteract-Bind": {
+    "name": "Bind",
+    "module": "LiquidInteract",
+    "value": "NONE"
+  },
+  "MCP-Bind": {
+    "name": "Bind",
+    "module": "MCP",
+    "value": "NONE"
+  },
+  "MultiTask-Bind": {
+    "name": "Bind",
+    "module": "MultiTask",
+    "value": "NONE"
+  },
+  "NCPTweaks-Bind": {
+    "name": "Bind",
+    "module": "NCPTweaks",
+    "value": "NONE"
+  },
+  "NoGlitchBlocks-Bind": {
+    "name": "Bind",
+    "module": "NoGlitchBlocks",
+    "value": "NONE"
+  },
+  "NoHunger-Bind": {
+    "name": "Bind",
+    "module": "NoHunger",
+    "value": "NONE"
+  },
+  "InventorySync-Bind": {
+    "name": "Bind",
+    "module": "InventorySync",
+    "value": "NONE"
+  },
+  "NoRotate-Bind": {
+    "name": "Bind",
+    "module": "NoRotate",
+    "value": "NONE"
+  },
+  "Arrows-Bind": {
+    "name": "Bind",
+    "module": "Arrows",
+    "value": "NONE"
+  },
+  "Arrows-Cycle-Bind": {
+    "name": "Cycle-Bind",
+    "module": "Arrows",
+    "value": "NONE"
+  },
+  "PhaseTrace-Bind": {
+    "name": "Bind",
+    "module": "PhaseTrace",
+    "value": "NONE"
+  },
+  "Reach-Bind": {
+    "name": "Bind",
+    "module": "Reach",
+    "value": "NONE"
+  },
+  "Replenish-Bind": {
+    "name": "Bind",
+    "module": "Replenish",
+    "value": "NONE"
+  },
+  "Scaffold-Bind": {
+    "name": "Bind",
+    "module": "Scaffold",
+    "value": "NONE"
+  },
+  "Sorter-Bind": {
+    "name": "Bind",
+    "module": "Sorter",
+    "value": "NONE"
+  },
+  "Spectate-Bind": {
+    "name": "Bind",
+    "module": "Spectate",
+    "value": "NONE"
+  },
+  "Speedmine-Bind": {
+    "name": "Bind",
+    "module": "Speedmine",
+    "value": "NONE"
+  },
+  "Speedmine-BreakBind": {
+    "name": "BreakBind",
+    "module": "Speedmine",
+    "value": "NONE"
+  },
+  "Suicide-Bind": {
+    "name": "Bind",
+    "module": "Suicide",
+    "value": "M"
+  },
+  "Suicide-SwitchBind": {
+    "name": "SwitchBind",
+    "module": "Suicide",
+    "value": "R"
+  },
+  "Timer-Bind": {
+    "name": "Bind",
+    "module": "Timer",
+    "value": "NONE"
+  },
+  "XCarry-Bind": {
+    "name": "Bind",
+    "module": "XCarry",
+    "value": "NONE"
+  },
+  "BlockHighlight-Bind": {
+    "name": "Bind",
+    "module": "BlockHighlight",
+    "value": "NONE"
+  },
+  "BreadCrumbs-Bind": {
+    "name": "Bind",
+    "module": "BreadCrumbs",
+    "value": "NONE"
+  },
+  "Chams-Bind": {
+    "name": "Bind",
+    "module": "Chams",
+    "value": "NONE"
+  },
+  "ESP-Bind": {
+    "name": "Bind",
+    "module": "ESP",
+    "value": "NONE"
+  },
+  "Fullbright-Bind": {
+    "name": "Bind",
+    "module": "Fullbright",
+    "value": "NONE"
+  },
+  "HoleESP-Bind": {
+    "name": "Bind",
+    "module": "HoleESP",
+    "value": "NONE"
+  },
+  "Lag-O-Meter-Bind": {
+    "name": "Bind",
+    "module": "Lag-O-Meter",
+    "value": "NONE"
+  },
+  "LogoutSpots-Bind": {
+    "name": "Bind",
+    "module": "LogoutSpots",
+    "value": "NONE"
+  },
+  "VoidESP-Bind": {
+    "name": "Bind",
+    "module": "VoidESP",
+    "value": "NONE"
+  },
+  "Nametags-Bind": {
+    "name": "Bind",
+    "module": "Nametags",
+    "value": "NONE"
+  },
+  "NewChunks-Bind": {
+    "name": "Bind",
+    "module": "NewChunks",
+    "value": "NONE"
+  },
+  "NoRender-Bind": {
+    "name": "Bind",
+    "module": "NoRender",
+    "value": "NONE"
+  },
+  "Search-Bind": {
+    "name": "Bind",
+    "module": "Search",
+    "value": "NONE"
+  },
+  "Skeleton-Bind": {
+    "name": "Bind",
+    "module": "Skeleton",
+    "value": "NONE"
+  },
+  "Sounds-Bind": {
+    "name": "Bind",
+    "module": "Sounds",
+    "value": "NONE"
+  },
+  "Tracers-Bind": {
+    "name": "Bind",
+    "module": "Tracers",
+    "value": "NONE"
+  },
+  "CameraClip-Bind": {
+    "name": "Bind",
+    "module": "CameraClip",
+    "value": "NONE"
+  },
+  "ViewModel-Bind": {
+    "name": "Bind",
+    "module": "ViewModel",
+    "value": "NONE"
+  },
+  "XRay-Bind": {
+    "name": "Bind",
+    "module": "XRay",
+    "value": "NONE"
+  },
+  "CrystalScale-Bind": {
+    "name": "Bind",
+    "module": "CrystalScale",
+    "value": "NONE"
+  },
+  "Trails-Bind": {
+    "name": "Bind",
+    "module": "Trails",
+    "value": "NONE"
+  },
+  "Trajectories-Bind": {
+    "name": "Bind",
+    "module": "Trajectories",
+    "value": "NONE"
+  },
+  "Penis-Bind": {
+    "name": "Bind",
+    "module": "Penis",
+    "value": "NONE"
+  },
+  "Waypoints-Bind": {
+    "name": "Bind",
+    "module": "Waypoints",
+    "value": "NONE"
+  },
+  "Weather-Bind": {
+    "name": "Bind",
+    "module": "Weather",
+    "value": "NONE"
+  },
+  "HandChams-Bind": {
+    "name": "Bind",
+    "module": "HandChams",
+    "value": "NONE"
+  },
+  "CrystalChams-Bind": {
+    "name": "Bind",
+    "module": "CrystalChams",
+    "value": "NONE"
+  },
+  "RainbowEnchant-Bind": {
+    "name": "Bind",
+    "module": "RainbowEnchant",
+    "value": "NONE"
+  },
+  "Crosshair-Bind": {
+    "name": "Bind",
+    "module": "Crosshair",
+    "value": "NONE"
+  },
+  "PopChams-Bind": {
+    "name": "Bind",
+    "module": "PopChams",
+    "value": "NONE"
+  },
+  "ItemChams-Bind": {
+    "name": "Bind",
+    "module": "ItemChams",
+    "value": "NONE"
+  },
+  "Ambience-Bind": {
+    "name": "Bind",
+    "module": "Ambience",
+    "value": "NONE"
+  },
+  "S-AutoTotem-Bind": {
+    "name": "Bind",
+    "module": "S-AutoTotem",
+    "value": "NONE"
+  },
+  "S-AutoCrystal-Bind": {
+    "name": "Bind",
+    "module": "S-AutoCrystal",
+    "value": "NONE"
+  },
+  "S-Inventory-Bind": {
+    "name": "Bind",
+    "module": "S-Inventory",
+    "value": "NONE"
+  },
+  "S-Safety-Bind": {
+    "name": "Bind",
+    "module": "S-Safety",
+    "value": "NONE"
+  }
+}

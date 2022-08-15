@@ -1,4 +1,0 @@
-jdk:
-  - openjdk8
-before_install:
-  - ./gradlew setupDecompWorkspace
