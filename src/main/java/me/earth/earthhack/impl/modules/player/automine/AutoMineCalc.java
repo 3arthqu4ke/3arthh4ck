@@ -21,11 +21,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
+import java.util.Set;
 
 public class AutoMineCalc implements SafeRunnable, Globals
 {
     private final IAutomine automine;
     private final List<EntityPlayer> players;
+    private final Set<BlockPos> surrounding;
     private final List<Entity> entities;
     private final EntityPlayer target;
     private final float minDamage;
@@ -43,6 +45,7 @@ public class AutoMineCalc implements SafeRunnable, Globals
 
     public AutoMineCalc(IAutomine automine,
                         List<EntityPlayer> players,
+                        Set<BlockPos> surrounding,
                         List<Entity> entities,
                         EntityPlayer target,
                         float minDamage,
@@ -57,6 +60,7 @@ public class AutoMineCalc implements SafeRunnable, Globals
     {
         this.automine     = automine;
         this.players      = players;
+        this.surrounding = surrounding;
         this.entities     = entities;
         this.target       = target;
         this.minDamage    = minDamage;
@@ -102,6 +106,11 @@ public class AutoMineCalc implements SafeRunnable, Globals
                     }
 
                     mPos.setPos(x, y, z);
+                    if (surrounding.contains(mPos))
+                    {
+                        return;
+                    }
+
                     IBlockState state = mc.world.getBlockState(mPos);
                     boolean isObbyState = state.getBlock() == Blocks.OBSIDIAN
                             || state.getBlock() == Blocks.BEDROCK;

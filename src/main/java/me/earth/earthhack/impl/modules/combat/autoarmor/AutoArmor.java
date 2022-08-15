@@ -131,6 +131,8 @@ public class AutoArmor extends Module
         register(new NumberSetting<>("Remove-Time", 250, 0, 1000));
     protected final Setting<Boolean> dontBlockWhenFull =
         register(new BooleanSetting("DontBlockWhenFull", false));
+    protected final Setting<Boolean> hotSwap =
+        register(new BooleanSetting("HotSwap", false));
 
     protected final Map<Integer, DesyncClick> desyncMap = new ConcurrentHashMap<>();
     /** Queue that manages the windowClicks */

@@ -285,7 +285,7 @@ public class Surround extends ObbyModule
      *
      * @return positions to be surrounded.
      */
-    protected Set<BlockPos> createBlocked()
+    public Set<BlockPos> createBlocked()
     {
         Set<BlockPos> blocked = new HashSet<>();
         BlockPos playerPos = getPlayerPos();
@@ -446,7 +446,7 @@ public class Surround extends ObbyModule
                                 : EnumFacing.EAST;
     }
 
-    protected Set<BlockPos> createSurrounding(Set<BlockPos> blocked,
+    public Set<BlockPos> createSurrounding(Set<BlockPos> blocked,
                                               List<EntityPlayer> players)
     {
         Set<BlockPos> surrounding = new HashSet<>();

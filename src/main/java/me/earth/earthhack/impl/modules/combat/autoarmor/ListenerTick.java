@@ -22,7 +22,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
 {
@@ -56,6 +59,7 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
             {
                 module.queuedSlots.add(-2); // blacklist drag slot
                 ItemStack setStack = module.setStack();
+                boolean setStackIsNull = setStack == null;
                 boolean singleMend = module.singleMend.getValue();
                 if (setStack == null)
                 {
@@ -71,8 +75,7 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
                 int mendBlock = module.mendBlock.getValue();
                 if (mendBlock > 0 && module.stage != MendingStage.MENDING)
                 {
-                    if (module.dontBlockWhenFull.getValue()
-                            && InventoryUtil.findItem(Items.AIR, XCARRY.isEnabled()) == -1)
+                    if (module.dontBlockWhenFull.getValue() && (setStackIsNull || isFull()))
                     {
                         module.stage = MendingStage.MENDING;
                         return;
@@ -268,6 +271,23 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
         return false;
     }
 
+    private boolean isFull()
+    {
+        boolean added = false;
+        if (!module.dragTakeOff.getValue())
+        {
+            added = module.queuedSlots.add(-2);
+        }
+
+        boolean result = AutoArmor.findItem(Items.AIR, XCARRY.isEnabled(), module.queuedSlots) == -1;
+        if (added)
+        {
+            module.queuedSlots.remove(-2);
+        }
+
+        return result;
+    }
+
     @SuppressWarnings("unchecked")
     private void doNormalMend(ItemStack dragIn, int mendBlock)
     {
@@ -322,8 +342,7 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
             }
         }
 
-        // Most damaged will be first, all others will be taken off.
-        stacks.sort(Comparator.reverseOrder());
+        stacks.sort(DamageStack::compareTo);
         if (stacks.size() <= 0)
         {
             int bestSlot = -1;
@@ -353,7 +372,7 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
                 }
             }
 
-            if (bestSlot != -1)
+            if (bestSlot != -1 && lowest.get() < 100.0f)
             {
                 EntityEquipmentSlot equipmentSlot = AutoArmor.getSlot(bestStack.get());
                 if (equipmentSlot != null)
@@ -391,20 +410,16 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
         else
         {
             MutableWrapper<ItemStack> drag = new MutableWrapper<>(dragIn);
-            boolean skipFirst = true;
             for (DamageStack stack : stacks)
             {
-                if (skipFirst)
-                {
-                    skipFirst = false;
-                    continue;
-                }
-
                 if (checkDamageStack(stack, mendBlock, drag))
                 {
                     return;
                 }
             }
+
+            module.stage = MendingStage.MENDING;
+            // TODO: "hotswap"
         }
     }
 
