@@ -6,33 +6,43 @@ import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.impl.event.events.keyboard.KeyboardEvent;
 import me.earth.earthhack.impl.event.events.render.GuiScreenEvent;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.managers.client.ModuleManager;
 import me.earth.earthhack.impl.util.minecraft.KeyBoardUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
 
 public class KeyBoardManager extends SubscriberImpl
 {
+    private final ModuleManager moduleManager;
+
     public KeyBoardManager()
     {
-        this.listeners.add(
-                new EventListener<KeyboardEvent>(KeyboardEvent.class)
+        this(Managers.MODULES);
+    }
+
+    public KeyBoardManager(ModuleManager moduleManager)
+    {
+        this.moduleManager = moduleManager;
+        this.listeners.add(new EventListener<KeyboardEvent>(KeyboardEvent.class)
+        {
+            @Override
+            public void invoke(KeyboardEvent event)
+            {
+                if (event.getEventState())
                 {
-                    @Override
-                    public void invoke(KeyboardEvent event)
+                    for (Module module : moduleManager.getRegistered())
                     {
-                        if (event.getEventState())
+                        if (isModuleValid(module) && module.getBind().getKey() == event.getKey())
                         {
-                            for (Module module : Managers.MODULES.getRegistered())
-                            {
-                                if (module.getBind().getKey() == event.getKey())
-                                {
-                                    module.toggle();
-                                }
-                            }
-                        } else
-                        {
-                            onRelease(event.getKey());
+                            module.toggle();
                         }
                     }
-                });
+                }
+                else
+                {
+                    onRelease(event.getKey());
+                }
+            }
+        });
         this.listeners.add(new EventListener<GuiScreenEvent<?>>
                 (GuiScreenEvent.class, Integer.MIN_VALUE + 10)
         {
@@ -44,9 +54,9 @@ public class KeyBoardManager extends SubscriberImpl
                     return;
                 }
 
-                for (Module module : Managers.MODULES.getRegistered())
+                for (Module module : moduleManager.getRegistered())
                 {
-                    if (KeyBoardUtil.isKeyDown(module.getBind()))
+                    if (isModuleValid(module) && KeyBoardUtil.isKeyDown(module.getBind()))
                     {
                         switch (module.getBindMode())
                         {
@@ -66,9 +76,9 @@ public class KeyBoardManager extends SubscriberImpl
 
     private void onRelease(int keyCode)
     {
-        for (Module module : Managers.MODULES.getRegistered())
+        for (Module module : moduleManager.getRegistered())
         {
-            if (module.getBind().getKey() == keyCode)
+            if (isModuleValid(module) && module.getBind().getKey() == keyCode)
             {
                 switch (module.getBindMode())
                 {
@@ -82,6 +92,11 @@ public class KeyBoardManager extends SubscriberImpl
                 }
             }
         }
+    }
+
+    protected boolean isModuleValid(Module module)
+    {
+        return !PingBypass.isConnected();
     }
 
 }

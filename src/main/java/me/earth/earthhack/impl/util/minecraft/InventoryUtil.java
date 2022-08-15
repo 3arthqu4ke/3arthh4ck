@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
@@ -40,21 +41,25 @@ public class InventoryUtil implements Globals
 
     public static void switchToBypass(int slot)
     {
-        if (mc.player.inventory.currentItem != slot && slot > -1 && slot < 9)
+        Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
         {
-            Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
+            if (mc.player.inventory.currentItem != slot
+                && slot > -1 && slot < 9)
             {
                 int lastSlot = mc.player.inventory.currentItem;
-                int targetSlot =  hotbarToInventory(slot);
+                int targetSlot = hotbarToInventory(slot);
                 int currentSlot = hotbarToInventory(lastSlot);
                 mc.playerController
-                  .windowClick(0, targetSlot, 0, ClickType.PICKUP, mc.player);
+                    .windowClick(0, targetSlot, 0, ClickType.PICKUP,
+                                 mc.player);
                 mc.playerController
-                  .windowClick(0, currentSlot, 0, ClickType.PICKUP, mc.player);
+                    .windowClick(0, currentSlot, 0, ClickType.PICKUP,
+                                 mc.player);
                 mc.playerController
-                  .windowClick(0, targetSlot, 0, ClickType.PICKUP, mc.player);
-            });
-        }
+                    .windowClick(0, targetSlot, 0, ClickType.PICKUP,
+                                 mc.player);
+            }
+        });
     }
 
     /**
@@ -63,13 +68,17 @@ public class InventoryUtil implements Globals
      */
     public static void switchToBypassAlt(int slot)
     {
-        if (slot != -1)
+        Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
         {
-            Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
-                mc.playerController
-                  .windowClick(0, slot, mc.player.inventory.currentItem,
-                               ClickType.SWAP, mc.player));
-        }
+            if (mc.player.inventory.currentItem != slot
+                && slot > -1 && slot < 9)
+            {
+                Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
+                    mc.playerController
+                        .windowClick(0, slot, mc.player.inventory.currentItem,
+                                     ClickType.SWAP, mc.player));
+            }
+        });
     }
 
     /**
@@ -479,6 +488,11 @@ public class InventoryUtil implements Globals
         }
 
         mc.player.inventoryContainer.putStackInSlot(slot, stack);
+
+        int invSlot = containerToSlots(slot);
+        if (invSlot != -1) {
+            mc.player.inventory.setInventorySlotContents(invSlot, stack);
+        }
     }
 
     public static int findEmptyHotbarSlot()
@@ -608,6 +622,34 @@ public class InventoryUtil implements Globals
                 }
             }
         });
+    }
+
+    /**
+     * Converts slots from {@link Container} to slots from
+     * {@link InventoryPlayer}. Crafting slots are not part of the
+     * {@link InventoryPlayer}! For those slots -1 will be returned.
+     *
+     * @param containerSlot the slot in the container.
+     * @return the slot in the Inventory or -1 if not in Inventory.
+     */
+    public static int containerToSlots(int containerSlot) {
+        if (containerSlot < 5 || containerSlot > 45) { // crafting slots
+            return -1;
+        }
+
+        if (containerSlot <= 9) {
+            return 44 - containerSlot;
+        }
+
+        if (containerSlot < 36) {
+            return containerSlot;
+        }
+
+        if (containerSlot < 45) {
+            return containerSlot - 36;
+        }
+
+        return 40; // offhand is 40 here
     }
 
 }

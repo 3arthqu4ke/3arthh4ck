@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.modules.combat.autoarmor;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -45,7 +46,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.CombatRules;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.input.Mouse;
+import me.earth.earthhack.pingbypass.input.Mouse;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,74 +66,109 @@ public class AutoArmor extends Module
 
     protected final Setting<ArmorMode> mode =
             register(new EnumSetting<>("Mode", ArmorMode.Blast));
-    protected final Setting<Boolean> fast =
-            register(new BooleanSetting("Fast", true));
     protected final Setting<Boolean> safe =
-            register(new BooleanSetting("Safe", true));
+            register(new BooleanSetting("Safe", true))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Integer> delay =
             register(new NumberSetting<>("Delay", 50, 0, 500));
     protected final Setting<Boolean> autoMend =
-            register(new BooleanSetting("AutoMend", false));
+            register(new BooleanSetting("AutoMend", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> singleMend =
-            register(new BooleanSetting("SingleMend", false));
+            register(new BooleanSetting("SingleMend", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Integer> mendBlock =
-            register(new NumberSetting<>("MendBlock", 0, 0, 500));
+            register(new NumberSetting<>("MendBlock", 0, 0, 500))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> postBlock =
-            register(new NumberSetting<>("PostBlock", 50, 0, 500));
+            register(new NumberSetting<>("PostBlock", 50, 0, 500))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> helmet =
-            register(new NumberSetting<>("Helmet%", 80, 1, 100));
+            register(new NumberSetting<>("Helmet%", 80, 1, 100))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Integer> chest =
-            register(new NumberSetting<>("Chest%", 85, 1, 100));
+            register(new NumberSetting<>("Chest%", 85, 1, 100))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Integer> legs =
-            register(new NumberSetting<>("Legs%", 84, 1, 100));
+            register(new NumberSetting<>("Legs%", 84, 1, 100))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Integer> boots =
-            register(new NumberSetting<>("Boots%", 80, 1, 100));
+            register(new NumberSetting<>("Boots%", 80, 1, 100))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> curse =
-            register(new BooleanSetting("CurseOfBinding", false));
+            register(new BooleanSetting("CurseOfBinding", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Float> closest      =
-        register(new NumberSetting<>("Closest", 12.0f, 0.0f, 30.0f));
+        register(new NumberSetting<>("Closest", 12.0f, 0.0f, 30.0f))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Float> maxDmg       =
-        register(new NumberSetting<>("MaxDmg", 1.5f, 0.0f, 36.0f));
+        register(new NumberSetting<>("MaxDmg", 1.5f, 0.0f, 36.0f))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> newVer     =
-        register(new BooleanSetting("1.13+", false));
+        register(new BooleanSetting("1.13+", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> newVerEntities =
-        register(new BooleanSetting("1.13-Entities", false));
+        register(new BooleanSetting("1.13-Entities", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> bedCheck   =
-        register(new BooleanSetting("BedCheck", false));
+        register(new BooleanSetting("BedCheck", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> noDesync   =
-        register(new BooleanSetting("NoDesync", false));
+        register(new BooleanSetting("NoDesync", false))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> illegalSync =
-        register(new BooleanSetting("Illegal-Sync", false));
+        register(new BooleanSetting("Illegal-Sync", false))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> screenCheck   =
-        register(new BooleanSetting("CheckScreen", true));
+        register(new BooleanSetting("CheckScreen", true))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Integer> desyncDelay      =
-        register(new NumberSetting<>("DesyncDelay", 2500, 0, 5000));
+        register(new NumberSetting<>("DesyncDelay", 2500, 0, 5000))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Integer> checkDelay      =
-            register(new NumberSetting<>("CheckDelay", 250, 0, 5000));
+            register(new NumberSetting<>("CheckDelay", 250, 0, 5000))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> propertyDelay      =
-        register(new NumberSetting<>("PropertyDelay", 500, 0, 5000));
+        register(new NumberSetting<>("PropertyDelay", 500, 0, 5000))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> dragTakeOff =
-        register(new BooleanSetting("Drag-Mend", false));
+        register(new BooleanSetting("Drag-Mend", false))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> prioLow =
-        register(new BooleanSetting("Prio-Low", true));
+        register(new BooleanSetting("Prio-Low", true))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Float> prioThreshold =
-        register(new NumberSetting<>("Prio-Threshold", 40.0f, 0.0f, 100.0f));
+        register(new NumberSetting<>("Prio-Threshold", 40.0f, 0.0f, 100.0f))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> putBack =
-        register(new BooleanSetting("Put-Back", false));
+        register(new BooleanSetting("Put-Back", false))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> doubleClicks =
-        register(new BooleanSetting("Double-Clicks", false));
+        register(new BooleanSetting("Double-Clicks", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> wasteLoot =
-        register(new BooleanSetting("Waste-Loot", false));
+        register(new BooleanSetting("Waste-Loot", false))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> takeOffLoot =
-        register(new BooleanSetting("TakeOff-Loot", false));
+        register(new BooleanSetting("TakeOff-Loot", false))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> noDuraDesync =
-        register(new BooleanSetting("NoDuraDesync", true));
+        register(new BooleanSetting("NoDuraDesync", false))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Integer> removeTime =
-        register(new NumberSetting<>("Remove-Time", 250, 0, 1000));
+        register(new NumberSetting<>("Remove-Time", 250, 0, 1000))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> dontBlockWhenFull =
-        register(new BooleanSetting("DontBlockWhenFull", false));
+        register(new BooleanSetting("DontBlockWhenFull", false))
+            .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> softInInv =
+        register(new BooleanSetting("SoftInInv", false));
     protected final Setting<Boolean> hotSwap =
-        register(new BooleanSetting("HotSwap", false));
+        register(new BooleanSetting("HotSwap", false))
+            .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> fast =
+        register(new BooleanSetting("Unsafe-Fast", false))
+            .setComplexity(Complexity.Expert);
 
     protected final Map<Integer, DesyncClick> desyncMap = new ConcurrentHashMap<>();
     /** Queue that manages the windowClicks */

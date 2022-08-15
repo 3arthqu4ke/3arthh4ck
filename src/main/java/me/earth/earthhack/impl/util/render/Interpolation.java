@@ -90,9 +90,9 @@ public class Interpolation implements Globals
     }
 
     public static Vec3d interpolateVectors(Vec3d current, Vec3d last) {
-        double x = interpolateLastTickPos(current.x, last.x);
-        double y = interpolateLastTickPos(current.y, last.y);
-        double z = interpolateLastTickPos(current.z, last.z);
+        double x = interpolateLastTickPos(current.x, last.x) - getRenderPosX();
+        double y = interpolateLastTickPos(current.y, last.y) - getRenderPosY();
+        double z = interpolateLastTickPos(current.z, last.z) - getRenderPosZ();
         return new Vec3d(x, y, z);
     }
 

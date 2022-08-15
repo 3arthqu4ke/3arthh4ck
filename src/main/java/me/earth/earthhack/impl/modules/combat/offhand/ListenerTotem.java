@@ -9,6 +9,8 @@ import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.player.suicide.Suicide;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.pingbypass.protocol.s2c.S2CAsyncTotemPacket;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -82,11 +84,14 @@ final class ListenerTotem extends
         }
 
         final int finalSlot = slot;
-        Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
-        {
+        try {
+            Locks.WINDOW_CLICK_LOCK.lock();
             if (InventoryUtil.get(t).getItem() == Items.TOTEM_OF_UNDYING)
             {
                 InventoryUtil.put(finalSlot, ItemStack.EMPTY);
+                if (PingBypass.isConnected()) {
+                    PingBypass.sendPacket(new S2CAsyncTotemPacket(finalSlot));
+                }
 
                 if (t != -2)
                 {
@@ -101,7 +106,9 @@ final class ListenerTotem extends
                     Managers.NCP.releaseMultiClick();
                 }
             }
-        });
+        } finally {
+            Locks.WINDOW_CLICK_LOCK.unlock();
+        }
 
         module.asyncSlot = slot;
         module.asyncTimer.reset();

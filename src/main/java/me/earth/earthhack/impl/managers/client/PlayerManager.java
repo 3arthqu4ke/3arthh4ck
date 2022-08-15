@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.managers.client;
 
 import me.earth.earthhack.api.observable.Observable;
+import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.client.event.PlayerEvent;
 import me.earth.earthhack.impl.managers.client.event.PlayerEventType;
@@ -84,13 +85,16 @@ public class PlayerManager extends Observable<PlayerEvent>
 
     public void remove(String name)
     {
-        UUID uuid = players.get(name);
-        PlayerEvent event = new PlayerEvent(PlayerEventType.DEL, name, uuid);
-        onChange(event);
-
-        if (!event.isCancelled())
+        if (players.containsKey(name))
         {
-            players.remove(name);
+            UUID uuid = players.get(name);
+            PlayerEvent event = new PlayerEvent(PlayerEventType.DEL, name, uuid);
+            onChange(event);
+
+            if (!event.isCancelled())
+            {
+                players.remove(name);
+            }
         }
     }
 

@@ -51,4 +51,5 @@ public class BooleanComponent extends Component {
     public BooleanSetting getBooleanSetting() {
         return booleanSetting;
     }
+
 }

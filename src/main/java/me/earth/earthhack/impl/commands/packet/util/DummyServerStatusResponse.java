@@ -6,7 +6,7 @@ import net.minecraft.util.text.TextComponentString;
 public class DummyServerStatusResponse
         extends ServerStatusResponse implements Dummy
 {
-    private static final String FAVICON =
+    public static final String FAVICON =
             "data:image/png;base64," +
         "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAA" +
             "AAlC+aJAAABhUlEQVR42u3WMUgCUQDG8bc0OFhk\n" +

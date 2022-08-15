@@ -165,6 +165,11 @@ public class ColorSetting extends Setting<Color> {
     }
 
     @Override
+    public Setting<Color> copy() {
+        return new ColorSetting(getName(), getInitial());
+    }
+
+    @Override
     public SettingResult fromString(String string) {
         if (string.contains("-")) {
             final String[] values = string.split("-");

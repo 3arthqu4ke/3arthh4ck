@@ -34,6 +34,7 @@ import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.states.BlockStateHelper;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -137,7 +138,6 @@ public class LegSwitch extends RemovingItemAddingModule
                 s -> "Black/Whitelist LegSwitch" +
                         " from being active while you hold "
                             + s.getName() + ".");
-
         this.listeners.add(new ListenerMotion(this));
         this.listeners.add(new ListenerSpawnObject(this));
         this.listeners.add(new ListenerBlockChange(this));
@@ -475,7 +475,7 @@ public class LegSwitch extends RemovingItemAddingModule
                     {
                         Managers.ROTATION.setBlocking(true);
                         float[] r = ray.getRotations();
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                                 PacketUtil.rotation(r[0], r[1],
                                         mc.player.onGround));
                         Managers.ROTATION.setBlocking(false);

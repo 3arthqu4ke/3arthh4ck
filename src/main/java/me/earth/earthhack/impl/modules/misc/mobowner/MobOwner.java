@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class MobOwner extends Module
 {
-    final Map<UUID, String> cache = new HashMap<>();
+    protected final Map<UUID, String> cache = new HashMap<>();
 
     public MobOwner()
     {

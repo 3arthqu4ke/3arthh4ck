@@ -31,8 +31,8 @@ public class Notifications extends Module
             register(new BooleanSetting("Modules", true));
     protected final Setting<Boolean> configure   =
             register(new BooleanSetting("Show-Modules", true));
-    protected final Setting<Category> categories =
-            register(new EnumSetting<>("Categories", Category.Combat));
+    protected final Setting<Category.CategoryEnum> categories =
+            register(new EnumSetting<>("Categories", Category.CategoryEnum.Combat));
 
     protected final Map<Module, Setting<Boolean>> announceMap =
             new HashMap<>();
@@ -95,7 +95,7 @@ public class Notifications extends Module
 
             Visibilities.VISIBILITY_MANAGER.registerVisibility(setting,
                     () -> configure.getValue()
-                        && categories.getValue() == module.getCategory());
+                        && categories.getValue().toValue() == module.getCategory());
 
             this.getData()
                 .settingDescriptions()

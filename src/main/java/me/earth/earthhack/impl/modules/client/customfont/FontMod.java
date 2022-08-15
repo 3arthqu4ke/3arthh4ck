@@ -58,20 +58,21 @@ public class FontMod extends Module
     {
         for (Setting<?> setting : this.getSettings())
         {
-            if (setting.equals(showFonts))
-            {
-                setting.addObserver(event ->
-                {
-                    event.setCancelled(true);
-                    sendFonts();
-                });
-            }
-            else
+            if (!setting.equals(showFonts))
             {
                 setting.addObserver(e ->
                         Scheduler.getInstance().schedule(this::setFont));
             }
         }
+
+        showFonts.addObserver(event ->
+        {
+            if (event.getValue())
+            {
+                event.setCancelled(true);
+                sendFonts();
+            }
+        });
     }
 
     public void sendFonts()

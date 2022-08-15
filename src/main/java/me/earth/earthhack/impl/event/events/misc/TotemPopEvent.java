@@ -1,6 +1,5 @@
 package me.earth.earthhack.impl.event.events.misc;
 
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class TotemPopEvent {

@@ -58,6 +58,12 @@ public class Visibilities
                                                 && supplier.isVisible());
     }
 
+    public static VisibilitySupplier orComposer(VisibilitySupplier supplier)
+    {
+        return withComposer(supplier, v -> v.isVisible()
+                                                || supplier.isVisible());
+    }
+
     public static VisibilitySupplier withComposer(
                       VisibilitySupplier supplier,
                       Function<VisibilitySupplier, Boolean> composer)

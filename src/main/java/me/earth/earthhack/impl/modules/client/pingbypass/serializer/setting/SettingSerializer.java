@@ -5,19 +5,19 @@ import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.observable.Observer;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.event.SettingEvent;
+import me.earth.earthhack.api.setting.settings.BindSetting;
 import me.earth.earthhack.api.util.interfaces.Displayable;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.api.util.interfaces.Nameable;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.thread.scheduler.Scheduler;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.modules.client.pingbypass.serializer.Serializer;
+import me.earth.earthhack.pingbypass.protocol.c2s.C2SBindSettingPacket;
+import me.earth.earthhack.pingbypass.protocol.c2s.C2SSettingPacket;
 import net.minecraft.network.play.client.CPacketChatMessage;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 
 public class SettingSerializer extends SubscriberImpl
@@ -36,21 +36,28 @@ public class SettingSerializer extends SubscriberImpl
         UNSERIALIZABLE.add("Toggle");
     }
 
-    private final Set<Module> modules      = new HashSet<>();
+    protected final Set<Module> modules      = new HashSet<>();
     private final Set<Setting<?>> settings = new HashSet<>();
     private final Set<Setting<?>> changed  = new LinkedHashSet<>();
+    private final PingBypassModule module;
 
-    public SettingSerializer(Module...modules)
+    public SettingSerializer(PingBypassModule module, Module...modules)
     {
+        this.module = module;
         init(new ListenerSetting(this), modules);
         this.listeners.add(new ListenerDisconnect(this));
         this.listeners.add(new ListenerTick(this));
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private void init(Observer observer, Module...modules)
+    @SuppressWarnings("rawtypes")
+    protected void init(Observer observer, Module...modules)
     {
         this.modules.addAll(Arrays.asList(modules));
+        init(observer);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected void init(Observer observer) {
         this.modules.forEach(module ->
         {
             if (module != null)
@@ -81,9 +88,9 @@ public class SettingSerializer extends SubscriberImpl
                 && mc.getConnection() != null
                 && !changed.isEmpty())
         {
-            Setting<?> setting = pollSetting();
-            if (setting != null)
-            {
+            Setting<?> setting;
+            int i = 0;
+            while ((setting = pollSetting()) != null && i++ < 500) {
                 serializeAndSend(setting);
             }
         }
@@ -100,11 +107,14 @@ public class SettingSerializer extends SubscriberImpl
 
     private Setting<?> pollSetting()
     {
-        if (!changed.isEmpty())
+        synchronized (changed)
         {
-            Setting<?> setting = changed.iterator().next();
-            changed.remove(setting);
-            return setting;
+            if (!changed.isEmpty())
+            {
+                Setting<?> setting = changed.iterator().next();
+                changed.remove(setting);
+                return setting;
+            }
         }
 
         return null;
@@ -119,6 +129,29 @@ public class SettingSerializer extends SubscriberImpl
             name = ((Nameable) setting.getContainer()).getName();
         }
 
+        if (name == null)
+        {
+            return;
+        }
+
+        if (!module.isOld())
+        {
+            if (setting instanceof BindSetting) {
+                Objects.requireNonNull(mc.getConnection()).sendPacket(
+                    new C2SBindSettingPacket(
+                        name, setting.getName(),
+                        ((BindSetting) setting).getValue().getKey(),
+                        setting.changeId.incrementAndGet()));
+            } else {
+                Objects.requireNonNull(mc.getConnection()).sendPacket(
+                    new C2SSettingPacket(
+                        name, setting, setting.toJson(),
+                        setting.changeId.incrementAndGet()));
+            }
+
+            return;
+        }
+
         String command = "@Server"
                 + name
                 + " "
@@ -131,7 +164,7 @@ public class SettingSerializer extends SubscriberImpl
         Objects.requireNonNull(mc.getConnection()).sendPacket(packet);
     }
 
-    private boolean isSettingSerializable(Setting<?> setting)
+    protected boolean isSettingSerializable(Setting<?> setting)
     {
         return !UNSERIALIZABLE.contains(setting.getName());
     }

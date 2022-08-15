@@ -5,7 +5,6 @@ import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
-import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
@@ -22,7 +21,7 @@ final class ListenerMotion extends ModuleListener<BowSpam, MotionUpdateEvent> {
     public void invoke(MotionUpdateEvent event) {
         if (event.getStage() == Stage.POST) {
             ItemStack stack = getStack();
-            if (module.rape.getValue()) {
+            if (module.spam.getValue()) {
                 if (mc.player.onGround) {
                     if (stack != null
                             && !mc.player.getActiveItemStack().isEmpty()

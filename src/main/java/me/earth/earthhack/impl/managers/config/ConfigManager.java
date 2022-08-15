@@ -4,15 +4,10 @@ import me.earth.earthhack.api.config.ConfigHelper;
 import me.earth.earthhack.api.register.AbstractRegister;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.managers.config.helpers.BindConfigHelper;
-import me.earth.earthhack.impl.managers.config.helpers.CurrentConfig;
-import me.earth.earthhack.impl.managers.config.helpers.EnemyConfigHelper;
-import me.earth.earthhack.impl.managers.config.helpers.FriendConfigHelper;
-import me.earth.earthhack.impl.managers.config.helpers.HudConfigHelper;
-import me.earth.earthhack.impl.managers.config.helpers.MacroConfigHelper;
-import me.earth.earthhack.impl.managers.config.helpers.ModuleConfigHelper;
+import me.earth.earthhack.impl.managers.config.helpers.*;
 import me.earth.earthhack.impl.util.misc.io.BiIOConsumer;
 import me.earth.earthhack.impl.util.misc.io.IOConsumer;
+import me.earth.earthhack.pingbypass.PingBypass;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,7 +22,11 @@ public class ConfigManager extends AbstractRegister<ConfigHelper<?>>
         this.registered.put("hud",    new HudConfigHelper(Managers.ELEMENTS));
         this.registered.put("friend", new FriendConfigHelper());
         this.registered.put("enemy",  new EnemyConfigHelper());
-        this.registered.put("bind",   new BindConfigHelper());
+
+        if (!PingBypass.isServer()) {
+            this.registered.put("bind",   new BindConfigHelper());
+        }
+
         // load modules last!
         this.registered.put("module", new ModuleConfigHelper(Managers.MODULES));
     }

@@ -1,6 +1,8 @@
 package me.earth.earthhack.impl.core.mixins.gui;
 
+import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.commands.gui.EarthhackButton;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -31,7 +33,7 @@ public abstract class MixinGuiMainMenu extends GuiScreen
             {
                 x = button.x;
                 y = button.y;
-                w = button.width;
+                w = button.getButtonWidth();
                 break;
             }
         }
@@ -57,6 +59,13 @@ public abstract class MixinGuiMainMenu extends GuiScreen
         {
             mc.displayGuiScreen(this);
             info.cancel();
+        }
+    }
+
+    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiScreen;drawScreen(IIF)V", ordinal = 0, shift = At.Shift.BEFORE))
+    private void onDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+        if (PingBypass.isServer()) {
+            this.drawString(fontRenderer, "PingBypass-Server-" + Earthhack.VERSION, 2, 2, 0xffffffff);
         }
     }
 

@@ -4,7 +4,7 @@ import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.event.events.render.Render3DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.util.math.BlockPos;
@@ -13,8 +13,8 @@ import java.awt.*;
 
 final class ListenerRender extends ModuleListener<ServerAutoCrystal, Render3DEvent>
 {
-    private static final ModuleCache<PingBypass> PINGBYPASS =
-            Caches.getModule(PingBypass.class);
+    private static final ModuleCache<PingBypassModule> PINGBYPASS =
+            Caches.getModule(PingBypassModule.class);
 
     public ListenerRender(ServerAutoCrystal module)
     {

@@ -18,6 +18,7 @@ public class Frame {
     private boolean extended,dragging;
     private final ArrayList<Component> components = new ArrayList<>();
     private int scrollY;
+
     public Frame(String label, float posX, float posY, float width, float height) {
         this.label = label;
         this.posX = posX;

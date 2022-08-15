@@ -22,6 +22,11 @@ public class EnumSetting<E extends Enum<E>> extends Setting<E>
     }
 
     @Override
+    public Setting<E> copy() {
+        return new EnumSetting<>(getName(), getInitial());
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public SettingResult fromString(String string)
     {

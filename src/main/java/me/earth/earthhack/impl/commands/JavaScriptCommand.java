@@ -10,6 +10,7 @@ import me.earth.earthhack.impl.commands.util.CommandDescriptions;
 import me.earth.earthhack.impl.commands.util.CommandScheduler;
 import me.earth.earthhack.impl.commands.util.CommandUtil;
 import me.earth.earthhack.impl.commands.util.EarthhackJsBridge;
+import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.tweaker.launch.Argument;
 import me.earth.earthhack.tweaker.launch.DevArguments;
 import me.earth.earthhack.impl.managers.thread.GlobalExecutor;
@@ -88,6 +89,14 @@ public class JavaScriptCommand extends Command
     @Override
     public void execute(String[] args)
     {
+        if (PingBypass.isServer() && !PingBypass.CONFIG.enableJavaScript())
+        {
+            ChatUtil.sendMessage(
+                TextColor.RED + "JavaScript is not enabled" +
+                    " on this PingBypass server!");
+            return;
+        }
+
         if (invalid)
         {
             ChatUtil.sendMessage(TextColor.RED

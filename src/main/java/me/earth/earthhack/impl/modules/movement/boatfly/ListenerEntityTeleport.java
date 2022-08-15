@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.movement.boatfly;
 
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.play.server.SPacketEntityTeleport;
 
 final class ListenerEntityTeleport extends
@@ -14,9 +15,10 @@ final class ListenerEntityTeleport extends
 
     @Override
     public void invoke(PacketEvent.Receive<SPacketEntityTeleport> event) {
-        if (mc.player.getRidingEntity() != null && module.noForceBoatMove.getValue())
+        EntityPlayerSP player = mc.player;
+        if (player != null && player.getRidingEntity() != null && module.noForceBoatMove.getValue())
         {
-            if (event.getPacket().getEntityId() == mc.player.getRidingEntity().getEntityId())
+            if (event.getPacket().getEntityId() == player.getRidingEntity().getEntityId())
             {
                 event.setCancelled(true);
             }

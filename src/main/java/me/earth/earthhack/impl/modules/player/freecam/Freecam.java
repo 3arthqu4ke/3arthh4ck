@@ -33,7 +33,8 @@ public class Freecam extends DisablingModule
         this.listeners.add(new ListenerMotion(this));
 
         SimpleData data = new SimpleData(this,
-                "Allows you to look around freely.");
+                "Allows you to look around freely. This module is mostly" +
+                    " meant for packet exploits, Spectate is more legit.");
         data.register(mode, "-Cancel cancels movement packets." +
                 "\n-Spanish good for dupes." +
                 "\n-Position very legit freecam and, unless you toggle" +

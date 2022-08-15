@@ -14,7 +14,7 @@ import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
-import org.lwjgl.input.Keyboard;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class LongJump extends DisablingModule
     protected final Setting<Boolean> noKick    =
             register(new BooleanSetting("AntiKick", true));
     protected final Setting<Bind> invalidBind    =
-            register(new BindSetting("Invalid", Bind.fromKey(Keyboard.KEY_M)));
+            register(new BindSetting("Invalid", Bind.fromKey(Keyboard.getKeyM())));
 
     protected int stage;
     protected int airTicks;

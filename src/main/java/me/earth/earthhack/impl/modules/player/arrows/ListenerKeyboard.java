@@ -2,7 +2,7 @@ package me.earth.earthhack.impl.modules.player.arrows;
 
 import me.earth.earthhack.impl.event.events.keyboard.KeyboardEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
-import org.lwjgl.input.Keyboard;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 
 final class ListenerKeyboard extends ModuleListener<Arrows, KeyboardEvent>
 {
@@ -14,7 +14,7 @@ final class ListenerKeyboard extends ModuleListener<Arrows, KeyboardEvent>
     @Override
     public void invoke(KeyboardEvent event)
     {
-        if (module.cycleButton.getValue().getKey() == Keyboard.getEventKey()
+        if (module.cycleButton.getValue().getKey() == event.getKey()
             && event.getEventState())
         {
             module.cycle(false, false);

@@ -26,6 +26,14 @@ public abstract class MixinC00Handshake implements IC00Handshake
     public abstract void setPort(int port);
 
     @Override
+    @Accessor(value = "ip")
+    public abstract String getIp();
+
+    @Override
+    @Accessor(value = "port")
+    public abstract int getPort();
+
+    @Override
     public void cancelFML(boolean cancel)
     {
         this.cancel = cancel;

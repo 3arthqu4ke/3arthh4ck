@@ -9,6 +9,7 @@ import me.earth.earthhack.impl.core.ducks.entity.IEntityPlayerSP;
 import me.earth.earthhack.impl.event.events.misc.UpdateEvent;
 import me.earth.earthhack.impl.event.events.movement.BlockPushEvent;
 import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
+import me.earth.earthhack.impl.event.events.network.PreMotionUpdateEvent;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.rotationbypass.Compatibility;
 import me.earth.earthhack.impl.modules.misc.portals.Portals;
@@ -19,6 +20,7 @@ import me.earth.earthhack.impl.modules.movement.elytraflight.mode.ElytraMode;
 import me.earth.earthhack.impl.modules.player.spectate.Spectate;
 import me.earth.earthhack.impl.modules.player.xcarry.XCarry;
 import me.earth.earthhack.impl.util.minecraft.MovementUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -92,6 +94,18 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
     @Override
     @Accessor(value = "prevOnGround")
     public abstract boolean getLastOnGround();
+
+    @Override
+    @Accessor(value = "lastReportedPosX")
+    public abstract void setLastReportedX(double x);
+
+    @Override
+    @Accessor(value = "lastReportedPosY")
+    public abstract void setLastReportedY(double y);
+
+    @Override
+    @Accessor(value = "lastReportedPosZ")
+    public abstract void setLastReportedZ(double z);
 
     @Override
     @Accessor(value = "lastReportedYaw")
@@ -174,30 +188,33 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         return sprinting;
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(
         method = "onUpdate",
         at = @At(
-            value = "NEW",
-            target = "net/minecraft/network/play/client/CPacketPlayer$Rotation",
+            value = "FIELD",
+            target = "Lnet/minecraft/client/entity/EntityPlayerSP;rotationYaw:F",
             shift = At.Shift.BEFORE),
         cancellable = true)
     private void ridingHook_1(CallbackInfo info)
     {
         this.riding = new MotionUpdateEvent.Riding(
-                                Stage.PRE,
-                                this.posX,
-                                this.getEntityBoundingBox().minY,
-                                this.posZ,
-                                this.rotationYaw,
-                                this.rotationPitch,
-                                this.onGround,
-                                this.moveStrafing,
-                                this.moveForward,
-                                this.movementInput.jump,
-                                this.movementInput.sneak);
+            Stage.PRE,
+            this.posX,
+            this.getEntityBoundingBox().minY,
+            this.posZ,
+            this.rotationYaw,
+            this.rotationPitch,
+            this.onGround,
+            this.moveStrafing,
+            this.moveForward,
+            this.movementInput.jump,
+            this.movementInput.sneak);
 
-        Bus.EVENT_BUS.post(this.riding);
+        if (!PingBypass.isConnected())
+        {
+            Bus.EVENT_BUS.post(this.riding);
+        }
+
         if (this.riding.isCancelled())
         {
             info.cancel();
@@ -284,7 +301,10 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
             by = 2)) // Inject after the If-Statement
     private void ridingHook_9(CallbackInfo info)
     {
-        Bus.EVENT_BUS.post(new MotionUpdateEvent.Riding(Stage.POST, riding));
+        if (!PingBypass.isConnected())
+        {
+            Bus.EVENT_BUS.post(new MotionUpdateEvent.Riding(Stage.POST, riding));
+        }
     }
 
     /**
@@ -302,13 +322,15 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         Bus.EVENT_BUS.post(new UpdateEvent());
     }
 
-    @Inject(method = "onUpdate",
+    @Inject(
+        method = "onUpdate",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;onUpdateWalkingPlayer()V",
             shift = At.Shift.BEFORE))
     private void onUpdateWalkingPlayerPre(CallbackInfo ci)
     {
+        Bus.EVENT_BUS.post(new PreMotionUpdateEvent());
         if (ROTATION_BYPASS.isEnabled())
         {
             motionEvent = new MotionUpdateEvent(Stage.PRE,
@@ -318,13 +340,16 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
                                                 this.rotationYaw,
                                                 this.rotationPitch,
                                                 this.onGround);
-            Bus.EVENT_BUS.post(motionEvent);
-            posX = motionEvent.getX();
-            posY = motionEvent.getY();
-            posZ = motionEvent.getZ();
-            rotationYaw = motionEvent.getRotationYaw();
-            rotationPitch = motionEvent.getRotationPitch();
-            onGround = motionEvent.isOnGround();
+            if (!PingBypass.isConnected())
+            {
+                Bus.EVENT_BUS.post(motionEvent);
+                posX = motionEvent.getX();
+                posY = motionEvent.getY();
+                posZ = motionEvent.getZ();
+                rotationYaw = motionEvent.getRotationYaw();
+                rotationPitch = motionEvent.getRotationPitch();
+                onGround = motionEvent.isOnGround();
+            }
         }
     }
 
@@ -343,7 +368,10 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
                                                 this.rotationYaw,
                                                 this.rotationPitch,
                                                 this.onGround);
-            Bus.EVENT_BUS.post(motionEvent);
+            if (!PingBypass.isConnected())
+            {
+                Bus.EVENT_BUS.post(motionEvent);
+            }
         }
 
         if (motionEvent.isCancelled())
@@ -361,7 +389,8 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
     private void onUpdateWalkingPlayerPost(CallbackInfo ci)
     {
         if (ROTATION_BYPASS.isEnabled() && !ROTATION_BYPASS.returnIfPresent(
-            Compatibility::isShowingRotations, false))
+            Compatibility::isShowingRotations, false)
+            && !PingBypass.isConnected())
         {
             // maybe someone else changed our position in the meantime
             if (posX == motionEvent.getX())
@@ -461,23 +490,26 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(value = "RETURN"))
     private void onUpdateWalkingPlayer_Return(CallbackInfo callbackInfo)
     {
-        MotionUpdateEvent event = new MotionUpdateEvent(Stage.POST, motionEvent);
-        event.setCancelled(motionEvent.isCancelled());
-        Bus.EVENT_BUS.postReversed(event, null);
+        if (!PingBypass.isConnected())
+        {
+            MotionUpdateEvent event = new MotionUpdateEvent(Stage.POST, motionEvent);
+            event.setCancelled(motionEvent.isCancelled());
+            Bus.EVENT_BUS.postReversed(event, null);
+        }
     }
 
     @Inject(
         method = "pushOutOfBlocks",
         at = @At(value = "HEAD"),
         cancellable = true)
-    private void pushOutOfBlocksHook(CallbackInfoReturnable<Boolean> info)
+    private void pushOutOfBlocksHook(CallbackInfoReturnable<Boolean> cir)
     {
         BlockPushEvent event = new BlockPushEvent();
         Bus.EVENT_BUS.post(event);
 
         if (event.isCancelled())
         {
-            info.cancel();
+            cir.cancel();
         }
     }
 

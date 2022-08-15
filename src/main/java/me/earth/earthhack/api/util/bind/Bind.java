@@ -1,6 +1,6 @@
 package me.earth.earthhack.api.util.bind;
 
-import org.lwjgl.input.Keyboard;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 
 /**
  * Represents binds for the client. A key of -1 means no bind.

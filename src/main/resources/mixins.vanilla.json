@@ -14,7 +14,8 @@
     "MixinPlayerControllerMP",
     "MixinRenderChunk",
     "MixinRenderGlobal",
-    "MixinWorld"
+    "MixinWorld",
+    "MixinMinecraft"
   ],
   "injectors": {
     "maxShiftBy": 10

@@ -44,6 +44,11 @@ public class NumberSetting<N extends Number> extends Setting<N>
     }
 
     @Override
+    public Setting<N> copy() {
+        return new NumberSetting<>(getName(), getInitial(), getMin(), getMax());
+    }
+
+    @Override
     public SettingResult fromString(String string)
     {
         if (string == null)

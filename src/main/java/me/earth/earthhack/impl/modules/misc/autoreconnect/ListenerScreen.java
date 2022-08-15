@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.misc.autoreconnect;
 
 import me.earth.earthhack.impl.event.events.render.GuiScreenEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.client.gui.GuiDisconnected;
 
 final class ListenerScreen extends
@@ -15,10 +16,13 @@ final class ListenerScreen extends
     @Override
     public void invoke(GuiScreenEvent<GuiDisconnected> event)
     {
-        if (!event.isCancelled())
-        {
-            module.onGuiDisconnected(event.getScreen());
-            event.setCancelled(true);
+        if (!event.isCancelled() && !PingBypass.isConnected()) {
+            if (module.connected) {
+                module.setConnected(false);
+            } else {
+                module.onGuiDisconnected(event.getScreen());
+                event.setCancelled(true);
+            }
         }
     }
 

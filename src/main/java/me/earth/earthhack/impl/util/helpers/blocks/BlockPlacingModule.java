@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.util.helpers.blocks;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -25,6 +26,7 @@ import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockingType;
 import me.earth.earthhack.impl.util.minecraft.blocks.SpecialBlocks;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -63,25 +65,34 @@ public abstract class BlockPlacingModule extends DisablingModule
     public final Setting<Integer> blocks =
             register(new NumberSetting<>("Blocks/Place", 4, 1, 10));
     public final Setting<Integer> delay  =
-            register(new NumberSetting<>("Delay", 25, 0, 1000));
+            register(new NumberSetting<>("Delay", 25, 0, 1000))
+                .setComplexity(Complexity.Medium);
     public final Setting<Rotate> rotate  =
             register(new EnumSetting<>("Rotations", Rotate.None));
     public final Setting<Boolean> packet =
-            register(new BooleanSetting("Packet", true));
+            register(new BooleanSetting("Packet", true))
+                .setComplexity(Complexity.Medium);
     public final Setting<Boolean> swing  =
-            register(new BooleanSetting("Swing", false));
+            register(new BooleanSetting("Swing", false))
+                .setComplexity(Complexity.Medium);
     public final Setting<CooldownBypass> cooldownBypass =
-            register(new EnumSetting<>("Cooldown-Bypass", CooldownBypass.None));
+            register(new EnumSetting<>("Cooldown-Bypass", CooldownBypass.None))
+                .setComplexity(Complexity.Medium);
     public final Setting<Boolean> stackPacket =
-            register(new BooleanSetting("StackPacket", false));
+            register(new BooleanSetting("StackPacket", false))
+                .setComplexity(Complexity.Expert);
     public final Setting<Boolean> smartSneak =
-            register(new BooleanSetting("Smart-Sneak", false));
+            register(new BooleanSetting("Smart-Sneak", false))
+                .setComplexity(Complexity.Expert);
     public final Setting<PlaceSwing> placeSwing =
-            register(new EnumSetting<>("PlaceSwing", PlaceSwing.Always));
+            register(new EnumSetting<>("PlaceSwing", PlaceSwing.Always))
+                .setComplexity(Complexity.Medium);
     public final Setting<BlockingType> blockingType =
-            register(new EnumSetting<>("Blocking", BlockingType.Strict));
+            register(new EnumSetting<>("Blocking", BlockingType.Strict))
+                .setComplexity(Complexity.Expert);
     public final Setting<RayTraceMode> smartRay =
-            register(new EnumSetting<>("Raytrace", RayTraceMode.Fast));
+            register(new EnumSetting<>("Raytrace", RayTraceMode.Fast))
+                .setComplexity(Complexity.Expert);
 
     /** Timer for the delay setting.*/
     public final DiscreteTimer timer = new GuardTimer(500).reset(getDelay());
@@ -97,6 +108,7 @@ public abstract class BlockPlacingModule extends DisablingModule
     public int lastSlot = -1;
     /** The rotations to the placed block. */
     public float[] rotations;
+    protected int crystalSlot = -1;
 
     protected BlockPlacingModule(String name, Category category)
     {
@@ -268,28 +280,16 @@ public abstract class BlockPlacingModule extends DisablingModule
                             ? mc.player.inventory.currentItem
                             : this.lastSlot;
 
-            switch (cooldownBypass.getValue()) {
-                case None:
-                    InventoryUtil.switchTo(slot);
-                    break;
-                case Pick:
-                    InventoryUtil.bypassSwitch(slot);
-                    break;
-                case Slot:
-                    InventoryUtil.switchToBypassAlt(
-                            InventoryUtil.hotbarToInventory(slot));
-                    break;
-            }
+            cooldownBypass.getValue().switchTo(slot);
 
             if (!sneaking)
             {
-                mc.player
-                    .connection
-                    .sendPacket(new CPacketEntityAction(mc.player,
-                                    CPacketEntityAction.Action.START_SNEAKING));
+                PingBypass.sendToActualServer(
+                    new CPacketEntityAction(
+                        mc.player, CPacketEntityAction.Action.START_SNEAKING));
             }
 
-            packets.forEach(packet -> mc.player.connection.sendPacket(packet));
+            packets.forEach(PingBypass::sendToActualServer);
             timer.reset(delay.getValue());
 
             if (placeSwing.getValue() == PlaceSwing.Once)
@@ -299,28 +299,16 @@ public abstract class BlockPlacingModule extends DisablingModule
 
             if (!sneaking)
             {
-                mc.player
-                    .connection
-                    .sendPacket(new CPacketEntityAction(mc.player,
-                                    CPacketEntityAction.Action.STOP_SNEAKING));
+                PingBypass.sendToActualServer(
+                    new CPacketEntityAction(
+                        mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
             }
 
             post.forEach(Runnable::run);
             packets.clear();
             post.clear();
 
-            switch (cooldownBypass.getValue()) {
-                case None:
-                    InventoryUtil.switchTo(lastSlot);
-                    break;
-                case Slot:
-                    InventoryUtil.switchToBypassAlt(
-                            InventoryUtil.hotbarToInventory(slot));
-                    break;
-                case Pick:
-                    InventoryUtil.bypassSwitch(slot);
-                    break;
-            }
+            cooldownBypass.getValue().switchBack(lastSlot, slot);
 
             if (swing.getValue())
             {

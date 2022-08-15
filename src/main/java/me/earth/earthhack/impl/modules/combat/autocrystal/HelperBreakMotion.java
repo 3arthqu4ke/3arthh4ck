@@ -43,7 +43,7 @@ public class HelperBreakMotion extends AbstractBreakHelper<CrystalDataMotion>
     protected boolean isValid(Entity crystal, CrystalDataMotion data)
     {
         double distance = Managers.POSITION.getDistanceSq(crystal);
-        if (distance >= MathUtil.square(module.breakRange.getValue())
+        if (!module.rangeHelper.isCrystalInRangeOfLastPosition(crystal)
             || distance >= MathUtil.square(module.breakTrace.getValue())
                 && !Managers.POSITION.canEntityBeSeen(crystal))
         {
@@ -52,7 +52,7 @@ public class HelperBreakMotion extends AbstractBreakHelper<CrystalDataMotion>
 
         EntityPlayer e = RotationUtil.getRotationPlayer();
         distance = e.getDistanceSq(crystal);
-        if (distance >= MathUtil.square(module.breakRange.getValue())
+        if (!module.rangeHelper.isCrystalInRange(crystal)
             || distance >= MathUtil.square(module.breakTrace.getValue())
                 && !e.canEntityBeSeen(crystal))
         {
@@ -95,9 +95,11 @@ public class HelperBreakMotion extends AbstractBreakHelper<CrystalDataMotion>
                     break;
                 }
             case POST:
-                float postDamage = module.damageHelper.getDamage(crystal,
-                    RotationUtil.getRotationPlayer().getEntityBoundingBox());
-
+                float postDamage = module.isSuicideModule()
+                    ? 0.0f
+                    : module.damageHelper.getDamage(
+                        crystal, RotationUtil.getRotationPlayer()
+                                             .getEntityBoundingBox());
                 if (!incrementedCount
                     && postDamage <= module.shieldSelfDamage.getValue())
                 {

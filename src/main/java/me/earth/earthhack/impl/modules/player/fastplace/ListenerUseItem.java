@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.player.fastplace;
 
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.item.ItemFood;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
@@ -34,7 +35,7 @@ final class ListenerUseItem extends
         mc.player.connection.sendPacket(
                 new CPacketPlayerTryUseItem(event.getPacket().getHand()));
         sending = false;
-        mc.player.connection.sendPacket(
+        PingBypass.sendToActualServer(
                 new CPacketPlayerDigging(
                         CPacketPlayerDigging.Action.RELEASE_USE_ITEM,
                         BlockPos.ORIGIN,

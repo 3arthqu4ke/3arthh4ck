@@ -96,6 +96,8 @@ public class ServerTimeHelper extends SubscriberImpl implements Globals
                 mc.player.connection.sendPacket(
                         new CPacketPlayerTryUseItemOnBlock(
                                 pos, ray.sideHit, hand, f[0], f[1], f[2]));
+                module.sequentialHelper.setExpecting(pos);
+
                 if (time == SwingTime.Post)
                 {
                     Swing.Packet.swing(hand);

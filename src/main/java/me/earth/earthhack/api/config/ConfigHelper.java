@@ -14,7 +14,7 @@ public interface ConfigHelper<C extends Config> extends Nameable
 
     void save(String name) throws IOException;
 
-    void load(String name);
+    void load(String name) throws IOException;
 
     void refresh(String name) throws IOException;
 

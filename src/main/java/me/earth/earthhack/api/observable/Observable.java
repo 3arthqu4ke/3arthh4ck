@@ -11,6 +11,7 @@ import java.util.List;
 public class Observable<T>
 {
     private final List<Observer<? super T>> observers = new LinkedList<>();
+    private boolean deactivated;
 
     /**
      * Notifies all observers about a change.
@@ -20,9 +21,12 @@ public class Observable<T>
      */
     public T onChange(T value)
     {
-        for (Observer<? super T> observer : observers)
+        if (!deactivated)
         {
-            observer.onChange(value);
+            for (Observer<? super T> observer : observers)
+            {
+                observer.onChange(value);
+            }
         }
 
         return value;
@@ -49,6 +53,11 @@ public class Observable<T>
     public void removeObserver(Observer<? super T> observer)
     {
         observers.remove(observer);
+    }
+
+    public void setObserversDeactivated(boolean deactivated)
+    {
+        this.deactivated = deactivated;
     }
 
 }

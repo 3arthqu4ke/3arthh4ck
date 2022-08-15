@@ -7,8 +7,10 @@ import me.earth.earthhack.api.module.data.DefaultData;
 import me.earth.earthhack.api.module.data.ModuleData;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.module.util.Hidden;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.SettingContainer;
+import me.earth.earthhack.api.setting.event.SettingEvent;
 import me.earth.earthhack.api.setting.settings.BindSetting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -38,13 +40,15 @@ public abstract class Module extends SettingContainer
 
     private final Setting<String> name;
     private final Setting<Bind> bind =
-            register(new BindSetting("Bind", Bind.none()));
+        register(new BindSetting("Bind", Bind.none()));
     private final Setting<Hidden> hidden =
-        register(new EnumSetting<>("Hidden", Hidden.Visible));
+        register(new EnumSetting<>("Hidden", Hidden.Visible))
+            .setComplexity(Complexity.Medium);
     private final Setting<Boolean> enabled =
         register(new BooleanSetting("Enabled", false));
     private final Setting<Toggle> bindMode =
-        register(new EnumSetting<>("Toggle", Toggle.Normal));
+        register(new EnumSetting<>("Toggle", Toggle.Normal))
+            .setComplexity(Complexity.Medium);
 
     private final Category category;
     private ModuleData data;
@@ -59,34 +63,36 @@ public abstract class Module extends SettingContainer
      */
     public Module(String name, Category category)
     {
-        this.name = register(new StringSetting("Name", name));
+        this.name = register(new StringSetting("Name", name))
+            .setComplexity(Complexity.Medium);
         this.category = category;
         this.data     = new DefaultData<>(this);
-        this.enabled.addObserver(event ->
-        {
-            if (event.isCancelled())
-            {
-                return;
-            }
+        this.enabled.addObserver(this::onEnabledEvent);
+    }
 
-            enableCheck.set(event.getValue());
-            if (event.getValue() && !Bus.EVENT_BUS.isSubscribed(this))
+    protected void onEnabledEvent(SettingEvent<Boolean> event) {
+        if (event.isCancelled())
+        {
+            return;
+        }
+
+        enableCheck.set(event.getValue());
+        if (event.getValue() && !Bus.EVENT_BUS.isSubscribed(this))
+        {
+            inOnEnable.set(true);
+            onEnable();
+            inOnEnable.set(false);
+            if (enableCheck.get())
             {
-                inOnEnable.set(true);
-                onEnable();
-                inOnEnable.set(false);
-                if (enableCheck.get())
-                {
-                    Bus.EVENT_BUS.subscribe(this);
-                }
+                Bus.EVENT_BUS.subscribe(this);
             }
-            else if (!event.getValue()
-                    && (Bus.EVENT_BUS.isSubscribed(this) || inOnEnable.get()))
-            {
-                Bus.EVENT_BUS.unsubscribe(this);
-                onDisable();
-            }
-        });
+        }
+        else if (!event.getValue()
+            && (Bus.EVENT_BUS.isSubscribed(this) || inOnEnable.get()))
+        {
+            Bus.EVENT_BUS.unsubscribe(this);
+            onDisable();
+        }
     }
 
     @Override
@@ -227,6 +233,7 @@ public abstract class Module extends SettingContainer
         return this.name.getInitial().hashCode();
     }
 
+    // TODO: this is shit!!!!
     @Override
     public boolean equals(Object o)
     {
@@ -237,7 +244,7 @@ public abstract class Module extends SettingContainer
         else if (o instanceof Module)
         {
             String name = this.name.getInitial();
-            return name != null && name.equals(((Module) o).name.getInitial());
+            return name != null && name.equals(((Module) o).name.getInitial()) && this.getClass() == o.getClass();
         }
 
         return false;

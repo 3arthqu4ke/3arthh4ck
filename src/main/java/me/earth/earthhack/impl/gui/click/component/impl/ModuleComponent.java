@@ -9,18 +9,16 @@ import me.earth.earthhack.impl.gui.click.component.Component;
 import me.earth.earthhack.impl.gui.visibility.Visibilities;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
+import me.earth.earthhack.impl.modules.client.configs.ConfigHelperModule;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
+import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 
 public class ModuleComponent extends Component {
-    private static final SettingCache<Boolean, BooleanSetting, ClickGui> WHITE =
-            Caches.getSetting(ClickGui.class, BooleanSetting.class, "White-Settings", true);
-
-
     private final Module module;
     private final ArrayList<Component> components = new ArrayList<>();
 
@@ -100,7 +98,9 @@ public class ModuleComponent extends Component {
         if (getModule().isEnabled()) {
             Render2DUtil.drawRect(getFinishedX() + 1, getFinishedY() + 0.5f, getFinishedX() + getWidth() - 1, getFinishedY() + getHeight() - 0.5f, hovered ? getClickGui().get().color.getValue().brighter().getRGB() : getClickGui().get().color.getValue().getRGB());
         }
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(getLabel(), getFinishedX() + 4, getFinishedY() + getHeight() / 2 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), getModule().isEnabled() ? 0xFFFFFFFF : 0xFFAAAAAA);
+
+        String label = module instanceof ConfigHelperModule && ((ConfigHelperModule) module).isDeleted() ? TextColor.RED + getLabel() : getLabel();
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(label, getFinishedX() + 4, getFinishedY() + getHeight() / 2 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), getModule().isEnabled() ? 0xFFFFFFFF : 0xFFAAAAAA);
         if (!getComponents().isEmpty())
             Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(isExtended() ? getClickGui().get().close.getValue() : getClickGui().get().open.getValue(), getFinishedX() + getWidth() - 4 - Minecraft.getMinecraft().fontRenderer.getStringWidth(isExtended() ? getClickGui().get().close.getValue() : getClickGui().get().open.getValue()), getFinishedY() + getHeight() / 2 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), getModule().isEnabled() ? 0xFFFFFFFF : 0xFFAAAAAA);
 
@@ -161,7 +161,7 @@ public class ModuleComponent extends Component {
                 Render2DUtil.drawRect(getFinishedX() + 1.0f, getFinishedY() + getHeight() + getComponentsSize(), getFinishedX() + getWidth() - 1.f, getFinishedY() + getHeight() + getComponentsSize() + 2, hovered ? getClickGui().get().color.getValue().brighter().getRGB() : getClickGui().get().color.getValue().getRGB());
                 Render2DUtil.drawRect(getFinishedX() + getWidth() - 3.f, getFinishedY() + getHeight() - 0.5f, getFinishedX() + getWidth() - 1.f, getFinishedY() + getHeight() + getComponentsSize(), hovered ? getClickGui().get().color.getValue().brighter().getRGB() : getClickGui().get().color.getValue().getRGB());
             }
-            Render2DUtil.drawBorderedRect(getFinishedX() + 3.0f, getFinishedY() + getHeight() - 0.5f, getFinishedX() + getWidth() - 3.f, getFinishedY() + getHeight() + getComponentsSize() + 0.5f, 0.5f, 0, WHITE.getValue() ? 0xffffffff : 0xff000000);
+            Render2DUtil.drawBorderedRect(getFinishedX() + 3.0f, getFinishedY() + getHeight() - 0.5f, getFinishedX() + getWidth() - 3.f, getFinishedY() + getHeight() + getComponentsSize() + 0.5f, 0.5f, 0, getClickGui().get().white.getValue() ? 0xffffffff : 0xff000000);
 
         }
         Render2DUtil.drawBorderedRect(getFinishedX() + 1, getFinishedY() + 0.5f, getFinishedX() + 1 + getWidth() - 2, getFinishedY() - 0.5f + getHeight() + (isExtended() ? (getComponentsSize() + 3.0f) : 0), 0.5f, 0, 0xff000000);

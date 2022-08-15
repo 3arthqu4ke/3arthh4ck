@@ -14,6 +14,7 @@ import java.util.List;
  *
  * @param <T> the type of Object registered.
  */
+// TODO: any actual evidence that ArrayList iterates so much faster???????????
 public abstract class IterationRegister<T extends Nameable>
         implements Register<T>
 {

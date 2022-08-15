@@ -31,7 +31,7 @@ public abstract class AbstractConfigHelper<C extends Config>
                                 String path)
     {
         this.name = name;
-        this.path = "earthhack/" + path;
+        this.path = "earthhack" + File.separator + path;
     }
 
     protected abstract C create(String name);

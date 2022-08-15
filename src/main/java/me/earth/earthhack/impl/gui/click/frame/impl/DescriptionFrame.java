@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.gui.click.frame.impl;
 
 import me.earth.earthhack.api.cache.ModuleCache;
+import me.earth.earthhack.impl.gui.click.Click;
 import me.earth.earthhack.impl.gui.click.frame.Frame;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
@@ -16,8 +17,6 @@ import java.util.List;
 
 public class DescriptionFrame extends Frame
 {
-    private static final ModuleCache<ClickGui> CLICK_GUI =
-            Caches.getModule(ClickGui.class);
     private static final ResourceLocation LEFT_EAR = new ResourceLocation("earthhack:textures/gui/left_ear.png");
     private static final ResourceLocation RIGH_EAR = new ResourceLocation("earthhack:textures/gui/right_ear.png");
 
@@ -25,20 +24,25 @@ public class DescriptionFrame extends Frame
 
     public DescriptionFrame(float posX, float posY, float width, float height)
     {
-        super("Description", posX, posY, width, height);
+        this("Description", posX, posY, width, height);
+    }
+
+    public DescriptionFrame(String label, float posX, float posY, float width, float height)
+    {
+        super(label, posX, posY, width, height);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        if (description == null || !CLICK_GUI.get().description.getValue())
+        if (description == null || !Click.CLICK_GUI.get().description.getValue())
         {
             return;
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
-        final Color clr = CLICK_GUI.get().color.getValue();
-        if (CLICK_GUI.get().catEars.getValue())
+        final Color clr = Click.CLICK_GUI.get().color.getValue();
+        if (Click.CLICK_GUI.get().catEars.getValue())
         {
             Minecraft.getMinecraft().getTextureManager().bindTexture(LEFT_EAR);
             GlStateManager.color(clr.getRed() / 255.f, clr.getGreen() / 255.f, clr.getBlue() / 255.f, 1.0F);
@@ -48,7 +52,7 @@ public class DescriptionFrame extends Frame
             Gui.drawScaledCustomSizeModalRect((int) (getPosX() + getWidth()) - 12, (int) getPosY() - 8, 0, 0, 20, 20, 20, 20, 20, 20);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         }
-        Render2DUtil.drawRect(getPosX(), getPosY(), getPosX() + getWidth(), getPosY() + getHeight(), CLICK_GUI.get().color.getValue().getRGB());
+        Render2DUtil.drawRect(getPosX(), getPosY(), getPosX() + getWidth(), getPosY() + getHeight(), Click.CLICK_GUI.get().color.getValue().getRGB());
         Render2DUtil.drawBorderedRect(getPosX(), getPosY(), getPosX() + getWidth(), getPosY() + getHeight(), 0.5f, 0, 0xff000000);
         Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(getLabel(), getPosX() + 3, getPosY() + getHeight() / 2 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), 0xFFFFFFFF);
 
@@ -65,6 +69,11 @@ public class DescriptionFrame extends Frame
         }
     }
 
+    @Override
+    public void mouseReleased(int mouseX, int mouseY, int mouseButton) {
+        super.mouseReleased(mouseX, mouseY, mouseButton);
+    }
+
     public String getDescription()
     {
         return description;
@@ -74,4 +83,5 @@ public class DescriptionFrame extends Frame
     {
         this.description = description;
     }
+
 }

@@ -33,6 +33,8 @@ public class Velocity extends Module
             register(new BooleanSetting("Blocks", false));
     protected final Setting<Boolean> shulkers   =
             register(new BooleanSetting("Shulkers", false));
+    protected final Setting<Boolean> fixPingBypass   =
+            register(new BooleanSetting("FixPingBypassPackets", true));
     // TODO: AntiLag!
 
     public Velocity()

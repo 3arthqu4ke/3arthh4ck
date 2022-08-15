@@ -7,10 +7,11 @@ final class StepData extends BlockESPModuleData<Step>
     public StepData(Step module)
     {
         super(module);
+        register(module.mode, "-Vanilla:, not allowed by some AntiCheats." +
+            "\n-Normal: sends a few packets at once." +
+            "\n-Slow: distributes the packets from mode Normal.");
         register(module.height,
                 "Maximum height in blocks that you want to step up.");
-        register(module.useTimer, "If you want step to use timer.");
-        register(module.vanilla, "Always to prefer if the server allows it.");
         register(module.entityStep,
                 "Step with entities that you are riding on as well.");
         register(module.autoOff, "Turn the module off after it stepped.");

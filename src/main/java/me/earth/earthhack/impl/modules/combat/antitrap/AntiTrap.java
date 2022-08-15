@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.modules.combat.antitrap;
 
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -30,17 +31,23 @@ public class AntiTrap extends ObbyModule
     protected final Setting<AntiTrapMode> mode =
         registerBefore(new EnumSetting<>("Mode", AntiTrapMode.Crystal), blocks);
     protected final Setting<Boolean> offhand =
-        register(new BooleanSetting("Offhand", false));
+        register(new BooleanSetting("Offhand", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Integer> timeOut =
-        register(new NumberSetting<>("TimeOut", 400, 0, 1000));
+        register(new NumberSetting<>("TimeOut", 400, 0, 1000))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> empty   =
-        register(new BooleanSetting("Empty", true));
+        register(new BooleanSetting("Empty", true))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> swing   =
-        register(new BooleanSetting("Swing", false));
+        register(new BooleanSetting("Swing", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> highFill =
-        register(new BooleanSetting("HighFill", false));
+        register(new BooleanSetting("HighFill", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Integer> confirm =
-        register(new NumberSetting<>("Confirm", 250, 0, 1000));
+        register(new NumberSetting<>("Confirm", 250, 0, 1000))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> autoOff =
         register(new BooleanSetting("Auto-Off", true));
 

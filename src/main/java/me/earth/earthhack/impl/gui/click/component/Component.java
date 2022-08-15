@@ -21,7 +21,6 @@ public class Component {
     private float height;
     private boolean extended, dragging;
     private String description;
-    private static final ModuleCache<ClickGui> CLICK_GUI = Caches.getModule(ClickGui.class);
 
     public Component(String label, float posX, float posY, float offsetX, float offsetY, float width, float height) {
         this.label = label;
@@ -156,7 +155,7 @@ public class Component {
     }
 
     public static ModuleCache<ClickGui> getClickGui() {
-        return CLICK_GUI;
+        return Click.CLICK_GUI;
     }
 
     public void setWidth(float width) {

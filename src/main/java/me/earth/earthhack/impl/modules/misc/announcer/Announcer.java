@@ -51,6 +51,8 @@ public class Announcer extends Module
             register(new BooleanSetting("Refresh", false));
     protected final Setting<Boolean> random   =
             register(new BooleanSetting("Random", false));
+    protected final Setting<Boolean> targetsOnly   =
+            register(new BooleanSetting("TargetsOnly", false));
     protected final Setting<Double> minDist   =
             register(new NumberSetting<>("MinDistance", 10.0, 1.0, 100.0));
 

@@ -1,6 +1,7 @@
 package me.earth.earthhack.api.setting.settings;
 
 import com.google.gson.JsonElement;
+import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.event.SettingResult;
 
 import java.util.function.Consumer;

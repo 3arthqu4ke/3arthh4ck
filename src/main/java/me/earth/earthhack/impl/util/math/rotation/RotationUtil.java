@@ -229,6 +229,7 @@ public class RotationUtil implements Globals
 
          */
 
+        // TODO: use RenderEntity arghhhhhhhhhh all of this is so messed up???
         return getAngle(x, y, z) < mc.gameSettings.fovSetting / 2.0f;
     }
 
@@ -340,44 +341,25 @@ public class RotationUtil implements Globals
                                             IBlockAccess world,
                                             BiPredicate<Block, BlockPos> check)
     {
-        Entity from = getRotationPlayer();
-        float yaw = Managers.ROTATION.getServerYaw();
-        float pitch = Managers.ROTATION.getServerPitch();
-        Vec3d start = Managers.POSITION.getVec().add(0, from.getEyeHeight(), 0);
-
-        Vec3d look = RotationUtil.getVec3d(yaw, pitch);
-        double d = from.getDistance(pos.getX() + 0.5,
-                                    pos.getY() + 0.5,
-                                    pos.getZ() + 0.5) + 1;
-
-        Vec3d end = start.add(look.x * d, look.y * d, look.z * d);
-
-        return RayTracer.trace(mc.world,
-                                world,
-                                start,
-                                end,
-                                true,
-                                false,
-                                true,
-                                check);
+        return rayTraceWithYP(pos, world,
+                          Managers.ROTATION.getServerYaw(),
+                          Managers.ROTATION.getServerPitch(), check);
     }
 
-    // TODO: make function calls nice
     public static RayTraceResult rayTraceWithYP(BlockPos pos,
                                             IBlockAccess world,
-                                            float yaw,
-                                            float pitch,
+                                            float yaw, float pitch,
                                             BiPredicate<Block, BlockPos> check)
     {
         Entity from = getRotationPlayer();
-        Vec3d start = from.getPositionVector()
-                          .add(0.0, from.getEyeHeight(), 0.0);
-
+        Vec3d start = Managers.POSITION.getVec().add(0, from.getEyeHeight(), 0);
         Vec3d look = RotationUtil.getVec3d(yaw, pitch);
         double d = from.getDistance(pos.getX() + 0.5,
                                     pos.getY() + 0.5,
                                     pos.getZ() + 0.5) + 1;
+
         Vec3d end = start.add(look.x * d, look.y * d, look.z * d);
+
         return RayTracer.trace(mc.world,
                                world,
                                start,

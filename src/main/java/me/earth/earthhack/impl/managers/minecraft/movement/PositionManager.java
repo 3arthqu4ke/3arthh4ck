@@ -4,7 +4,10 @@ import me.earth.earthhack.api.event.bus.EventListener;
 import me.earth.earthhack.api.event.bus.SubscriberImpl;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityTracker;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -18,6 +21,9 @@ import net.minecraft.util.math.Vec3d;
  */
 public class PositionManager extends SubscriberImpl implements Globals
 {
+    private static final boolean SET_SELF = Boolean.parseBoolean(
+        System.getProperty("set.mc.player.serverPos", "true"));
+
     private boolean blocking;
 
     private volatile int teleportID;
@@ -38,6 +44,15 @@ public class PositionManager extends SubscriberImpl implements Globals
             @Override
             public void invoke(PacketEvent.Receive<SPacketPlayerPosLook> event)
             {
+                EntityPlayerSP player = mc.player;
+                if (player == null) {
+                    if (!mc.isCallingFromMinecraftThread()) {
+                        mc.addScheduledTask(() -> this.invoke(event));
+                    }
+
+                    return;
+                }
+
                 SPacketPlayerPosLook packet = event.getPacket();
                 double x = packet.getX();
                 double y = packet.getY();
@@ -46,24 +61,30 @@ public class PositionManager extends SubscriberImpl implements Globals
                 if (packet.getFlags()
                           .contains(SPacketPlayerPosLook.EnumFlags.X))
                 {
-                    x += mc.player.posX;
+                    x += player.posX;
                 }
 
                 if (packet.getFlags()
                           .contains(SPacketPlayerPosLook.EnumFlags.Y))
                 {
-                    y += mc.player.posY;
+                    y += player.posY;
                 }
 
                 if (packet.getFlags()
                           .contains(SPacketPlayerPosLook.EnumFlags.Z))
                 {
-                    z += mc.player.posZ;
+                    z += player.posZ;
                 }
 
                 last_x = MathHelper.clamp(x, -3.0E7, 3.0E7);
                 last_y = y;
                 last_z = MathHelper.clamp(z, -3.0E7, 3.0E7);
+                if (SET_SELF) {
+                    player.serverPosX = EntityTracker.getPositionLong(last_x);
+                    player.serverPosY = EntityTracker.getPositionLong(last_y);
+                    player.serverPosZ = EntityTracker.getPositionLong(last_z);
+                }
+
                 onGround = false;
                 teleportID = packet.getTeleportId();
             }
@@ -141,6 +162,13 @@ public class PositionManager extends SubscriberImpl implements Globals
         last_x = packetIn.getX(mc.player.posX);
         last_y = packetIn.getY(mc.player.posY);
         last_z = packetIn.getZ(mc.player.posZ);
+        EntityPlayer player;
+        if (SET_SELF && (player = mc.player) != null) {
+            player.serverPosX = EntityTracker.getPositionLong(last_x);
+            player.serverPosY = EntityTracker.getPositionLong(last_y);
+            player.serverPosZ = EntityTracker.getPositionLong(last_z);
+        }
+
         setOnGround(packetIn.isOnGround());
     }
 

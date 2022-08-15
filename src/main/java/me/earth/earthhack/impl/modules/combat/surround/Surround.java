@@ -41,60 +41,60 @@ import java.util.stream.Collectors;
 public class Surround extends ObbyModule
 {
     protected static final ModuleCache<Freecam> FREECAM =
-            Caches.getModule(Freecam.class);
+        Caches.getModule(Freecam.class);
     protected static final ModuleCache<BlockLag> BLOCKLAG =
-            Caches.getModule(BlockLag.class);
+        Caches.getModule(BlockLag.class);
 
     protected final Setting<Boolean> center    =
-            register(new BooleanSetting("Center", true));
+        register(new BooleanSetting("Center", true));
     protected final Setting<Movement> movement =
-            register(new EnumSetting<>("Movement", Movement.Static));
+        register(new EnumSetting<>("Movement", Movement.Static));
     protected final Setting<Float> speed       =
-            register(new NumberSetting<>("Speed", 19.5f, 0.0f, 35.0f));
+        register(new NumberSetting<>("Speed", 19.5f, 0.0f, 35.0f));
     protected final Setting<Boolean> noTrap    =
-            register(new BooleanSetting("NoTrap", false));
+        register(new BooleanSetting("NoTrap", false));
     protected final Setting<Boolean> floor     =
-            register(new BooleanSetting("Floor", false));
+        register(new BooleanSetting("Floor", false));
     protected final Setting<Integer> extend    =
-            register(new NumberSetting<>("Extend", 1, 1, 3));
+        register(new NumberSetting<>("Extend", 1, 1, 3));
     protected final Setting<Integer> eDelay    =
-            register(new NumberSetting<>("E-Delay", 100, 0, 1000));
+        register(new NumberSetting<>("E-Delay", 100, 0, 1000));
     protected final Setting<Boolean> holeC     =
-            register(new BooleanSetting("Hole-C", false));
+        register(new BooleanSetting("Hole-C", false));
     protected final Setting<Boolean> instant   =
-            register(new BooleanSetting("Instant", false));
+        register(new BooleanSetting("Instant", false));
     protected final Setting<Boolean> sound =
-            register(new BooleanSetting("Sound", false));
+        register(new BooleanSetting("Sound", false));
     protected final Setting<Integer> playerExtend =
-            register(new NumberSetting<>("PlayerExtend", 0, 0, 4));
+        register(new NumberSetting<>("PlayerExtend", 0, 0, 4));
     protected final Setting<Boolean> peNoTrap =
-            register(new BooleanSetting("PE-NoTrap", false));
+        register(new BooleanSetting("PE-NoTrap", false));
     protected final Setting<Boolean> noTrapBlock =
-            register(new BooleanSetting("NoTrapBlock", false));
+        register(new BooleanSetting("NoTrapBlock", false));
     protected final Setting<Boolean> multiTrap =
-            register(new BooleanSetting("MultiTrap", false));
+        register(new BooleanSetting("MultiTrap", false));
     protected final Setting<Boolean> trapExtend =
-            register(new BooleanSetting("TrapExtend", false));
+        register(new BooleanSetting("TrapExtend", false));
     protected final Setting<Boolean> newVer =
-            register(new BooleanSetting("1.13+", false));
+        register(new BooleanSetting("1.13+", false));
     protected final Setting<Boolean> deltaY =
-            register(new BooleanSetting("Delta-Y", true));
+        register(new BooleanSetting("Delta-Y", true));
     protected final Setting<Boolean> centerY =
-            register(new BooleanSetting("Center-Y", false));
+        register(new BooleanSetting("Center-Y", false));
     protected final Setting<Boolean> predict =
-            register(new BooleanSetting("Predict", false));
+        register(new BooleanSetting("Predict", false));
     protected final Setting<Boolean> async =
-            register(new BooleanSetting("Async", false));
+        register(new BooleanSetting("Async", false));
     protected final Setting<Boolean> resync =
-            register(new BooleanSetting("Resync", false));
+        register(new BooleanSetting("Resync", false));
     protected final Setting<Boolean> crystalCheck =
-            register(new BooleanSetting("Crystal-Check", true));
+        register(new BooleanSetting("Crystal-Check", true));
     protected final Setting<Boolean> burrow =
-            register(new BooleanSetting("Burrow", false));
+        register(new BooleanSetting("Burrow", false));
     protected final Setting<Boolean> noSelfExtend =
-            register(new BooleanSetting("NoSelfExtend", false));
+        register(new BooleanSetting("NoSelfExtend", false));
     protected final Setting<SurroundFreecamMode> freecam =
-            register(new EnumSetting<>("Freecam", SurroundFreecamMode.Off));
+        register(new EnumSetting<>("Freecam", SurroundFreecamMode.Off));
 
     /** A Listener for the SetDeadManager (Instant + Sound). */
     protected final ListenerSound soundObserver = new ListenerSound(this);
@@ -160,10 +160,10 @@ public class Surround extends ObbyModule
     protected void center()
     {
         if (center.getValue()
-                && !setPosition
-                && startPos != null
-                && mc.world.getBlockState(startPos).getBlock() != Blocks.WEB
-                && (holeC.getValue() || !HoleUtil.isHole(startPos, false)[0]))
+            && !setPosition
+            && startPos != null
+            && mc.world.getBlockState(startPos).getBlock() != Blocks.WEB
+            && (holeC.getValue() || !HoleUtil.isHole(startPos, false)[0]))
         {
             double x = startPos.getX() + 0.5;
             double y = centerY.getValue() ? startPos.getY() : getPlayer().posY;
@@ -190,7 +190,7 @@ public class Surround extends ObbyModule
             Set<BlockPos> blocked = createBlocked();
             Set<BlockPos> surrounding = createSurrounding(blocked,
                                                           mc.world
-                                                            .playerEntities);
+                                                              .playerEntities);
             placed.retainAll(surrounding);
             this.targets = surrounding;
             return true;
@@ -209,7 +209,7 @@ public class Surround extends ObbyModule
     private boolean check()
     {
         if (FREECAM.isEnabled()
-                && freecam.getValue() == SurroundFreecamMode.Off)
+            && freecam.getValue() == SurroundFreecamMode.Off)
         {
             return false;
         }
@@ -290,9 +290,9 @@ public class Surround extends ObbyModule
         Set<BlockPos> blocked = new HashSet<>();
         BlockPos playerPos = getPlayerPos();
         if (HoleUtil.isHole(playerPos, false)[0]
-                || center.getValue() // && !setPosition
-                || extend.getValue() == 1
-                || !extendingWatch.passed(eDelay.getValue()))
+            || center.getValue() // && !setPosition
+            || extend.getValue() == 1
+            || !extendingWatch.passed(eDelay.getValue()))
         {
             blocked.add(playerPos);
         }
@@ -302,26 +302,26 @@ public class Surround extends ObbyModule
                 new ArrayList<>(PositionUtil.getBlockedPositions(getPlayer()))
                     .stream()
                     .sorted(Comparator.comparingDouble(pos ->
-                            BlockUtil.getDistanceSq(getPlayer(), pos)))
+                                                           BlockUtil.getDistanceSq(getPlayer(), pos)))
                     .collect(Collectors.toList());
 
             List<BlockPos> filtered =
                 new ArrayList<>(unfiltered)
                     .stream()
                     .filter(pos ->
-                        mc.world
-                            .getBlockState(pos)
-                            .getMaterial()
-                            .isReplaceable()
-                        && mc.world
-                                .getBlockState(pos.up())
-                                .getMaterial()
-                                .isReplaceable())
+                                mc.world
+                                    .getBlockState(pos)
+                                    .getMaterial()
+                                    .isReplaceable()
+                                    && mc.world
+                                    .getBlockState(pos.up())
+                                    .getMaterial()
+                                    .isReplaceable())
                     .collect(Collectors.toList());
 
             if (extend.getValue() == 3
-                    && filtered.size() == 2
-                    && unfiltered.size() == 4)
+                && filtered.size() == 2
+                && unfiltered.size() == 4)
             {
                 // Prevents that a pos like this
                 // (x == block, o == air, i = player):
@@ -331,7 +331,7 @@ public class Surround extends ObbyModule
                 //                                   x i
                 //
                 if (unfiltered.get(0).equals(filtered.get(0))
-                        && unfiltered.get(3).equals(filtered.get(1)))
+                    && unfiltered.get(3).equals(filtered.get(1)))
                 {
                     filtered.clear();
                     filtered.add(playerPos);
@@ -339,7 +339,7 @@ public class Surround extends ObbyModule
             }
 
             if (extend.getValue() == 2 && filtered.size() > 2
-                    || extend.getValue() == 3 && filtered.size() == 3)
+                || extend.getValue() == 3 && filtered.size() == 3)
             {
                 // Prevents that a pos like this
                 // (x == block, o == air, i = player):
@@ -370,8 +370,8 @@ public class Surround extends ObbyModule
     protected boolean shouldInstant(boolean sound)
     {
         return instant.getValue()
-                && rotate.getValue() != Rotate.Normal
-                && (!sound || this.sound.getValue());
+            && rotate.getValue() != Rotate.Normal
+            && (!sound || this.sound.getValue());
     }
 
     protected boolean isBlockingTrap(BlockPos pos, List<EntityPlayer> players)
@@ -383,12 +383,12 @@ public class Surround extends ObbyModule
 
         EnumFacing relative = getFacingRelativeToPlayer(pos, getPlayer());
         if (relative != null
-                && !trapExtend.getValue()
-                && BlockUtil.canPlaceCrystal(getPlayerPos()
-                                                     .down()
-                                                     .offset(relative, 2),
-                                             true,
-                                             newVer.getValue()))
+            && !trapExtend.getValue()
+            && BlockUtil.canPlaceCrystal(getPlayerPos()
+                                             .down()
+                                             .offset(relative, 2),
+                                         true,
+                                         newVer.getValue()))
         {
             return false;
         }
@@ -396,10 +396,10 @@ public class Surround extends ObbyModule
         for (EntityPlayer player : players)
         {
             if (player == null
-                    || getPlayer().equals(player)
-                    || EntityUtil.isDead(player)
-                    || Managers.FRIENDS.contains(player)
-                    || player.getDistanceSq(pos) > 9)
+                || getPlayer().equals(player)
+                || EntityUtil.isDead(player)
+                || Managers.FRIENDS.contains(player)
+                || player.getDistanceSq(pos) > 9)
             {
                 continue;
             }
@@ -408,8 +408,8 @@ public class Surround extends ObbyModule
             for (EnumFacing facing : EnumFacing.HORIZONTALS)
             {
                 if (facing == relative
-                        || facing.getOpposite() == relative
-                        || !pos.offset(facing).equals(playerPos))
+                    || facing.getOpposite() == relative
+                    || !pos.offset(facing).equals(playerPos))
                 {
                     continue;
                 }
@@ -439,15 +439,15 @@ public class Surround extends ObbyModule
         }
 
         return compare < 0 ? z < 0
-                                ? EnumFacing.NORTH
-                                : EnumFacing.SOUTH
-                           : x < 0
-                                ? EnumFacing.WEST
-                                : EnumFacing.EAST;
+            ? EnumFacing.NORTH
+            : EnumFacing.SOUTH
+            : x < 0
+            ? EnumFacing.WEST
+            : EnumFacing.EAST;
     }
 
     public Set<BlockPos> createSurrounding(Set<BlockPos> blocked,
-                                              List<EntityPlayer> players)
+                                           List<EntityPlayer> players)
     {
         Set<BlockPos> surrounding = new HashSet<>();
         for (BlockPos pos : blocked)
@@ -483,12 +483,12 @@ public class Surround extends ObbyModule
                 for (EntityPlayer player : players)
                 {
                     if (player == null
-                            || (noSelfExtend.getValue() && player == mc.player)
-                            || PlayerUtil.isFakePlayer(player)
-                            || EntityUtil.isDead(player)
-                            || !BlockUtil.isBlocking(pos,
-                                                     player,
-                                                     blockingType.getValue()))
+                        || (noSelfExtend.getValue() && player == mc.player)
+                        || PlayerUtil.isFakePlayer(player)
+                        || EntityUtil.isDead(player)
+                        || !BlockUtil.isBlocking(pos,
+                                                 player,
+                                                 blockingType.getValue()))
                     {
                         continue;
                     }
@@ -522,9 +522,9 @@ public class Surround extends ObbyModule
         if (noTrapBlock.getValue())
         {
             Set<BlockPos> trapBlocks =
-                    surrounding.stream()
-                               .filter(pos -> isBlockingTrap(pos, players))
-                               .collect(Collectors.toSet());
+                surrounding.stream()
+                           .filter(pos -> isBlockingTrap(pos, players))
+                           .collect(Collectors.toSet());
 
             if (!multiTrap.getValue() && trapBlocks.size() > 1)
             {
@@ -552,8 +552,8 @@ public class Surround extends ObbyModule
     protected BlockPos getPlayerPos()
     {
         return deltaY.getValue() && Math.abs(getPlayer().motionY) > 0.1
-                    ? new BlockPos(getPlayer())
-                    : PositionUtil.getPosition(getPlayer());
+            ? new BlockPos(getPlayer())
+            : PositionUtil.getPosition(getPlayer());
     }
 
     @Override
@@ -575,7 +575,7 @@ public class Surround extends ObbyModule
     public EntityPlayer getPlayer()
     {
         if (freecam.getValue() == SurroundFreecamMode.Origin
-                && FREECAM.isEnabled())
+            && FREECAM.isEnabled())
         {
             EntityPlayer target = FREECAM.get().getPlayer();
             if (target != null)
@@ -588,4 +588,3 @@ public class Surround extends ObbyModule
     }
 
 }
-

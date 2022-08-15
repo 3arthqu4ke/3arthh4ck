@@ -22,6 +22,12 @@ public class HelperUtil implements Globals
 {
     public static BreakValidity isValid(AutoCrystal module, Entity crystal)
     {
+        return isValid(module, crystal, false);
+    }
+
+    // TODO: make sure that we use the correct lastPos everywhere!
+    public static BreakValidity isValid(AutoCrystal module, Entity crystal, boolean lastPos)
+    {
         if (module.existed.getValue() != 0
                 && System.currentTimeMillis()
                     - ((IEntity) crystal).getTimeStamp()
@@ -33,17 +39,19 @@ public class HelperUtil implements Globals
             return BreakValidity.INVALID;
         }
 
-        //TODO: not accurate, Managers.Position...
-        if (RotationUtil.getRotationPlayer().getDistanceSq(crystal)
-                >= MathUtil.square(module.breakRange.getValue()))
+        if (lastPos && !module.rangeHelper.isCrystalInRangeOfLastPosition(crystal)
+            || !lastPos && !module.rangeHelper.isCrystalInRange(crystal))
         {
             return BreakValidity.INVALID;
         }
 
-        if (RotationUtil.getRotationPlayer().getDistanceSq(crystal)
-                >= MathUtil.square(module.breakTrace.getValue()))
+        if (lastPos && Managers.POSITION.getDistanceSq(crystal)
+            >= MathUtil.square(module.breakTrace.getValue())
+            || !lastPos && RotationUtil.getRotationPlayer().getDistanceSq(crystal)
+            >= MathUtil.square(module.breakTrace.getValue()))
         {
-            if (!RayTraceUtil.canBeSeen(
+            if (lastPos && !Managers.POSITION.canEntityBeSeen(crystal)
+                || !lastPos && !RayTraceUtil.canBeSeen(
                     new Vec3d(crystal.posX,
                               crystal.posY + 1.7,
                               crystal.posZ),
@@ -53,7 +61,9 @@ public class HelperUtil implements Globals
             }
         }
 
+        // TODO: lastPos and then check isLegit???????? not sure if this is ok
         if (module.rotate.getValue().noRotate(ACRotate.Break)
+                || module.isNotCheckingRotations()
                 || (RotationUtil.isLegit(crystal, crystal)
                     && module.positionHistoryHelper
                              .arePreviousRotationsLegit(crystal,

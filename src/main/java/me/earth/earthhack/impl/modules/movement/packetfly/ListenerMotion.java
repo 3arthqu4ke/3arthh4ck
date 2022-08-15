@@ -17,7 +17,8 @@ final class ListenerMotion extends ModuleListener<PacketFly, MotionUpdateEvent>
     @Override
     public void invoke(MotionUpdateEvent event)
     {
-        if (event.getStage() == Stage.PRE)
+        if (event.getStage() == Stage.PRE
+            && module.mode.getValue() != Mode.Compatibility)
         {
             mc.player.motionX = 0.0;
             mc.player.motionY = 0.0;

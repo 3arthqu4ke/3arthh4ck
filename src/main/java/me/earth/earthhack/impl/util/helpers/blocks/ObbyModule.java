@@ -4,6 +4,7 @@ import me.earth.earthhack.api.event.bus.EventListener;
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.event.events.Stage;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -79,26 +80,36 @@ public abstract class ObbyModule extends BlockPlacingModule
     }
 
     public final Setting<Boolean> attack =
-            register(new BooleanSetting("Attack", false));
+            register(new BooleanSetting("Attack", false))
+                .setComplexity(Complexity.Medium);
     public final Setting<Pop> pop =
-            register(new EnumSetting<>("Pop", Pop.None));
+            register(new EnumSetting<>("Pop", Pop.None))
+                .setComplexity(Complexity.Expert);
     public final Setting<Integer> popTime =
-            register(new NumberSetting<>("Pop-Time", 500, 0, 500));
+            register(new NumberSetting<>("Pop-Time", 500, 0, 500))
+                .setComplexity(Complexity.Expert);
     public final Setting<Integer> cooldown =
-            register(new NumberSetting<>("Cooldown", 500, 0, 500));
+            register(new NumberSetting<>("Cooldown", 500, 0, 500))
+                .setComplexity(Complexity.Medium);
     public final Setting<Boolean> antiWeakness =
-            register(new BooleanSetting("AntiWeakness", false));
+            register(new BooleanSetting("AntiWeakness", false))
+                .setComplexity(Complexity.Medium);
     public final Setting<Integer> breakDelay =
-            register(new NumberSetting<>("BreakDelay", 250, 0, 500));
+            register(new NumberSetting<>("BreakDelay", 250, 0, 500))
+                .setComplexity(Complexity.Medium);
     public final Setting<FastHelping> fastHelpingBlocks =
-            register(new EnumSetting<>("Fast-Helping", FastHelping.Fast));
+            register(new EnumSetting<>("Fast-Helping", FastHelping.Fast))
+                .setComplexity(Complexity.Expert);
 
     public final Setting<Boolean> attackAny =
-            register(new BooleanSetting("Attack-Any", false));
+            register(new BooleanSetting("Attack-Any", false))
+                .setComplexity(Complexity.Expert);
     public final Setting<Double> attackRange =
-            register(new NumberSetting<>("Attack-Range", 6.0, 0.0, 6.0));
+            register(new NumberSetting<>("Attack-Range", 6.0, 0.0, 6.0))
+                .setComplexity(Complexity.Medium);
     public final Setting<Double> attackTrace =
-            register(new NumberSetting<>("Attack-Trace", 3.0, 0.0, 6.0));
+            register(new NumberSetting<>("Attack-Trace", 3.0, 0.0, 6.0))
+                .setComplexity(Complexity.Expert);
 
     /** Timer to manage attackDelay */
     public final StopWatch attackTimer = new StopWatch();
@@ -163,6 +174,7 @@ public abstract class ObbyModule extends BlockPlacingModule
         {
             if (attacking != null)
             {
+                CooldownBypass cdb = cooldownBypass.getValue();
                 boolean switched = false;
                 int slot = -1;
                 if (!DamageUtil.canBreakWeakness(true))
@@ -182,38 +194,22 @@ public abstract class ObbyModule extends BlockPlacingModule
 
                     lastSlot = mc.player.inventory.currentItem;
 
-                    switch (cooldownBypass.getValue()) {
-                        case None:
-                            InventoryUtil.switchTo(slot);
-                            break;
-                        case Slot:
-                            InventoryUtil.switchToBypassAlt(
-                                    InventoryUtil.hotbarToInventory(slot));
-                            switched = true;
-                            break;
-                        case Pick:
-                            InventoryUtil.bypassSwitch(slot);
-                            switched = true;
-                            break;
+                    if (cdb == CooldownBypass.None) {
+                        InventoryUtil.switchTo(slot);
+                    } else {
+                        cdb.switchTo(slot);
+                        switched = true;
                     }
                 }
 
                 mc.player.connection.sendPacket(attacking);
                 Swing.Packet.swing(EnumHand.MAIN_HAND);
 
-                if (switched)
+                // IK ITS ALWAYS TRUE BUT STILL
+                //noinspection ConstantConditions
+                if (switched && cdb != CooldownBypass.None)
                 {
-                    if (cooldownBypass.getValue() == CooldownBypass.Pick)
-                    {
-                        InventoryUtil.bypassSwitch(slot);
-                    }
-                    else if (cooldownBypass.getValue() == CooldownBypass.Slot)
-                    {
-                        InventoryUtil.switchToBypassAlt(
-                                InventoryUtil.hotbarToInventory(slot));
-                    }
-                    /*InventoryUtil.switchToBypassAlt(
-                        InventoryUtil.hotbarToInventory(slot));*/
+                    cdb.switchTo(slot);
                 }
 
                 attackTimer.reset();

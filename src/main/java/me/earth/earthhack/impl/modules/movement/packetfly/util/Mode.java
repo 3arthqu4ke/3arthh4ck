@@ -6,5 +6,6 @@ public enum Mode
     Fast,
     Factor,
     Slow,
-    Increment
+    Increment,
+    Compatibility
 }

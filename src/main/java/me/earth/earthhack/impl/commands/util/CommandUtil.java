@@ -4,6 +4,8 @@ import me.earth.earthhack.api.register.Register;
 import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.api.util.interfaces.Nameable;
+import me.earth.earthhack.impl.util.text.ChatUtil;
+import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -204,6 +206,32 @@ public class CommandUtil implements Globals
         }
 
         return strings.toArray(new String[0]);
+    }
+
+    public static String getArgument(String argument, String[] args) {
+        boolean found = false;
+        for (String arg : args) {
+            if (argument.equalsIgnoreCase(arg)) {
+                found = true;
+            } else if (found) {
+                return arg;
+            }
+        }
+
+        return null;
+    }
+
+    public static int getInt(String argument, int def, String[] args) {
+        String value = getArgument(argument, args);
+        if (value != null) {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                ChatUtil.sendMessage(TextColor.RED + e.getMessage());
+            }
+        }
+
+        return def;
     }
 
 }

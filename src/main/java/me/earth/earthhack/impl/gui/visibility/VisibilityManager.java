@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.gui.visibility;
 
 import me.earth.earthhack.api.setting.Setting;
+import me.earth.earthhack.impl.modules.client.settings.SettingsModule;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 /**
  * Manages the Visibility of Settings.
  */
+// TODO: visibilities for PingBypassModules
 @SuppressWarnings("unused")
 public class VisibilityManager
 {
@@ -42,6 +44,8 @@ public class VisibilityManager
 
     public boolean isVisible(Setting<?> setting)
     {
-        return getVisibility(setting).isVisible();
+        return SettingsModule.shouldDisplay(setting)
+            && getVisibility(setting).isVisible();
     }
+
 }

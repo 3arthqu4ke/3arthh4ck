@@ -13,10 +13,11 @@ import me.earth.earthhack.impl.util.mcp.MappingProvider;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.SPacketEntityEquipment;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,10 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
             register(new BooleanSetting("Incoming", true));
     protected final Setting<Boolean> outgoing =
             register(new BooleanSetting("Outgoing", true));
+    protected final Setting<Boolean> pb2C =
+            register(new BooleanSetting("PB-Custom", true));
+    protected final Setting<Boolean> c2Pb =
+            register(new BooleanSetting("Client-2-PB", true));
     protected final Setting<Boolean> info =
             register(new BooleanSetting("Info", true));
     protected final Setting<Boolean> chat =
@@ -64,6 +69,8 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
         this.listeners.add(new ListenerChatLog(this));
         this.listeners.add(new ListenerReceive(this));
         this.listeners.add(new ListenerSend(this));
+        this.listeners.add(new ListenerCustomPbPacket(this));
+        this.listeners.add(new ListenerPbReceive(this));
         this.setData(new LoggerData(this));
     }
 
@@ -155,10 +162,26 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                             }
 
                             field.setAccessible(true);
+                            Object obj = field.get(packet);
+                            String objToString;
+                            if (obj != null && obj.getClass().isArray()) {
+                                StringBuilder builder = new StringBuilder("[");
+                                for (int i = 0; i < Array.getLength(obj); i++) {
+                                    builder.append(Array.get(obj, i));
+                                    if (i < Array.getLength(obj) - 1) {
+                                        builder.append(", ");
+                                    }
+                                }
+
+                                objToString = builder.append("]").toString();
+                            } else {
+                                objToString = String.valueOf(obj);
+                            }
+
                             outPut.append("     ")
                                     .append(getName(clazz, field))
                                     .append(" : ")
-                                    .append(field.get(packet))
+                                    .append(objToString)
                                     .append("\n");
                         }
                     }

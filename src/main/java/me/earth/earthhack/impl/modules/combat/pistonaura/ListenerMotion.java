@@ -19,6 +19,7 @@ import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.misc.collections.CollectionUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Blocks;
@@ -158,7 +159,7 @@ final class ListenerMotion extends ModuleListener<PistonAura, MotionUpdateEvent>
                                     SpecialBlocks.shouldSneak(b, false)));
                 if (!sneak)
                 {
-                    mc.player.connection.sendPacket(
+                    PingBypass.sendToActualServer(
                             new CPacketEntityAction(mc.player,
                                     CPacketEntityAction.Action.START_SNEAKING));
                 }
@@ -167,7 +168,7 @@ final class ListenerMotion extends ModuleListener<PistonAura, MotionUpdateEvent>
 
                 if (!sneak)
                 {
-                    mc.player.connection.sendPacket(
+                    PingBypass.sendToActualServer(
                             new CPacketEntityAction(mc.player,
                                     CPacketEntityAction.Action.STOP_SNEAKING));
                 }
@@ -225,12 +226,12 @@ final class ListenerMotion extends ModuleListener<PistonAura, MotionUpdateEvent>
                         {
                             if (finalRotation != null)
                             {
-                                mc.player.connection.sendPacket(finalRotation);
+                                PingBypass.sendToActualServer(finalRotation);
                             }
 
-                            mc.player.connection.sendPacket(
+                            PingBypass.sendToActualServer(
                                     new CPacketUseEntity(crystal));
-                            mc.player.connection.sendPacket(
+                            PingBypass.sendToActualServer(
                                     new CPacketAnimation(EnumHand.MAIN_HAND));
                             module.breakTimer.reset();
 
@@ -390,7 +391,7 @@ final class ListenerMotion extends ModuleListener<PistonAura, MotionUpdateEvent>
                                                        rotations[1],
                                                        mc.player.onGround);
                     module.actions.add(() ->
-                            mc.player.connection.sendPacket(rotation));
+                           PingBypass.sendToActualServer(rotation));
                     break;
                 default:
             }
@@ -437,8 +438,8 @@ final class ListenerMotion extends ModuleListener<PistonAura, MotionUpdateEvent>
 
             module.actions.add(() ->
             {
-                mc.player.connection.sendPacket(place);
-                mc.player.connection.sendPacket(new CPacketAnimation(hand));
+                PingBypass.sendToActualServer(place);
+                PingBypass.sendToActualServer(new CPacketAnimation(hand));
 
                 if (module.swing.getValue())
                 {

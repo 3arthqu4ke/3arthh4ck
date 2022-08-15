@@ -29,4 +29,10 @@ public class SettingEvent<T> extends Event
         this.value = value;
     }
 
+    public static class Post<T> extends SettingEvent<T> {
+        public Post(Setting<T> setting, T value) {
+            super(setting, value);
+        }
+    }
+
 }

@@ -29,7 +29,8 @@ public abstract class MixinWorld
             value = "INVOKE",
             target = "Lnet/minecraft/block/state/IBlockState;getLightOpacity(Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/util/math/BlockPos;)I",
             shift = At.Shift.BEFORE,
-            ordinal = 1),
+            ordinal = 1,
+            remap = false),
         locals = LocalCapture.CAPTURE_FAILHARD)
     private void onSetBlockState(
             BlockPos pos, IBlockState newState, int flags,

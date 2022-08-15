@@ -7,14 +7,13 @@ import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.register.Registrable;
 import me.earth.earthhack.api.register.exception.CantUnregisterException;
 import me.earth.earthhack.api.setting.Setting;
-import me.earth.earthhack.api.setting.SettingContainer;
 import me.earth.earthhack.api.setting.event.SettingResult;
 import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.impl.commands.hidden.HListSettingCommand;
 import me.earth.earthhack.impl.commands.util.CommandDescriptions;
 import me.earth.earthhack.impl.commands.util.CommandUtil;
-import me.earth.earthhack.impl.gui.hud.INameable;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.managers.client.ModuleManager;
 import me.earth.earthhack.impl.managers.thread.scheduler.Scheduler;
 import me.earth.earthhack.impl.modules.client.commands.Commands;
 import me.earth.earthhack.impl.util.helpers.command.CustomCommandModule;
@@ -26,12 +25,20 @@ import java.util.Optional;
 
 public class ModuleCommand extends Command implements Registrable
 {
+    private final ModuleManager moduleManager;
+
     public ModuleCommand()
     {
-        super(new String[][]{{"module"}, {"setting"}, {"value"}});
+        this(Managers.MODULES);
         CommandDescriptions.register(this, "Type only the name of the module" +
-                " to open the chatgui with its settings. You can also" +
-                " specify one of the modules settings and set it to a value.");
+            " to open the chatgui with its settings. You can also" +
+            " specify one of the modules settings and set it to a value.");
+    }
+
+    public ModuleCommand(ModuleManager moduleManager)
+    {
+        super(new String[][]{{"module"}, {"setting"}, {"value"}});
+        this.moduleManager = moduleManager;
     }
 
     @Override
@@ -54,7 +61,7 @@ public class ModuleCommand extends Command implements Registrable
             return;
         }
 
-        Module module = Managers.MODULES.getObject(args[0]);
+        Module module = moduleManager.getObject(args[0]);
         if (module == null)
         {
             module = getModule(args[0].toLowerCase());
@@ -100,9 +107,6 @@ public class ModuleCommand extends Command implements Registrable
         Setting<?> setting = module.getSetting(args[1]);
         if (setting == null)
         {
-            if (module instanceof INameable) {
-
-            }
             ChatUtil.sendMessage(TextColor.RED
                     + "Couldn't find setting "
                     + TextColor.AQUA
@@ -167,27 +171,36 @@ public class ModuleCommand extends Command implements Registrable
             }
             else
             {
-                String message = "<"
-                                    + module.getDisplayName()
-                                    + "> "
-                                    + TextColor.AQUA
-                                    + setting.getName()
-                                    + TextColor.WHITE
-                                    + " set to "
-                                    + (setting.getValue() instanceof Boolean
-                                        ? ((Boolean) setting.getValue()
-                                                ? TextColor.GREEN
-                                                : TextColor.RED)
-                                        : TextColor.AQUA)
-                                    + setting.toJson()
-                                    + TextColor.WHITE
-                                    + ".";
-
-                Managers.CHAT.sendDeleteMessage(message,
-                                                setting.getName(),
-                                                ChatIDs.COMMAND);
+                sendSettingMessage(module, setting);
             }
         }
+    }
+
+    public static void sendSettingMessage(Module module, Setting<?> setting) {
+        sendSettingMessage(module, setting, "");
+    }
+
+    public static void sendSettingMessage(Module module, Setting<?> setting,
+                                          String idAppend) {
+        String message = "<"
+            + module.getDisplayName()
+            + "> "
+            + TextColor.AQUA
+            + setting.getName()
+            + TextColor.WHITE
+            + " set to "
+            + (setting.getValue() instanceof Boolean
+            ? ((Boolean) setting.getValue()
+            ? TextColor.GREEN
+            : TextColor.RED)
+            : TextColor.AQUA)
+            + setting.toJson()
+            + TextColor.WHITE
+            + ".";
+
+        Managers.CHAT.sendDeleteMessage(message,
+                                        setting.getName() + idAppend,
+                                        ChatIDs.COMMAND);
     }
 
     @Override
@@ -423,7 +436,7 @@ public class ModuleCommand extends Command implements Registrable
 
     private Module getModule(String name)
     {
-        return CommandUtil.getNameableStartingWith(name, Managers.MODULES);
+        return CommandUtil.getNameableStartingWith(name, moduleManager);
     }
 
 }

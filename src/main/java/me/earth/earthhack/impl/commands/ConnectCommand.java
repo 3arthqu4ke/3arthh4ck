@@ -1,26 +1,32 @@
 package me.earth.earthhack.impl.commands;
 
+import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.command.Command;
 import me.earth.earthhack.api.command.PossibleInputs;
 import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.commands.util.CommandScheduler;
+import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
+import me.earth.earthhack.impl.modules.client.pingbypass.guis.GuiConnectingPingBypass;
 import me.earth.earthhack.impl.util.network.ServerUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
-import me.earth.earthhack.impl.util.thread.ThreadUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.pingbypass.protocol.c2s.C2SCommandPacket;
+import me.earth.earthhack.pingbypass.protocol.s2c.S2CUnloadWorldPacket;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiMultiplayer;
 import net.minecraft.client.multiplayer.GuiConnecting;
+import net.minecraft.client.multiplayer.ServerAddress;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
-import net.minecraft.client.resources.I18n;
-
-import java.util.concurrent.ScheduledExecutorService;
 
 public class ConnectCommand extends Command
         implements Globals, CommandScheduler
 {
+    private static final ModuleCache<PingBypassModule> PINGBYPASS =
+        Caches.getModule(PingBypassModule.class);
+
     private ServerList cachedServerList;
     private long lastCache;
 
@@ -38,15 +44,33 @@ public class ConnectCommand extends Command
             return;
         }
 
-        ServerUtil.disconnectFromMC("Disconnecting.");
-        SCHEDULER.submit(() -> mc.addScheduledTask(() ->
-            mc.displayGuiScreen(
-                new GuiConnecting(new GuiMultiplayer(new GuiMainMenu()),
-                mc,
-                new ServerData(I18n.format("selectServer.defaultName"),
-                args[1],
-                false)))),
-        100);
+        if (PINGBYPASS.isEnabled()
+            && !PINGBYPASS.get().isOld()
+            && mc.player != null)
+        {
+            mc.player.connection.sendPacket(new C2SCommandPacket(args));
+            return;
+        }
+
+        ServerAddress serveraddress = ServerAddress.fromString(args[1]);
+        if (PingBypass.isConnected()) {
+            try {
+                PingBypass.sendPacket(new S2CUnloadWorldPacket(
+                    "Pingbypass is connecting to " + args[1] + "..."));
+                PingBypass.DISCONNECT_SERVICE.setAllow(true);
+                ServerUtil.disconnectFromMC("Disconnecting.");
+            } finally {
+                PingBypass.DISCONNECT_SERVICE.setAllow(false);
+            }
+        }
+
+        SCHEDULER.submit(() -> mc.addScheduledTask(() -> {
+            if (PINGBYPASS.isEnabled()) {
+                mc.displayGuiScreen(new GuiConnectingPingBypass(new GuiMainMenu(), mc, serveraddress.getIP(), serveraddress.getPort()));
+            } else {
+                mc.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), mc, serveraddress.getIP(), serveraddress.getPort()));
+            }
+        }), 100);
     }
 
     @Override
@@ -60,16 +84,17 @@ public class ConnectCommand extends Command
             lastCache = System.currentTimeMillis();
         }
 
-        if (args.length == 2)
+        if (args.length >= 2)
         {
             for (int i = 0; i < cachedServerList.countServers(); i++)
             {
                 ServerData data = cachedServerList.getServerData(i);
+                //noinspection PointlessNullCheck
                 if (data.serverIP != null
-                        && TextUtil.startsWith(data.serverIP, args[1]))
+                    && TextUtil.startsWith(data.serverIP, args[1]))
                 {
                     return new PossibleInputs(TextUtil.substring(
-                            data.serverIP, args[1].length()), "");
+                        data.serverIP, args[1].length()), "");
                 }
             }
         }

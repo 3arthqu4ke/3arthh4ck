@@ -5,11 +5,11 @@ import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
-import me.earth.earthhack.impl.gui.module.impl.SimpleSubModule;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.minecraft.combat.util.SimpleSoundObserver;
 import me.earth.earthhack.impl.managers.minecraft.combat.util.SoundObserver;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassSubmodule;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.ACRotate;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.Target;
 import me.earth.earthhack.impl.util.math.StopWatch;
@@ -18,7 +18,7 @@ import me.earth.earthhack.impl.util.thread.Locks;
 import net.minecraft.init.Items;
 import net.minecraft.util.math.BlockPos;
 
-public class ServerAutoCrystal extends SimpleSubModule<PingBypass>
+public class ServerAutoCrystal extends PingBypassSubmodule
 {
     protected final Setting<Boolean> soundR =
             register(new BooleanSetting("SoundRemove", false));
@@ -27,7 +27,7 @@ public class ServerAutoCrystal extends SimpleSubModule<PingBypass>
     protected final StopWatch timer = new StopWatch();
     protected BlockPos renderPos;
 
-    public ServerAutoCrystal(PingBypass pingBypass)
+    public ServerAutoCrystal(PingBypassModule pingBypass)
     {
         super(pingBypass, "S-AutoCrystal", Category.Client);
         register(new BooleanSetting("Place", true));

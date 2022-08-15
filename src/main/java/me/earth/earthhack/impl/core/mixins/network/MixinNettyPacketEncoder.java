@@ -7,17 +7,14 @@ import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.misc.logger.Logger;
 import me.earth.earthhack.impl.modules.misc.logger.util.LoggerMode;
-import net.minecraft.network.EnumPacketDirection;
-import net.minecraft.network.NettyPacketEncoder;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.io.IOException;
 
 @Mixin(NettyPacketEncoder.class)
 public abstract class MixinNettyPacketEncoder
@@ -30,7 +27,7 @@ public abstract class MixinNettyPacketEncoder
     private EnumPacketDirection direction;
 
     @Inject(
-        method = "encode",
+        method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;Lio/netty/buffer/ByteBuf;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/network/Packet;writePacketData(Lnet/minecraft/network/PacketBuffer;)V",
@@ -113,6 +110,19 @@ public abstract class MixinNettyPacketEncoder
                                  + " has no readable bytes!");
             }
         }
+    }
+
+    @Redirect(method = "encode(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;Lio/netty/buffer/ByteBuf;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/EnumConnectionState;getPacketId(Lnet/minecraft/network/EnumPacketDirection;Lnet/minecraft/network/Packet;)Ljava/lang/Integer;"))
+    private Integer hook(EnumConnectionState instance,
+                         EnumPacketDirection direction, Packet<?> packetIn)
+        throws Exception {
+        Integer id = instance.getPacketId(direction, packetIn);
+        //noinspection ConstantConditions
+        if (id == null) {
+            throw new IOException("Couldn't get Id for " + packetIn.getClass().getName());
+        }
+
+        return id;
     }
 
 }

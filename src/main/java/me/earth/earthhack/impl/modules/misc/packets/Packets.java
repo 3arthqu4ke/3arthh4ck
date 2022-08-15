@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.misc.packets;
 
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -100,6 +101,10 @@ public class Packets extends Module
             register(new NumberSetting<>("Book-Length", 600, 100, 8192));
     protected final Setting<Integer> offhandCrashes =
             register(new NumberSetting<>("Offhand-Crash", 0, 0, 5000));
+    // TODO: use everywhere???
+    protected final Setting<Boolean> volatileFix =
+            register(new BooleanSetting("Volatile-Fix", false))
+                .setComplexity(Complexity.Expert);
 
     protected final Map<BlockPos, IBlockState> stateMap;
     protected final AtomicBoolean crashing = new AtomicBoolean();
@@ -132,7 +137,7 @@ public class Packets extends Module
 
         new PageBuilder<>(this, page)
            .addPage(v -> v == PacketPages.Safe, fastTransactions, miniTeleports)
-           .addPage(v -> v == PacketPages.Danger, noBookBan, offhandCrashes)
+           .addPage(v -> v == PacketPages.Danger, noBookBan)
            .register(Visibilities.VISIBILITY_MANAGER);
 
         SimpleData data = new SimpleData(this, "Exploits with packets.");

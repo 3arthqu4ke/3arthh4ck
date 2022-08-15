@@ -27,4 +27,8 @@ public interface IC00Handshake
      */
     void setPort(int port);
 
+    String getIp();
+
+    int getPort();
+
 }

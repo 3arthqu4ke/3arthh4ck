@@ -3,25 +3,33 @@ package me.earth.earthhack.impl.modules.misc.mcf;
 import com.mojang.authlib.GameProfile;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Setting;
+import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.text.ChatIDs;
 import me.earth.earthhack.impl.util.text.TextColor;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
 
 public class MCF extends Module
 {
+    protected Setting<Boolean> pickBlock =
+        register(new BooleanSetting("PickBlock", false));
+
     public MCF()
     {
         super("MCF", Category.Misc);
-        this.listeners.add(new MiddleClickListener(this));
+        this.listeners.add(new PickBlockListener(this));
+        this.listeners.add(new MouseListener(this));
         this.setData(new MCFData(this));
     }
 
     protected void onMiddleClick()
     {
         if (this.isEnabled()
+                && !PingBypass.isConnected()
                 && mc.objectMouseOver != null
                 && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.ENTITY)
         {

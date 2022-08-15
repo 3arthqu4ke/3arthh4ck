@@ -153,15 +153,6 @@ public class PositionUtil implements Globals
                             (bb.minZ + bb.maxZ) / 2.0);
     }
 
-    public static AxisAlignedBB serverBB(Entity entity)
-    {
-        return newBB(entity.serverPosX / 4096.0,
-                     entity.serverPosY / 4096.0,
-                     entity.serverPosZ / 4096.0,
-                     entity.width / 2.0f,
-                     entity.height);
-    }
-
     public static AxisAlignedBB newBB(double x,
                                       double y,
                                       double z,

@@ -15,8 +15,9 @@ final class ListenerMove extends ModuleListener<PacketFly, MoveEvent>
     @Override
     public void invoke(MoveEvent event)
     {
-        if (module.mode.getValue() == Mode.Setback
-                || module.teleportID.get() != 0)
+        if (module.mode.getValue() != Mode.Compatibility
+            && (module.mode.getValue() == Mode.Setback
+                    || module.teleportID.get() != 0))
         {
             if (module.zeroSpeed.getValue())
             {

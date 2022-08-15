@@ -1,5 +1,7 @@
 package me.earth.earthhack.impl.modules.misc.packets;
 
+import me.earth.earthhack.impl.core.ducks.entity.IEntity;
+import me.earth.earthhack.impl.core.ducks.network.ISPacketEntityTeleport;
 import me.earth.earthhack.impl.core.mixins.network.server.ISPacketEntity;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.SPacketEntityListener;
@@ -61,6 +63,12 @@ final class ListenerEntity extends SPacketEntityListener
         }
 
         event.setCancelled(true);
+        long oldServerPosX = e.serverPosX;
+        long oldServerPosY = e.serverPosY;
+        long oldServerPosZ = e.serverPosZ;
+        mc.addScheduledTask(() -> ((IEntity) e).setOldServerPos(
+            oldServerPosX, oldServerPosY, oldServerPosZ));
+
         e.serverPosX += packet.getX();
         e.serverPosY += packet.getY();
         e.serverPosZ += packet.getZ();

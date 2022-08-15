@@ -4,13 +4,13 @@ import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
-import me.earth.earthhack.impl.gui.module.impl.SimpleSubModule;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassSubmodule;
 import me.earth.earthhack.impl.modules.client.safety.util.Update;
 
-public class ServerSafety extends SimpleSubModule<PingBypass>
+public class ServerSafety extends PingBypassSubmodule
 {
-    public ServerSafety(PingBypass pingBypass)
+    public ServerSafety(PingBypassModule pingBypass)
     {
         super(pingBypass, "S-Safety", Category.Client);
         register(new NumberSetting<>("MaxDamage", 4.0f, 0.0f, 36.0f));

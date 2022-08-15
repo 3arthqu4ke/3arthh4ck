@@ -10,6 +10,8 @@ public abstract class MixinCPacketPlayerDigging implements ICPacketPlayerDigging
 {
     @Unique
     private boolean clientSideBreaking;
+    @Unique
+    private boolean normalDigging;
 
     @Unique
     @Override
@@ -23,6 +25,20 @@ public abstract class MixinCPacketPlayerDigging implements ICPacketPlayerDigging
     public boolean isClientSideBreaking()
     {
         return clientSideBreaking;
+    }
+
+    @Unique
+    @Override
+    public void setNormalDigging(boolean normalDigging)
+    {
+        this.normalDigging = normalDigging;
+    }
+
+    @Unique
+    @Override
+    public boolean isNormalDigging()
+    {
+        return normalDigging;
     }
 
 }

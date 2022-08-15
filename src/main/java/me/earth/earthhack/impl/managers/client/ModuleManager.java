@@ -9,21 +9,26 @@ import me.earth.earthhack.api.register.exception.CantUnregisterException;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.event.events.client.PostInitEvent;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.anticheat.AntiCheat;
 import me.earth.earthhack.impl.modules.client.autoconfig.AutoConfig;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.modules.client.colors.Colors;
 import me.earth.earthhack.impl.modules.client.commands.Commands;
+import me.earth.earthhack.impl.modules.client.configs.ConfigModule;
 import me.earth.earthhack.impl.modules.client.customfont.FontMod;
 import me.earth.earthhack.impl.modules.client.debug.Debug;
 import me.earth.earthhack.impl.modules.client.editor.HudEditor;
 import me.earth.earthhack.impl.modules.client.hud.HUD;
 import me.earth.earthhack.impl.modules.client.management.Management;
 import me.earth.earthhack.impl.modules.client.media.Media;
+import me.earth.earthhack.impl.modules.client.nospoof.NoSpoof;
 import me.earth.earthhack.impl.modules.client.notifications.Notifications;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pbgui.PbGui;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.modules.client.rotationbypass.Compatibility;
 import me.earth.earthhack.impl.modules.client.safety.Safety;
 import me.earth.earthhack.impl.modules.client.server.ServerModule;
+import me.earth.earthhack.impl.modules.client.settings.SettingsModule;
 import me.earth.earthhack.impl.modules.client.tab.TabModule;
 import me.earth.earthhack.impl.modules.combat.antisurround.AntiSurround;
 import me.earth.earthhack.impl.modules.combat.antitrap.AntiTrap;
@@ -167,6 +172,8 @@ import me.earth.earthhack.impl.modules.render.voidesp.VoidESP;
 import me.earth.earthhack.impl.modules.render.waypoints.WayPoints;
 import me.earth.earthhack.impl.modules.render.weather.Weather;
 import me.earth.earthhack.impl.modules.render.xray.XRay;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.vanilla.Environment;
 
 import java.util.ArrayList;
 
@@ -175,10 +182,12 @@ public class ModuleManager extends IterationRegister<Module>
     public void init()
     {
         Earthhack.getLogger().info("Initializing Modules.");
+        this.forceRegister(new AntiCheat());
         this.forceRegister(new AutoConfig());
         this.forceRegister(new ClickGui());
         this.forceRegister(new Colors());
         this.forceRegister(new Commands());
+        this.forceRegister(new ConfigModule());
         this.forceRegister(new Debug());
         this.forceRegister(new FontMod());
         this.forceRegister(new HUD());
@@ -187,6 +196,8 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new Compatibility());
         this.forceRegister(new Safety());
         this.forceRegister(new ServerModule());
+        this.forceRegister(new PbGui());
+        this.forceRegister(new SettingsModule());
         this.forceRegister(new TabModule());
         this.forceRegister(new Media());
         this.forceRegister(new HudEditor());
@@ -245,7 +256,15 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new TpsSync());
         this.forceRegister(new Tracker());
         this.forceRegister(new TrueDurability());
-        this.forceRegister(new AutoCraft());
+
+        if (PingBypass.isServer()) {
+            this.forceRegister(new NoSpoof());
+        }
+
+        if (Environment.hasForge()) {
+            this.forceRegister(new AutoCraft());
+        }
+
         this.forceRegister(new AutoRegear());
         this.forceRegister(new PacketDelay());
         this.forceRegister(new RPC());
@@ -338,7 +357,7 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new ItemChams());
         this.forceRegister(new Ambience());
 
-        this.forceRegister(new PingBypass());
+        this.forceRegister(new PingBypassModule());
 
         Bus.EVENT_BUS.post(new PostInitEvent());
     }
@@ -359,7 +378,7 @@ public class ModuleManager extends IterationRegister<Module>
         Bus.EVENT_BUS.unsubscribe(module);
     }
 
-    private void forceRegister(Module module)
+    protected void forceRegister(Module module)
     {
         registered.add(module);
         if (module instanceof Registrable)

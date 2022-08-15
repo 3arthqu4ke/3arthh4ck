@@ -7,7 +7,7 @@ import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
-import org.lwjgl.input.Keyboard;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -34,11 +34,12 @@ public class StringComponent extends Component {
         super.drawScreen(mouseX, mouseY, partialTicks);
         final boolean hovered = RenderUtil.mouseWithinBounds(mouseX, mouseY, getFinishedX() + 5, getFinishedY() + 1, getWidth() - 10, getHeight() - 2);
         Render2DUtil.drawBorderedRect(getFinishedX() + 4.5f, getFinishedY() + 1.0f, getFinishedX() + getWidth() - 4.5f, getFinishedY() + getHeight() - 0.5f, 0.5f, hovered ? 0x66333333 : 0, 0xff000000);
+        String string = getStringSetting().isPassword() ? getStringSetting().censor() : isListening ? currentString.getString() : getStringSetting().getValue();
         if (isListening) {
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(currentString.getString() + getIdleSign(), getFinishedX() + 6.5f, getFinishedY() + getHeight() - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT - 1f, getState() ? 0xFFFFFFFF : 0xFFAAAAAA);
-        } else {
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(getStringSetting().getValue(), getFinishedX() + 6.5f, getFinishedY() + getHeight() - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT - 1f, getState() ? 0xFFFFFFFF : 0xFFAAAAAA);
+            string += getIdleSign();
         }
+
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(string, getFinishedX() + 6.5f, getFinishedY() + getHeight() - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT - 1f, getState() ? 0xFFFFFFFF : 0xFFAAAAAA);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class StringComponent extends Component {
             } else if (keyCode == 14) {
                 setString(removeLastChar(currentString.getString()));
             } else {
-                if (keyCode == Keyboard.KEY_V && (Keyboard.isKeyDown(Keyboard.KEY_RCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))) {
+                if (keyCode == Keyboard.getKeyV() && (Keyboard.isKeyDown(Keyboard.getRControl()) || Keyboard.isKeyDown(Keyboard.getLControl()))) {
                     try {
                         setString(currentString.getString() + Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor));
                     } catch (Exception e) {

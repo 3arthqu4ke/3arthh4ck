@@ -1,5 +1,6 @@
 package me.earth.earthhack.impl.managers.thread.safety;
 
+import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.event.bus.SubscriberImpl;
 import me.earth.earthhack.api.setting.Setting;
@@ -11,6 +12,7 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.safety.Safety;
 import me.earth.earthhack.impl.modules.client.safety.util.Update;
+import me.earth.earthhack.impl.modules.player.suicide.Suicide;
 import me.earth.earthhack.impl.util.math.Timer;
 import net.minecraft.entity.Entity;
 
@@ -25,6 +27,8 @@ public class SafetyManager extends SubscriberImpl implements Globals
 {
     private final AtomicBoolean safe = new AtomicBoolean(false);
 
+    private static final ModuleCache<Suicide> SUICIDE =
+     Caches.getModule(Suicide.class);
     protected final SettingCache<Boolean, BooleanSetting, Safety> newV =
      Caches.getSetting(Safety.class, BooleanSetting.class, "1.13+", false);
     protected final SettingCache<Boolean, BooleanSetting, Safety> newVEntities =
@@ -68,7 +72,7 @@ public class SafetyManager extends SubscriberImpl implements Globals
      */
     public boolean isSafe()
     {
-        return safe.get();
+        return SUICIDE.isEnabled() || safe.get();
     }
 
     /**

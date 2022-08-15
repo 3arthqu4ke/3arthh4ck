@@ -14,6 +14,7 @@ import me.earth.earthhack.impl.modules.combat.autocrystal.util.RotationFunction;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.WeaknessSwitch;
 import me.earth.earthhack.impl.modules.combat.offhand.Offhand;
 import me.earth.earthhack.impl.modules.combat.offhand.modes.OffhandMode;
+import me.earth.earthhack.impl.modules.player.suicide.Suicide;
 import me.earth.earthhack.impl.util.misc.MutableWrapper;
 import me.earth.earthhack.impl.util.helpers.blocks.modes.PlaceSwing;
 import me.earth.earthhack.impl.util.helpers.blocks.modes.Rotate;
@@ -29,6 +30,7 @@ import me.earth.earthhack.impl.util.minecraft.Swing;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Blocks;
@@ -49,6 +51,8 @@ public class HelperRotation implements Globals
     private static final AtomicInteger ID = new AtomicInteger();
     private static final ModuleCache<Offhand> OFFHAND =
             Caches.getModule(Offhand.class);
+    private static final ModuleCache<Suicide> SUICIDE =
+        Caches.getModule(Suicide.class);
 
     private final RotationSmoother smoother;
     private final AutoCrystal module;
@@ -241,7 +245,8 @@ public class HelperRotation implements Globals
 
                         if (module.instantOffhand.getValue())
                         {
-                            if (OFFHAND.get().isSafe())
+                            if (OFFHAND.get().isSafe()
+                                || SUICIDE.returnIfPresent(Suicide::deactivateOffhand, false))
                             {
                                 OFFHAND.get().setMode(OffhandMode.CRYSTAL);
 
@@ -292,7 +297,8 @@ public class HelperRotation implements Globals
             RayTraceResult ray = RotationUtil.rayTraceTo(pos, mc.world);
             if (ray == null || !pos.equals(ray.getBlockPos()))
             {
-                if (!module.rotate.getValue().noRotate(ACRotate.Place))
+                if (!module.rotate.getValue().noRotate(ACRotate.Place)
+                    && !module.isNotCheckingRotations())
                 {
                     return;
                 }
@@ -331,19 +337,7 @@ public class HelperRotation implements Globals
                 int lastSlot = mc.player.inventory.currentItem;
                 if (finalSlot != -1 && finalSlot != -2)
                 {
-                    switch (module.cooldownBypass.getValue())
-                    {
-                        case None:
-                            InventoryUtil.switchTo(finalSlot);
-                            break;
-                        case Slot:
-                            InventoryUtil.switchToBypassAlt(
-                                    InventoryUtil.hotbarToInventory(finalSlot));
-                            break;
-                        case Pick:
-                            InventoryUtil.bypassSwitch(finalSlot);
-                            break;
-                    }
+                    module.cooldownBypass.getValue().switchTo(finalSlot);
                 }
 
                 InventoryUtil.syncItem();
@@ -355,6 +349,7 @@ public class HelperRotation implements Globals
                 mc.player.connection.sendPacket(
                     new CPacketPlayerTryUseItemOnBlock(
                         pos, finalRay.sideHit, finalHand, f[0], f[1], f[2]));
+                module.sequentialHelper.setExpecting(pos);
 
                 if (finalNoGodded)
                 {
@@ -370,19 +365,8 @@ public class HelperRotation implements Globals
 
                 if (module.switchBack.getValue())
                 {
-                    switch (module.cooldownBypass.getValue())
-                    {
-                        case None:
-                            InventoryUtil.switchTo(lastSlot);
-                            break;
-                        case Slot:
-                            InventoryUtil.switchToBypassAlt(
-                                    InventoryUtil.hotbarToInventory(finalSlot));
-                            break;
-                        case Pick:
-                            InventoryUtil.bypassSwitch(finalSlot);
-                            break;
-                    }
+                    module.cooldownBypass.getValue()
+                                         .switchBack(lastSlot, finalSlot);
                 }
             });
 
@@ -409,6 +393,7 @@ public class HelperRotation implements Globals
             if (w.needsSwitch() && w.getSlot() == -1
                 || EntityUtil.isDead(entity)
                 || !module.rotate.getValue().noRotate(ACRotate.Break)
+                    && !module.isNotCheckingRotations()
                     && !RotationUtil.isLegit(entity))
             {
                 return;
@@ -421,19 +406,7 @@ public class HelperRotation implements Globals
                 int lastSlot = mc.player.inventory.currentItem;
                 if (w.getSlot() != -1)
                 {
-                    switch (module.antiWeaknessBypass.getValue())
-                    {
-                        case None:
-                            InventoryUtil.switchTo(w.getSlot());
-                            break;
-                        case Slot:
-                            InventoryUtil.switchToBypassAlt(
-                                    InventoryUtil.hotbarToInventory(w.getSlot()));
-                            break;
-                        case Pick:
-                            InventoryUtil.bypassSwitch(w.getSlot());
-                            break;
-                    }
+                    module.antiWeaknessBypass.getValue().switchTo(w.getSlot());
                 }
 
                 if (swingTime == SwingTime.Pre)
@@ -451,19 +424,8 @@ public class HelperRotation implements Globals
 
                 if (w.getSlot() != -1)
                 {
-                    switch (module.antiWeaknessBypass.getValue())
-                    {
-                        case None:
-                            InventoryUtil.switchTo(lastSlot);
-                            break;
-                        case Slot:
-                            InventoryUtil.switchToBypassAlt(
-                                    InventoryUtil.hotbarToInventory(w.getSlot()));
-                            break;
-                        case Pick:
-                            InventoryUtil.bypassSwitch(w.getSlot());
-                            break;
-                    }
+                    module.antiWeaknessBypass.getValue().switchBack(
+                        lastSlot, w.getSlot());
                 }
             };
 
@@ -525,19 +487,7 @@ public class HelperRotation implements Globals
                     switchBack.set(lastSlot);
                 }
 
-                switch (module.obsidianBypass.getValue())
-                {
-                    case None:
-                        InventoryUtil.switchTo(slot);
-                        break;
-                    case Slot:
-                        InventoryUtil.switchToBypassAlt(
-                                InventoryUtil.hotbarToInventory(slot));
-                        break;
-                    case Pick:
-                        InventoryUtil.bypassSwitch(slot);
-                        break;
-                }
+                module.obsidianBypass.getValue().switchTo(slot);
 
                 for (Ray ray : data.getPath())
                 {
@@ -546,7 +496,7 @@ public class HelperRotation implements Globals
                     {
                         Managers.ROTATION.setBlocking(true);
                         float[] r = ray.getRotations();
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                            PacketUtil.rotation(r[0], r[1], mc.player.onGround));
                         Managers.ROTATION.setBlocking(false);
                     }
@@ -587,22 +537,7 @@ public class HelperRotation implements Globals
                     Swing.Packet.swing(hand);
                 }
 
-                if (switchBack == null)
-                {
-                    switch (module.obsidianBypass.getValue())
-                    {
-                        case None:
-                            InventoryUtil.switchTo(lastSlot);
-                            break;
-                        case Slot:
-                            InventoryUtil.switchToBypassAlt(
-                                    InventoryUtil.hotbarToInventory(slot));
-                            break;
-                        case Pick:
-                            InventoryUtil.bypassSwitch(slot);
-                            break;
-                    }
-                }
+                module.obsidianBypass.getValue().switchBack(lastSlot, slot);
 
                 if (placed != null)
                 {
@@ -637,19 +572,7 @@ public class HelperRotation implements Globals
                 return;
             }
 
-            switch (module.mineBypass.getValue())
-            {
-                case None:
-                    InventoryUtil.switchTo(toolSlot);
-                    break;
-                case Slot:
-                    InventoryUtil.switchToBypassAlt(
-                            InventoryUtil.hotbarToInventory(toolSlot));
-                    break;
-                case Pick:
-                    InventoryUtil.bypassSwitch(toolSlot);
-                    break;
-            }
+            module.mineBypass.getValue().switchTo(toolSlot);
 
             for (int i : order)
             {
@@ -660,19 +583,7 @@ public class HelperRotation implements Globals
                 Swing.Packet.swing(EnumHand.MAIN_HAND);
             }
 
-            switch (module.mineBypass.getValue())
-            {
-                case None:
-                    InventoryUtil.switchTo(lastSlot.get());
-                    break;
-                case Slot:
-                    InventoryUtil.switchToBypassAlt(
-                            InventoryUtil.hotbarToInventory(toolSlot));
-                    break;
-                case Pick:
-                    InventoryUtil.bypassSwitch(toolSlot);
-                    break;
-            }
+            module.mineBypass.getValue().switchBack(lastSlot.get(), toolSlot);
         });
     }
 

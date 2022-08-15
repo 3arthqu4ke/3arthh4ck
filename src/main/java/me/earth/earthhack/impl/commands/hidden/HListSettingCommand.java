@@ -12,6 +12,7 @@ import me.earth.earthhack.impl.gui.chat.util.ChatComponentUtil;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.thread.scheduler.Scheduler;
 import me.earth.earthhack.impl.modules.client.commands.Commands;
+import me.earth.earthhack.impl.modules.client.settings.SettingsModule;
 import me.earth.earthhack.impl.util.text.ChatIDs;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.impl.util.thread.ThreadUtil;
@@ -79,15 +80,17 @@ public class HListSettingCommand extends Command
                 module.getName() + "2",
                 ChatIDs.CHAT_GUI);
 
-        int i = 2;
         for (Setting<?> setting : module.getSettings())
         {
-            ITextComponent component = ComponentFactory.create(setting);
-            Managers.CHAT.sendDeleteComponent(
+            if (SettingsModule.shouldDisplay(setting))
+            {
+                ITextComponent component = ComponentFactory.create(setting);
+                Managers.CHAT.sendDeleteComponent(
                     component,
                     setting.getName()
-                    + module.getName(),
+                        + module.getName(),
                     ChatIDs.CHAT_GUI);
+            }
         }
 
         Managers.CHAT.sendDeleteMessage(" ",

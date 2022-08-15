@@ -34,8 +34,7 @@ public abstract class MixinEnumConnectionState
                                  CallbackInfoReturnable<Integer> cir)
             throws Exception
     {
-        if (dir == EnumPacketDirection.SERVERBOUND
-                && packet instanceof CustomPacket)
+        if (packet instanceof CustomPacket)
         {
             cir.setReturnValue(((CustomPacket) packet).getId());
         }

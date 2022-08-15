@@ -30,7 +30,7 @@ import java.util.concurrent.Future;
 public class AutoMine extends BlockAddingModule implements IAutomine
 {
     private static final ModuleCache<Speedmine> SPEED_MINE =
-            Caches.getModule(Speedmine.class);
+        Caches.getModule(Speedmine.class);
 
     protected final Setting<AutoMineMode> mode =
         register(new EnumSetting<>("Mode", AutoMineMode.Combat));
@@ -129,8 +129,8 @@ public class AutoMine extends BlockAddingModule implements IAutomine
     public AutoMine()
     {
         super("AutoMine",
-            Category.Player,
-            s -> "White/Blacklist the mining of " + s.getName() + " blocks.");
+              Category.Player,
+              s -> "White/Blacklist the mining of " + s.getName() + " blocks.");
         this.listeners.add(new ListenerUpdate(this));
         this.listeners.add(new ListenerBlockChange(this));
         this.listeners.add(new ListenerMultiBlockChange(this));
@@ -140,13 +140,13 @@ public class AutoMine extends BlockAddingModule implements IAutomine
 
         SimpleData data = new SimpleData(this, "Automatically mines Blocks.");
         data.register(mode, "-Combat will strategically mine enemies out." +
-                            " Uses Speedmine - Smart." +
-                            "\n-AntiTrap will mine you out of traps.");
+            " Uses Speedmine - Smart." +
+            "\n-AntiTrap will mine you out of traps.");
         data.register(range, "Range in which blocks will be mined.");
         data.register(head, "Mines the Block above the Target.");
         data.register(rotate, "Rotates to mine the block.");
         data.register(self, "Touches Blocks in your own Surround so it can" +
-                            " be mined quickly if an enemy jumps in.");
+            " be mined quickly if an enemy jumps in.");
         data.register(prioSelf, "Prioritizes untrapping yourself.");
         data.register(constellationCheck, "Dev Setting, should be on.");
         data.register(delay, "Delay between touching blocks.");
@@ -156,12 +156,12 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         data.register(mineL, "For Combat: Mines out L-Shaped Holes");
         data.register(offset, "Time to wait after a block has been destroyed.");
         data.register(shouldBlackList,
-                "Blacklists blocks that you reset by touching them again.");
+                      "Blacklists blocks that you reset by touching them again.");
         data.register(blackListFor, "Time in seconds a block should be " +
-                "blacklisted for. A value of 0 means it will never be" +
-                " blacklisted.");
+            "blacklisted for. A value of 0 means it will never be" +
+            " blacklisted.");
         data.register(checkTrace, "Checks PlaceRange, PlaceTrace and" +
-                " BreakTrace for the crystal position.");
+            " BreakTrace for the crystal position.");
         data.register(placeRange, "PlaceRange of your CA.");
         data.register(placeTrace, "PlaceTrace of your CA.");
         data.register(breakTrace, "BreakTrace of your CA.");
@@ -235,12 +235,12 @@ public class AutoMine extends BlockAddingModule implements IAutomine
                                                  placeRange.getValue(),
                                                  placeTrace.getValue(),
                                                  breakTrace.getValue())
-                    && BlockUtil.canPlaceCrystal(pos, true, newV.getValue(),
-                        mc.world.loadedEntityList, newVEntities.getValue(), 0);
+                && BlockUtil.canPlaceCrystal(pos, true, newV.getValue(),
+                                             mc.world.loadedEntityList, newVEntities.getValue(), 0);
         }
 
         return BlockUtil.canPlaceCrystal(pos, true, newV.getValue(),
-                mc.world.loadedEntityList, newVEntities.getValue(), 0);
+                                         mc.world.loadedEntityList, newVEntities.getValue(), 0);
     }
 
     @Override
@@ -273,7 +273,7 @@ public class AutoMine extends BlockAddingModule implements IAutomine
     public void attackPos(BlockPos pos)
     {
         EnumFacing facing = RayTraceUtil.getFacing(
-                RotationUtil.getRotationPlayer(), pos, true);
+            RotationUtil.getRotationPlayer(), pos, true);
 
         SPEED_MINE.get().getTimer().setTime(0);
         this.current = pos;
@@ -348,7 +348,7 @@ public class AutoMine extends BlockAddingModule implements IAutomine
     public boolean isValidCrystalPos(BlockPos pos)
     {
         return BlockUtil.canPlaceCrystal(pos, true, newV.getValue(), mc.world.loadedEntityList, newVEntities.getValue(), 0L)
-                && BlockUtil.isCrystalPosInRange(pos, placeRange.getValue(), placeTrace.getValue(), breakTrace.getValue());
+            && BlockUtil.isCrystalPosInRange(pos, placeRange.getValue(), placeTrace.getValue(), breakTrace.getValue());
     }
 
 }

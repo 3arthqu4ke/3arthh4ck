@@ -9,7 +9,6 @@ import io.netty.util.concurrent.GenericFutureListener;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.impl.core.ducks.network.INetworkManager;
-import me.earth.earthhack.impl.event.events.network.DisconnectEvent;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.misc.logger.Logger;
@@ -66,6 +65,8 @@ public abstract class MixinNetworkManager implements INetworkManager
     @Shadow
     public abstract void sendPacket(Packet<?> packetIn);
 
+    @Shadow @Final private EnumPacketDirection direction;
+
     @Override
     public Packet<?> sendPacketNoEvent(Packet<?> packetIn)
     {
@@ -83,7 +84,7 @@ public abstract class MixinNetworkManager implements INetworkManager
                     "Sending (No Event) Post: " + post + ", ", false, true);
         }
 
-        PacketEvent.NoEvent<?> event = new PacketEvent.NoEvent<>(packet, post);
+        PacketEvent.NoEvent<?> event = getNoEvent(packet, post);
         Bus.EVENT_BUS.post(event, packet.getClass());
         if (event.isCancelled())
         {
@@ -109,18 +110,46 @@ public abstract class MixinNetworkManager implements INetworkManager
         return null;
     }
 
+    @Override
+    public boolean isPingBypass()
+    {
+        return false;
+    }
+
+    @Override
+    public EnumPacketDirection getPacketDirection()
+    {
+        return direction;
+    }
+
     @Inject(
         method = "sendPacket(Lnet/minecraft/network/Packet;)V",
         at = @At("HEAD"),
         cancellable = true)
     private void onSendPacketPre(Packet<?> packet, CallbackInfo info)
     {
+        onSendPacket(packet, info);
+    }
+
+    @Inject(
+        method = "sendPacket(Lnet/minecraft/network/Packet;Lio/netty/util/concurrent/GenericFutureListener;[Lio/netty/util/concurrent/GenericFutureListener;)V",
+        at = @At("HEAD"),
+        cancellable = true)
+    private void onSendPacketPre2(Packet<?> packetIn,
+                                  GenericFutureListener<? extends Future<? super Void>> listener,
+                                  GenericFutureListener<? extends Future<? super Void>>[] listeners,
+                                  CallbackInfo ci)
+    {
+        onSendPacket(packetIn, ci);
+    }
+
+    private void onSendPacket(Packet<?> packet, CallbackInfo ci) {
         if (PACKET_DELAY.isEnabled()
             && !PACKET_DELAY.get().packets.contains(packet)
             && PACKET_DELAY.get().isPacketValid(
-                    MappingProvider.simpleName(packet.getClass())))
+            MappingProvider.simpleName(packet.getClass())))
         {
-            info.cancel();
+            ci.cancel();
             PACKET_DELAY.get().service.schedule(() ->
             {
                 PACKET_DELAY.get().packets.add(packet);
@@ -130,12 +159,12 @@ public abstract class MixinNetworkManager implements INetworkManager
             return;
         }
 
-        PacketEvent.Send<?> event = new PacketEvent.Send<>(packet);
+        PacketEvent.Send<?> event = getSendEvent(packet);
         Bus.EVENT_BUS.post(event, packet.getClass());
 
         if (event.isCancelled())
         {
-            info.cancel();
+            ci.cancel();
         }
     }
 
@@ -148,7 +177,7 @@ public abstract class MixinNetworkManager implements INetworkManager
                   <? extends Future <? super Void >>[] futureListeners,
           CallbackInfo info)
     {
-        PacketEvent.Post<?> event = new PacketEvent.Post<>(packetIn);
+        PacketEvent.Post<?> event = getPost(packetIn);
         Bus.EVENT_BUS.post(event, packetIn.getClass());
     }
 
@@ -168,7 +197,7 @@ public abstract class MixinNetworkManager implements INetworkManager
                                Packet<?> packet,
                                CallbackInfo info)
     {
-        PacketEvent.Receive<?> event = new PacketEvent.Receive<>(packet);
+        PacketEvent.Receive<?> event = getReceive(packet);
 
         try
         {
@@ -216,7 +245,7 @@ public abstract class MixinNetworkManager implements INetworkManager
     {
         if (this.isChannelOpen())
         {
-            Bus.EVENT_BUS.post(new DisconnectEvent(component));
+            Bus.EVENT_BUS.post(getDisconnect(component));
         }
     }
 

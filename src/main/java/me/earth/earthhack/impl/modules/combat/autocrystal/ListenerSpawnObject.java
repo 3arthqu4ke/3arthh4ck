@@ -17,7 +17,7 @@ import me.earth.earthhack.impl.modules.combat.autocrystal.modes.SwingTime;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalTimeStamp;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.WeaknessSwitch;
 import me.earth.earthhack.impl.modules.combat.legswitch.LegSwitch;
-import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
+import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.Swing;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.misc.MutableWrapper;
@@ -66,7 +66,10 @@ final class ListenerSpawnObject extends
 
     private void onEvent(PacketEvent.Receive<SPacketSpawnObject> event)
     {
-        if (mc.player == null || mc.world == null || !module.spectator.getValue() && mc.player.isSpectator())
+        if (mc.player == null
+            || event.getPacket().getType() != 51
+            || mc.world == null
+            || !module.spectator.getValue() && mc.player.isSpectator())
         {
             return;
         }
@@ -94,8 +97,7 @@ final class ListenerSpawnObject extends
             });
         }
 
-        if (packet.getType() != 51
-            || !module.instant.getValue()
+        if (!module.instant.getValue()
             || module.isPingBypass()
             || !module.breakTimer.passed(module.breakDelay.getValue())
             || ANTISURROUND.returnIfPresent(AntiSurround::isActive, false)
@@ -185,7 +187,10 @@ final class ListenerSpawnObject extends
                     continue;
                 }
 
-                if (Managers.FRIENDS.contains(player))
+                if (Managers.FRIENDS.contains(player)
+                    && (!module.isSuicideModule()
+                    || !player.equals(mc.player)
+                        && !player.equals(RotationUtil.getRotationPlayer())))
                 {
                     if (module.antiFriendPop.getValue()
                                             .shouldCalc(AntiFriendPop.Break))
@@ -256,19 +261,7 @@ final class ListenerSpawnObject extends
         {
             if (w.getSlot() != -1)
             {
-                switch (module.antiWeaknessBypass.getValue())
-                {
-                    case None:
-                        InventoryUtil.switchTo(w.getSlot());
-                        break;
-                    case Slot:
-                        InventoryUtil.switchToBypassAlt(
-                                InventoryUtil.hotbarToInventory(w.getSlot()));
-                        break;
-                    case Pick:
-                        InventoryUtil.bypassSwitch(w.getSlot());
-                        break;
-                }
+                module.antiWeaknessBypass.getValue().switchTo(w.getSlot());
             }
 
             if (module.breakSwing.getValue() == SwingTime.Pre)
@@ -285,19 +278,8 @@ final class ListenerSpawnObject extends
 
             if (w.getSlot() != -1)
             {
-                switch (module.antiWeaknessBypass.getValue())
-                {
-                    case None:
-                        InventoryUtil.switchTo(lastSlot);
-                        break;
-                    case Slot:
-                        InventoryUtil.switchToBypassAlt(
-                                InventoryUtil.hotbarToInventory(w.getSlot()));
-                        break;
-                    case Pick:
-                        InventoryUtil.bypassSwitch(w.getSlot());
-                        break;
-                }
+                module.antiWeaknessBypass.getValue().switchBack(
+                    lastSlot, w.getSlot());
             }
         };
 
@@ -370,9 +352,10 @@ final class ListenerSpawnObject extends
 
     private float checkPos(Entity entity)
     {
-        BreakValidity validity = HelperUtil.isValid(module, entity);
+        BreakValidity validity = HelperUtil.isValid(module, entity, true);
         switch (validity)
         {
+            // TODO: wtf is this magic number shit
             case INVALID:
                 return -1.0f;
             case ROTATIONS:

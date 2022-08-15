@@ -3,11 +3,11 @@ package me.earth.earthhack.impl.modules.client.pingbypass.guis;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.setting.settings.StringSetting;
 import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import org.lwjgl.input.Keyboard;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 
 import java.io.IOException;
 
@@ -17,14 +17,17 @@ import java.io.IOException;
  */
 public class GuiAddPingBypass extends GuiScreen
 {
-    private static final SettingCache<String, StringSetting, PingBypass> IP =
-     Caches.getSetting(PingBypass.class, StringSetting.class, "IP", "Proxy-IP");
-    private static final SettingCache<String, StringSetting, PingBypass> PORT =
-     Caches.getSetting(PingBypass.class, StringSetting.class, "Port", "0");
+    private static final SettingCache<String, StringSetting, PingBypassModule> IP =
+     Caches.getSetting(PingBypassModule.class, StringSetting.class, "IP", "Proxy-IP");
+    private static final SettingCache<String, StringSetting, PingBypassModule> PORT =
+     Caches.getSetting(PingBypassModule.class, StringSetting.class, "Port", "0");
+    private static final SettingCache<String, StringSetting, PingBypassModule> PASSWORD =
+     Caches.getSetting(PingBypassModule.class, StringSetting.class, "Password", "");
 
     private final GuiScreen parentScreen;
     private GuiTextField serverPortField;
     private GuiTextField serverIPField;
+    private GuiPasswordField passwordField;
 
     public GuiAddPingBypass(GuiScreen parentScreenIn)
     {
@@ -36,6 +39,7 @@ public class GuiAddPingBypass extends GuiScreen
     {
         this.serverIPField.updateCursorCounter();
         this.serverPortField.updateCursorCounter();
+        this.passwordField.updateCursorCounter();
     }
 
     @Override
@@ -61,6 +65,10 @@ public class GuiAddPingBypass extends GuiScreen
                 !this.serverPortField.getText().isEmpty()
                     && this.serverPortField.getText().split(":").length > 0
                     && !this.serverIPField.getText().isEmpty();
+
+
+        this.passwordField = new GuiPasswordField(2, this.fontRenderer, this.width / 2 - 100, 146, 200, 20);
+        this.passwordField.setText(PASSWORD.getValue());
     }
 
     @Override
@@ -76,16 +84,18 @@ public class GuiAddPingBypass extends GuiScreen
         {
             if (button.id == 1)
             {
-                this.parentScreen.confirmClicked(false, 1337);
+                mc.displayGuiScreen(parentScreen);
             }
             else if (button.id == 0)
             {
                 IP.computeIfPresent(s ->
                         s.setValue(this.serverIPField.getText()));
                 PORT.computeIfPresent(s ->
-                    s.setValue(this.serverPortField.getText()));
+                        s.setValue(this.serverPortField.getText()));
+                PASSWORD.computeIfPresent(s ->
+                        s.setValue(this.passwordField.getText()));
 
-                this.parentScreen.confirmClicked(true, 1337);
+                mc.displayGuiScreen(parentScreen);
             }
         }
     }
@@ -95,11 +105,13 @@ public class GuiAddPingBypass extends GuiScreen
     {
         this.serverIPField.textboxKeyTyped(typedChar, keyCode);
         this.serverPortField.textboxKeyTyped(typedChar, keyCode);
+        this.passwordField.textboxKeyTyped(typedChar, keyCode);
 
         if (keyCode == 15)
         {
             this.serverIPField.setFocused(!this.serverIPField.isFocused());
             this.serverPortField.setFocused(!this.serverPortField.isFocused());
+            this.passwordField.setFocused(!this.passwordField.isFocused());
         }
 
         if (keyCode == 28 || keyCode == 156)
@@ -125,6 +137,7 @@ public class GuiAddPingBypass extends GuiScreen
         super.mouseClicked(mouseX, mouseY, mouseButton);
         this.serverPortField.mouseClicked(mouseX, mouseY, mouseButton);
         this.serverIPField.mouseClicked(mouseX, mouseY, mouseButton);
+        this.passwordField.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -139,6 +152,7 @@ public class GuiAddPingBypass extends GuiScreen
                 this.width / 2 - 100, 94, 10526880);
         this.serverIPField.drawTextBox();
         this.serverPortField.drawTextBox();
+        this.passwordField.drawTextBox();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

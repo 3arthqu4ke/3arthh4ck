@@ -5,7 +5,9 @@ import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.media.Media;
+import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
+import me.earth.earthhack.impl.util.minecraft.PhaseUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.block.state.IBlockState;
@@ -196,6 +198,36 @@ public class Nametag implements Globals
             }
         }
 
+        if (module.motion.getValue())
+        {
+            builder.append(" ")
+                .append(TextColor.GRAY)
+                .append("x: ")
+                .append(TextColor.WHITE)
+                .append(MathUtil.round(player.motionX * 20, 2))
+                .append(TextColor.GRAY)
+                .append(", y: ")
+                .append(TextColor.WHITE)
+                .append(MathUtil.round(player.motionY * 20, 2))
+                .append(TextColor.GRAY)
+                .append(", z: ")
+                .append(TextColor.WHITE)
+                .append(MathUtil.round(player.motionZ * 20, 2));
+        }
+
+        if (module.motionKpH.getValue())
+        {
+            double kpH = Math.sqrt(
+                player.motionX * player.motionX
+                    + player.motionZ * player.motionZ) * 20 * 3.6;
+
+            builder.append(" ")
+                   .append(TextColor.WHITE)
+                   .append(MathUtil.round(kpH, 2))
+                   .append(TextColor.GRAY)
+                   .append(" km/h");
+        }
+
         return builder.toString();
     }
 
@@ -216,6 +248,12 @@ public class Nametag implements Globals
             {
                 return 0xff670067;
             }
+        }
+
+        if (module.phase.getValue() && PhaseUtil.isPhasing(
+            player, module.pushMode.getValue()))
+        {
+            return 0xff670067;
         }
 
         if (Managers.ENEMIES.contains(player))

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.earth.earthhack.api.config.Jsonable;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.managers.client.ModuleManager;
 import me.earth.earthhack.impl.managers.config.util.BindConfig;
 import me.earth.earthhack.impl.managers.config.util.BindWrapper;
 
@@ -13,15 +14,23 @@ import java.util.Map;
 
 public class BindConfigHelper extends AbstractConfigHelper<BindConfig>
 {
+    private final ModuleManager moduleManager;
+
     public BindConfigHelper()
     {
-        super("bind", "binds");
+        this("bind", "binds", Managers.MODULES);
+    }
+
+    public BindConfigHelper(String name, String path, ModuleManager moduleManager)
+    {
+        super(name, path);
+        this.moduleManager = moduleManager;
     }
 
     @Override
     protected BindConfig create(String name)
     {
-        return BindConfig.create(name, Managers.MODULES);
+        return BindConfig.create(name, moduleManager);
     }
 
     @Override
@@ -41,7 +50,7 @@ public class BindConfigHelper extends AbstractConfigHelper<BindConfig>
     @Override
     protected BindConfig readFile(InputStream stream, String name)
     {
-        BindConfig config = new BindConfig(name, Managers.MODULES);
+        BindConfig config = new BindConfig(name, moduleManager);
         JsonObject object = Jsonable.PARSER
                                     .parse(new InputStreamReader(stream))
                                     .getAsJsonObject();

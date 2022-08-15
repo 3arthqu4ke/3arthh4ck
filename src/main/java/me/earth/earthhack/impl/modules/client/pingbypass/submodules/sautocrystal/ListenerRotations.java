@@ -6,7 +6,7 @@ import me.earth.earthhack.impl.core.ducks.entity.IEntityPlayerSP;
 import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import net.minecraft.init.Items;
 
@@ -18,8 +18,8 @@ import net.minecraft.init.Items;
 final class ListenerRotations extends
         ModuleListener<ServerAutoCrystal, MotionUpdateEvent>
 {
-    private static final ModuleCache<PingBypass> PINGBYPASS =
-            Caches.getModule(PingBypass.class);
+    private static final ModuleCache<PingBypassModule> PINGBYPASS =
+            Caches.getModule(PingBypassModule.class);
 
     /** The offset made to yaw and pitch. */
     private float offset = 0.0004f;

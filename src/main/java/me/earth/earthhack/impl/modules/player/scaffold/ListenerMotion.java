@@ -10,6 +10,8 @@ import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.player.freecam.Freecam;
 import me.earth.earthhack.impl.modules.player.spectate.Spectate;
 import me.earth.earthhack.impl.util.math.RayTraceUtil;
+import me.earth.earthhack.impl.util.math.raytrace.Ray;
+import me.earth.earthhack.impl.util.math.raytrace.RayTraceFactory;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
@@ -17,6 +19,7 @@ import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import me.earth.earthhack.impl.util.minecraft.Swing;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.SpecialBlocks;
+import me.earth.earthhack.impl.util.minecraft.blocks.states.BlockStateHelper;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
 import net.minecraft.block.Block;
@@ -34,6 +37,7 @@ import net.minecraft.util.math.RayTraceResult;
 
 final class ListenerMotion extends ModuleListener<Scaffold, MotionUpdateEvent>
 {
+    private static final BlockStateHelper HELPER = new BlockStateHelper();
     private static final ModuleCache<Freecam> FREECAM =
             Caches.getModule(Freecam.class);
     private static final ModuleCache<Spectate> SPECTATE =
@@ -292,26 +296,67 @@ final class ListenerMotion extends ModuleListener<Scaffold, MotionUpdateEvent>
 
     private void setRotations(BlockPos pos, MotionUpdateEvent event)
     {
-        // Could find helping block?
-        module.facing = BlockUtil.getFacing(pos);
-        if (module.facing != null)
+        if (module.raytrace.getValue())
         {
-            setRotations(pos, event, module.facing);
+            if (rayTrace(pos, event))
+            {
+                return;
+            }
         }
-        else if (module.helping.getValue())
+        else
         {
-            for (EnumFacing facing : EnumFacing.VALUES)
+            module.facing = BlockUtil.getFacing(pos);
+            if (module.facing != null)
+            {
+                setRotations(pos, event, module.facing);
+                return;
+            }
+        }
+
+        // Could find helping block?
+        if (module.helping.getValue() && module.facing == null)
+        {
+            for (EnumFacing facing : EnumFacing.values())
             {
                 BlockPos p = pos.offset(facing);
-                EnumFacing f = BlockUtil.getFacing(p);
-                if (f != null)
+                if (module.raytrace.getValue())
                 {
-                    module.facing = f;
-                    module.pos = p;
-                    setRotations(p, event, f);
+                    if (rayTrace(p, event))
+                    {
+                        module.pos = p;
+                        return;
+                    }
+                }
+                else
+                {
+                    EnumFacing f = BlockUtil.getFacing(p);
+                    if (f != null)
+                    {
+                        module.facing = f;
+                        module.pos = p;
+                        setRotations(p, event, f);
+                    }
                 }
             }
         }
+    }
+
+    private boolean rayTrace(BlockPos pos, MotionUpdateEvent event) {
+        Entity entity = RotationUtil.getRotationPlayer();
+        Ray ray = RayTraceFactory.fullTrace(entity, HELPER, pos, -1.0);
+        if (ray != null && ray.isLegit()) {
+            module.facing = ray.getFacing().getOpposite();
+            module.rotations = ray.getRotations();
+            if (module.rotate.getValue() && module.rotations != null)
+            {
+                event.setYaw(module.rotations[0]);
+                event.setPitch(module.rotations[1]);
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     private void setRotations(BlockPos pos,

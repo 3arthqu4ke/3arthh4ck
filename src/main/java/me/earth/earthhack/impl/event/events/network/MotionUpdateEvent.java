@@ -34,6 +34,7 @@ public class MotionUpdateEvent extends StageEvent implements Globals
     private float rotationPitch;
     private boolean onGround;
     protected boolean modified;
+    private boolean pingBypass;
 
     public MotionUpdateEvent()
     {
@@ -184,6 +185,14 @@ public class MotionUpdateEvent extends StageEvent implements Globals
     {
         this.modified = true;
         this.onGround = onGround;
+    }
+
+    public boolean isPingBypass() {
+        return pingBypass;
+    }
+
+    public void setPingBypass(boolean pingBypass) {
+        this.pingBypass = pingBypass;
     }
 
     /**

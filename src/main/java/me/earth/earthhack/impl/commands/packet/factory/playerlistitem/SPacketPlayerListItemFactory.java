@@ -103,11 +103,7 @@ public class SPacketPlayerListItemFactory extends DefaultFactory
             throws NoSuchFieldException, IllegalAccessException
     {
         SPacketPlayerListItem packet = new SPacketPlayerListItem();
-        Field action = ReflectionUtil.getField(
-                SPacketPlayerListItem.class,
-                "action", "field_179770_a", "a");
-        action.setAccessible(true);
-        action.set(packet, parameters[0]);
+        setAction(packet, (SPacketPlayerListItem.Action) parameters[0]);
 
         for (int i = 1; i < parameters.length; i++)
         {
@@ -136,6 +132,16 @@ public class SPacketPlayerListItemFactory extends DefaultFactory
         }
 
         return packet;
+    }
+
+    public static void setAction(SPacketPlayerListItem packet, SPacketPlayerListItem.Action actionIn)
+        throws NoSuchFieldException, IllegalAccessException
+    {
+        Field action = ReflectionUtil.getField(
+            SPacketPlayerListItem.class,
+            "action", "field_179770_a", "a");
+        action.setAccessible(true);
+        action.set(packet, actionIn);
     }
 
     @Override

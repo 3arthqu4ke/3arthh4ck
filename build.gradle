@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        //noinspection JCenterRepository
-        jcenter()
+        mavenCentral()
+        //jcenter()
         maven {
             name = 'forge'
             url = 'https://files.minecraftforge.net/maven'
@@ -39,10 +39,11 @@ apply plugin: 'application'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
 
 mainClassName = "me.earth.earthhack.installer.main.Main"
 group project.modGroup //http://maven.apache.org/guides/mini/guide-naming-conventions.html
-project.version = '1.6.3'
+project.version = '1.7.5'
 
 boolean VANILLA = false
 //noinspection GroovyUnusedAssignment
@@ -87,6 +88,14 @@ dependencies {
         exclude module: 'commons-io'
     }
 
+    /*
+    Had this in to make a Mixin, not needed anymore, but leaving it here
+    compileOnly ('com.github.3arthqu4ke:HeadlessMc:1.5.2') {
+        exclude module: 'headlessmc-launcher'
+        exclude module: 'headlessmc-lwjgl'
+    }
+    */
+
     compile group: 'club.minnced', name: 'java-discord-rpc', version: '2.0.1'
     compile group: 'com.formdev', name: 'flatlaf', version: '1.5'
 }
@@ -112,7 +121,17 @@ processResources {
     rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
+task copyShadowJar(type: Copy, dependsOn: subprojects.jar) {
+    from(project.shadowJar)
+    if (System.getProperty('pb.jar.dir') != null) {
+        into project.file(System.getProperty('pb.jar.dir'))
+    } else {
+        into project.file('build/dummy')
+    }
+}
+
 shadowJar {
+    finalizedBy(copyShadowJar)
     dependencies {
         include(dependency('org.spongepowered:mixin'))
         include(dependency('club.minnced:java-discord-rpc:2.0.1'))

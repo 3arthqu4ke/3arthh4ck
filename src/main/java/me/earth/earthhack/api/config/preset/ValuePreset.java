@@ -9,6 +9,8 @@ import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.SettingContainer;
 import me.earth.earthhack.api.setting.settings.BindSetting;
 import me.earth.earthhack.api.util.interfaces.Nameable;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
+import me.earth.earthhack.pingbypass.PingBypass;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,10 +61,15 @@ public class ValuePreset extends ModulePreset<Module>
                 continue;
             }
 
+            if (module instanceof PingBypassModule
+                && "Protocol".equalsIgnoreCase(entry.getKey())) {
+                continue;
+            }
+
             setSetting(module, entry);
         }
         // set enabled last, so all settings are to date when we enter onEnable.
-        if (enabled != null)
+        if (enabled != null && !(module instanceof PingBypassModule))
         {
             setSetting(module, enabled);
         }

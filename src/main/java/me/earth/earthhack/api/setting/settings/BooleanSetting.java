@@ -21,6 +21,11 @@ public class BooleanSetting extends Setting<Boolean>
     }
 
     @Override
+    public Setting<Boolean> copy() {
+        return new BooleanSetting(getName(), getInitial());
+    }
+
+    @Override
     public SettingResult fromString(String string)
     {
         if ("true".equalsIgnoreCase(string))

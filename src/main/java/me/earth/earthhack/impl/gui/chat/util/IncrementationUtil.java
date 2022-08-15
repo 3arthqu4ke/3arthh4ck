@@ -1,7 +1,7 @@
 package me.earth.earthhack.impl.gui.chat.util;
 
 import me.earth.earthhack.impl.util.math.MathUtil;
-import org.lwjgl.input.Keyboard;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,12 +11,12 @@ import java.math.RoundingMode;
  */
 public class IncrementationUtil
 {
-    /** {@link Keyboard#KEY_RCONTROL} maxes out. */
-    public static final int MAX    = Keyboard.KEY_RCONTROL;
-    /** {@link Keyboard#KEY_LCONTROL} increments faster. */
-    public static final int FASTER = Keyboard.KEY_LCONTROL;
-    /** {@link Keyboard#KEY_LMENU} increments fast. */
-    public static final int FAST   = Keyboard.KEY_LMENU;
+    /** {@link Keyboard#getRControl()} maxes out. */
+    public static final int MAX    = Keyboard.getRControl();
+    /** {@link Keyboard#getLControl()} increments faster. */
+    public static final int FASTER = Keyboard.getLControl();
+    /** {@link Keyboard#getLMenu()} increments fast. */
+    public static final int FAST   = Keyboard.getLMenu();
 
     /**
      * Uses Strings to prevent floating,

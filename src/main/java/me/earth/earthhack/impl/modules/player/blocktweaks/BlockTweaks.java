@@ -5,7 +5,7 @@ import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.util.helpers.addable.RemovingItemAddingModule;
-import org.lwjgl.input.Mouse;
+import me.earth.earthhack.pingbypass.input.Mouse;
 
 //TODO: no entity block better
 public class BlockTweaks extends RemovingItemAddingModule

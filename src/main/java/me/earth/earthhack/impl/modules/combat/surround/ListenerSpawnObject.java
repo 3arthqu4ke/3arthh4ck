@@ -14,6 +14,7 @@ import me.earth.earthhack.impl.util.minecraft.Swing;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -150,7 +151,7 @@ final class ListenerSpawnObject extends
 
                 if (module.rotate.getValue() == Rotate.Packet)
                 {
-                    mc.player.connection.sendPacket(
+                    PingBypass.sendToActualServer(
                             new CPacketPlayer.Rotation(helpingRotations[0],
                                                        helpingRotations[1],
                                                        mc.player.onGround));

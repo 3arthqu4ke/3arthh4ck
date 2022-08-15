@@ -44,6 +44,8 @@ public class Scaffold extends BlockAddingModule
             register(new BooleanSetting("FastDown", false));
     protected final Setting<Boolean> helping  =
             register(new BooleanSetting("Helping", false));
+    protected final Setting<Boolean> raytrace  =
+            register(new BooleanSetting("Raytrace", false));
     protected final Setting<Boolean> swing  =
             register(new BooleanSetting("Swing", false));
     protected final Setting<Boolean> checkState =

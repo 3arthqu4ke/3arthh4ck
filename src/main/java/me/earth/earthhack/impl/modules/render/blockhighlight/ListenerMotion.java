@@ -27,6 +27,7 @@ final class ListenerMotion extends
         if (event.getStage() == Stage.POST
                 && module.distance.getValue()
                 && module.current != null
+                && mc.player != null
                 && mc.objectMouseOver != null
                 && mc.objectMouseOver.hitVec != null)
         {
@@ -45,11 +46,20 @@ final class ListenerMotion extends
                 BlockPos p = r.getBlockPos();
                 if (module.hitVec.getValue())
                 {
-                    d = Managers.POSITION.getVec().distanceTo(r.hitVec);
+                    d = Managers.POSITION.getVec()
+                                         .add(0.0, module.eyes.getValue()
+                                                ? mc.player.getEyeHeight()
+                                                : 0.0,
+                                              0.0)
+                                         .distanceTo(r.hitVec);
                 }
                 else
                 {
-                    d = Managers.POSITION.getVec().distanceTo(
+                    d = Managers.POSITION.getVec()
+                                         .add(0.0, module.eyes.getValue()
+                                             ? mc.player.getEyeHeight()
+                                             : 0.0, 0.0)
+                                         .distanceTo(
                      new Vec3d(p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5));
                 }
 
@@ -64,7 +74,10 @@ final class ListenerMotion extends
             {
                 Entity e = r.entityHit;
                 d = r.entityHit.getDistance(Managers.POSITION.getX(),
-                                            Managers.POSITION.getY(),
+                                            Managers.POSITION.getY()
+                                                + (module.eyes.getValue()
+                                                    ? mc.player.getEyeHeight()
+                                                    : 0.0),
                                             Managers.POSITION.getZ());
 
                 see = canSee(
@@ -77,9 +90,15 @@ final class ListenerMotion extends
             }
             else
             {
-                d = Managers.POSITION.getVec().distanceTo(r.hitVec);
-                see = canSee(r.hitVec, Managers.POSITION);
+                d = Managers.POSITION.getVec()
+                                     .add(0.0,
+                                          module.eyes.getValue()
+                                            ? mc.player.getEyeHeight()
+                                            : 0.0,
+                                          0.0)
+                                     .distanceTo(r.hitVec);
 
+                see = canSee(r.hitVec, Managers.POSITION);
                 x = y = z = 0.0;
                 noPosition = true;
             }

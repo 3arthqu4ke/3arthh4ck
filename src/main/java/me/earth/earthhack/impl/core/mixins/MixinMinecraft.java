@@ -5,10 +5,7 @@ import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.core.ducks.IMinecraft;
 import me.earth.earthhack.impl.event.events.client.ShutDownEvent;
-import me.earth.earthhack.impl.event.events.keyboard.ClickLeftEvent;
-import me.earth.earthhack.impl.event.events.keyboard.ClickMiddleEvent;
-import me.earth.earthhack.impl.event.events.keyboard.ClickRightEvent;
-import me.earth.earthhack.impl.event.events.keyboard.KeyboardEvent;
+import me.earth.earthhack.impl.event.events.keyboard.*;
 import me.earth.earthhack.impl.event.events.misc.AbortEatingEvent;
 import me.earth.earthhack.impl.event.events.misc.GameLoopEvent;
 import me.earth.earthhack.impl.event.events.misc.TickEvent;
@@ -22,6 +19,8 @@ import me.earth.earthhack.impl.modules.player.multitask.MultiTask;
 import me.earth.earthhack.impl.modules.player.sorter.Sorter;
 import me.earth.earthhack.impl.modules.player.spectate.Spectate;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiChat;
@@ -31,7 +30,6 @@ import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.*;
@@ -41,7 +39,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -106,9 +104,11 @@ public abstract class MixinMinecraft implements IMinecraft
     @Shadow
     public GuiScreen currentScreen;
 
-    @Shadow public int displayWidth;
+    @Shadow
+    public int displayWidth;
 
-    @Shadow public int displayHeight;
+    @Shadow
+    public int displayHeight;
 
     @Override
     @Accessor(value = "rightClickDelayTimer")
@@ -181,19 +181,6 @@ public abstract class MixinMinecraft implements IMinecraft
         Earthhack.preInit();
     }
 
-    @Inject(
-            method = "init",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;checkGLError(Ljava/lang/String;)V",
-                    ordinal = 2,
-                    shift = At.Shift.BEFORE))
-    private void initHook2(CallbackInfo ci)
-    {
-        Earthhack.init();
-        Earthhack.postInit();
-    }
-
     @Inject(method = "runGameLoop", at = @At("HEAD"))
     private void runGameLoopHead(CallbackInfo callbackInfo)
     {
@@ -245,6 +232,17 @@ public abstract class MixinMinecraft implements IMinecraft
     }
 
     @Inject(
+        method = "runTickMouse",
+        at = @At(
+            value = "INVOKE",
+            target = "Lorg/lwjgl/input/Mouse;getEventButton()I",
+            remap = false))
+    private void runTickMouseHook(CallbackInfo ci) {
+        Bus.EVENT_BUS.post(new MouseEvent(Mouse.getEventButton(),
+                                          Mouse.getEventButtonState()));
+    }
+
+    @Inject(
         method = "runTickKeyboard",
         at = @At(
             value = "INVOKE_ASSIGN",
@@ -267,7 +265,10 @@ public abstract class MixinMinecraft implements IMinecraft
             shift = At.Shift.BEFORE))
     public void post_keyboardTickHook(CallbackInfo info)
     {
-        Bus.EVENT_BUS.post(new KeyboardEvent.Post());
+        if (!PingBypass.isServer())
+        {
+            Bus.EVENT_BUS.post(new KeyboardEvent.Post());
+        }
     }
 
     @Inject(

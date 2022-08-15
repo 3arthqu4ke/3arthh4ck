@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.modules.render.waypoints;
 
 import com.google.gson.JsonElement;
+import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.gui.chat.factory.ComponentFactory;
 import me.earth.earthhack.impl.modules.render.waypoints.mode.WayPointType;
@@ -78,6 +79,11 @@ public class WayPointSetting extends RemovingSetting<BlockPos>
     {
         BlockPos pos = this.getValue();
         return type + "x" + pos.getX() + "y" + pos.getY() + "z" + pos.getZ();
+    }
+
+    @Override
+    public Setting<BlockPos> copy() {
+        return new WayPointSetting(getName(), getInitial());
     }
 
     public boolean isCorrupted()

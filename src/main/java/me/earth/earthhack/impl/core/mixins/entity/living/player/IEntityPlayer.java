@@ -1,5 +1,7 @@
 package me.earth.earthhack.impl.core.mixins.entity.living.player;
 
+import com.mojang.authlib.GameProfile;
+import me.earth.earthhack.impl.util.minecraft.MotionTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,4 +15,8 @@ public interface IEntityPlayer
     {
         throw new IllegalStateException("ABSORPTION accessor wasn't shadowed.");
     }
+
+    @Accessor("gameProfile")
+    void setGameProfile(GameProfile gameProfile);
+
 }

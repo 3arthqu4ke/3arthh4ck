@@ -8,6 +8,7 @@ import me.earth.earthhack.impl.event.events.network.DisconnectEvent;
 import me.earth.earthhack.impl.event.events.network.WorldClientEvent;
 import me.earth.earthhack.impl.util.misc.SkippingCounter;
 import me.earth.earthhack.impl.util.text.ChatUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.Map;
@@ -16,8 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChatManager extends SubscriberImpl implements Globals
 {
     private final Map<Integer, Map<String, Integer>> message_ids;
-    private final SkippingCounter counter =
-            new SkippingCounter(1337, i -> i != -1);
+    private final SkippingCounter counter = PingBypass.isServer()
+        ? new SkippingCounter(Integer.MIN_VALUE, i -> i != -1)
+        : new SkippingCounter(1337, i -> i != -1);
 
     public ChatManager()
     {

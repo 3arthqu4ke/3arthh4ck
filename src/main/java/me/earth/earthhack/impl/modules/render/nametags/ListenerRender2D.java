@@ -3,11 +3,14 @@ package me.earth.earthhack.impl.modules.render.nametags;
 import me.earth.earthhack.impl.event.events.render.Render2DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.util.math.MathUtil;
+import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.render.GLUProjection;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -27,7 +30,11 @@ final class ListenerRender2D extends ModuleListener<Nametags, Render2DEvent>
     @Override
     public void invoke(Render2DEvent event)
     {
-        if (module.twoD.getValue())
+        Entity renderEntity;
+        if (module.twoD.getValue()
+            && mc.player != null
+            && mc.world != null
+            && (renderEntity = RenderUtil.getEntity()) != null)
         {
             module.updateNametags();
             Nametag.isRendering = true;
@@ -35,14 +42,20 @@ final class ListenerRender2D extends ModuleListener<Nametags, Render2DEvent>
             for (Nametag nametag : module.nametags)
             {
                 if (nametag.player.isDead
-                        || nametag.player.isInvisible() && !module.invisibles.getValue()
-                        || module.fov.getValue() && !RenderUtil.isInFrustum(nametag.player.getEntityBoundingBox()))
+                    || nametag.player.isInvisible() && !module.invisibles.getValue()
+                    || module.withDistance.getValue()
+                        && renderEntity.getDistanceSq(nametag.player)
+                            > MathUtil.square(module.distance.getValue())
+                    || module.fov.getValue()
+                        && !RenderUtil.isInFrustum(nametag.player.getEntityBoundingBox())
+                        && (!module.close.getValue() || mc.player.getDistanceSq(nametag.player) > 1.0))
                 {
                     continue;
                 }
 
                 renderNametag(nametag, nametag.player, scaledResolution);
             }
+
             Nametag.isRendering = false;
         }
     }

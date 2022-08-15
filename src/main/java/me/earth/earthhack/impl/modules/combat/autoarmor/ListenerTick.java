@@ -14,6 +14,7 @@ import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.misc.MutableWrapper;
 import me.earth.earthhack.impl.util.text.TextColor;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
@@ -30,7 +31,7 @@ import java.util.Map;
 final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
 {
     private static final ModuleCache<XCarry> XCARRY =
-            Caches.getModule(XCarry.class);
+        Caches.getModule(XCarry.class);
 
     public ListenerTick(AutoArmor module)
     {
@@ -50,9 +51,15 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
         module.stackSet = false;
         module.queuedSlots.clear();
         module.windowClicks.clear();
-        module.desyncMap.entrySet().removeIf(e ->
-            System.currentTimeMillis() - e.getValue().getTimeStamp()
-                    > module.removeTime.getValue());
+        module.desyncMap.entrySet().removeIf(
+            e -> System.currentTimeMillis() - e.getValue().getTimeStamp()
+                > module.removeTime.getValue());
+
+        if (module.softInInv.getValue()
+            && mc.currentScreen instanceof GuiInventory) {
+            return;
+        }
+
         if (InventoryUtil.validScreen())
         {
             if (module.canAutoMend())
@@ -114,12 +121,12 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
                 module.stage = MendingStage.MENDING;
                 module.unblockMendingSlots();
                 Map<EntityEquipmentSlot, Integer> map =
-                        module.mode
-                                .getValue()
-                                .setup(XCARRY.isEnabled(),
-                                        !module.curse.getValue(),
-                                        module.prioLow.getValue(),
-                                        module.prioThreshold.getValue());
+                    module.mode
+                        .getValue()
+                        .setup(XCARRY.isEnabled(),
+                               !module.curse.getValue(),
+                               module.prioLow.getValue(),
+                               module.prioThreshold.getValue());
                 int last = -1;
                 ItemStack drag = mc.player.inventory.getItemStack();
                 for (Map.Entry<EntityEquipmentSlot, Integer> entry : map.entrySet())
@@ -181,12 +188,12 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
                                     module.queueClick(air, inSlot, drag);
 
                                 module.putBackClick.addPost(() ->
-                                    module.putBackClick = null);
+                                                                module.putBackClick = null);
                             }
                         }
                     }
                     else if (module.putBackClick != null
-                            && module.putBackClick.isValid())
+                        && module.putBackClick.isValid())
                     {
                         module.queueClick(module.putBackClick);
                     }
@@ -220,8 +227,8 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
             for (int i = 5; i < 9; i++)
             {
                 ItemStack stack = mc.player.inventoryContainer
-                                           .getSlot(i)
-                                           .getStack();
+                    .getSlot(i)
+                    .getStack();
                 if (stack.isEmpty() && !foundType)
                 {
                     bestSlot = i;
@@ -238,7 +245,7 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
             }
 
             if (clientValue != armorValue
-                    && module.timer.passed(module.delay.getValue()))
+                && module.timer.passed(module.delay.getValue()))
             {
                 if (module.illegalSync.getValue())
                 {
@@ -246,11 +253,11 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
                     InventoryUtil.illegalSync();
                 }
                 else if (bestSlot != -1
-                        && AutoArmor.getSlot(mc.player.inventory.getItemStack())
-                            == AutoArmor.fromSlot(bestSlot))
+                    && AutoArmor.getSlot(mc.player.inventory.getItemStack())
+                    == AutoArmor.fromSlot(bestSlot))
                 {
                     ModuleUtil.sendMessage(module, TextColor.RED
-                            + "Desync! (Code: " + bestSlot + ")");
+                        + "Desync! (Code: " + bestSlot + ")");
 
                     Item i = InventoryUtil.get(bestSlot).getItem();
                     InventoryUtil.clickLocked(bestSlot, bestSlot, i, i);
@@ -400,7 +407,7 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
                                                   .findFirst()
                                                   .orElse(null);
             if (mendingSlot != null
-                    && stack.getDamage() > ((Setting<Integer>) module.damages[stack.getSlot() - 5]).getValue())
+                && stack.getDamage() > ((Setting<Integer>) module.damages[stack.getSlot() - 5]).getValue())
             {
                 MutableWrapper<ItemStack> drag = new MutableWrapper<>(dragIn);
                 checkDamageStack(stack, mendBlock, drag);
@@ -442,9 +449,9 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
         if (slot == -1)
         {
             if (module.dragTakeOff.getValue()
-                    && (module.stackSet
-                    || mc.player.inventory.getItemStack()
-                                          .isEmpty()))
+                && (module.stackSet
+                || mc.player.inventory.getItemStack()
+                                      .isEmpty()))
             {
                 if (checkMendingStage(mendBlock))
                 {

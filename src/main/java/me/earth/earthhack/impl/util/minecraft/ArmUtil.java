@@ -2,6 +2,8 @@ package me.earth.earthhack.impl.util.minecraft;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityLivingBase;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.pingbypass.protocol.s2c.S2CSwingPacket;
 import net.minecraft.network.play.client.CPacketAnimation;
 import net.minecraft.util.EnumHand;
 
@@ -17,6 +19,7 @@ public class ArmUtil implements Globals
 
     public static void swingArmNoPacket(EnumHand hand)
     {
+        PingBypass.sendPacket(new S2CSwingPacket(hand));
         if (!mc.player.isSwingInProgress
                 || mc.player.swingProgressInt >=
                      ((IEntityLivingBase) mc.player).armSwingAnimationEnd() / 2
@@ -30,6 +33,7 @@ public class ArmUtil implements Globals
 
     public static void swingArm(EnumHand hand)
     {
+        PingBypass.sendPacket(new S2CSwingPacket(hand));
         mc.player.swingArm(hand);
     }
 

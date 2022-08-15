@@ -5,6 +5,7 @@ import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
+import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.impl.core.ducks.network.ICPacketUseEntity;
 import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import me.earth.earthhack.impl.event.events.misc.UpdateEntitiesEvent;
@@ -57,6 +58,7 @@ public class Debug extends Module
     public Debug()
     {
         super("Debug", Category.Client);
+        register(new EnumSetting<>("ConsoleColors", ConsoleColors.Unformatted));
         SimpleData data =
             new SimpleData(this, "An empty module for debugging.");
         // DONT REMOVE THIS!

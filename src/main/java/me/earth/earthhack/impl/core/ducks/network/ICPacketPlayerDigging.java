@@ -6,4 +6,13 @@ public interface ICPacketPlayerDigging
 
     boolean isClientSideBreaking();
 
+    void setNormalDigging(boolean normalDigging);
+
+    /**
+     * Signalizes that this packet is coming from Minecrafts code rather
+     * than from the client and should not get send though the PingBypass
+     * when Speedmine is active.
+     */
+    boolean isNormalDigging();
+
 }

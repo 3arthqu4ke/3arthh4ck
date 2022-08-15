@@ -3,10 +3,13 @@ package me.earth.earthhack.impl.modules.combat.autocrystal;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.event.events.keyboard.KeyboardEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.AutoSwitch;
 import me.earth.earthhack.impl.modules.combat.offhand.Offhand;
 import me.earth.earthhack.impl.modules.combat.offhand.modes.OffhandMode;
+import me.earth.earthhack.impl.util.client.ModuleUtil;
+import me.earth.earthhack.impl.util.text.TextColor;
 
 final class ListenerKeyboard extends ModuleListener<AutoCrystal, KeyboardEvent>
 {
@@ -46,6 +49,13 @@ final class ListenerKeyboard extends ModuleListener<AutoCrystal, KeyboardEvent>
             else if (module.autoSwitch.getValue() == AutoSwitch.Bind)
             {
                 module.switching = !module.switching;
+                if (module.switchMessage.getValue()) {
+                    ModuleUtil.sendMessageWithAquaModule(module,
+                                           module.switching
+                                               ? TextColor.GREEN + "Switch on"
+                                               : TextColor.RED + "Switch off",
+                                            "");
+                }
             }
         }
     }

@@ -5,7 +5,6 @@ import me.earth.earthhack.impl.managers.Managers;
 
 public class ReloadResourceCommand extends Command
 {
-
     public ReloadResourceCommand()
     {
         super(new String[][]{{"reloadresources"}});

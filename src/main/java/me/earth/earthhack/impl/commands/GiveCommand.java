@@ -15,10 +15,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Arrays;
+
 public class GiveCommand extends AbstractStackCommand
 {
     private boolean local = true;
     private int amount;
+    private ItemStack stack;
     private Item item;
 
     public GiveCommand()
@@ -92,7 +95,13 @@ public class GiveCommand extends AbstractStackCommand
 
         String conc = CommandUtil.concatenate(args, 2);
 
-        if (local)
+        stack = null;
+        if (Arrays.stream(args).anyMatch("-current"::equalsIgnoreCase))
+        {
+            stack = mc.player.inventory.getStackInSlot(
+                mc.player.inventory.currentItem);
+        }
+        else if (local)
         {
             item = ItemAddingModule.getItemStartingWith(conc, i -> true);
         }
@@ -101,7 +110,7 @@ public class GiveCommand extends AbstractStackCommand
             item = Item.getByNameOrId(conc);
         }
 
-        if (item == null)
+        if (item == null && stack == null)
         {
             ChatUtil.sendMessage(TextColor.RED
                     + "Could not find item "
@@ -198,6 +207,13 @@ public class GiveCommand extends AbstractStackCommand
     @Override
     protected ItemStack getStack(String[] args)
     {
+        if (this.stack != null)
+        {
+            ItemStack stack = this.stack.copy();
+            stack.setCount(amount);
+            return stack;
+        }
+
         if (item == null)
         {
             ItemStack stack = new ItemStack(Items.WRITTEN_BOOK);

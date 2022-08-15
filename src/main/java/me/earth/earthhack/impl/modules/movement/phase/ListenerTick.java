@@ -5,7 +5,7 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.movement.phase.mode.PhaseMode;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 
-public class ListenerTick
+final class ListenerTick
         extends ModuleListener<Phase, TickEvent>
 {
     public ListenerTick(Phase module)

@@ -12,6 +12,7 @@ import me.earth.earthhack.impl.commands.gui.YesNoNonPausing;
 import me.earth.earthhack.impl.commands.util.CommandDescriptions;
 import me.earth.earthhack.impl.commands.util.CommandUtil;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.managers.config.helpers.AllConfigHelper;
 import me.earth.earthhack.impl.managers.config.helpers.CurrentConfig;
 import me.earth.earthhack.impl.managers.thread.scheduler.Scheduler;
 import me.earth.earthhack.impl.util.misc.io.IORunnable;
@@ -21,11 +22,13 @@ import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.client.gui.GuiScreen;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 
 public class ConfigCommand extends Command implements Globals
 {
+    private final AllConfigHelper allConfigHelper =
+        new AllConfigHelper(Managers.CONFIG);
+
     public ConfigCommand()
     {
         super(new String[][]{{"config"},
@@ -47,22 +50,36 @@ public class ConfigCommand extends Command implements Globals
             return;
         }
 
-        ConfigHelper<?> helper = Managers.CONFIG.getObject(args[1]);
-        if (helper == null)
+        ConfigHelper<?> tempHelper = Managers.CONFIG.getObject(args[1]);
+        if (tempHelper == null)
         {
-            Managers.CHAT.sendDeleteMessage(
+            if ("all".equalsIgnoreCase(args[1]))
+            {
+                tempHelper = allConfigHelper;
+            }
+            else
+            {
+                Managers.CHAT.sendDeleteMessage(
                     TextColor.AQUA
                         + args[1]
                         + TextColor.RED
                         + " unknown. Use: " + getConcatenatedHelpers(),
                     "config1",
                     ChatIDs.COMMAND);
-            return;
+                return;
+            }
         }
 
+        ConfigHelper<?> helper = tempHelper;
         switch (args.length)
         {
             case 2:
+                String current = CurrentConfig.getInstance().get(helper);
+                if (current == null)
+                {
+                    current = TextColor.RED + "None";
+                }
+
                 StringBuilder message = new StringBuilder("Use this command")
                    .append(" to save/delete/load the ")
                    .append(TextColor.AQUA)
@@ -70,7 +87,7 @@ public class ConfigCommand extends Command implements Globals
                    .append(TextColor.WHITE)
                    .append(" config. Currently active: ")
                    .append(TextColor.GREEN)
-                   .append(CurrentConfig.getInstance().get(helper))
+                   .append(current)
                    .append(TextColor.WHITE)
                    .append(". Available: ");
 
@@ -320,7 +337,7 @@ public class ConfigCommand extends Command implements Globals
         }
 
         ConfigHelper<?> helper = CommandUtil.getNameableStartingWith(
-                args[1], Managers.CONFIG.getRegistered());
+                args[1], getConfigHelpers());
 
         if (helper == null)
         {
@@ -376,7 +393,14 @@ public class ConfigCommand extends Command implements Globals
             }
         }
 
-        return builder.toString();
+        return builder.append("/all").toString();
+    }
+
+    private Collection<ConfigHelper<?>> getConfigHelpers() {
+        List<ConfigHelper<?>> helpers = new ArrayList<>(Managers.CONFIG.getRegistered().size() + 1);
+        helpers.addAll(Managers.CONFIG.getRegistered());
+        helpers.add(allConfigHelper);
+        return helpers;
     }
 
     private void displayYesNo(String action,

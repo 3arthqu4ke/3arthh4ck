@@ -1,5 +1,7 @@
 package me.earth.earthhack.impl.core.ducks.network;
 
+import net.minecraft.client.network.NetHandlerPlayClient;
+
 /**
  * Duck interface for
  * {@link net.minecraft.client.multiplayer.PlayerControllerMP}.
@@ -59,5 +61,7 @@ public interface IPlayerControllerMP
      * @return isHittingBlock.
      */
     boolean getIsHittingBlock();
+
+    NetHandlerPlayClient getConnection();
 
 }

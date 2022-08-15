@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.movement.packetfly;
 
 import me.earth.earthhack.impl.event.events.render.SuffocationEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import me.earth.earthhack.impl.modules.movement.packetfly.util.Mode;
 
 final class ListenerOverlay extends ModuleListener<PacketFly, SuffocationEvent>
 {
@@ -13,7 +14,10 @@ final class ListenerOverlay extends ModuleListener<PacketFly, SuffocationEvent>
     @Override
     public void invoke(SuffocationEvent event)
     {
-        event.setCancelled(true);
+        if (module.mode.getValue() != Mode.Compatibility)
+        {
+            event.setCancelled(true);
+        }
     }
 
 }

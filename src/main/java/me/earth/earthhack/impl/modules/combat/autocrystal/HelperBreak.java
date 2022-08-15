@@ -48,7 +48,7 @@ public class HelperBreak extends AbstractBreakHelper<CrystalData>
             return false;
         }
 
-        return distance <= MathUtil.square(module.breakRange.getValue());
+        return module.rangeHelper.isCrystalInRangeOfLastPosition(crystal);
     }
 
     @Override

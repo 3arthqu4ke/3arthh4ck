@@ -3,8 +3,9 @@ package me.earth.earthhack.impl.core.mixins.gui;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.event.bus.instance.Bus;
+import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
-import me.earth.earthhack.impl.Earthhack;
+import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.impl.commands.gui.CommandGui;
 import me.earth.earthhack.impl.core.ducks.gui.IChatLine;
 import me.earth.earthhack.impl.core.ducks.gui.IGuiNewChat;
@@ -13,6 +14,8 @@ import me.earth.earthhack.impl.event.events.render.ChatEvent;
 import me.earth.earthhack.impl.gui.chat.AbstractTextComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.debug.ConsoleColors;
+import me.earth.earthhack.impl.modules.client.debug.Debug;
 import me.earth.earthhack.impl.modules.client.media.Media;
 import me.earth.earthhack.impl.modules.misc.chat.Chat;
 import me.earth.earthhack.impl.util.animation.AnimationMode;
@@ -28,16 +31,12 @@ import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentKeybind;
-import net.minecraft.util.text.TextComponentScore;
-import net.minecraft.util.text.TextComponentString;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -64,6 +63,8 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
      = Caches.getSetting(Chat.class, BooleanSetting.class, "Clean", false);
     private static final SettingCache<Boolean, BooleanSetting, Chat> INFINITE
      = Caches.getSetting(Chat.class, BooleanSetting.class, "Infinite", false);
+    private static final SettingCache<ConsoleColors, Setting<ConsoleColors>, Debug> CONSOLE_COLORS
+     = Caches.getSetting(Debug.class, EnumSetting.class, "ConsoleColors", ConsoleColors.Unformatted);
 
     private static final ITextComponent INSTEAD = new TextComponentKeybind("");
     
@@ -373,6 +374,11 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
         {
             ci.cancel();
         }
+    }
+
+    @Redirect(method = "printChatMessageWithOptionalDeletion", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/text/ITextComponent;getUnformattedText()Ljava/lang/String;"))
+    private String getUnformattedTextHook(ITextComponent component) {
+        return CONSOLE_COLORS.getValue().apply(component);
     }
 
     /**

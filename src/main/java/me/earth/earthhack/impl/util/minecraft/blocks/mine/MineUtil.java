@@ -199,7 +199,8 @@ public class MineUtil implements Globals
     public static boolean canBreak(IBlockState state, BlockPos pos)
     {
         return state.getBlockHardness(mc.world, pos) != -1
-                || state.getMaterial().isLiquid();
+                && state.getBlock() != Blocks.AIR
+                && !state.getMaterial().isLiquid();
     }
     
     private static void setupHarvestLevels()

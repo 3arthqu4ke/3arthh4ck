@@ -8,6 +8,7 @@ import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.api.setting.settings.StringSetting;
 import me.earth.earthhack.impl.gui.click.Click;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.client.SimpleData;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -50,15 +51,35 @@ public class ClickGui extends Module
         this.setData(new SimpleData(this, "Beautiful ClickGui by oHare"));
     }
 
+    public ClickGui(String name)
+    {
+        super(name, Category.Client);
+        this.listeners.add(new ListenerScreen(this));
+    }
+
     @Override
     protected void onEnable()
     {
-        screen = mc.currentScreen;
+        disableOtherGuis();
+        Click.CLICK_GUI.set(this);
+        screen = mc.currentScreen instanceof Click ? ((Click) mc.currentScreen).screen : mc.currentScreen;
         // dont save it since some modules add/del settings
-        Click gui = new Click();
+        Click gui = newClick();
         gui.init();
         gui.onGuiOpened();
         mc.displayGuiScreen(gui);
+    }
+
+    protected void disableOtherGuis() {
+        for (Module module : Managers.MODULES.getRegistered()) {
+            if (module instanceof ClickGui && module != this) {
+                module.disable();
+            }
+        }
+    }
+
+    protected Click newClick() {
+        return new Click(screen);
     }
 
     @Override

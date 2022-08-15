@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.movement.packetfly;
 
 import me.earth.earthhack.impl.event.events.movement.BlockPushEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import me.earth.earthhack.impl.modules.movement.packetfly.util.Mode;
 
 final class ListenerBlockPush extends ModuleListener<PacketFly, BlockPushEvent>
 {
@@ -13,7 +14,10 @@ final class ListenerBlockPush extends ModuleListener<PacketFly, BlockPushEvent>
     @Override
     public void invoke(BlockPushEvent event)
     {
-        event.setCancelled(true);
+        if (module.mode.getValue() != Mode.Compatibility)
+        {
+            event.setCancelled(true);
+        }
     }
 
 }

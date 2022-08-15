@@ -15,6 +15,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
@@ -84,6 +85,10 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
     @Override
     @Accessor(value = "isHittingBlock")
     public abstract void setIsHittingBlock(boolean hitting);
+
+    @Override
+    @Accessor(value = "connection")
+    public abstract NetHandlerPlayClient getConnection();
 
     @Inject(
         method = "clickBlock",
@@ -156,12 +161,12 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
     }
 
     @Inject(
-            method = "onPlayerDamageBlock",
-            at = @At("HEAD"),
-            cancellable = true)
+        method = "onPlayerDamageBlock",
+        at = @At("HEAD"),
+        cancellable = true)
     private void onPlayerDamageBlock(BlockPos pos,
                                      EnumFacing facing,
-                                     CallbackInfoReturnable<Boolean> info)
+                                     CallbackInfoReturnable<Boolean> cir)
     {
         DamageBlockEvent event = new DamageBlockEvent(pos,
                                                       facing,
@@ -174,7 +179,7 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
 
         if (event.isCancelled())
         {
-            info.cancel();
+            cir.cancel();
         }
     }
 
@@ -220,7 +225,7 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
     {
         return state.getPlayerRelativeBlockHardness(player, worldIn, pos)
                 * (TPS_SYNC.isEnabled() && MINE.getValue()
-                        ? 1 / Managers.TPS.getFactor()
+                        ? Managers.TPS.getFactor()
                         : 1);
     }
 
@@ -257,6 +262,40 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
     private void postGetTransactionId(int windowId, int slotId, int mouseButton, ClickType type, EntityPlayer player, CallbackInfoReturnable<ItemStack> cir, short short1)
     {
         Bus.EVENT_BUS.post(new PreSlotClickEvent(windowId, slotId, mouseButton, type, player, short1));
+    }
+
+    // PingBypass CPacketPlayerDigging Redirects:
+    private CPacketPlayerDigging initDigging(CPacketPlayerDigging.Action actionIn, BlockPos posIn, EnumFacing facingIn) {
+        CPacketPlayerDigging digging = new CPacketPlayerDigging(actionIn, posIn, facingIn);
+        ((ICPacketPlayerDigging) digging).setNormalDigging(true);
+        return digging;
+    }
+
+    @Redirect(
+        method = "resetBlockRemoving",
+        at = @At(
+            value = "NEW",
+            target = "Lnet/minecraft/network/play/client/CPacketPlayerDigging;<init>(Lnet/minecraft/network/play/client/CPacketPlayerDigging$Action;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)V"))
+    private CPacketPlayerDigging resetBlockRemovingInitPacketHook(CPacketPlayerDigging.Action actionIn, BlockPos posIn, EnumFacing facingIn) {
+        return initDigging(actionIn, posIn, facingIn);
+    }
+
+    @Redirect(
+        method = "onPlayerDamageBlock",
+        at = @At(
+            value = "NEW",
+            target = "Lnet/minecraft/network/play/client/CPacketPlayerDigging;<init>(Lnet/minecraft/network/play/client/CPacketPlayerDigging$Action;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)V"))
+    private CPacketPlayerDigging onPlayerDamageBlockInitPacketHook(CPacketPlayerDigging.Action actionIn, BlockPos posIn, EnumFacing facingIn) {
+        return initDigging(actionIn, posIn, facingIn);
+    }
+
+    @Redirect(
+        method = "clickBlock",
+        at = @At(
+            value = "NEW",
+            target = "Lnet/minecraft/network/play/client/CPacketPlayerDigging;<init>(Lnet/minecraft/network/play/client/CPacketPlayerDigging$Action;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)V"))
+    private CPacketPlayerDigging clickBlockInitPacketHook(CPacketPlayerDigging.Action actionIn, BlockPos posIn, EnumFacing facingIn) {
+        return initDigging(actionIn, posIn, facingIn);
     }
 
 }

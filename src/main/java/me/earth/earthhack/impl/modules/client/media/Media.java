@@ -10,7 +10,7 @@ import me.earth.earthhack.impl.commands.util.CommandUtil;
 import me.earth.earthhack.impl.core.mixins.gui.MixinGuiNewChat;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.autoconfig.RemovingString;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.util.helpers.addable.RegisteringModule;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
  */
 public class Media extends RegisteringModule<String, RemovingString>
 {
-    protected static final ModuleCache<PingBypass> PING_BYPASS =
-            Caches.getModule(PingBypass.class);
+    protected static final ModuleCache<PingBypassModule> PING_BYPASS =
+            Caches.getModule(PingBypassModule.class);
 
     protected final Setting<String> replacement =
             register(new StringSetting("Replacement", "3arthqu4ke"));
@@ -177,6 +177,7 @@ public class Media extends RegisteringModule<String, RemovingString>
     public void reload()
     {
         cache.clear();
+        // TODO: reload media properly -> management thingy
         this.pattern = compile(mc.getSession().getUsername());
     }
 
