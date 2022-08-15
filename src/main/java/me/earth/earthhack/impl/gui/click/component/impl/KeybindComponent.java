@@ -7,7 +7,7 @@ import me.earth.earthhack.impl.gui.click.component.Component;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 
 public class KeybindComponent extends Component {
     private final BindSetting bindSetting;
@@ -35,7 +35,7 @@ public class KeybindComponent extends Component {
     public void keyTyped(char character, int keyCode) {
         super.keyTyped(character, keyCode);
         if (isBinding()) {
-            final Bind bind = Bind.fromKey(keyCode == Keyboard.KEY_ESCAPE || keyCode == Keyboard.KEY_SPACE || keyCode == Keyboard.KEY_DELETE ? Keyboard.KEY_NONE : keyCode);
+            final Bind bind = Bind.fromKey(keyCode == Keyboard.getEscape() || keyCode == Keyboard.getSpace() || keyCode == Keyboard.getDelete() ? Keyboard.getNone() : keyCode);
             getBindSetting().setValue(bind);
             setBinding(false);
         }

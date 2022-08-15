@@ -34,6 +34,9 @@ final class AutoArmorData extends DefaultData<AutoArmor>
         register(module.noDesync, "Attempts to resync your inventory (BETA).");
         register(module.screenCheck,
                 "Doesn't allow taking off armor while in a gui.");
+        register(module.softInInv, "Will not put on Armor while you" +
+            " are arranging your Inventory.");
+        register(module.fast, "Does not work!");
     }
 
     @Override

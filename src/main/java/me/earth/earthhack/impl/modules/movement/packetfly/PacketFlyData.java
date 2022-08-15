@@ -12,7 +12,10 @@ final class PacketFlyData extends DefaultData<PacketFly>
                 "\n-Factor like Fast (when Factor is 1.0) but you can" +
                 " use the Factor Setting to make it go even faster" +
                 " (desyncs).\n-Slow similar to SetBack," +
-                " but still predicts LagBacks, also uses Factor (desync).");
+                " but still predicts LagBacks, also uses Factor (desync).\n" +
+                "-Compatibility does nothing. Is meant to be used together" +
+                " with the PacketFly's of other clients to signal 3arthh4ck" +
+                " that a PacketFly is in use.");
         register(module.factor, "The Speed multiplier when using Mode " +
                 "Factor or Slow.");
         register(module.phase, "-Off don't phase\n-Semi phase" +

@@ -4,6 +4,7 @@ import me.earth.earthhack.api.event.events.Stage;
 import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.player.fasteat.mode.FastEatMode;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
@@ -47,11 +48,11 @@ final class ListenerUpdate extends ModuleListener<FastEat, MotionUpdateEvent>
         {
             for (int i = 0; i < 32; i++)
             {
-                mc.player.connection.sendPacket(
+                PingBypass.sendToActualServer(
                         new CPacketPlayer(mc.player.onGround));
             }
 
-            mc.player.connection.sendPacket(new CPacketPlayerDigging(
+            PingBypass.sendToActualServer(new CPacketPlayerDigging(
                     CPacketPlayerDigging.Action.RELEASE_USE_ITEM,
                     BlockPos.ORIGIN,
                     EnumFacing.DOWN));

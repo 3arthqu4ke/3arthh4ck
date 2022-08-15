@@ -5,6 +5,7 @@ import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.world.border.WorldBorder;
 
 import java.awt.font.TextHitInfo;
 import java.util.HashSet;
@@ -62,6 +63,8 @@ public class NoRender extends Module
             register(new BooleanSetting("Boots", false));
     protected final Setting<Boolean> entities =
             register(new BooleanSetting("Entities", false));
+    public final Setting<Boolean> worldBorder =
+        register(new BooleanSetting("WorldBorder", false));
 
     protected final Set<Integer> ids = new HashSet<>();
 

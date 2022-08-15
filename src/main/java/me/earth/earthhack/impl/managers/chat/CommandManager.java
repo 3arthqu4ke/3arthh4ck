@@ -101,13 +101,17 @@ public class CommandManager extends SubscriberImpl
         commands.add(new Thirty2kCommand());
         commands.add(new BindCommand());
         commands.add(new ResetCommand());
+        commands.add(new PbModuleCommand());
+        commands.add(new PbSyncCommand());
         commands.add(new PrintCommand());
+        commands.add(new ProxyCommand());
         commands.add(new QuitCommand());
         commands.add(new ConnectCommand());
         commands.add(new DisconnectCommand());
         commands.add(new VClipCommand());
         commands.add(new HClipCommand());
         commands.add(new GiveCommand());
+        commands.add(new DumpStackCommand());
         commands.add(new EnchantCommand());
         commands.add(new ShrugCommand());
         commands.add(new EntityDesyncCommand());
@@ -244,17 +248,30 @@ public class CommandManager extends SubscriberImpl
     {
         if (message != null && message.length() > 1)
         {
+            applyCommandNoPrefix(removePrefix(message));
+        }
+    }
+
+    public void applyCommandNoPrefix(String message)
+    {
+        if (message != null && message.length() > 1)
+        {
             // String[] commandSplit = message.split(";"); TODO this
             // for (String s : commandSplit)
-            String[] array = createArray(message);
-            Command command = getCommandForMessage(array);
-            if (command.equals(FAIL_COMMAND))
-            {
-                command = getHiddenCommand(array);
-            }
-
-            command.execute(array);
+            String[] array = createArrayNoPrefix(message);
+            executeArgs(array);
         }
+    }
+
+    public void executeArgs(String... args)
+    {
+        Command command = getCommandForMessage(args);
+        if (command.equals(FAIL_COMMAND))
+        {
+            command = getHiddenCommand(args);
+        }
+
+        command.execute(args);
     }
 
     public String getConcatenatedCommands()
@@ -282,8 +299,17 @@ public class CommandManager extends SubscriberImpl
 
     public String[] createArray(String message)
     {
-        String noPrefix = message.substring(Commands.getPrefix().length());
+        String noPrefix = removePrefix(message);
         return CommandUtil.toArgs(noPrefix);
+    }
+
+    public String removePrefix(String message) {
+        return message.substring(Commands.getPrefix().length());
+    }
+
+    public String[] createArrayNoPrefix(String message)
+    {
+        return CommandUtil.toArgs(message);
     }
 
     private Command getHiddenCommand(String[] array)

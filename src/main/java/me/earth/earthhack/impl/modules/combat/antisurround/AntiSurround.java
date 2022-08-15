@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.combat.antisurround;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.ColorSetting;
@@ -61,43 +62,62 @@ public class AntiSurround extends ObbyListenerModule<ListenerObby>
     protected final Setting<Double> range =
         register(new NumberSetting<>("Range", 5.25, 0.1, 6.0));
     protected final Setting<Boolean> async =
-        register(new BooleanSetting("Async", false));
+        register(new BooleanSetting("Async", false))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> instant = // TODO
-        register(new BooleanSetting("Instant", false));
+        register(new BooleanSetting("Instant", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> persistent =
-        register(new BooleanSetting("Persistent", true));
+        register(new BooleanSetting("Persistent", true))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> obby =
-        register(new BooleanSetting("Obby", false));
+        register(new BooleanSetting("Obby", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> digSwing =
-        register(new BooleanSetting("DigSwing", false));
+        register(new BooleanSetting("DigSwing", false))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> newVer =
-        register(new BooleanSetting("1.13+", false));
+        register(new BooleanSetting("1.13+", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> newVerEntities =
-        register(new BooleanSetting("1.13-Entities", false));
+        register(new BooleanSetting("1.13-Entities", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> onGround =
-        register(new BooleanSetting("OnGround", true));
+        register(new BooleanSetting("OnGround", true))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Float> minDmg =
-        register(new NumberSetting<>("MinDamage", 5.0f, 0.0f, 36.0f));
+        register(new NumberSetting<>("MinDamage", 5.0f, 0.0f, 36.0f))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Integer> itemDeathTime =
-        register(new NumberSetting<>("ItemDeathTime", 100, 0, 1000));
+        register(new NumberSetting<>("ItemDeathTime", 100, 0, 1000))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> pickaxeOnly =
-        register(new BooleanSetting("HoldingPickaxe", false));
+        register(new BooleanSetting("HoldingPickaxe", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> anvil =
-        register(new BooleanSetting("Anvil", false));
+        register(new BooleanSetting("Anvil", false))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> drawEsp =
-        register(new BooleanSetting("ESP", true));
+        register(new BooleanSetting("ESP", true))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> preCrystal =
-        register(new BooleanSetting("PreCrystal", false));
-    protected final ColorSetting color =
-        register(new ColorSetting("Color", new Color(255, 255, 255, 75)));
-    protected final ColorSetting outline =
-        register(new ColorSetting("Outline", new Color(255, 255, 255, 240)));
+        register(new BooleanSetting("PreCrystal", false))
+            .setComplexity(Complexity.Expert);
+    protected final Setting<Color> color =
+        register(new ColorSetting("Color", new Color(255, 255, 255, 75)))
+            .setComplexity(Complexity.Medium);
+    protected final Setting<Color> outline =
+        register(new ColorSetting("Outline", new Color(255, 255, 255, 240)))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Float> lineWidth =
-        register(new NumberSetting<>("LineWidth", 1.5f, 0.0f, 10.0f));
+        register(new NumberSetting<>("LineWidth", 1.5f, 0.0f, 10.0f))
+            .setComplexity(Complexity.Expert);
     protected final Setting<Float> height =
-        register(new NumberSetting<>("ESP-Height", 1.0f, -1.0f, 1.0f));
+        register(new NumberSetting<>("ESP-Height", 1.0f, -1.0f, 1.0f))
+            .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> normal =
-        register(new BooleanSetting("Normal", true));
+        register(new BooleanSetting("Normal", true))
+            .setComplexity(Complexity.Expert);
 
     // TODO: don't register this until we found implemented
     //  a way to attack the block x ticks before we break it
@@ -109,6 +129,7 @@ public class AntiSurround extends ObbyListenerModule<ListenerObby>
     protected volatile long semiActiveTime;
     protected final IAxisESP esp;
 
+    protected int crystalSwitchBackSlot = -1;
     protected int crystalSlot = -1;
     protected int toolSlot    = -1;
     protected int obbySlot    = -1;
@@ -208,7 +229,7 @@ public class AntiSurround extends ObbyListenerModule<ListenerObby>
             {
                 // TODO: fix this, I dont like this, too many switches!
                 int lastSlot = mc.player.inventory.currentItem;
-                InventoryUtil.switchTo(toolSlot);
+                cooldownBypass.getValue().switchTo(toolSlot);
                 if (!isAnvil)
                 {
                     PacketUtil.startDigging(pos, finalFacing);
@@ -222,7 +243,7 @@ public class AntiSurround extends ObbyListenerModule<ListenerObby>
                     Swing.Packet.swing(EnumHand.MAIN_HAND);
                 }
 
-                InventoryUtil.switchTo(lastSlot);
+                cooldownBypass.getValue().switchBack(lastSlot, toolSlot);
             });
         }
 
@@ -238,7 +259,8 @@ public class AntiSurround extends ObbyListenerModule<ListenerObby>
             {
                 int lastSlot = mc.player.inventory.currentItem;
                 post.forEach(Runnable::run);
-                InventoryUtil.switchTo(lastSlot);
+                cooldownBypass.getValue().switchBack(lastSlot, crystalSwitchBackSlot != -1 ? crystalSwitchBackSlot : lastSlot);
+                crystalSwitchBackSlot = -1;
             });
 
             post.clear();

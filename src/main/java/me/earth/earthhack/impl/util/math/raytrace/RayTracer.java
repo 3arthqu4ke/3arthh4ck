@@ -141,8 +141,8 @@ public class RayTracer implements Globals
                 if (hitDistance < distance || distance == 0.0)
                 {
                     if (entity.getLowestRidingEntity()
-                            == from.getLowestRidingEntity()
-                        && !entity.canRiderInteract())
+                            == from.getLowestRidingEntity())
+                        // TODO: && !entity.canRiderInteract()) for Vanilla?
                     {
                         if (distance == 0.0)
                         {

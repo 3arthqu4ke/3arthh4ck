@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.modules.player.noinventorydesync;
 
 import io.netty.util.internal.ConcurrentSet;
+import me.earth.earthhack.api.event.events.Event;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
@@ -13,8 +14,11 @@ import me.earth.earthhack.impl.event.listeners.LambdaListener;
 import me.earth.earthhack.impl.event.listeners.PostSendListener;
 import me.earth.earthhack.impl.event.listeners.ReceiveListener;
 import me.earth.earthhack.impl.event.listeners.SendListener;
+import me.earth.earthhack.impl.util.client.SimpleData;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.event.S2CCustomPacketEvent;
+import me.earth.earthhack.pingbypass.protocol.s2c.S2CConfirmTransaction;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.INetHandlerPlayClient;
@@ -48,6 +52,8 @@ public class InventorySync extends Module
     public InventorySync()
     {
         super("InventorySync", Category.Player);
+        this.setData(new SimpleData(this, "This module is bad and scheduled for removal!"));
+
         alwaysConfirm.addObserver(e ->
         {
             window2Id.clear();
@@ -106,36 +112,12 @@ public class InventorySync extends Module
         }));
         this.listeners.add(new ReceiveListener<>(
             SPacketConfirmTransaction.class, p ->
-        {
-            if (restore.getValue() && !p.getPacket().wasAccepted() && clicked.remove(
-                    new ClickTimeStamp(p.getPacket().getWindowId(), p.getPacket().getActionNumber())))
-            {
-                mc.addScheduledTask(() ->
-                        restores.stream()
-                                .filter(r -> r.getId() == p.getPacket().getActionNumber()
-                                        && r.getWindowId() == p.getPacket().getWindowId())
-                                .findFirst()
-                                .ifPresent(restore -> Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
-                                {
-                                    restore.restore(packets);
-                                    packets.clear();
-                                    restores.clear();
-                                })));
-            }
+            onConfirmTransaction(p, p.getPacket().wasAccepted(), p.getPacket().getWindowId(), p.getPacket().getActionNumber())));
 
-            if (alwaysConfirm.getValue())
-            {
-                if (cancel.getValue()
-                        && confirmed.remove(p.getPacket().getActionNumber()))
-                {
-                    p.setCancelled(true);
-                }
-            }
-            else if (p.getPacket().wasAccepted())
-            {
-                window2Id.remove(p.getPacket().getWindowId());
-            }
-        }));
+        this.listeners.add(new LambdaListener<S2CCustomPacketEvent<S2CConfirmTransaction>>(
+            S2CCustomPacketEvent.class, S2CConfirmTransaction.class, p ->
+            onConfirmTransaction(p, p.getPacket().wasAccepted(), p.getPacket().getWindowId(), p.getPacket().getActionNumber())));
+
         this.listeners.add(new SendListener<>(
             CPacketConfirmTransaction.class, p ->
         {
@@ -202,6 +184,37 @@ public class InventorySync extends Module
     protected void onDisable()
     {
         reset();
+    }
+
+    private void onConfirmTransaction(Event event, boolean wasAccepted, int windowId, short actionNumber) {
+        if (restore.getValue() && !wasAccepted && clicked.remove(
+            new ClickTimeStamp(windowId, actionNumber)))
+        {
+            mc.addScheduledTask(() ->
+                restores.stream()
+                        .filter(r -> r.getId() == actionNumber
+                            && r.getWindowId() == windowId)
+                        .findFirst()
+                        .ifPresent(restore -> Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
+                        {
+                            restore.restore(packets);
+                            packets.clear();
+                            restores.clear();
+                        })));
+        }
+
+        if (alwaysConfirm.getValue())
+        {
+            if (cancel.getValue()
+                && confirmed.remove(actionNumber))
+            {
+                event.setCancelled(true);
+            }
+        }
+        else if (wasAccepted)
+        {
+            window2Id.remove(windowId);
+        }
     }
 
     public void reset()

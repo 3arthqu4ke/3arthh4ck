@@ -17,6 +17,12 @@ public interface IEntityPlayerSP
 
     boolean getLastOnGround();
 
+    void setLastReportedX(double x);
+
+    void setLastReportedY(double y);
+
+    void setLastReportedZ(double z);
+
     void setLastReportedYaw(float yaw);
 
     void setLastReportedPitch(float pitch);

@@ -47,7 +47,7 @@ public class AutoTrap extends ObbyListenerModule<ListenerAutoTrap>
             register(new NumberSetting<>("Range", 6.0f, 0.0f, 6.0f));
     protected final Setting<Boolean> noScaffold    =
             register(new BooleanSetting("NoScaffold", false));
-    protected final Setting<Boolean> top        =
+protected final Setting<Boolean> top               =
             register(new BooleanSetting("Top", true));
     protected final Setting<Boolean> noStep        =
             register(new BooleanSetting("NoStep", false));

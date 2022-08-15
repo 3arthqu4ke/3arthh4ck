@@ -4,7 +4,8 @@ import com.google.gson.JsonElement;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.event.SettingResult;
 import me.earth.earthhack.api.util.bind.Bind;
-import org.lwjgl.input.Keyboard;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 
 public class BindSetting extends Setting<Bind>
 {
@@ -25,8 +26,17 @@ public class BindSetting extends Setting<Bind>
     }
 
     @Override
+    public Setting<Bind> copy() {
+        return new BindSetting(getName(), getInitial());
+    }
+
+    @Override
     public SettingResult fromString(String string)
     {
+        if (PingBypass.isServer()) {
+            return new SettingResult(false, "No Binds on PingBypass!");
+        }
+
         if ("none".equalsIgnoreCase(string))
         {
             this.value = Bind.none();
@@ -42,6 +52,10 @@ public class BindSetting extends Setting<Bind>
     @Override
     public String getInputs(String string)
     {
+        if (PingBypass.isServer()) {
+            return "<No Binds on PingBypass!>";
+        }
+
         if (string == null || string.isEmpty())
         {
             return "<key>";
@@ -53,7 +67,7 @@ public class BindSetting extends Setting<Bind>
         }
         else
         {
-            for (int i = 0; i < Keyboard.KEYBOARD_SIZE; i++)
+            for (int i = 0; i < Keyboard.getKeyboardSize(); i++)
             {
                 String keyName = Keyboard.getKeyName(i);
                 if (keyName != null

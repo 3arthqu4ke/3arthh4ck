@@ -14,7 +14,7 @@ import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.KeyBoardUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
-import net.minecraft.enchantment.EnchantmentHelper;
+import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Enchantments;
@@ -22,7 +22,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
-import org.lwjgl.input.Mouse;
 
 import java.util.List;
 
@@ -64,6 +63,10 @@ public class ExpTweaks extends Module
         register(new BooleanSetting("AllowDragSlot", false));
     protected final Setting<Bind> mceBind =
         register(new BindSetting("MCE-Bind", Bind.none()));
+    protected final Setting<Boolean> pickBlock =
+        register(new BooleanSetting("CancelPickBlock", true));
+    protected final Setting<Boolean> normalMC =
+        register(new BooleanSetting("CancelDefaultMiddleClick", true));
 
     protected boolean justCancelled;
     protected boolean isMiddleClick;
@@ -74,6 +77,7 @@ public class ExpTweaks extends Module
         super("ExpTweaks", Category.Player);
         this.listeners.add(new ListenerMotion(this));
         this.listeners.add(new ListenerUseItem(this));
+        this.listeners.add(new ListenerPickBlock(this));
         this.listeners.add(new ListenerMiddleClick(this));
 
         SimpleData data = new SimpleData(this,

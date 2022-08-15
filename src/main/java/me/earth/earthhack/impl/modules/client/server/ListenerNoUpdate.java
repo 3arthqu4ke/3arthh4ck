@@ -17,7 +17,9 @@ final class ListenerNoUpdate extends
     @Override
     public void invoke(NoMotionUpdateEvent event)
     {
-        if (module.currentMode == ServerMode.Client || !module.sync.getValue())
+        if (module.currentMode == ServerMode.Client
+            || !module.sync.getValue()
+            || event.isCancelled())
         {
             return;
         }

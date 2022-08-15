@@ -185,6 +185,7 @@ public class EarthhackTweaker implements ITweaker
         dev.addArgument("jsnull",      new BooleanArgument(Boolean.FALSE));
         dev.addArgument("connection",  new LongArgument(800L));
         dev.addArgument("leijurvpos",  new BooleanArgument(Boolean.TRUE));
+        dev.addArgument("splash",      new BooleanArgument(Boolean.TRUE));
         dev.loadArguments();
     }
 

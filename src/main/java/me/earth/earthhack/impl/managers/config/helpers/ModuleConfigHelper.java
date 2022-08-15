@@ -10,6 +10,8 @@ import me.earth.earthhack.api.register.Register;
 import me.earth.earthhack.api.setting.GeneratedSettings;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.impl.Earthhack;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
+import me.earth.earthhack.pingbypass.PingBypass;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,7 +25,12 @@ public class ModuleConfigHelper extends AbstractConfigHelper<ModuleConfig>
 
     public ModuleConfigHelper(Register<Module> mods)
     {
-        super("module", "modules");
+        this("module", "modules", mods);
+    }
+
+    public ModuleConfigHelper(String name, String path, Register<Module> mods)
+    {
+        super(name, path);
         this.modules = mods;
     }
 
@@ -77,6 +84,11 @@ public class ModuleConfigHelper extends AbstractConfigHelper<ModuleConfig>
                     Earthhack.getLogger().error(
                         "Config: Couldn't find setting: " + s.getKey()
                             + " in module: " + module.getName() + ".");
+                    continue;
+                }
+
+                if ("Enabled".equalsIgnoreCase(setting.getName())
+                    && module instanceof PingBypassModule) {
                     continue;
                 }
 

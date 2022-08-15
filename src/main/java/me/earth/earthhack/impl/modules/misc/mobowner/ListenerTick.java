@@ -62,6 +62,7 @@ final class ListenerTick extends ModuleListener<MobOwner, TickEvent>
             }
             else
             {
+                module.cache.put(id, null);
                 Managers.LOOK_UP.doLookUp(new LookUp(LookUp.Type.NAME, id)
                 {
                     @Override

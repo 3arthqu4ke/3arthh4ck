@@ -14,9 +14,9 @@ import net.minecraft.network.play.client.CPacketKeepAlive;
  * clearly identified Packets (id == -1337). Everytime a CPacketKeepAlive
  * is sent we also sync the transactionId for mc.player.openContainer.
  */
-final class ListenerTick extends ModuleListener<PingBypass, TickEvent>
+final class ListenerTick extends ModuleListener<PingBypassModule, TickEvent>
 {
-    public ListenerTick(PingBypass module)
+    public ListenerTick(PingBypassModule module)
     {
         super(module, TickEvent.class);
     }
@@ -29,15 +29,25 @@ final class ListenerTick extends ModuleListener<PingBypass, TickEvent>
             NetHandlerPlayClient connection = mc.getConnection();
             if (connection != null)
             {
-                CPacketClickWindow container = new CPacketClickWindow(1, -1337, 1, ClickType.PICKUP, ItemStack.EMPTY, ((IContainer) mc.player.openContainer).getTransactionID());
-                CPacketKeepAlive alive = new CPacketKeepAlive(-1337);
                 module.startTime = System.currentTimeMillis();
                 module.handled = false;
-                connection.sendPacket(container);
-                connection.sendPacket(alive);
-            }
 
-            module.timer.reset();
+                if (module.isOld())
+                {
+                    CPacketClickWindow container = new CPacketClickWindow(1, -1337, 1, ClickType.PICKUP, ItemStack.EMPTY, ((IContainer) mc.player.openContainer).getTransactionID());
+                    CPacketKeepAlive alive = new CPacketKeepAlive(-1337);
+                    connection.sendPacket(container);
+                    connection.sendPacket(alive);
+                }
+                else
+                {
+                    // it was just convenient to use the old protocol where the client sends KeepAlives to get the ping
+                    CPacketKeepAlive alive = new CPacketKeepAlive(-1337);
+                    connection.sendPacket(alive);
+                }
+
+                module.timer.reset();
+            }
         }
     }
 

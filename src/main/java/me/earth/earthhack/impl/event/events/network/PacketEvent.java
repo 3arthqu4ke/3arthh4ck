@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.event.events.network;
 import me.earth.earthhack.api.event.events.Event;
 import me.earth.earthhack.impl.util.thread.SafeRunnable;
 import net.minecraft.network.INetHandler;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 
 import java.util.ArrayDeque;
@@ -16,9 +17,10 @@ import java.util.Deque;
  */
 public class PacketEvent<T extends Packet<? extends INetHandler>> extends Event
 {
+    private boolean isPingBypassCancelled;
     private final T packet;
 
-    private PacketEvent(T packet)
+    protected PacketEvent(T packet)
     {
         this.packet = packet;
     }
@@ -26,6 +28,16 @@ public class PacketEvent<T extends Packet<? extends INetHandler>> extends Event
     public T getPacket()
     {
         return packet;
+    }
+
+    public boolean isPingBypassCancelled()
+    {
+        return isPingBypassCancelled;
+    }
+
+    public void setPingBypassCancelled(boolean pingBypassCancelled)
+    {
+        isPingBypassCancelled = pingBypassCancelled;
     }
 
     /**
@@ -81,10 +93,12 @@ public class PacketEvent<T extends Packet<? extends INetHandler>> extends Event
     {
         // Could use a PostRunnable, with "shouldScheduleIfCancelled"
         private final Deque<Runnable> postEvents = new ArrayDeque<>();
+        private final NetworkManager networkManager;
 
-        public Receive(T packet)
+        public Receive(T packet, NetworkManager networkManager)
         {
             super(packet);
+            this.networkManager = networkManager;
         }
 
         /**
@@ -102,6 +116,11 @@ public class PacketEvent<T extends Packet<? extends INetHandler>> extends Event
         public Deque<Runnable> getPostEvents()
         {
             return postEvents;
+        }
+
+        public NetworkManager getNetworkManager()
+        {
+            return networkManager;
         }
     }
 

@@ -16,7 +16,8 @@ final class ListenerText extends ModuleListener<LagOMeter, Render2DEvent>
     @Override
     public void invoke(Render2DEvent event)
     {
-        if (!module.response.getValue() && !module.lagTime.getValue())
+        if (!module.response.getValue() && !module.lagTime.getValue()
+            || mc.player == null)
         {
             return;
         }

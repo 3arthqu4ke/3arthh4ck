@@ -85,6 +85,7 @@ import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.installer.srg2notch.MappingUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.block.Block;
@@ -274,7 +275,7 @@ public class PacketCommandImpl extends Command implements Globals, PacketCommand
                     + TextColor.GREEN + " to server!");
             try
             {
-                mc.player.connection.sendPacket(packet);
+                PingBypass.sendToActualServer(packet);
             }
             catch (Throwable t)
             {
@@ -304,8 +305,7 @@ public class PacketCommandImpl extends Command implements Globals, PacketCommand
                 packet.writePacketData(buffer);
                 packet.readPacketData(buffer);
 
-                if (!NetworkUtil.receive(
-                        (Packet<INetHandlerPlayClient>) packet))
+                if (!NetworkUtil.receive((Packet<INetHandlerPlayClient>) packet, mc.player.connection.getNetworkManager()))
                 {
                     ChatUtil.sendMessage(
                         TextColor.RED + "The packet "

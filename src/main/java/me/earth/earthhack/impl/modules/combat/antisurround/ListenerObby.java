@@ -454,7 +454,8 @@ final class ListenerObby extends ObbyListener<AntiSurround>
             BlockPos finalPos = crystalPos;
             module.post.add(() ->
             {
-                InventoryUtil.switchTo(crystalSlot);
+                module.crystalSwitchBackSlot = crystalSlot;
+                module.cooldownBypass.getValue().switchTo(crystalSlot);
                 mc.player.connection.sendPacket(
                     new CPacketPlayerTryUseItemOnBlock(
                         finalPos, finalResult.sideHit, h, f[0], f[1], f[2]));

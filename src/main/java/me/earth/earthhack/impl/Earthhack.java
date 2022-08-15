@@ -4,7 +4,9 @@ import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.IMinecraft;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.thread.GlobalExecutor;
+import me.earth.earthhack.impl.modules.client.commands.Commands;
 import me.earth.earthhack.impl.util.math.geocache.Sphere;
+import me.earth.earthhack.impl.util.render.SplashScreenHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.Display;
@@ -13,7 +15,7 @@ public class Earthhack implements Globals
 {
     private static final Logger LOGGER = LogManager.getLogger("3arthh4ck");
     public static final String NAME = "3arthh4ck";
-    public static final String VERSION = "1.6.3";
+    public static final String VERSION = "1.7.5";
 
     public static void preInit()
     {
@@ -23,8 +25,11 @@ public class Earthhack implements Globals
     public static void init()
     {
         LOGGER.info("\n\nInitializing 3arthh4ck.");
+        SplashScreenHelper.setSplashScreen("Initializing 3arthh4ck", 7);
         Display.setTitle(NAME + " - " + VERSION);
         Managers.load();
+        LOGGER.info("Prefix is " + Commands.getPrefix());
+        SplashScreenHelper.clear();
         LOGGER.info("\n3arthh4ck initialized.\n");
     }
 

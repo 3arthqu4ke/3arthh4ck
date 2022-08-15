@@ -4,10 +4,14 @@ import me.earth.earthhack.api.event.bus.EventListener;
 import me.earth.earthhack.api.event.bus.SubscriberImpl;
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.event.events.Stage;
+import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.events.network.NoMotionUpdateEvent;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.CPacketPlayerListener;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.pingbypass.protocol.c2s.C2SNoMotionUpdateEvent;
 import net.minecraft.network.play.client.CPacketPlayer;
 
 /**
@@ -15,7 +19,7 @@ import net.minecraft.network.play.client.CPacketPlayer;
  * if onUpdateWalkingPlayer is called,
  * but no CPacketPlayer is sent.
  */
-public class NoMotionUpdateService extends SubscriberImpl
+public class NoMotionUpdateService extends SubscriberImpl implements Globals
 {
     private boolean awaiting;
 
@@ -40,7 +44,16 @@ public class NoMotionUpdateService extends SubscriberImpl
                 {
                     if (isAwaiting())
                     {
-                        Bus.EVENT_BUS.post(new NoMotionUpdateEvent());
+                        NoMotionUpdateEvent noMotionUpdate =
+                            new NoMotionUpdateEvent();
+                        Bus.EVENT_BUS.post(noMotionUpdate);
+                        if (!noMotionUpdate.isCancelled()
+                            && PingBypassModule.CACHE.isEnabled()
+                            && !PingBypassModule.CACHE.get().isOld()
+                            && mc.player != null) {
+                            mc.player.connection.sendPacket(
+                                new C2SNoMotionUpdateEvent());
+                        }
                     }
 
                     setAwaiting(false);

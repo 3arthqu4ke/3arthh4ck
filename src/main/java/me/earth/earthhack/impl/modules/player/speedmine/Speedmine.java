@@ -3,11 +3,9 @@ package me.earth.earthhack.impl.modules.player.speedmine;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
-import me.earth.earthhack.api.setting.settings.BindSetting;
-import me.earth.earthhack.api.setting.settings.BooleanSetting;
-import me.earth.earthhack.api.setting.settings.EnumSetting;
-import me.earth.earthhack.api.setting.settings.NumberSetting;
+import me.earth.earthhack.api.setting.settings.*;
 import me.earth.earthhack.api.util.bind.Bind;
 import me.earth.earthhack.impl.core.ducks.network.ICPacketPlayerDigging;
 import me.earth.earthhack.impl.core.ducks.network.IPlayerControllerMP;
@@ -18,7 +16,7 @@ import me.earth.earthhack.impl.modules.player.speedmine.mode.MineMode;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
-import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
+import me.earth.earthhack.impl.util.minecraft.CooldownBypass;
 import me.earth.earthhack.impl.util.minecraft.Swing;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
@@ -29,6 +27,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+
+import java.awt.*;
 
 import static net.minecraft.network.play.client.CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK;
 import static net.minecraft.network.play.client.CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK;
@@ -46,67 +46,117 @@ public class Speedmine extends Module
     protected final Setting<Boolean> noReset   =
             register(new BooleanSetting("Reset", true));
     public final Setting<Float> limit       =
-            register(new NumberSetting<>("Damage", 1.0f, 0.0f, 2.0f));
+            register(new NumberSetting<>("Damage", 1.0f, 0.0f, 2.0f))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Float> range       =
             register(new NumberSetting<>("Range", 7.0f, 0.1f, 100.0f));
     protected final Setting<Boolean> multiTask =
             register(new BooleanSetting("MultiTask", false));
     protected final Setting<Boolean> rotate    =
-            register(new BooleanSetting("Rotate", false));
+            register(new BooleanSetting("Rotate", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> event     =
-            register(new BooleanSetting("Event", false));
+            register(new BooleanSetting("Event", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> display   =
-            register(new BooleanSetting("DisplayDamage", false));
+            register(new BooleanSetting("DisplayDamage", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Integer> delay     =
-            register(new NumberSetting<>("ClickDelay", 100, 0, 500));
+            register(new NumberSetting<>("ClickDelay", 100, 0, 500))
+                .setComplexity(Complexity.Medium);
     protected final Setting<ESPMode> esp       =
-            register(new EnumSetting<>("ESP", ESPMode.Outline));
+            register(new EnumSetting<>("ESP", ESPMode.Outline))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Integer> alpha     =
-            register(new NumberSetting<>("BlockAlpha", 100, 0, 255));
+            register(new NumberSetting<>("BlockAlpha", 100, 0, 255))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Integer> outlineA  =
-            register(new NumberSetting<>("OutlineAlpha", 100, 0, 255));
+            register(new NumberSetting<>("OutlineAlpha", 100, 0, 255))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Integer> realDelay =
-            register(new NumberSetting<>("Delay", 50, 0, 500));
+            register(new NumberSetting<>("Delay", 50, 0, 500))
+                .setComplexity(Complexity.Medium);
     public final Setting<Boolean> onGround  =
-            register(new BooleanSetting("OnGround", false));
+            register(new BooleanSetting("OnGround", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> toAir     =
-            register(new BooleanSetting("ToAir", false));
+            register(new BooleanSetting("ToAir", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> swap      =
-            register(new BooleanSetting("SilentSwitch", false));
+            register(new BooleanSetting("SilentSwitch", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<CooldownBypass> cooldownBypass =
+            register(new EnumSetting<>("CoolDownBypass", CooldownBypass.None))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> requireBreakSlot      =
-            register(new BooleanSetting("RequireBreakSlot", false));
+            register(new BooleanSetting("RequireBreakSlot", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> placeCrystal =
-            register(new BooleanSetting("PlaceCrystal", false));
-    protected final BindSetting breakBind =
-            register(new BindSetting("BreakBind", Bind.none()));
+            register(new BooleanSetting("PlaceCrystal", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Bind> breakBind =
+            register(new BindSetting("BreakBind", Bind.none()))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> normal     =
-            register(new BooleanSetting("Normal", false));
+            register(new BooleanSetting("Normal", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> resetAfterPacket =
-            register(new BooleanSetting("ResetAfterPacket", false));
+            register(new BooleanSetting("ResetAfterPacket", true))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> checkPacket =
-            register(new BooleanSetting("CheckPacket", true));
+            register(new BooleanSetting("CheckPacket", true))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> swingStop =
-            register(new BooleanSetting("Swing-Stop", true));
+            register(new BooleanSetting("Swing-Stop", true))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> limitRotations =
-            register(new BooleanSetting("Limit-Rotations", true));
+            register(new BooleanSetting("Limit-Rotations", true))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> confirm =
-            register(new NumberSetting<>("Confirm", 500, 0, 1000));
+            register(new NumberSetting<>("Confirm", 500, 0, 1000))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Double> crystalRange =
-            register(new NumberSetting<>("CrystalRange", 6.0, 0.0, 10.0));
+            register(new NumberSetting<>("CrystalRange", 6.0, 0.0, 10.0))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Double> crystalTrace =
-            register(new NumberSetting<>("CrystalTrace", 6.0, 0.0, 10.0));
+            register(new NumberSetting<>("CrystalTrace", 6.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Double> crystalBreakTrace =
-            register(new NumberSetting<>("CrystalTrace", 3.0, 0.0, 10.0));
+            register(new NumberSetting<>("CrystalTrace", 3.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Double> minDmg =
-            register(new NumberSetting<>("MinDamage", 10.0, 0.0, 36.0));
+            register(new NumberSetting<>("MinDamage", 10.0, 0.0, 36.0))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Double> maxSelfDmg =
-            register(new NumberSetting<>("MaxSelfDamage", 10.0, 0.0, 36.0));
+            register(new NumberSetting<>("MaxSelfDamage", 10.0, 0.0, 36.0))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> newVer =
-            register(new BooleanSetting("1.13", false));
+            register(new BooleanSetting("1.13", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> newVerEntities =
-            register(new BooleanSetting("1.13-Entities", false));
+            register(new BooleanSetting("1.13-Entities", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> growRender =
-            register(new BooleanSetting("GrowRender", false));
+            register(new BooleanSetting("GrowRender", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Color> pbColor  =
+            register(new ColorSetting("PB-Color", new Color(0, 255, 0, 240)))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Color> pbOutline  =
+            register(new ColorSetting("PB-Outline", new Color(0, 255, 0, 120)))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> down =
+            register(new BooleanSetting("Down", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> tpsSync =
+            register(new BooleanSetting("TpsSync", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> abortNextTick =
+            register(new BooleanSetting("AbortNextTick", false))
+                .setComplexity(Complexity.Expert);
+
+    protected final FastHelper fastHelper = new FastHelper(this);
+    protected final CrystalHelper crystalHelper = new CrystalHelper(this);
 
     /**
      * Damage dealt to block for each hotbarSlot.
@@ -193,7 +243,9 @@ public class Speedmine extends Module
     @Override
     public String getDisplayInfo()
     {
-        if (display.getValue() && mode.getValue() == MineMode.Smart)
+        if (display.getValue()
+            && (mode.getValue() == MineMode.Smart
+            || mode.getValue() == MineMode.Fast))
         {
             return (maxDamage >= limit.getValue()
                     ? TextColor.GREEN + MathUtil.round(limit.getValue(), 1)
@@ -234,6 +286,7 @@ public class Speedmine extends Module
         sentPacket = false;
         limitRotationSlot = -1;
         limitRotationPacket = null;
+        fastHelper.reset();
         AUTO_MINE.computeIfPresent(AutoMine::reset);
 
         for (int i = 0; i < 9; i++)
@@ -319,6 +372,11 @@ public class Speedmine extends Module
             NetworkUtil.sendPacketNoEvent(stop, false);
         }
 
+        if (mode.getValue() == MineMode.Fast)
+        {
+            fastHelper.sendAbortStart(pos, facing);
+        }
+
         onSendPacket();
         return true;
     }
@@ -335,7 +393,7 @@ public class Speedmine extends Module
             mc.playerController.onPlayerDestroyBlock(pos);
         }
 
-        if (resetAfterPacket.getValue())
+        if (resetAfterPacket.getValue() && mode.getValue() != MineMode.Fast)
         {
             reset();
         }
@@ -371,7 +429,7 @@ public class Speedmine extends Module
             {
                 int lastSlot = mc.player.inventory.currentItem;
                 if (breakSlot != -1) {
-                    InventoryUtil.switchTo(breakSlot);
+                    cooldownBypass.getValue().switchTo(breakSlot);
                 }
 
                 CPacketPlayerDigging packet =
@@ -389,7 +447,7 @@ public class Speedmine extends Module
 
                 NetworkUtil.sendPacketNoEvent(packet, false);
                 if (breakSlot != -1) {
-                    InventoryUtil.switchTo(lastSlot);
+                    cooldownBypass.getValue().switchBack(lastSlot, breakSlot);
                 }
             });
 
@@ -422,7 +480,7 @@ public class Speedmine extends Module
         if (sentPacket
                 && resetTimer.passed(confirm.getValue())
                 && (mode.getValue() == MineMode.Packet
-                || mode.getValue() == MineMode.Smart))
+                    || mode.getValue() == MineMode.Smart))
         {
             reset();
         }
@@ -432,12 +490,6 @@ public class Speedmine extends Module
     {
         sentPacket = true;
         resetTimer.reset();
-    }
-
-    public enum PlaceCrystalMode {
-        Off,
-        Old,
-        New
     }
 
 }

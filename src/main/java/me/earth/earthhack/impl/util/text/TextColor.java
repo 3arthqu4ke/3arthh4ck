@@ -1,5 +1,7 @@
 package me.earth.earthhack.impl.util.text;
 
+import me.earth.earthhack.impl.modules.client.debug.AnsiColors;
+
 /**
  * TextColors for {@link me.earth.earthhack.impl.gui.font.CustomFontRenderer}
  * and {@link net.minecraft.client.gui.FontRenderer}. Note that theres also
@@ -19,7 +21,7 @@ public enum TextColor
             return "";
         }
     },
-    Black()
+    Black(AnsiColors.BLACK)
     {
         @Override
         public String getColor()
@@ -27,7 +29,7 @@ public enum TextColor
             return BLACK;
         }
     },
-    White()
+    White(AnsiColors.RESET)
     {
         @Override
         public String getColor()
@@ -35,7 +37,7 @@ public enum TextColor
             return WHITE;
         }
     },
-    DarkBlue
+    DarkBlue(AnsiColors.BLUE)
     {
         @Override
         public String getColor()
@@ -43,7 +45,7 @@ public enum TextColor
             return DARK_BLUE;
         }
     },
-    DarkGreen
+    DarkGreen(AnsiColors.GREEN)
     {
         @Override
         public String getColor()
@@ -51,7 +53,7 @@ public enum TextColor
             return DARK_GREEN;
         }
     },
-    DarkAqua
+    DarkAqua(AnsiColors.CYAN)
     {
         @Override
         public String getColor()
@@ -59,7 +61,7 @@ public enum TextColor
             return DARK_AQUA;
         }
     },
-    DarkRed
+    DarkRed(AnsiColors.RED)
     {
         @Override
         public String getColor()
@@ -67,7 +69,7 @@ public enum TextColor
             return DARK_RED;
         }
     },
-    DarkPurple
+    DarkPurple(AnsiColors.MAGENTA)
     {
         @Override
         public String getColor()
@@ -75,7 +77,7 @@ public enum TextColor
             return DARK_PURPLE;
         }
     },
-    Gold
+    Gold(AnsiColors.YELLOW)
     {
         @Override
         public String getColor()
@@ -83,7 +85,7 @@ public enum TextColor
             return GOLD;
         }
     },
-    Gray
+    Gray(AnsiColors.WHITE)
     {
         @Override
         public String getColor()
@@ -91,7 +93,7 @@ public enum TextColor
             return GRAY;
         }
     },
-    DarkGray
+    DarkGray(AnsiColors.WHITE)
     {
         @Override
         public String getColor()
@@ -99,7 +101,7 @@ public enum TextColor
             return DARK_GRAY;
         }
     },
-    Blue
+    Blue(AnsiColors.BLUE)
     {
         @Override
         public String getColor()
@@ -107,7 +109,7 @@ public enum TextColor
             return BLUE;
         }
     },
-    Green
+    Green(AnsiColors.GREEN)
     {
         @Override
         public String getColor()
@@ -115,7 +117,7 @@ public enum TextColor
             return GREEN;
         }
     },
-    Aqua
+    Aqua(AnsiColors.CYAN)
     {
         @Override
         public String getColor()
@@ -123,7 +125,7 @@ public enum TextColor
             return AQUA;
         }
     },
-    Red
+    Red(AnsiColors.RED)
     {
         @Override
         public String getColor()
@@ -131,7 +133,7 @@ public enum TextColor
             return RED;
         }
     },
-    LightPurple
+    LightPurple(AnsiColors.MAGENTA)
     {
         @Override
         public String getColor()
@@ -139,7 +141,7 @@ public enum TextColor
             return LIGHT_PURPLE;
         }
     },
-    Yellow
+    Yellow(AnsiColors.YELLOW)
     {
         @Override
         public String getColor()
@@ -147,7 +149,7 @@ public enum TextColor
             return YELLOW;
         }
     },
-    Obfuscated
+    Obfuscated(AnsiColors.RESET)
     {
         @Override
         public String getColor()
@@ -274,6 +276,7 @@ public enum TextColor
     public static final String ITALIC       = SECTIONSIGN + "o";
     /** $ + r */
     public static final String RESET        = SECTIONSIGN + "r";
+    // TODO: if the alpha has a 0 at the hex start Integer.toHexString might not work?
     /** $ + "z" + 32-bit Hex String HAS to follow. */
     public static final String CUSTOM       = SECTIONSIGN + "z";
     /** $ + "y" */
@@ -284,6 +287,20 @@ public enum TextColor
     public static final String RAINBOW_MINUS = SECTIONSIGN + "-";
     /** $ + "p" + UUID of player must follow. */
     public static final String PLAYER_FACE = SECTIONSIGN + "p";
+
+    private final String ansi;
+
+    TextColor() {
+        this("");
+    }
+
+    TextColor(String ansi) {
+        this.ansi = ansi;
+    }
+
+    public String getAnsiCode() {
+        return ansi;
+    }
 
     /**
      * @return the colorCode belonging to the color.

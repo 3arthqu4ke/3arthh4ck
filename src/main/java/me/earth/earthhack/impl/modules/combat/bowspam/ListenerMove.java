@@ -15,7 +15,7 @@ final class ListenerMove extends ModuleListener<BowSpam, MoveEvent> {
     @Override
     public void invoke(MoveEvent event) {
         ItemStack stack = getStack();
-        if (module.rape.getValue() && mc.player.onGround && stack != null && !mc.player.getActiveItemStack().isEmpty() && mc.player.getItemInUseCount() > 0) {
+        if (module.spam.getValue() && mc.player.onGround && stack != null && !mc.player.getActiveItemStack().isEmpty() && mc.player.getItemInUseCount() > 0) {
             event.setX(0);
             event.setY(0);
             event.setZ(0);

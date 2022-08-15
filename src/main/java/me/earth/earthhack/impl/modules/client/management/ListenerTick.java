@@ -20,14 +20,25 @@ final class ListenerTick extends ModuleListener<Management, TickEvent>
     @Override
     public void invoke(TickEvent event)
     {
-        if (module.friend.getValue()
-            && module.lastProfile != null
-            && !module.lastProfile.equals(mc.getSession().getProfile()))
-        {
-            module.lastProfile = mc.getSession().getProfile();
-            Managers.FRIENDS.add(module.lastProfile.getName(),
-                                 module.lastProfile.getId());
-            MEDIA.computeIfPresent(Media::reload);
+        if (module.friend.getValue()) {
+            if (mc.player != module.player) {
+                module.player = mc.player;
+                if (mc.player != null
+                    && !Managers.FRIENDS.contains(mc.player)) {
+                    Managers.FRIENDS.add(
+                        mc.player.getGameProfile().getName(),
+                        mc.player.getGameProfile().getId());
+                    // TODO: reload media based on this too?
+                }
+            }
+
+            if (module.lastProfile != null
+                && !module.lastProfile.equals(mc.getSession().getProfile())) {
+                module.lastProfile = mc.getSession().getProfile();
+                Managers.FRIENDS.add(module.lastProfile.getName(),
+                                     module.lastProfile.getId());
+                MEDIA.computeIfPresent(Media::reload);
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import me.earth.earthhack.impl.modules.combat.autocrystal.modes.ACRotate;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.AntiFriendPop;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.Target;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.*;
+import me.earth.earthhack.impl.util.math.DistanceUtil;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.RayTraceUtil;
 import me.earth.earthhack.impl.util.math.geocache.Sphere;
@@ -53,7 +54,9 @@ public class HelperPlace implements Globals
                              double maxY)
     {
         PlaceData data = new PlaceData(minDamage);
-        EntityPlayer target = module.targetMode.getValue().getTarget(
+        EntityPlayer target = module.isSuicideModule()
+            ? RotationUtil.getRotationPlayer()
+            : module.targetMode.getValue().getTarget(
                 players, enemies, module.targetRange.getValue());
 
         if (target == null && module.targetMode.getValue() != Target.Damage)
@@ -283,6 +286,11 @@ public class HelperPlace implements Globals
 
     private boolean noPlaceTrace(BlockPos pos)
     {
+        if (module.isNotCheckingRotations())
+        {
+            return false;
+        }
+
         if (module.smartTrace.getValue())
         {
             for (EnumFacing facing : EnumFacing.values())
@@ -416,18 +424,25 @@ public class HelperPlace implements Globals
         if (pos.getY() < 0
             || pos.getY() - 1 >= maxY
             || BlockUtil.getDistanceSq(pos)
-                > MathUtil.square(module.placeRange.getValue()))
+                >= MathUtil.square(module.placeRange.getValue()))
         {
             return true;
         }
 
-        if (BlockUtil.getDistanceSq(pos)
+        if (module.placeBreakRange.getValue().isOutsideBreakRange(pos, module)
+            || module.rangeHelper.isCrystalOutsideNegativeRange(pos)) {
+            return true;
+        }
+
+        if (DistanceUtil.distanceSq(
+            pos.getX() + 0.5f, pos.getY() + 1, pos.getZ() + 0.5f,
+            RotationUtil.getRotationPlayer())
                 > MathUtil.square(module.pbTrace.getValue()))
         {
             return !RayTraceUtil.canBeSeen(
-                        new Vec3d(pos.getX() + 0.5,
-                                  pos.getY() + 2.7,
-                                  pos.getZ() + 0.5),
+                        new Vec3d(pos.getX() + 0.5f,
+                                  pos.getY() + 1 + 1.7,
+                                  pos.getZ() + 0.5f),
                         mc.player);
         }
 

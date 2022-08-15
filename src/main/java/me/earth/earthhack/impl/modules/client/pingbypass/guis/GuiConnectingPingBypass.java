@@ -4,7 +4,7 @@ import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.setting.settings.StringSetting;
 import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.util.text.IdleUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -35,18 +35,23 @@ public class GuiConnectingPingBypass extends GuiScreen
     private static final AtomicInteger CONNECTION_ID = new AtomicInteger(0);
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private static final SettingCache<String, StringSetting, PingBypass> IP =
-     Caches.getSetting(PingBypass.class, StringSetting.class, "IP", "Proxy-IP");
-    private static final ModuleCache<PingBypass> PINGBYPASS =
-     Caches.getModule(PingBypass.class);
+    private static final SettingCache<String, StringSetting, PingBypassModule> IP =
+     Caches.getSetting(PingBypassModule.class, StringSetting.class, "IP", "Proxy-IP");
+    private static final ModuleCache<PingBypassModule> PINGBYPASS =
+     Caches.getModule(PingBypassModule.class);
 
     private NetworkManager networkManager;
     private boolean cancel;
     private final GuiScreen previousGuiScreen;
+    // Insano.fun edge case, the mc in the super class is protected and when we
+    // are running on Vanilla mappings the protected field in the GuiScreen class
+    // is not available for our anonymous thread class.
+    private final Minecraft mc;
 
     public GuiConnectingPingBypass(GuiScreen parent, Minecraft mcIn, ServerData serverDataIn)
     {
         this.mc = mcIn;
+        super.mc = mcIn;
         this.previousGuiScreen = parent;
         mcIn.loadWorld(null);
         mcIn.setServerData(serverDataIn);
@@ -54,9 +59,22 @@ public class GuiConnectingPingBypass extends GuiScreen
                 ServerAddress.fromString(serverDataIn.serverIP);
         this.connect(
                 IP.getValue(),
-                PINGBYPASS.returnIfPresent(PingBypass::getPort, 25565),
+                PINGBYPASS.returnIfPresent(PingBypassModule::getPort, 25565),
                 serveraddress.getIP(),
                 serveraddress.getPort());
+    }
+
+    public GuiConnectingPingBypass(GuiScreen parent, Minecraft mcIn, String ip, int port)
+    {
+        this.mc = mcIn;
+        super.mc = mcIn;
+        this.previousGuiScreen = parent;
+        mcIn.loadWorld(null);
+        this.connect(
+            IP.getValue(),
+            PINGBYPASS.returnIfPresent(PingBypassModule::getPort, 25565),
+            ip,
+            port);
     }
 
     /**
@@ -92,8 +110,17 @@ public class GuiConnectingPingBypass extends GuiScreen
 
                     networkManager.setNetHandler(
                             new NetHandlerLoginClient(networkManager, mc, previousGuiScreen));
-                    networkManager.sendPacket(
-                            new C00Handshake(actualIP, actualPort, EnumConnectionState.LOGIN, true));
+
+                    // TODO: this will not work in vanilla... use duck interface
+                    if (PINGBYPASS.get().isOld() || actualIP.equalsIgnoreCase(proxyIP) && actualPort == proxyPort) {
+                        networkManager.sendPacket(
+                            new C00Handshake(actualIP, actualPort, EnumConnectionState.LOGIN));
+                    } else {
+                        networkManager.sendPacket(
+                            // I really wanted a custom payload for this instead but it was just easier to use a magic number (PLAY) here
+                            new C00Handshake(actualIP, actualPort, EnumConnectionState.PLAY));
+                    }
+
                     networkManager.sendPacket(
                             new CPacketLoginStart(mc.getSession().getProfile()));
                 }
@@ -191,5 +218,5 @@ public class GuiConnectingPingBypass extends GuiScreen
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
-    
+
 }

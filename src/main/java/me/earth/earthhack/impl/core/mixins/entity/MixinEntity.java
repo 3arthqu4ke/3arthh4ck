@@ -19,6 +19,7 @@ import me.earth.earthhack.impl.modules.client.management.Management;
 import me.earth.earthhack.impl.modules.misc.nointerp.NoInterp;
 import me.earth.earthhack.impl.modules.movement.autosprint.AutoSprint;
 import me.earth.earthhack.impl.modules.movement.autosprint.mode.SprintMode;
+import me.earth.earthhack.impl.modules.movement.step.Step;
 import me.earth.earthhack.impl.modules.movement.velocity.Velocity;
 import me.earth.earthhack.impl.modules.render.norender.NoRender;
 import me.earth.earthhack.impl.util.math.StopWatch;
@@ -27,11 +28,11 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -56,6 +57,9 @@ public abstract class MixinEntity implements IEntity, Globals
     private static final SettingCache<Boolean, BooleanSetting, Velocity>
         NO_PUSH = Caches.getSetting
             (Velocity.class, BooleanSetting.class, "NoPush", false);
+    private static final SettingCache<Boolean, BooleanSetting, Step>
+        STEP_COMP = Caches.getSetting
+            (Step.class, BooleanSetting.class, "Compatibility", false);
 
     private static final SettingCache
         <Integer, NumberSetting<Integer>, Management> DEATH_TIME =
@@ -108,6 +112,13 @@ public abstract class MixinEntity implements IEntity, Globals
     @Shadow
     public float height;
 
+    @Unique
+    private long oldServerX;
+    @Unique
+    private long oldServerY;
+    @Unique
+    private long oldServerZ;
+
     private final StopWatch pseudoWatch = new StopWatch();
     private MoveEvent moveEvent;
     private Float prevHeight;
@@ -131,7 +142,14 @@ public abstract class MixinEntity implements IEntity, Globals
     @Shadow
     public abstract boolean isRiding();
 
-    @Shadow public boolean noClip;
+    @Shadow
+    public boolean noClip;
+
+    @Shadow
+    public abstract void move(MoverType type, double x, double y,
+                                      double z);
+    @Shadow
+    public abstract String getName();
 
     @Override
     @Accessor(value = "isInWeb")
@@ -148,6 +166,32 @@ public abstract class MixinEntity implements IEntity, Globals
     {
         // TODO!!!
         return 0;
+    }
+
+    @Override
+    public void setOldServerPos(long x, long y, long z)
+    {
+        this.oldServerX = x;
+        this.oldServerY = y;
+        this.oldServerZ = z;
+    }
+
+    @Override
+    public long getOldServerPosX()
+    {
+        return oldServerX;
+    }
+
+    @Override
+    public long getOldServerPosY()
+    {
+        return oldServerY;
+    }
+
+    @Override
+    public long getOldServerPosZ()
+    {
+        return oldServerZ;
     }
 
     @Override
@@ -221,18 +265,22 @@ public abstract class MixinEntity implements IEntity, Globals
 
     @Inject(
         method = "move",
-        at = @At("HEAD"))
+        at = @At("HEAD"),
+        cancellable = true)
     public void moveEntityHook_Head(MoverType type,
                                     double x,
                                     double y,
                                     double z,
-                                    CallbackInfo info)
+                                    CallbackInfo ci)
     {
         //noinspection ConstantConditions
         if (EntityPlayerSP.class.isInstance(this))
         {
             this.moveEvent = new MoveEvent(type, x, y, z, this.isSneaking());
             Bus.EVENT_BUS.post(this.moveEvent);
+            if (moveEvent.isCancelled()) {
+                ci.cancel();
+            }
         }
     }
 
@@ -278,11 +326,11 @@ public abstract class MixinEntity implements IEntity, Globals
     }
 
     @Inject(
-            method = "move",
-            at = @At(
-                    value = "FIELD",
-                    target = "net/minecraft/entity/Entity.onGround:Z",
-                    ordinal = 1))
+        method = "move",
+        at = @At(
+                value = "FIELD",
+                target = "net/minecraft/entity/Entity.onGround:Z",
+                ordinal = 1))
     private void onGroundHook(MoverType type,
                               double x,
                               double y,
@@ -290,8 +338,7 @@ public abstract class MixinEntity implements IEntity, Globals
                               CallbackInfo info)
     {
         //noinspection ConstantConditions
-        if (EntityPlayerSP.class.isInstance(this))
-        {
+        if (EntityPlayerSP.class.isInstance(this) && !STEP_COMP.getValue()) {
             StepEvent event = new StepEvent(Stage.PRE,
                                             this.getEntityBoundingBox(),
                                             this.stepHeight);
@@ -302,12 +349,35 @@ public abstract class MixinEntity implements IEntity, Globals
     }
 
     @Inject(
-            method = "move",
-            at = @At(
-                    value = "FIELD",
-                    target = "net/minecraft/entity/Entity.onGround:Z",
-                    ordinal = 2,
-                    shift = At.Shift.AFTER))
+        method = "move",
+        at = @At(
+            value = "FIELD",
+            target = "net/minecraft/entity/Entity.stepHeight:F",
+            ordinal = 3,
+            shift = At.Shift.BEFORE))
+    private void onGroundHookComp(MoverType type,
+                                  double x,
+                                  double y,
+                                  double z,
+                                  CallbackInfo info) {
+        //noinspection ConstantConditions
+        if (EntityPlayerSP.class.isInstance(this) && STEP_COMP.getValue()) {
+            StepEvent event = new StepEvent(Stage.PRE,
+                                            this.getEntityBoundingBox(),
+                                            this.stepHeight);
+            Bus.EVENT_BUS.post(event);
+            this.prevHeight = this.stepHeight;
+            this.stepHeight = event.getHeight();
+        }
+    }
+
+    @Inject(
+        method = "move",
+        at = @At(
+            value = "FIELD",
+            target = "net/minecraft/entity/Entity.onGround:Z",
+            ordinal = 2,
+            shift = At.Shift.AFTER))
     private void onGroundHook2(MoverType type,
                                double x,
                                double y,
@@ -341,13 +411,32 @@ public abstract class MixinEntity implements IEntity, Globals
                                           CallbackInfo info)
     {
         //noinspection ConstantConditions
-        if (EntityPlayerSP.class.isInstance(this))
+        if (EntityPlayerSP.class.isInstance(this) && !STEP_COMP.getValue())
         {
             StepEvent event = new StepEvent(Stage.POST,
                                             this.getEntityBoundingBox(),
                                             this.prevHeight != null
                                                     ? this.prevHeight
                                                     : 0.0F);
+            Bus.EVENT_BUS.postReversed(event, null);
+        }
+    }
+
+    @Inject(
+        method = "move",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/profiler/Profiler;endSection()V"))
+    private void stepCompHook(MoverType type, double x, double y, double z, CallbackInfo ci)
+    {
+        //noinspection ConstantConditions
+        if (EntityPlayerSP.class.isInstance(this) && STEP_COMP.getValue())
+        {
+            StepEvent event = new StepEvent(Stage.POST,
+                                            this.getEntityBoundingBox(),
+                                            this.prevHeight != null
+                                                ? this.prevHeight
+                                                : 0.0F);
             Bus.EVENT_BUS.postReversed(event, null);
         }
     }

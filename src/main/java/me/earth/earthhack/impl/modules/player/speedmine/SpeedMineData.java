@@ -7,13 +7,15 @@ final class SpeedMineData extends DefaultData<Speedmine>
     public SpeedMineData(Speedmine module)
     {
         super(module);
-        register(module.mode, "-Reset nothing special, blocks" +
+        register(module.mode, "-Reset: nothing special, blocks" +
                 " won't be reset after you stopped mining them.\n" +
-                "-Packet touch a block to mine it later.\n" +
-                "-Smart much better packet. Allows you to decide that" +
+                "-Packet: touch a block to mine it later.\n" +
+                "-Smart: much better packet. Allows you to decide that" +
                 " you want to go for another block in difference" +
-                " to Mode Packet.\"" +
-                "-Damage normal Mining but the the block will be mined " +
+                " to Mode Packet.\n" +
+                "-Fast: similar to Smart but makes mining the same position" +
+                    " over and over faster.\n" +
+                "-Damage: normal Mining but the the block will be mined " +
                 "instantly after the damage specified by the Damage Setting" +
                 " is reached.");
         register(module.noReset, "Doesn't reset blocks after mining them.");
@@ -46,10 +48,15 @@ final class SpeedMineData extends DefaultData<Speedmine>
                 " from the server. Can cause Glitchblocks. Also its" +
                 " recommended to set the Limit Setting to 1 when" +
                 " using this with Mode Smart or Packet.");
-        register(module.normal, "Ignore code that 3arth doesn't understand.");
+        register(module.normal, "Ignore code that 3arth doesn't understand." +
+            " Recommended for Mode - Smart and maybe Fast," +
+            " mind ResetAfterPacket, tho.");
         register(module.confirm,
                 "Time for the Server to confirm that we broke the block.");
         register(module.requireBreakSlot, "Requires damage to be >= limit when using BreakBind");
+        register(module.resetAfterPacket,
+                 "Only for Mode - Smart with Normal on.");
+        register(module.tpsSync, "Syncs mode Smart and Fast with the TPS.");
     }
 
     @Override

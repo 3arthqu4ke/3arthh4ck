@@ -25,3 +25,6 @@ run
 forge*changelog.txt
 
 # version files
+/HeadlessMC/
+/logs/
+/plugins/

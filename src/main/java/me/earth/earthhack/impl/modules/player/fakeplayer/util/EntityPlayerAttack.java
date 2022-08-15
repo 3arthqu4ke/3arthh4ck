@@ -5,6 +5,7 @@ import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityOtherPlayerMP;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityRemoteAttack;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.entity.EntityTracker;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -27,7 +28,19 @@ public class EntityPlayerAttack extends EntityOtherPlayerMP
     }
 
     @Override
-    protected void markVelocityChanged() { /* NOOP */ }
+    public void onUpdate()
+    {
+        super.onUpdate();
+        this.serverPosX = EntityTracker.getPositionLong(this.posX);
+        this.serverPosY = EntityTracker.getPositionLong(this.posY);
+        this.serverPosZ = EntityTracker.getPositionLong(this.posZ);
+    }
+
+    @Override
+    protected void markVelocityChanged()
+    {
+        /* NOOP */
+    }
 
     @Override
     public boolean shouldRemoteAttack()

@@ -1,11 +1,15 @@
 package me.earth.earthhack.impl.modules.combat.autocrystal;
 
+import me.earth.earthhack.impl.core.ducks.entity.IEntityRenderer;
 import me.earth.earthhack.impl.event.events.render.Render3DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.render.TextRenderer;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.RenderDamage;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.RenderDamagePos;
+import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
+import me.earth.earthhack.impl.util.minecraft.MotionTracker;
+import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
@@ -13,9 +17,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -89,6 +95,65 @@ final class ListenerRender extends ModuleListener<AutoCrystal, Render3DEvent> {
                 e.getValue() + module.fadeTime.getValue()
                         < System.currentTimeMillis());
 
+        if (module.renderExtrapolation.getValue())
+        {
+            for (EntityPlayer player : mc.world.playerEntities)
+            {
+                MotionTracker tracker;
+                if (player == null
+                    || EntityUtil.isDead(player)
+                    || RenderUtil.getEntity().getDistanceSq(player) > 200
+                    || !RenderUtil.isInFrustum(player.getEntityBoundingBox())
+                    || player.equals(RotationUtil.getRotationPlayer())
+                    || (tracker = module.extrapolationHelper
+                                        .getTrackerFromEntity(player)) == null
+                    || !tracker.active)
+                {
+                    continue;
+                }
+
+                Vec3d interpolation = Interpolation.interpolateEntity(player);
+                double x = interpolation.x;
+                double y = interpolation.y;
+                double z = interpolation.z;
+
+                double tX = tracker.posX - Interpolation.getRenderPosX();
+                double tY = tracker.posY - Interpolation.getRenderPosY();
+                double tZ = tracker.posZ - Interpolation.getRenderPosZ();
+
+                RenderUtil.startRender();
+                GlStateManager.enableAlpha();
+                GlStateManager.enableBlend();
+                GlStateManager.pushMatrix();
+                GlStateManager.loadIdentity();
+
+                if (Managers.FRIENDS.contains(player))
+                {
+                    GL11.glColor4f(0.33333334f, 0.78431374f, 0.78431374f, 0.55f);
+                }
+                else
+                {
+                    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                }
+
+                boolean viewBobbing = mc.gameSettings.viewBobbing;
+                mc.gameSettings.viewBobbing = false;
+                ((IEntityRenderer) mc.entityRenderer)
+                    .invokeOrientCamera(event.getPartialTicks());
+                mc.gameSettings.viewBobbing = viewBobbing;
+
+                GL11.glLineWidth(1.5f);
+                GL11.glBegin(GL11.GL_LINES);
+                GL11.glVertex3d(tX, tY, tZ);
+                GL11.glVertex3d(x, y, z);
+                GL11.glEnd();
+
+                GlStateManager.popMatrix();
+                GlStateManager.disableAlpha();
+                GlStateManager.disableBlend();
+                RenderUtil.endRender();
+            }
+        }
     }
 
     private void renderDamage(BlockPos pos) {

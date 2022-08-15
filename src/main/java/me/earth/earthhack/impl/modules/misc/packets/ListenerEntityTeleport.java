@@ -1,5 +1,7 @@
 package me.earth.earthhack.impl.modules.misc.packets;
 
+import me.earth.earthhack.impl.core.ducks.entity.IEntity;
+import me.earth.earthhack.impl.core.ducks.network.ISPacketEntityTeleport;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
@@ -14,7 +16,7 @@ final class ListenerEntityTeleport extends
     {
         super(module,
                 PacketEvent.Receive.class,
-                Integer.MIN_VALUE,
+                Integer.MIN_VALUE + 1,
                 SPacketEntityTeleport.class);
     }
 
@@ -37,7 +39,19 @@ final class ListenerEntityTeleport extends
         double x = packet.getX();
         double y = packet.getY();
         double z = packet.getZ();
-        EntityTracker.updateServerPosition(e, x, y, z);
+
+        long oldServerPosX = e.serverPosX;
+        long oldServerPosY = e.serverPosY;
+        long oldServerPosZ = e.serverPosZ;
+        mc.addScheduledTask(() -> {
+            ((ISPacketEntityTeleport) packet).setSetByPackets(true);
+            ((IEntity) e).setOldServerPos(
+                oldServerPosX, oldServerPosY, oldServerPosZ);
+        });
+
+        e.serverPosX = EntityTracker.getPositionLong(x);
+        e.serverPosY = EntityTracker.getPositionLong(y);
+        e.serverPosZ = EntityTracker.getPositionLong(z);
 
         if (!e.canPassengerSteer())
         {
@@ -52,6 +66,12 @@ final class ListenerEntityTeleport extends
                         && module.cancelEntityTeleport.getValue())
                 {
                     e.setPositionAndRotation(x, y, z, yaw, pitch);
+                    if (module.volatileFix.getValue())
+                    {
+                        mc.addScheduledTask(() -> e.setPositionAndRotation(
+                            x, y, z, yaw, pitch));
+                    }
+
                     return;
                 }
 

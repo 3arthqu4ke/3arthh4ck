@@ -1,16 +1,24 @@
 package me.earth.earthhack.impl.core.mixins.network;
 
+import com.mojang.authlib.GameProfile;
 import me.earth.earthhack.api.cache.ModuleCache;
+import me.earth.earthhack.api.cache.SettingCache;
+import me.earth.earthhack.api.setting.settings.BooleanSetting;
+import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.core.ducks.network.INetHandlerPlayClient;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.management.Management;
 import me.earth.earthhack.impl.modules.misc.packets.Packets;
 import me.earth.earthhack.impl.util.thread.Locks;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.CPacketResourcePackStatus;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.network.play.server.SPacketResourcePackSend;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -24,10 +32,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(NetHandlerPlayClient.class)
 public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
 {
+    private static final SettingCache
+        <Boolean, BooleanSetting, Management> ACTIVE =
+        Caches.getSetting(Management.class, BooleanSetting.class, "MotionService", true);
     private static final ModuleCache<Packets> PACKETS =
             Caches.getModule(Packets.class);
     @Shadow
@@ -41,6 +53,10 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
     @Override
     @Accessor(value = "doneLoadingTerrain")
     public abstract void setDoneLoadingTerrain(boolean loaded);
+
+    @Override
+    @Accessor(value = "profile")
+    public abstract void setGameProfile(GameProfile gameProfile);
 
     @Redirect(
         method = "handleEntityTeleport",
@@ -138,6 +154,26 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
     {
         Locks.acquire(Locks.PLACE_SWITCH_LOCK,
                       () -> inventoryPlayer.currentItem = value);
+    }
+
+    @Inject(
+        method = "handleEntityVelocity",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/entity/Entity;setVelocity(DDD)V",
+            shift = At.Shift.BEFORE),
+        locals = LocalCapture.CAPTURE_FAILHARD,
+        cancellable = true)
+    private void setVelocityHook(SPacketEntityVelocity packetIn,
+                                 CallbackInfo ci,
+                                 Entity entity0)
+    {
+        if (ACTIVE.getValue()
+            && entity0 instanceof EntityPlayer
+            && !(entity0 instanceof EntityPlayerSP))
+        {
+            ci.cancel();
+        }
     }
 
 }

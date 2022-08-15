@@ -16,6 +16,8 @@ final class ChatData extends DefaultData<Chat>
         register("Rainbow", "If you want Rainbow timestamps. Note that because"
             + " I'm lazy changing this setting will only take effect for" +
             " messages which have been received afterwards.");
+        register(module.popMessage,
+                 "Made by either 1ea, asphyxia1337 or vhakan");
     }
 
     @Override

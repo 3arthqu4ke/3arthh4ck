@@ -41,13 +41,13 @@ import java.util.stream.Collectors;
 final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
 {
     private static final ModuleCache<Speedmine> SPEED_MINE =
-            Caches.getModule(Speedmine.class);
+        Caches.getModule(Speedmine.class);
     private static final ModuleCache<AnvilAura> ANVIL_AURA =
-            Caches.getModule(AnvilAura.class);
+        Caches.getModule(AnvilAura.class);
     private static final ModuleCache<AntiSurround> ANTISURROUND =
-            Caches.getModule(AntiSurround.class);
+        Caches.getModule(AntiSurround.class);
     private static final ModuleCache<Surround> SURROUND =
-            Caches.getModule(Surround.class);
+        Caches.getModule(Surround.class);
 
     private Set<BlockPos> surrounding = Collections.emptySet();
 
@@ -75,10 +75,11 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
         }
 
         if ((module.mode.getValue() == AutoMineMode.Combat
-                || module.mode.getValue() == AutoMineMode.AntiTrap)
+            || module.mode.getValue() == AutoMineMode.AntiTrap)
             && (!SPEED_MINE.isEnabled()
-                || !(SPEED_MINE.get().getMode() == MineMode.Smart
-                        || SPEED_MINE.get().getMode() == MineMode.Instant)))
+            || !(SPEED_MINE.get().getMode() == MineMode.Smart
+                || SPEED_MINE.get().getMode() == MineMode.Fast
+                || SPEED_MINE.get().getMode() == MineMode.Instant)))
         {
             ModuleUtil.disable(module, TextColor.RED
                 + "Disabled, enable Speedmine - Smart for AutoMine - Combat!");
@@ -89,9 +90,9 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
             || mc.player.isSpectator()
             || !module.timer.passed(module.delay.getValue())
             || (module.mode.getValue() == AutoMineMode.Combat
-                && SPEED_MINE.get().getPos() != null
-                && (module.current == null
-                    || !module.current.equals(SPEED_MINE.get().getPos()))))
+            && SPEED_MINE.get().getPos() != null
+            && (module.current == null
+            || !module.current.equals(SPEED_MINE.get().getPos()))))
         {
             return;
         }
@@ -99,14 +100,14 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
         BlockPos invalid = null;
         if (module.constellation != null)
         {
-             module.constellation.update(module);
+            module.constellation.update(module);
         }
 
         if (module.constellationCheck.getValue()
-                && module.constellation != null)
+            && module.constellation != null)
         {
             if (module.constellation.isValid(mc.world,
-                    module.checkPlayerState.getValue())
+                                             module.checkPlayerState.getValue())
                 && !module.constellationTimer.passed(module.maxTime.getValue())
                 && module.constellation.cantBeImproved())
             {
@@ -124,15 +125,15 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
         if (!module.improve.getValue()
             && module.constellation != null
             && (!module.improveInvalid.getValue()
-                || module.constellation.isValid(mc.world, module.checkPlayerState.getValue()))
+            || module.constellation.isValid(mc.world, module.checkPlayerState.getValue()))
             && module.constellation.cantBeImproved())
         {
             return;
         }
 
         module.blackList.entrySet().removeIf(e ->
-            (System.currentTimeMillis() - e.getValue()) / 1000.0f
-                    > module.blackListFor.getValue());
+                                                 (System.currentTimeMillis() - e.getValue()) / 1000.0f
+                                                     > module.blackListFor.getValue());
 
         if (module.mode.getValue() == AutoMineMode.Combat)
         {
@@ -143,7 +144,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
             }
 
             if (module.prioSelf.getValue() && checkSelfTrap()
-                    || checkEnemies(false))
+                || checkEnemies(false))
             {
                 return;
             }
@@ -151,7 +152,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
             BlockPos position = PositionUtil.getPosition();
             if (module.self.getValue()
                 && (!module.prioSelf.getValue() && checkSelfTrap()
-                    || checkPos(mc.player, position)))
+                || checkPos(mc.player, position)))
             {
                 return;
             }
@@ -163,9 +164,9 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
 
             IBlockState state;
             if (module.selfEchestMine.getValue()
-                    && module.isValid(Blocks.ENDER_CHEST.getDefaultState())
-                    && (state = mc.world.getBlockState(position))
-                                        .getBlock() == Blocks.ENDER_CHEST)
+                && module.isValid(Blocks.ENDER_CHEST.getDefaultState())
+                && (state = mc.world.getBlockState(position))
+                .getBlock() == Blocks.ENDER_CHEST)
             {
                 attackPos(position,
                           new Constellation(mc.world,
@@ -177,14 +178,14 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
             }
 
             if (invalid != null
-                    && invalid.equals(SPEED_MINE.get().getPos())
-                    && module.resetIfNotValid.getValue())
+                && invalid.equals(SPEED_MINE.get().getPos())
+                && module.resetIfNotValid.getValue())
             {
                 SPEED_MINE.get().reset();
             }
 
             if (module.constellation == null
-                    && module.echest.getValue())
+                && module.echest.getValue())
             {
                 TileEntity closest = null;
                 double minDist = Double.MAX_VALUE;
@@ -192,13 +193,13 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                 {
                     if (entity instanceof TileEntityEnderChest
                         && BlockUtil.getDistanceSq(entity.getPos())
-                            < MathUtil.square(module.echestRange.getValue()))
+                        < MathUtil.square(module.echestRange.getValue()))
                     {
                         double dist = entity.getPos().distanceSqToCenter(
-                                RotationUtil.getRotationPlayer().posX,
-                                RotationUtil.getRotationPlayer().posY
-                                        + mc.player.getEyeHeight(),
-                                RotationUtil.getRotationPlayer().posZ);
+                            RotationUtil.getRotationPlayer().posX,
+                            RotationUtil.getRotationPlayer().posY
+                                + mc.player.getEyeHeight(),
+                            RotationUtil.getRotationPlayer().posZ);
 
                         if (dist < minDist)
                         {
@@ -217,13 +218,13 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
             }
 
             if ((module.constellation == null
-                    || !module.constellation.cantBeImproved()
-                        && !(module.constellation instanceof BigConstellation))
+                || !module.constellation.cantBeImproved()
+                && !(module.constellation instanceof BigConstellation))
                 && module.terrain.getValue()
                 && module.terrainTimer.passed(module.terrainDelay.getValue())
                 && module.future == null
                 && (!module.checkCrystalDownTime.getValue()
-                    || module.downTimer.passed(module.downTime.getValue())))
+                || module.downTimer.passed(module.downTime.getValue())))
             {
                 boolean c = module.closestPlayer.getValue();
                 double closest = Double.MAX_VALUE;
@@ -234,7 +235,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                     if (p == null
                         || EntityUtil.isDead(p)
                         || p.getDistanceSq(RotationUtil.getRotationPlayer())
-                                > 400
+                        > 400
                         || Managers.FRIENDS.contains(p))
                     {
                         continue;
@@ -269,25 +270,25 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                     .filter(e -> !(e instanceof EntityItem)) // we ignore items
                     .filter(e -> !EntityUtil.isDead(e))
                     .filter(e ->
-                        e.getDistanceSq(RotationUtil.getRotationPlayer())
-                            < MathUtil.square(module.range.getValue()))
+                                e.getDistanceSq(RotationUtil.getRotationPlayer())
+                                    < MathUtil.square(module.range.getValue()))
                     .collect(Collectors.toList());
 
                 AutoMineCalc calc = new AutoMineCalc(
-                                                module,
-                                                players,
-                                                surrounding,
-                                                entities,
-                                                best,
-                                                module.minDmg.getValue(),
-                                                module.maxSelfDmg.getValue(),
-                                                module.range.getValue(),
-                                                module.obbyPositions.getValue(),
-                                                module.newV.getValue(),
-                                                module.newVEntities.getValue(),
-                                                module.mineObby.getValue(),
-                                                module.breakTrace.getValue(),
-                                                module.suicide.getValue());
+                    module,
+                    players,
+                    surrounding,
+                    entities,
+                    best,
+                    module.minDmg.getValue(),
+                    module.maxSelfDmg.getValue(),
+                    module.range.getValue(),
+                    module.obbyPositions.getValue(),
+                    module.newV.getValue(),
+                    module.newVEntities.getValue(),
+                    module.mineObby.getValue(),
+                    module.breakTrace.getValue(),
+                    module.suicide.getValue());
 
                 module.future = Managers.THREAD.submit(calc);
                 module.terrainTimer.reset();
@@ -316,7 +317,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
         for (EntityPlayer player : mc.world.playerEntities)
         {
             if (EntityUtil.isValid(player, module.range.getValue() + 1)
-                    && !player.equals(mc.player))
+                && !player.equals(mc.player))
             {
                 BlockPos playerPos = PositionUtil.getPosition(player);
                 if (burrow)
@@ -329,7 +330,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
 
                     IBlockState state;
                     if (!isValid(playerPos,
-                                (state = mc.world.getBlockState(playerPos))))
+                                 (state = mc.world.getBlockState(playerPos))))
                     {
                         continue;
                     }
@@ -346,9 +347,9 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
 
                 IBlockState playerPosState = mc.world.getBlockState(playerPos);
                 if (playerPosState.getMaterial().isReplaceable()
-                        || playerPosState
-                                .getBlock()
-                                .getExplosionResistance(mc.player) < 100)
+                    || playerPosState
+                    .getBlock()
+                    .getExplosionResistance(mc.player) < 100)
                 {
                     // TODO: up in case player phases
                     BlockPos upUp = playerPos.up(2);
@@ -356,17 +357,17 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                     if (module.head.getValue() || module.crystal.getValue())
                     {
                         if (module.head.getValue() && isValid(upUp, headState)
-                                || module.crystal.getValue()
-                                    && headState.getBlock() == Blocks.OBSIDIAN
-                                    && module.isValidCrystalPos(upUp))
+                            || module.crystal.getValue()
+                            && headState.getBlock() == Blocks.OBSIDIAN
+                            && module.isValidCrystalPos(upUp))
                         {
                             attackPos(upUp,
                                       new CrystalConstellation(mc.world,
-                                                        player,
-                                                        upUp,
-                                                        playerPos,
-                                                        headState,
-                                                        module));
+                                                               player,
+                                                               upUp,
+                                                               playerPos,
+                                                               headState,
+                                                               module));
                             return true;
                         }
                     }
@@ -384,7 +385,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                         //      p x
                         // but its fine, because that's covered by mineL
                         if (state.getBlock() == Blocks.AIR
-                                && player.getEntityBoundingBox().intersects(new AxisAlignedBB(offset)))
+                            && player.getEntityBoundingBox().intersects(new AxisAlignedBB(offset)))
                         {
                             // TODO: we should also take offset.up(1) for crystal kinda
                             tempUpUp  = offset.up(2);
@@ -403,9 +404,9 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                         if (valid)
                         {
                             if (module.mineL.getValue()
-                                    && mc.world.getBlockState(offset.up())
-                                               .getMaterial()
-                                               .isReplaceable())
+                                && mc.world.getBlockState(offset.up())
+                                           .getMaterial()
+                                           .isReplaceable())
                             {
                                 boolean found = false;
                                 for (EnumFacing l : EnumFacing.HORIZONTALS)
@@ -420,10 +421,10 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                     {
                                         closestPos = offset;
                                         closest = new Constellation(mc.world,
-                                                player,
-                                                offset,
-                                                playerPos,
-                                                state);
+                                                                    player,
+                                                                    offset,
+                                                                    playerPos,
+                                                                    state);
                                         distance = dist;
                                         found = true;
                                         break;
@@ -441,26 +442,26 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                             {
                                 closestPos = offset;
                                 closest = new Constellation(mc.world,
-                                        player,
-                                        offset,
-                                        playerPos,
-                                        state);
+                                                            player,
+                                                            offset,
+                                                            playerPos,
+                                                            state);
                                 distance = dist;
                             }
                         }
 
                         if (module.crystal.getValue() && (valid && module.isValidCrystalPos(offset)
-                                || module.isValidCrystalPos((offset = offset.up()))
-                                    && tempHeadState.getBlock() == Blocks.AIR
-                                    && isValid(offset, (state = mc.world.getBlockState(offset)))))
+                            || module.isValidCrystalPos((offset = offset.up()))
+                            && tempHeadState.getBlock() == Blocks.AIR
+                            && isValid(offset, (state = mc.world.getBlockState(offset)))))
                         {
                             closestPos = offset;
                             closest = new CrystalConstellation(mc.world,
-                                                                player,
-                                                                offset,
-                                                                playerPos,
-                                                                state,
-                                                                module);
+                                                               player,
+                                                               offset,
+                                                               playerPos,
+                                                               state,
+                                                               module);
                             distance = dist;
                         }
                     }
@@ -485,7 +486,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
         if (isValid(upUp, state))
         {
             attackPos(upUp,
-                new Constellation(mc.world, mc.player, upUp, playerPos, state));
+                      new Constellation(mc.world, mc.player, upUp, playerPos, state));
             return true;
         }
 
@@ -517,21 +518,21 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
     private boolean isValid(BlockPos pos, IBlockState state)
     {
         return !module.blackList.containsKey(pos)
-                && !surrounding.contains(pos)
-                && MineUtil.canBreak(state, pos)
-                && module.isValid(state)
-                && mc.player.getDistanceSq(pos) <= MathUtil
-                                                    .square(SPEED_MINE
-                                                                .get()
-                                                                .getRange())
-                && !state.getMaterial().isReplaceable();
+            && !surrounding.contains(pos)
+            && MineUtil.canBreak(state, pos)
+            && module.isValid(state)
+            && mc.player.getDistanceSq(pos) <= MathUtil
+            .square(SPEED_MINE
+                        .get()
+                        .getRange())
+            && !state.getMaterial().isReplaceable();
     }
 
     public void attackPos(BlockPos pos, Constellation c)
     {
         // just so I can test if this is necessary ?
         if (module.checkCurrent.getValue()
-                && pos.equals(module.current))
+            && pos.equals(module.current))
         {
             return;
         }

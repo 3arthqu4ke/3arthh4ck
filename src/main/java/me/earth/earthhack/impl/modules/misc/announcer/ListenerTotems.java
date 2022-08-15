@@ -5,6 +5,7 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.misc.announcer.util.Announcement;
 import me.earth.earthhack.impl.modules.misc.announcer.util.AnnouncementType;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.SPacketEntityStatus;
@@ -23,11 +24,13 @@ final class ListenerTotems extends
         if (module.totems.getValue())
         {
             SPacketEntityStatus packet = event.getPacket();
-            if (packet.getOpCode() == 35)
+            EntityPlayerSP player = mc.player;
+            if (packet.getOpCode() == 35 && player != null)
             {
                 Entity entity = packet.getEntity(mc.world);
                 if (entity instanceof EntityPlayer
-                        && (!module.friends.getValue() || !Managers.FRIENDS.contains((EntityPlayer) entity)))
+                        && (!module.friends.getValue() || !Managers.FRIENDS.contains((EntityPlayer) entity))
+                        && !player.equals(entity))
                 {
                     Announcement announcement = module.addWordAndIncrement
                             (AnnouncementType.Totems, entity.getName());

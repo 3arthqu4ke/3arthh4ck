@@ -95,6 +95,9 @@ public abstract class MixinEntityLivingBase extends MixinEntity
     @Shadow
     public abstract boolean isServerWorld();
 
+    @Shadow public abstract void travel(float strafe, float vertical,
+                                        float forward);
+
     @Override
     @Invoker(value = "getArmSwingAnimationEnd")
     public abstract int armSwingAnimationEnd();
@@ -381,6 +384,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
                 && FAST_EAT.get().getMode() == FastEatMode.NoDelay
                 && this.activeItemStack.getItem() instanceof ItemFood)
         {
+            // TODO: service for pick slot cooldown bypass!!!
             this.activeItemStackUseCount = 0;
             ((EntityPlayerSP) base).connection
                 .sendPacket(new CPacketPlayerTryUseItem(base.getActiveHand()));

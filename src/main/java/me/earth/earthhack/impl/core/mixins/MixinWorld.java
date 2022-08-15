@@ -19,7 +19,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -36,6 +38,10 @@ public abstract class MixinWorld implements IWorld
             Caches.getModule(Packets.class);
     private static final ModuleCache<BlockTweaks> BLOCK_TWEAKS =
             Caches.getModule(BlockTweaks.class);
+
+    @Shadow
+    @Final
+    public boolean isRemote;
 
     @Override
     @Invoker(value = "isChunkLoaded")
@@ -148,8 +154,11 @@ public abstract class MixinWorld implements IWorld
     )
     private void updateEntitiesHook(CallbackInfo ci)
     {
-        UpdateEntitiesEvent event = new UpdateEntitiesEvent();
-        Bus.EVENT_BUS.post(event);
+        if (isRemote)
+        {
+            UpdateEntitiesEvent event = new UpdateEntitiesEvent();
+            Bus.EVENT_BUS.post(event);
+        }
     }
 
     // We could inject this in the chunks as well, but that would affect render

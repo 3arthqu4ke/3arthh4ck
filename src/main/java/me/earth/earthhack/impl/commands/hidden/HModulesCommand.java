@@ -10,7 +10,7 @@ import me.earth.earthhack.impl.modules.client.commands.Commands;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.client.gui.GuiChat;
-import org.lwjgl.input.Mouse;
+import me.earth.earthhack.pingbypass.input.Mouse;
 
 public class HModulesCommand extends Command implements Globals
 {

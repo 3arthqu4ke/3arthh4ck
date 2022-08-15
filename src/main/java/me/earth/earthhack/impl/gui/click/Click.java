@@ -12,40 +12,57 @@ import me.earth.earthhack.impl.gui.click.component.impl.StringComponent;
 import me.earth.earthhack.impl.gui.click.frame.Frame;
 import me.earth.earthhack.impl.gui.click.frame.impl.CategoryFrame;
 import me.earth.earthhack.impl.gui.click.frame.impl.DescriptionFrame;
+import me.earth.earthhack.impl.gui.click.frame.impl.ModulesFrame;
+import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.managers.client.ModuleManager;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.modules.client.commands.Commands;
-import me.earth.earthhack.impl.modules.render.chams.Chams;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
+import me.earth.earthhack.pingbypass.modules.SyncModule;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Click extends GuiScreen {
+    public static final ModuleCache<ClickGui> CLICK_GUI = Caches.getModule(ClickGui.class);
+
     private static final SettingCache<Boolean, BooleanSetting, Commands> BACK =
             Caches.getSetting(Commands.class, BooleanSetting.class, "BackgroundGui", false);
     private static final ResourceLocation BLACK_PNG =
             new ResourceLocation("earthhack:textures/gui/black.png");
 
-    private static final ModuleCache<ClickGui> CLICK_GUI = Caches.getModule(ClickGui.class);
-
     public static DescriptionFrame descriptionFrame =
             new DescriptionFrame(0, 0, 200, 16);
 
     private final ArrayList<Frame> frames = new ArrayList<>();
+    private Category[] categories = Category.values();
+    private final ModuleManager moduleManager;
     private boolean oldVal = false;
     private boolean attached = false;
+    private boolean addDescriptionFrame = true;
+    private boolean pingBypass;
+
+    public final GuiScreen screen;
+
+    public Click(GuiScreen screen) {
+        this.moduleManager = Managers.MODULES;
+        this.screen = screen;
+    }
+
+    public Click(GuiScreen screen, ModuleManager moduleManager) {
+        this.moduleManager = moduleManager;
+        this.screen = screen;
+    }
 
     public void init() {
         if (!attached)
@@ -57,15 +74,31 @@ public class Click extends GuiScreen {
         getFrames().clear();
         int x = CLICK_GUI.get().catEars.getValue() ? 14 : 2;
         int y = CLICK_GUI.get().catEars.getValue() ? 14 : 2;
-        for (Category moduleCategory : Category.values()) {
-            getFrames().add(new CategoryFrame(moduleCategory, x, y, 110, 16));
-            if (x + 220 >= new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth()) {
-                x = CLICK_GUI.get().catEars.getValue() ? 14 : 2;
-                y += CLICK_GUI.get().catEars.getValue() ? 32 : 20;
-            } else x += (CLICK_GUI.get().catEars.getValue() ? 132 : 112);
+        for (Category moduleCategory : categories) {
+            if (moduleManager.getModulesFromCategory(moduleCategory).size() > 0) {
+                getFrames().add(new CategoryFrame(moduleCategory, moduleManager, x, y, 110, 16));
+                if (x + 220 >= new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth()) {
+                    x = CLICK_GUI.get().catEars.getValue() ? 14 : 2;
+                    y += CLICK_GUI.get().catEars.getValue() ? 32 : 20;
+                } else x += (CLICK_GUI.get().catEars.getValue() ? 132 : 112);
+            }
         }
-        descriptionFrame = new DescriptionFrame(x, y, CLICK_GUI.get().descriptionWidth.getValue(), 16);
-        getFrames().add(descriptionFrame);
+
+        if (addDescriptionFrame) {
+            descriptionFrame = new DescriptionFrame(x, y, CLICK_GUI.get().descriptionWidth.getValue(), 16);
+            getFrames().add(descriptionFrame);
+        }
+
+        if (pingBypass) {
+            DescriptionFrame hint = new DescriptionFrame("Info", x, y + 100, CLICK_GUI.get().descriptionWidth.getValue(), 16);
+            hint.setDescription("You are editing the modules running on the PingBypass server, not the ones which run here on your client.");
+            getFrames().add(hint);
+
+            ModulesFrame pbFrame = new ModulesFrame("PingBypass", x, y + 200, 110, 16);
+            pbFrame.getComponents().add(new ModuleComponent(new SyncModule(), pbFrame.getPosX(), pbFrame.getPosY(), 0, pbFrame.getHeight() + 1, pbFrame.getWidth(), 14));
+            getFrames().add(pbFrame);
+        }
+
         getFrames().forEach(Frame::init);
         oldVal = CLICK_GUI.get().catEars.getValue();
     }
@@ -107,6 +140,7 @@ public class Click extends GuiScreen {
             init();
             oldVal = CLICK_GUI.get().catEars.getValue();
         }
+
         if (CLICK_GUI.get().blur.getValue()) {
             final ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
             Render2DUtil.drawBlurryRect(0, 0, scaledResolution.getScaledWidth(), scaledResolution.getScaledHeight(), CLICK_GUI.get().blurAmount.getValue(),CLICK_GUI.get().blurSize.getValue());
@@ -183,4 +217,17 @@ public class Click extends GuiScreen {
     public ArrayList<Frame> getFrames() {
         return frames;
     }
+
+    public void setPingBypass(boolean pingBypass) {
+        this.pingBypass = pingBypass;
+    }
+
+    public void setAddDescriptionFrame(boolean addDescriptionFrame) {
+        this.addDescriptionFrame = addDescriptionFrame;
+    }
+
+    public void setCategories(Category[] categories) {
+        this.categories = categories;
+    }
+
 }

@@ -14,6 +14,7 @@ import me.earth.earthhack.impl.modules.combat.legswitch.LegSwitch;
 import me.earth.earthhack.impl.modules.combat.offhand.Offhand;
 import me.earth.earthhack.impl.modules.combat.offhand.modes.OffhandMode;
 import me.earth.earthhack.impl.modules.player.speedmine.Speedmine;
+import me.earth.earthhack.impl.modules.player.suicide.SuicideAutoCrystal;
 import me.earth.earthhack.impl.util.helpers.Finishable;
 import me.earth.earthhack.impl.util.helpers.blocks.modes.Rotate;
 import me.earth.earthhack.impl.util.math.MathUtil;
@@ -377,6 +378,11 @@ public abstract class AbstractCalculation<T extends CrystalData>
 
     protected boolean placeCheck()
     {
+        if (module.sequentialHelper.isBlockingPlacement())
+        {
+            return false;
+        }
+
         if (module.damageSync.getValue())
         {
             Confirmer c = module.damageSyncHelper.getConfirmer();
@@ -450,6 +456,17 @@ public abstract class AbstractCalculation<T extends CrystalData>
 
     protected void setFriendsAndEnemies()
     {
+        if (module.isSuicideModule()) {
+            // in case it gets modified
+            //noinspection ArraysAsListWithZeroOrOneArgument
+            this.enemies = new ArrayList<>(
+                Arrays.asList(RotationUtil.getRotationPlayer()));
+            this.players = new ArrayList<>(0);
+            this.friends = new ArrayList<>(0);
+            this.all = this.enemies;
+            return;
+        }
+
         List<List<EntityPlayer>> split = CollectionUtil.split(raw,
             p -> p == null
                 || EntityUtil.isDead(p)
@@ -919,10 +936,10 @@ public abstract class AbstractCalculation<T extends CrystalData>
                 && module.switching) {
                 if (!module.mainHand.getValue()) {
                     mc.addScheduledTask(() ->
-                                        {
-                                            OFFHAND.computeIfPresent(o ->
-                                                                         o.setMode(OffhandMode.CRYSTAL));
-                                        });
+                    {
+                        OFFHAND.computeIfPresent(
+                            o -> o.setMode(OffhandMode.CRYSTAL));
+                    });
                 }
             }
         }
@@ -965,7 +982,7 @@ public abstract class AbstractCalculation<T extends CrystalData>
                                       .findBestObbyData(liquid != null
                                                         ? data.getLiquidObby()
                                                         : data.getAllObbyData(),
-                                              all,
+                                                        all,
                                                         friends,
                                                         entities,
                                                         data.getTarget(),
@@ -1052,7 +1069,8 @@ public abstract class AbstractCalculation<T extends CrystalData>
             return false;
         }
 
-        if (!module.rotate.getValue().noRotate(ACRotate.Place))
+        if (!module.rotate.getValue().noRotate(ACRotate.Place)
+            && !module.isNotCheckingRotations())
         {
             RayTraceResult result = RotationUtil.rayTraceTo(pos, mc.world);
             if (result == null || !result.getBlockPos().equals(pos))
@@ -1064,9 +1082,19 @@ public abstract class AbstractCalculation<T extends CrystalData>
         if (pos.distanceSqToCenter(x, y, z)
                 >= MathUtil.square(module.placeTrace.getValue()))
         {
-            RayTraceResult result = RotationUtil.rayTraceTo(pos,
-                                                            mc.world,
-                                                            (b,p) -> true);
+            RayTraceResult result;
+            if (module.isNotCheckingRotations())
+            {
+                float[] rotations = RotationUtil.getRotationsToTopMiddle(pos);
+                result = RotationUtil.rayTraceWithYP(pos,
+                                                 mc.world,
+                                                 rotations[0], rotations[1],
+                                                 (b,p) -> true);
+            }
+            else
+            {
+                result = RotationUtil.rayTraceTo(pos, mc.world, (b,p) -> true);
+            }
 
             if (result != null && !result.getBlockPos().equals(pos))
             {
@@ -1206,10 +1234,8 @@ public abstract class AbstractCalculation<T extends CrystalData>
         if (focus != null)
         {
             if (EntityUtil.isDead(focus)
-                || Managers.POSITION.getDistanceSq(focus)
-                        > MathUtil.square(module.breakRange.getValue())
-                    && RotationUtil.getRotationPlayer().getDistanceSq(focus)
-                        > MathUtil.square(module.breakRange.getValue()))
+                || !module.rangeHelper.isCrystalInRangeOfLastPosition(focus)
+                    && !module.rangeHelper.isCrystalInRange(focus))
             {
                 module.focus = null;
                 return false;

@@ -7,8 +7,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -71,7 +69,6 @@ public class MutableBB extends AxisAlignedBB implements BB
         this(pos1.getX(), pos1.getY(), pos1.getZ(), pos2.getX(), pos2.getY(), pos2.getZ());
     }
 
-    @SideOnly(Side.CLIENT)
     public MutableBB(Vec3d min, Vec3d max)
     {
         this(min.x, min.y, min.z, max.x, max.y, max.z);
@@ -495,7 +492,6 @@ public class MutableBB extends AxisAlignedBB implements BB
         return this.minX < x2 && this.maxX > x1 && this.minY < y2 && this.maxY > y1 && this.minZ < z2 && this.maxZ > z1;
     }
 
-    @SideOnly(Side.CLIENT)
     public boolean intersects(Vec3d min, Vec3d max)
     {
         return this.intersects(Math.min(min.x, max.x), Math.min(min.y, max.y), Math.min(min.z, max.z), Math.max(min.x, max.x), Math.max(min.y, max.y), Math.max(min.z, max.z));
@@ -652,13 +648,11 @@ public class MutableBB extends AxisAlignedBB implements BB
         return "box[" + this.minX + ", " + this.minY + ", " + this.minZ + " -> " + this.maxX + ", " + this.maxY + ", " + this.maxZ + "]";
     }
 
-    @SideOnly(Side.CLIENT)
     public boolean hasNaN()
     {
         return Double.isNaN(this.minX) || Double.isNaN(this.minY) || Double.isNaN(this.minZ) || Double.isNaN(this.maxX) || Double.isNaN(this.maxY) || Double.isNaN(this.maxZ);
     }
 
-    @SideOnly(Side.CLIENT)
     public Vec3d getCenter()
     {
         return new Vec3d(this.minX + (this.maxX - this.minX) * 0.5D, this.minY + (this.maxY - this.minY) * 0.5D, this.minZ + (this.maxZ - this.minZ) * 0.5D);

@@ -4,20 +4,26 @@ import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
+import me.earth.earthhack.impl.core.ducks.entity.IEntityPlayer;
 import me.earth.earthhack.impl.core.mixins.entity.living.MixinEntityLivingBase;
 import me.earth.earthhack.impl.event.events.movement.SprintEvent;
 import me.earth.earthhack.impl.event.events.render.SuffocationEvent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.misc.tpssync.TpsSync;
+import me.earth.earthhack.impl.util.minecraft.MotionTracker;
 import me.earth.earthhack.impl.util.thread.EnchantmentUtil;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -25,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityPlayer.class)
-public abstract class MixinEntityPlayer extends MixinEntityLivingBase
+public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements IEntityPlayer
 {
     private static final ModuleCache<TpsSync> TPS_SYNC =
         Caches.getModule(TpsSync.class);
@@ -36,6 +42,43 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase
     public InventoryPlayer inventory;
     @Shadow
     public Container inventoryContainer;
+
+    @Unique
+    private MotionTracker motionTracker;
+    @Unique
+    private MotionTracker breakMotionTracker;
+    @Unique
+    private int ticksWithoutMotionUpdate;
+
+    @Override
+    public void setMotionTracker(MotionTracker motionTracker) {
+        this.motionTracker = motionTracker;
+    }
+
+    @Override
+    public MotionTracker getMotionTracker() {
+        return motionTracker;
+    }
+
+    @Override
+    public MotionTracker getBreakMotionTracker() {
+        return breakMotionTracker;
+    }
+
+    @Override
+    public void setBreakMotionTracker(MotionTracker breakMotionTracker) {
+        this.breakMotionTracker = breakMotionTracker;
+    }
+
+    @Override
+    public int getTicksWithoutMotionUpdate() {
+        return ticksWithoutMotionUpdate;
+    }
+
+    @Override
+    public void setTicksWithoutMotionUpdate(int ticksWithoutMotionUpdate) {
+        this.ticksWithoutMotionUpdate = ticksWithoutMotionUpdate;
+    }
 
     @Shadow
     public void onUpdate()
@@ -48,6 +91,13 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase
     {
         throw new IllegalStateException("attackEntityFrom wasn't shadowed!");
     }
+
+    @Shadow public abstract void travel(float strafe, float vertical,
+                                        float forward);
+
+    @Shadow public abstract EnumActionResult interactOn(
+        Entity entityToInteractOn,
+        EnumHand hand);
 
     @Inject(method = "onUpdate", at = @At("RETURN"))
     private void onUpdateHook(CallbackInfo ci)

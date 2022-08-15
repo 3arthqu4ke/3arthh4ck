@@ -20,26 +20,32 @@ final class ListenerBlockChange extends
     public void invoke(PacketEvent.Receive<SPacketBlockChange> event)
     {
         SPacketBlockChange packet = event.getPacket();
+        if (module.mode.getValue() == MineMode.Fast) {
+            module.fastHelper.onBlockChange(packet.getBlockPosition(),
+                                            packet.getBlockState());
+            return;
+        }
+
         if (packet.getBlockPosition().equals(module.pos)
-                && packet.getBlockState().getBlock() == Blocks.AIR
-                && (module.mode.getValue() != MineMode.Smart
-                        || module.sentPacket)
-                && module.mode.getValue() != MineMode.Instant
-                && module.mode.getValue() != MineMode.Civ)
+            && packet.getBlockState().getBlock() == Blocks.AIR
+            && (module.mode.getValue() != MineMode.Smart
+            || module.sentPacket)
+            && module.mode.getValue() != MineMode.Instant
+            && module.mode.getValue() != MineMode.Civ)
         {
             mc.addScheduledTask(module::reset);
         }
         else if (packet.getBlockPosition().equals(module.pos)
-                && packet.getBlockState() == mc.world.getBlockState(module.pos)
-                && module.shouldAbort
-                && module.mode.getValue() == MineMode.Instant)
+            && packet.getBlockState() == mc.world.getBlockState(module.pos)
+            && module.shouldAbort
+            && module.mode.getValue() == MineMode.Instant)
         {
             mc.player.connection.sendPacket(
-                    new CPacketPlayerDigging(CPacketPlayerDigging
-                            .Action
-                            .START_DESTROY_BLOCK,
-                            module.pos,
-                            EnumFacing.DOWN));
+                new CPacketPlayerDigging(CPacketPlayerDigging
+                                             .Action
+                                             .START_DESTROY_BLOCK,
+                                         module.pos,
+                                         EnumFacing.DOWN));
             module.shouldAbort = false;
         }
     }

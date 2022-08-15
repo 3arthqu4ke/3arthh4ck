@@ -21,6 +21,11 @@ final class ListenerPosLook extends
     @Override
     public void invoke(PacketEvent.Receive<SPacketPlayerPosLook> event)
     {
+        if (module.mode.getValue() == Mode.Compatibility)
+        {
+            return;
+        }
+
         ISPacketPlayerPosLook packet =
                 (ISPacketPlayerPosLook) event.getPacket();
 

@@ -48,7 +48,7 @@ public class HelperLiquids implements Globals
                                       IBlockAccess access,
                                       double placeRange)
     {
-        for (EnumFacing facing : EnumFacing.VALUES)
+        for (EnumFacing facing : EnumFacing.values())
         {
             if (facing == EnumFacing.DOWN)
             {

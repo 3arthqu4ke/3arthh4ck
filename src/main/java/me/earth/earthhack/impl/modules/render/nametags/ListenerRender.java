@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.modules.render.nametags;
 import me.earth.earthhack.impl.event.events.render.Render3DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.render.Interpolation;
@@ -31,14 +32,19 @@ final class ListenerRender extends ModuleListener<Nametags, Render3DEvent>
     public void invoke(Render3DEvent event) {
         if (!module.twoD.getValue()) {
             module.updateNametags();
-            Vec3d interp = Interpolation.interpolateEntity(RenderUtil.getEntity());
+            Entity renderEntity = RenderUtil.getEntity();
+            Vec3d interp = Interpolation.interpolateEntity(renderEntity);
             Nametag.isRendering = true;
             for (Nametag nametag : module.nametags) {
                 if (nametag.player.isDead
                         || nametag.player.isInvisible()
-                        && !module.invisibles.getValue()
+                            && !module.invisibles.getValue()
+                        || module.withDistance.getValue()
+                            && renderEntity.getDistanceSq(nametag.player)
+                                > MathUtil.square(module.distance.getValue())
                         || module.fov.getValue()
-                        && !RotationUtil.inFov(nametag.player)) // Frustum?
+                            && !RotationUtil.inFov(nametag.player) // Frustum?
+                            && (!module.close.getValue() || renderEntity.getDistanceSq(nametag.player) > 1.0))
                 {
                     continue;
                 }
@@ -49,17 +55,20 @@ final class ListenerRender extends ModuleListener<Nametags, Render3DEvent>
             Nametag.isRendering = false;
 
             if (module.debug.getValue()) {
-                Entity renderEntity = RenderUtil.getEntity();
                 Frustum frustum = Interpolation.createFrustum(renderEntity);
+                // TODO: nametags for entities, like the 'Nether King'
                 for (Entity entity : mc.world.loadedEntityList) {
                     if (entity == null
                             || EntityUtil.isDead(entity)
                             || entity instanceof EntityPlayer
                             || entity.isInvisible()
-                            && !module.invisibles.getValue()
+                                && !module.invisibles.getValue()
+                            || module.withDistance.getValue()
+                                && renderEntity.getDistanceSq(entity)
+                                    > MathUtil.square(module.distance.getValue())
                             || module.fov.getValue()
-                            && !frustum.isBoundingBoxInFrustum(
-                            entity.getRenderBoundingBox())) {
+                                && !frustum.isBoundingBoxInFrustum(entity.getRenderBoundingBox())
+                                && (!module.close.getValue() || renderEntity.getDistanceSq(entity) > 1.0)) {
                         continue;
                     }
 

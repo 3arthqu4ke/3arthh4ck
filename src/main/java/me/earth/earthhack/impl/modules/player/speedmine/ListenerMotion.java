@@ -13,6 +13,7 @@ import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.PlayerUtil;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.init.Items;
 import net.minecraft.network.Packet;
 
@@ -31,7 +32,8 @@ final class ListenerMotion extends ModuleListener<Speedmine, MotionUpdateEvent>
     @Override
     public void invoke(MotionUpdateEvent event)
     {
-        if (!module.rotate.getValue())
+        if (!module.rotate.getValue()
+            || PingBypass.isConnected() && !event.isPingBypass())
         {
             return;
         }
@@ -59,7 +61,8 @@ final class ListenerMotion extends ModuleListener<Speedmine, MotionUpdateEvent>
             Locks.acquire(Locks.PLACE_SWITCH_LOCK, () ->
             {
                 int last = mc.player.inventory.currentItem;
-                InventoryUtil.switchTo(module.limitRotationSlot);
+                int slot = module.limitRotationSlot;
+                module.cooldownBypass.getValue().switchTo(slot);
 
                 if (module.event.getValue())
                 {
@@ -70,7 +73,7 @@ final class ListenerMotion extends ModuleListener<Speedmine, MotionUpdateEvent>
                     NetworkUtil.sendPacketNoEvent(packet, false);
                 }
 
-                InventoryUtil.switchTo(last);
+                module.cooldownBypass.getValue().switchBack(last, slot);
             });
 
             module.onSendPacket();

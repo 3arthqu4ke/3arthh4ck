@@ -2,11 +2,12 @@ package me.earth.earthhack.impl.util.network;
 
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.util.interfaces.Globals;
-import me.earth.earthhack.impl.commands.packet.PacketCommand;
 import me.earth.earthhack.impl.core.ducks.network.INetworkManager;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.INetHandlerPlayClient;
 
@@ -64,7 +65,17 @@ public class NetworkUtil implements Globals
 
     public static boolean receive(Packet<INetHandlerPlayClient> packet)
     {
-        PacketEvent.Receive<?> e = new PacketEvent.Receive<>(packet);
+        EntityPlayerSP player = mc.player;
+        if (player != null) {
+            return receive(packet, player.connection.getNetworkManager());
+        }
+
+        return false;
+    }
+
+    public static boolean receive(Packet<INetHandlerPlayClient> packet, NetworkManager manager)
+    {
+        PacketEvent.Receive<?> e = new PacketEvent.Receive<>(packet, manager);
         Bus.EVENT_BUS.post(e, packet.getClass());
         if (e.isCancelled())
         {

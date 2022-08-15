@@ -93,46 +93,11 @@ final class ListenerDamage extends ModuleListener<Speedmine, DamageBlockEvent>
                                 .setCurBlockDamageMP(1.0f);
                     }
                     break;
+                case Fast:
+                    module.fastHelper.reset();
+                    module.fastHelper.sendAbortNextTick = true;
                 case Smart:
-                    boolean aborted = false;
-                    if (module.pos != null
-                            && !module.pos.equals(event.getPos()))
-                    {
-                        module.abortCurrentPos();
-                        aborted = true;
-                    }
-
-                    if (aborted || module.timer.passed(module.delay.getValue()))
-                    {
-                        if (!aborted && module.pos != null
-                                && module.pos.equals(event.getPos()))
-                        {
-                            module.abortCurrentPos();
-                            module.timer.reset();
-                            return;
-                        }
-
-                        setPos(event);
-                        mc.player.swingArm(EnumHand.MAIN_HAND);
-                        CPacketPlayerDigging packet =
-                                new CPacketPlayerDigging(CPacketPlayerDigging
-                                                    .Action
-                                                        .START_DESTROY_BLOCK,
-                                                    event.getPos(),
-                                                    event.getFacing());
-
-                        if (module.event.getValue())
-                        {
-                            mc.player.connection.sendPacket(packet);
-                        }
-                        else
-                        {
-                            NetworkUtil.sendPacketNoEvent(packet, false);
-                        }
-
-                        event.setCancelled(true);
-                        module.timer.reset();
-                    }
+                    runSmart(event);
                     break;
                 case Instant:
                     boolean abortedd = false;
@@ -176,9 +141,52 @@ final class ListenerDamage extends ModuleListener<Speedmine, DamageBlockEvent>
                         event.setCancelled(true);
                         module.timer.reset();
                     }
-                    break;
 
+                    break;
+                default:
             }
+        }
+    }
+
+    private void runSmart(DamageBlockEvent event) {
+        boolean aborted = false;
+        if (module.pos != null
+            && !module.pos.equals(event.getPos()))
+        {
+            module.abortCurrentPos();
+            aborted = true;
+        }
+
+        if (aborted || module.timer.passed(module.delay.getValue()))
+        {
+            if (!aborted && module.pos != null
+                && module.pos.equals(event.getPos()))
+            {
+                module.abortCurrentPos();
+                module.timer.reset();
+                return;
+            }
+
+            setPos(event);
+            mc.player.swingArm(EnumHand.MAIN_HAND);
+            CPacketPlayerDigging packet =
+                new CPacketPlayerDigging(CPacketPlayerDigging
+                                             .Action
+                                             .START_DESTROY_BLOCK,
+                                         event.getPos(),
+                                         event.getFacing());
+
+            if (module.event.getValue())
+            {
+                mc.player.connection.sendPacket(packet);
+            }
+            else
+            {
+                NetworkUtil.sendPacketNoEvent(packet, false);
+            }
+
+            event.setCancelled(true);
+            module.timer.reset();
         }
     }
 

@@ -5,6 +5,7 @@ public enum MineMode
     Reset,
     Packet,
     Smart,
+    Fast,
     Instant,
     Civ,
     Damage

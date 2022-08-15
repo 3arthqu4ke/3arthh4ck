@@ -52,19 +52,7 @@ public class SPacketPlayerListHeaderFooterFactory implements PacketFactory
         SPacketPlayerListHeaderFooter p = new SPacketPlayerListHeaderFooter();
         try
         {
-            Field headerField = ReflectionUtil.getField(
-                    SPacketPlayerListHeaderFooter.class,
-                    "header", "field_179703_a", "a");
-
-            Field footerField = ReflectionUtil.getField(
-                    SPacketPlayerListHeaderFooter.class,
-                    "footer", "field_179702_b", "b");
-
-            headerField.setAccessible(true);
-            headerField.set(p, header);
-
-            footerField.setAccessible(true);
-            footerField.set(p, footer);
+            setHeaderFooter(p, header, footer);
         }
         catch (NoSuchFieldException | IllegalAccessException e)
         {
@@ -73,6 +61,22 @@ public class SPacketPlayerListHeaderFooterFactory implements PacketFactory
         }
 
         return p;
+    }
+
+    public static void setHeaderFooter(SPacketPlayerListHeaderFooter packet, ITextComponent header, ITextComponent footer) throws NoSuchFieldException, IllegalAccessException {
+        Field headerField = ReflectionUtil.getField(
+            SPacketPlayerListHeaderFooter.class,
+            "header", "field_179703_a", "a");
+
+        Field footerField = ReflectionUtil.getField(
+            SPacketPlayerListHeaderFooter.class,
+            "footer", "field_179702_b", "b");
+
+        headerField.setAccessible(true);
+        headerField.set(packet, header);
+
+        footerField.setAccessible(true);
+        footerField.set(packet, footer);
     }
 
     @Override

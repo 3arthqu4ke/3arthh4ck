@@ -21,6 +21,7 @@ import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.module.EntityTypeModule;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -38,7 +39,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.input.Mouse;
+import me.earth.earthhack.pingbypass.input.Mouse;
 
 public class KillAura extends EntityTypeModule
 {
@@ -348,7 +349,7 @@ public class KillAura extends EntityTypeModule
     {
         if (mc.player.getHeldItemOffhand().getItem() instanceof ItemShield)
         {
-            mc.player.connection.sendPacket(
+            PingBypass.sendToActualServer(
                     new CPacketPlayerDigging(
                             CPacketPlayerDigging.Action.RELEASE_USE_ITEM,
                             new BlockPos(mc.player),

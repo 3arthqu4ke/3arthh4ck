@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.combat.offhand;
 
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.network.play.server.SPacketSetSlot;
 
 final class ListenerSetSlot extends
@@ -25,6 +26,11 @@ final class ListenerSetSlot extends
         }
 
         event.setCancelled(true);
+        if (PingBypass.isConnected()
+            && module.fixPingBypassAsyncSlot.getValue()) {
+            event.setPingBypassCancelled(true);
+        }
+
         module.asyncSlot = -1;
     }
 

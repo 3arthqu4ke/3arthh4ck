@@ -1,20 +1,17 @@
 package me.earth.earthhack.impl.modules.render.esp;
 
-import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.render.chams.Chams;
-import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
 import me.earth.earthhack.impl.modules.render.esp.mode.EspMode;
-import me.earth.earthhack.impl.modules.render.fullbright.Fullbright;
 import me.earth.earthhack.impl.util.minecraft.EntityType;
+import me.earth.earthhack.impl.util.minecraft.PushMode;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.block.BlockChest;
@@ -29,12 +26,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityEnderChest;
+import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.EXTPackedDepthStencil;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 //TODO: Cleanup!
 public class ESP extends Module {
@@ -61,6 +60,12 @@ public class ESP extends Module {
             register(new NumberSetting<>("LineWidth", 3.0f, 0.1f, 10.0f));
     protected final Setting<Boolean> hurt =
             register(new BooleanSetting("Hurt", false));
+    protected final Setting<Boolean> phase =
+            register(new BooleanSetting("Phase", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<PushMode> pushMode =
+            register(new EnumSetting<>("PhasePushDetect", PushMode.None))
+                .setComplexity(Complexity.Expert);
     public final Setting<Color> color =
             register(new ColorSetting("Color", new Color(255, 255, 255, 255)));
     public final Setting<Color> invisibleColor =
@@ -72,17 +77,21 @@ public class ESP extends Module {
     protected final Setting<Float> scale =
             register(new NumberSetting<>("Scale", 0.003f, 0.001f, 0.01f));
 
+    protected final ArrayList<EntityPlayer> phasing = new ArrayList<>();
+
     public ESP() {
         super("ESP", Category.Render);
         this.listeners.add(new ListenerRender(this));
         this.listeners.add(new ListenerModel(this));
         this.listeners.add(new ListenerRenderCrystal(this));
+        this.listeners.add(new ListenerTick(this));
         this.setData(new ESPData(this));
     }
 
     @Override
     protected void onDisable() {
         isRendering = false;
+        phasing.clear();
     }
 
     protected boolean isValid(Entity entity) {
@@ -108,7 +117,7 @@ public class ESP extends Module {
             frustum.setPosition(x, y, z);
 
             for (TileEntity tileEntity : mc.world.loadedTileEntityList) {
-                if ((tileEntity instanceof TileEntityChest || tileEntity instanceof TileEntityEnderChest)) {
+                if ((tileEntity instanceof TileEntityChest || tileEntity instanceof TileEntityEnderChest) || tileEntity instanceof TileEntityShulkerBox) {
                     if (mc.player.getDistance(tileEntity.getPos().getX(),tileEntity.getPos().getY(),tileEntity.getPos().getZ()) > storageRange.getValue())
                         continue;
                     final double posX = tileEntity.getPos().getX() - Interpolation.getRenderPosX();
@@ -162,6 +171,8 @@ public class ESP extends Module {
             }
         } else if (tileEntity instanceof TileEntityEnderChest) {
             RenderUtil.color(new Color(174, 0, 255, 60));
+        } else if (tileEntity instanceof TileEntityShulkerBox) {
+            RenderUtil.color(new Color(81, 140, 255, 60));
         }
     }
 

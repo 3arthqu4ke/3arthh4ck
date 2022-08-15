@@ -1,7 +1,11 @@
 package me.earth.earthhack.impl.util.text;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.pingbypass.protocol.s2c.S2CChatPacket;
 import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -35,7 +39,15 @@ public class ChatUtil implements Globals
 
     public static void sendComponent(ITextComponent c, int id)
     {
-        applyIfPresent(g -> g.printChatMessageWithOptionalDeletion(c, id));
+        applyIfPresent(g -> {
+            if (PingBypass.isServer()) {
+                TextComponentString string = new TextComponentString("<" + TextColor.DARK_RED + "PingBypass" + TextColor.WHITE + "> ");
+                string.appendSibling(c);
+                PingBypass.sendPacket(new S2CChatPacket(string, ChatType.SYSTEM, id));
+            }
+
+            g.printChatMessageWithOptionalDeletion(c, id);
+        });
     }
 
     public static void applyIfPresent(Consumer<GuiNewChat> consumer)

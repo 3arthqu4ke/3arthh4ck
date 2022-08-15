@@ -4,6 +4,7 @@ import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.event.events.Stage;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.event.SettingEvent;
 import me.earth.earthhack.api.setting.settings.BindSetting;
@@ -30,6 +31,7 @@ import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.text.ChatIDs;
 import me.earth.earthhack.impl.util.text.TextColor;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockDeadBush;
@@ -71,7 +73,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.input.Keyboard;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -86,38 +88,65 @@ public class Auto32k extends Module {
             Caches.getModule(Freecam.class);
 
     protected Setting<Mode> mode = register(new EnumSetting<>("Mode", Mode.NORMAL));
-    protected final Setting<Boolean> swing = register(new BooleanSetting("Swing", false));
-    protected final Setting<Integer> delay = register(new NumberSetting<>("Delay/Place", 25, 0, 250));
+    protected final Setting<Boolean> swing = register(new BooleanSetting("Swing", false))
+        .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> delay = register(new NumberSetting<>("Delay/Place", 25, 0, 250))
+        .setComplexity(Complexity.Expert);
     protected final Setting<Integer> delayDispenser = register(new NumberSetting<>("Blocks/Place", 1, 1, 8));
     protected final Setting<Integer> blocksPerPlace = register(new NumberSetting<>("Actions/Place", 1, 1, 3));
     protected final Setting<Float> range = register(new NumberSetting<>("PlaceRange", 4.5F, 0.0F, 6.0F));
-    protected final Setting<Boolean> raytrace = register(new BooleanSetting("Raytrace", false));
+    protected final Setting<Boolean> raytrace = register(new BooleanSetting("Raytrace", false))
+        .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> rotate = register(new BooleanSetting("Rotate", false));
-    protected final Setting<Boolean> autoSwitch = register(new BooleanSetting("AutoSwitch", false));
-    protected final Setting<Boolean> withBind = register(new BooleanSetting("WithBind", false));
-    protected final Setting<Bind> switchBind = register(new BindSetting("SwitchBind", Bind.none()));
-    protected final Setting<Double> targetRange = register(new NumberSetting<>("TargetRange", 6.0, 0.0, 20.0));
-    protected final Setting<Boolean> extra = register(new BooleanSetting("ExtraRotation", false));
-    protected final Setting<PlaceType> placeType = register(new EnumSetting<>("Place", PlaceType.CLOSE));
-    protected final Setting<Boolean> freecam = register(new BooleanSetting("Freecam", false));
-    protected final Setting<Boolean> onOtherHoppers = register(new BooleanSetting("UseHoppers", false));
-    protected final Setting<Boolean> preferObby = register(new BooleanSetting("UseObby", false));
-    protected final Setting<Boolean> checkForShulker = register(new BooleanSetting("CheckShulker", true));
-    protected final Setting<Integer> checkDelay = register(new NumberSetting<>("CheckDelay", 500, 0, 500));
-    protected final Setting<Boolean> drop = register(new BooleanSetting("Drop", false));
-    protected final Setting<Boolean> mine = register(new BooleanSetting("Mine", false));
-    protected final Setting<Boolean> checkStatus = register(new BooleanSetting("CheckState", true));
-    protected final Setting<Boolean> packet = register(new BooleanSetting("Packet", false));
-    protected final Setting<Boolean> superPacket = register(new BooleanSetting("DispExtra", false));
-    protected final Setting<Boolean> secretClose = register(new BooleanSetting("SecretClose", false));
-    protected final Setting<Boolean> closeGui = register(new BooleanSetting("CloseGui", false));
-    protected final Setting<Boolean> repeatSwitch = register(new BooleanSetting("SwitchOnFail", true));
+    protected final Setting<Boolean> autoSwitch = register(new BooleanSetting("AutoSwitch", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> withBind = register(new BooleanSetting("WithBind", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Bind> switchBind = register(new BindSetting("SwitchBind", Bind.none()))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Double> targetRange = register(new NumberSetting<>("TargetRange", 6.0, 0.0, 20.0))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> extra = register(new BooleanSetting("ExtraRotation", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<PlaceType> placeType = register(new EnumSetting<>("Place", PlaceType.CLOSE))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> freecam = register(new BooleanSetting("Freecam", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> onOtherHoppers = register(new BooleanSetting("UseHoppers", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> preferObby = register(new BooleanSetting("UseObby", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> checkForShulker = register(new BooleanSetting("CheckShulker", true))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Integer> checkDelay = register(new NumberSetting<>("CheckDelay", 500, 0, 500))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> drop = register(new BooleanSetting("Drop", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> mine = register(new BooleanSetting("Mine", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> checkStatus = register(new BooleanSetting("CheckState", true))
+        .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> packet = register(new BooleanSetting("Packet", false))
+        .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> superPacket = register(new BooleanSetting("DispExtra", false))
+        .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> secretClose = register(new BooleanSetting("SecretClose", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> closeGui = register(new BooleanSetting("CloseGui", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> repeatSwitch = register(new BooleanSetting("SwitchOnFail", true))
+        .setComplexity(Complexity.Expert);
     //private final Setting<Boolean> authSneak = register(new Setting("AuthSneak", true));
-    protected final Setting<Boolean> simulate = register(new BooleanSetting("Simulate", true));
-    protected final Setting<Float> hopperDistance = register(new NumberSetting<>("HopperRange", 8.0F, 0.0F, 20.0F));
-    protected final Setting<Integer> trashSlot = register(new NumberSetting<>("32kSlot", 0, 0, 9));
-    protected final Setting<Boolean> messages = register(new BooleanSetting("Messages", false));
-    protected final Setting<Boolean> antiHopper = register(new BooleanSetting("AntiHopper", false));
+    protected final Setting<Boolean> simulate = register(new BooleanSetting("Simulate", true))
+        .setComplexity(Complexity.Expert);
+    protected final Setting<Float> hopperDistance = register(new NumberSetting<>("HopperRange", 8.0F, 0.0F, 20.0F))
+        .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> trashSlot = register(new NumberSetting<>("32kSlot", 0, 0, 9))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> messages = register(new BooleanSetting("Messages", false))
+        .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> antiHopper = register(new BooleanSetting("AntiHopper", false))
+        .setComplexity(Complexity.Medium);
 
     private float yaw;
     private float pitch;
@@ -252,7 +281,7 @@ public class Auto32k extends Module {
             return;
         }
 
-        if (Keyboard.getEventKeyState() && switchBind.getValue().getKey() == Keyboard.getEventKey() && withBind.getValue()) {
+        if (event.getEventState() && switchBind.getValue().getKey() == event.getKey() && withBind.getValue()) {
             if (switching) {
                 resetFields();
                 switching = true;
@@ -604,7 +633,7 @@ public class Auto32k extends Module {
 
         //if(!mc.player.isSneaking() && (BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock))) {
         authSneakPacket = true;
-        mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
+        PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
         authSneakPacket = false;
         //mc.player.setSneaking(true);
         //}
@@ -624,7 +653,7 @@ public class Auto32k extends Module {
         InventoryUtil.switchTo(slot);
         rightClickBlock(neighbour, hitVec, slot == -2 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, opposite, packet.getValue(), swing.getValue());
         authSneakPacket = true;
-        mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
+        PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
         authSneakPacket = false;
         placeTimer.reset();
         actionsThisTick++;
@@ -877,7 +906,7 @@ public class Auto32k extends Module {
         }
         //if(mc.player.isSneaking()) {
         authSneakPacket = true;
-        mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
+        PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
         authSneakPacket = false;
         //mc.player.setSneaking(false);
         //}
@@ -944,7 +973,7 @@ public class Auto32k extends Module {
 
             //if(!mc.player.isSneaking() && (BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock))) {
             authSneakPacket = true;
-            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
+            PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
             authSneakPacket = false;
             //mc.player.setSneaking(true);
             //}
@@ -965,7 +994,7 @@ public class Auto32k extends Module {
             InventoryUtil.switchTo(slot);
             rightClickBlock(neighbour, hitVec, slot == -2 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, opposite, packet.getValue(), swing.getValue());
             authSneakPacket = true;
-            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
+            PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
             authSneakPacket = false;
             placeTimer.reset();
             actionsThisTick++;
@@ -996,7 +1025,7 @@ public class Auto32k extends Module {
         Block neighbourBlock = mc.world.getBlockState(helpingPos).getBlock();
         //if(BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock)) {
         authSneakPacket = true;
-        mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
+        PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
         authSneakPacket = false;
         //mc.player.setSneaking(true);
         //}
@@ -1052,7 +1081,7 @@ public class Auto32k extends Module {
         InventoryUtil.switchTo(dispenserSlot);
         rightClickBlock(helpingPos, rotationVec, dispenserSlot == -2 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, opposite, packet.getValue(), swing.getValue());
         authSneakPacket = true;
-        mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
+        PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
         authSneakPacket = false;
         placeTimer.reset();
         actionsThisTick++;
@@ -1537,7 +1566,7 @@ public class Auto32k extends Module {
             float f = (float)(vec.x - (double)pos.getX());
             float f1 = (float)(vec.y - (double)pos.getY());
             float f2 = (float)(vec.z - (double)pos.getZ());
-            mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, direction, hand, f, f1, f2));
+            PingBypass.sendToActualServer(new CPacketPlayerTryUseItemOnBlock(pos, direction, hand, f, f1, f2));
         } else {
             mc.playerController.processRightClickBlock(mc.player, mc.world, pos, direction, vec, hand);
         }
@@ -1560,7 +1589,7 @@ public class Auto32k extends Module {
     }
 
     public static void faceYawAndPitch(float yaw, float pitch) {
-        mc.player.connection.sendPacket(new CPacketPlayer.Rotation(yaw, pitch, mc.player.onGround));
+        PingBypass.sendToActualServer(new CPacketPlayer.Rotation(yaw, pitch, mc.player.onGround));
     }
 
     private boolean badEntities(BlockPos pos) {

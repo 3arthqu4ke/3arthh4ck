@@ -7,6 +7,7 @@ final class MCFData extends DefaultData<MCF>
     public MCFData(MCF mcf)
     {
         super(mcf);
+        this.register(mcf.pickBlock, "Will use the PickBlock key to MCF.");
     }
 
     @Override

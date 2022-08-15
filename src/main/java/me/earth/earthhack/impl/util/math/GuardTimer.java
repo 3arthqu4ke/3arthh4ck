@@ -36,6 +36,12 @@ public class GuardTimer implements DiscreteTimer
     }
 
     @Override
+    public void setTime(long time)
+    {
+        this.time = time;
+    }
+
+    @Override
     public boolean passed(long ms)
     {
         return ms == 0

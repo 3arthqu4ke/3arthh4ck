@@ -58,4 +58,12 @@ public interface IEntity extends Dummy
 
     void setDummy(boolean dummy);
 
+    long getOldServerPosX();
+
+    long getOldServerPosY();
+
+    long getOldServerPosZ();
+
+    void setOldServerPos(long x, long y, long z);
+
 }

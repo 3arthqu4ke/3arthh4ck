@@ -21,4 +21,6 @@ public interface DiscreteTimer extends Passable
      */
     long getTime();
 
+    void setTime(long time);
+
 }

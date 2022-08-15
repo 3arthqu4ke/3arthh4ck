@@ -6,7 +6,6 @@ import me.earth.earthhack.api.module.util.Hidden;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.hud.HUD;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
 import me.earth.earthhack.impl.util.client.ModuleUtil;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.render.RenderUtil;
@@ -41,7 +40,7 @@ public class ArrayEntry implements Globals {
         HUD_MODULE_CACHE.get().renderText(ModuleUtil.getHudName(getModule()), getX(), desiredY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();
-        if (Caches.getModule(getModule().getClass()).get().isEnabled() && Caches.getModule(getModule().getClass()).get().isHidden() != Hidden.Hidden) {
+        if (module.isEnabled() && module.isHidden() != Hidden.Hidden) {
             if (stopWatch.passed(1000)) {
                 setX(desiredX - textWidth);
                 setAtDesired(true);

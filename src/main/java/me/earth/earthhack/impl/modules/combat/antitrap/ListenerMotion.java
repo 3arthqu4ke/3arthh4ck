@@ -19,6 +19,7 @@ import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -325,7 +326,7 @@ final class ListenerMotion extends ModuleListener<AntiTrap, MotionUpdateEvent>
         if (module.rotate.getValue() == Rotate.Packet
                 && module.rotations != null)
         {
-            mc.player.connection.sendPacket(
+            PingBypass.sendToActualServer(
                     new CPacketPlayer.Rotation(
                             module.rotations[0],
                             module.rotations[1],

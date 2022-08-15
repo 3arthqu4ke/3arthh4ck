@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.modules.combat.offhand;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BindSetting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
@@ -11,7 +12,7 @@ import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.api.util.bind.Bind;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.modules.client.pingbypass.submodules.sautototem.ServerAutoTotem;
 import me.earth.earthhack.impl.modules.combat.autoarmor.AutoArmor;
 import me.earth.earthhack.impl.modules.combat.offhand.modes.HUDMode;
@@ -25,7 +26,7 @@ import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
-import net.minecraft.entity.Entity;
+import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
@@ -35,19 +36,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
-import org.lwjgl.input.Mouse;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 //TODO: MainHand Totem
 //TODO: Make this an ItemAddingModule so we can add more modes?
 public class Offhand extends Module
 {
-    private static final ModuleCache<PingBypass> PINGBYPASS =
-            Caches.getModule(PingBypass.class);
+    private static final ModuleCache<PingBypassModule> PINGBYPASS =
+            Caches.getModule(PingBypassModule.class);
     private static final ModuleCache<ServerAutoTotem> AUTOTOTEM =
             Caches.getModule(ServerAutoTotem.class);
     private static final ModuleCache<AutoArmor> AUTO_ARMOR =
@@ -101,6 +100,9 @@ public class Offhand extends Module
             register(new BooleanSetting("NoDoubleGapple", false));
     protected final Setting<Boolean> doubleGappleToCrystal =
             register(new BooleanSetting("DoubleGappleToCrystal", false));
+    protected final Setting<Boolean> fixPingBypassAsyncSlot =
+            register(new BooleanSetting("FixPingBypassAsyncSlot", true))
+                .setComplexity(Complexity.Expert);
 
     protected final Map<Item, Integer> lastSlots = new HashMap<>();
     protected final StopWatch setSlotTimer = new StopWatch();
@@ -177,10 +179,10 @@ public class Offhand extends Module
 
     public void doOffhand()
     {
+        boolean suicide = SUICIDE.returnIfPresent(Suicide::deactivateOffhand, false);
         if (mc.player != null
             && timer.passed(delay.getValue())
-            && InventoryUtil.validScreen()
-            && !SUICIDE.returnIfPresent(Suicide::deactivateOffhand, false))
+            && InventoryUtil.validScreen())
         {
             if ((mc.player.getHeldItemMainhand().getItem() instanceof ItemSword
                 || mc.player.getHeldItemMainhand().getItem() instanceof ItemAxe)
@@ -203,7 +205,7 @@ public class Offhand extends Module
                 }
             }
 
-            if (!isSafe())
+            if (!isSafe() && !suicide)
             {
                 setRecovery(mode);
                 mode = OffhandMode.TOTEM;
@@ -218,6 +220,7 @@ public class Offhand extends Module
             int tSlot  = InventoryUtil.findItem(Items.TOTEM_OF_UNDYING, true);
             int hotbar = InventoryUtil.findHotbarItem(Items.TOTEM_OF_UNDYING);
             if (pulledFromHotbar
+                && !suicide
                 && hotbarFill.getValue()
                 && InventoryUtil.findEmptyHotbarSlot() != -1
                 && (hotbar == -1 || hotbar == -2)
@@ -265,7 +268,9 @@ public class Offhand extends Module
                 this.swordGapped = false;
             }
 
-            switchToItem(mode.getItem());
+            if (!suicide || mode != OffhandMode.TOTEM) {
+                switchToItem(mode.getItem());
+            }
         }
     }
 

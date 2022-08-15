@@ -71,4 +71,12 @@ public class ModuleUtil
                 ChatIDs.MODULE);
     }
 
+    public static void sendMessageWithAquaModule(Module module, String message, String append)
+    {
+        Managers.CHAT.sendDeleteMessage(
+            "<" + TextColor.AQUA + module.getDisplayName() + TextColor.RESET + "> " + message,
+            module.getName() + append,
+            ChatIDs.MODULE);
+    }
+
 }

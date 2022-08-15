@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.util.thread;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 
 /**
  * Locks that the client uses.
@@ -13,6 +14,8 @@ public class Locks
     // TODO: Use this everywhere!
     /** Locks when clicking Items in your Inventory. */
     public static final Lock WINDOW_CLICK_LOCK = new ReentrantLock();
+    /** Locks the processing of new packets until PingBypass has sent all JoinWorldPackets. */
+    public static final Lock PINGBYPASS_PACKET_LOCK = new ReentrantLock();
 
     /**
      * Locks the given Lock, runs the given Runnable and finally

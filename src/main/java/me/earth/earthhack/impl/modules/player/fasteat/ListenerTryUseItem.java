@@ -24,6 +24,7 @@ final class ListenerTryUseItem extends
                 && module.isValid(mc.player.getHeldItem(event.getPacket()
                                                              .getHand())))
         {
+            // no need to authorize it's NoEvent
             NetworkUtil.sendPacketNoEvent(new CPacketPlayerDigging(
                     CPacketPlayerDigging.Action.RELEASE_USE_ITEM,
                     BlockPos.ORIGIN,

@@ -7,6 +7,7 @@
   "mixinPriority": 2147483645,
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinMain",
     "MixinMinecraft",
     "MixinWorld",
     "MixinWorldClient",
@@ -24,6 +25,7 @@
     "entity.MixinEntity",
     "entity.MixinEntityBoat",
     "entity.MixinEntityEnderCrystal",
+    "entity.MixinEntityTracker",
     "entity.living.IEntityWolf",
     "entity.living.MixinAbstractHorse",
     "entity.living.MixinEntityLivingBase",
@@ -52,6 +54,7 @@
     "gui.MixinGuiToast",
     "gui.util.IGuiDisconnected",
     "gui.util.MixinContainer",
+    "headlessmc.MixinCommandContext",
     "init.MixinBootstrap",
     "item.IITemFood",
     "item.IItemTool",
@@ -69,10 +72,12 @@
     "network.client.ICPacketClientSettings",
     "network.client.ICPacketCloseWindow",
     "network.client.ICPacketCustomPayload",
+    "network.client.ICPacketLoginStart",
     "network.client.ICPacketPlayer",
     "network.client.ICPacketPlayerTryUseItemOnBlock",
     "network.client.ICPacketVehicleMove",
     "network.client.MixinC00Handshake",
+    "network.client.MixinCPacketCustomPayload",
     "network.client.MixinCPacketPlayerDigging",
     "network.client.MixinCPacketUseEntity",
     "network.server.ISPacketEntity",
@@ -83,7 +88,10 @@
     "network.server.ISPacketMultiBlockChange",
     "network.server.ISPacketPlayerPosLook",
     "network.server.ISPacketSetSlot",
+    "network.server.MixinSPacketEntityTeleport",
     "network.server.MixinSPacketResourcePack",
+    "network.server.MixinSPacketSpawnMob",
+    "network.server.MixinSPacketSpawnPlayer",
     "render.MixinActiveRenderInfo",
     "render.MixinBlockModelRenderer",
     "render.MixinBlockRendererDispatcher",
@@ -132,11 +140,14 @@
     "maxShiftBy": 10
   },
   "client": [
+    "gui.MixinGuiConnecting",
+    "gui.MixinGuiIngameMenu",
     "render.MixinFramebuffer",
     "render.MixinProfile",
     "render.MixinTextureManager",
     "render.MixinTileEntityRendererDispatcher",
     "render.entity.IRenderEnderCrystal",
-    "render.model.MixinModelEnderCrystal"
+    "render.model.MixinModelEnderCrystal",
+    "util.IChunkProviderClient"
   ]
 }

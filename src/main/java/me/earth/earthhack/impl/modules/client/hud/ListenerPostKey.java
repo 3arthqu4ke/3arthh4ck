@@ -7,14 +7,16 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.client.hud.modes.Modules;
 import me.earth.earthhack.impl.util.client.ModuleUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.pingbypass.modules.PbModule;
 import net.minecraft.client.gui.ScaledResolution;
 
-import java.util.AbstractMap;
-import java.util.Comparator;
-import java.util.Map;
+import java.util.*;
 
 final class ListenerPostKey extends ModuleListener<HUD, KeyboardEvent.Post>
 {
+    private final Set<Module> addedModules = new HashSet<>();
+
     public ListenerPostKey(HUD module)
     {
         super(module, KeyboardEvent.Post.class);
@@ -32,6 +34,7 @@ final class ListenerPostKey extends ModuleListener<HUD, KeyboardEvent.Post>
         module.width = module.resolution.getScaledWidth();
         module.height = module.resolution.getScaledHeight();
         module.modules.clear();
+        addedModules.clear();
 
         if (module.renderModules.getValue() != Modules.None)
         {
@@ -40,6 +43,18 @@ final class ListenerPostKey extends ModuleListener<HUD, KeyboardEvent.Post>
                 if (mod.isEnabled() && mod.isHidden() != Hidden.Hidden)
                 {
                     Map.Entry<String, Module> entry = new AbstractMap.SimpleEntry<>(ModuleUtil.getHudName(mod), mod);
+                    addedModules.add(mod);
+                    module.modules.add(entry);
+                }
+            }
+
+            for (Module mod : PingBypass.MODULES.getRegistered())
+            {
+                if (mod.isEnabled() && mod.isHidden() != Hidden.Hidden
+                    && !(addedModules.contains(mod) || mod instanceof PbModule && addedModules.contains(((PbModule) mod).getModule())))
+                {
+                    Map.Entry<String, Module> entry = new AbstractMap.SimpleEntry<>(ModuleUtil.getHudName(mod), mod);
+                    addedModules.add(mod);
                     module.modules.add(entry);
                 }
             }
@@ -54,4 +69,5 @@ final class ListenerPostKey extends ModuleListener<HUD, KeyboardEvent.Post>
             }
         }
     }
+
 }

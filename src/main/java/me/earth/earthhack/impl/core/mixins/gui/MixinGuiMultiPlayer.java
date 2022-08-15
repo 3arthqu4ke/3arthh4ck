@@ -3,7 +3,7 @@ package me.earth.earthhack.impl.core.mixins.gui;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.autoconfig.AutoConfig;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.modules.client.pingbypass.guis.GuiAddPingBypass;
 import me.earth.earthhack.impl.modules.client.pingbypass.guis.GuiButtonPingBypassOptions;
 import me.earth.earthhack.impl.modules.client.pingbypass.guis.GuiConnectingPingBypass;
@@ -20,8 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiMultiplayer.class)
 public abstract class MixinGuiMultiPlayer extends GuiScreen
 {
-    private static final ModuleCache<PingBypass> PINGBYPASS =
-            Caches.getModule(PingBypass.class);
+    private static final ModuleCache<PingBypassModule> PINGBYPASS =
+            Caches.getModule(PingBypassModule.class);
     private static final ModuleCache<AutoConfig> CONFIG =
             Caches.getModule(AutoConfig.class);
 

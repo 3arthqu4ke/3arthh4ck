@@ -18,6 +18,16 @@ final class ListenerMultiBlockChange extends
     public void invoke(PacketEvent.Receive<SPacketMultiBlockChange> event)
     {
         SPacketMultiBlockChange packet = event.getPacket();
+        if (module.mode.getValue() == MineMode.Fast) {
+            for (SPacketMultiBlockChange.BlockUpdateData data
+                : packet.getChangedBlocks()) {
+                module.fastHelper.onBlockChange(data.getPos(),
+                                                data.getBlockState());
+            }
+
+            return;
+        }
+
         if ((module.mode.getValue() != MineMode.Smart || module.sentPacket)
                 && module.mode.getValue() != MineMode.Instant
                 && module.mode.getValue() != MineMode.Civ)

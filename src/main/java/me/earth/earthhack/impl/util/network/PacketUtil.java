@@ -6,19 +6,13 @@ import me.earth.earthhack.impl.core.ducks.network.INetHandlerPlayClient;
 import me.earth.earthhack.impl.core.mixins.network.IEnumConnectionState;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.EnumConnectionState;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.CPacketAnimation;
-import net.minecraft.network.play.client.CPacketClickWindow;
-import net.minecraft.network.play.client.CPacketConfirmTeleport;
-import net.minecraft.network.play.client.CPacketEntityAction;
-import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.network.play.client.CPacketPlayerDigging;
-import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
-import net.minecraft.network.play.client.CPacketUseEntity;
+import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -170,7 +164,7 @@ public class PacketUtil implements Globals
 
     public static void sneak(boolean sneak)
     {
-        mc.player.connection.sendPacket(
+        PingBypass.sendToActualServer(
             new CPacketEntityAction(
                 mc.player,
                 sneak
@@ -228,7 +222,7 @@ public class PacketUtil implements Globals
 
     public static void sendAction(CPacketEntityAction.Action action)
     {
-        mc.player.connection.sendPacket(
+        PingBypass.sendToActualServer(
                 new CPacketEntityAction(mc.player, action));
     }
 

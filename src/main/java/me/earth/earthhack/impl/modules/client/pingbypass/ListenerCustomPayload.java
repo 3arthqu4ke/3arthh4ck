@@ -1,19 +1,28 @@
 package me.earth.earthhack.impl.modules.client.pingbypass;
 
-import me.earth.earthhack.api.event.bus.EventListener;
+import me.earth.earthhack.api.event.bus.instance.Bus;
+import me.earth.earthhack.api.event.events.Event;
 import me.earth.earthhack.impl.commands.packet.util.BufferUtil;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
+import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.client.pingbypass.packets.PayloadManager;
+import me.earth.earthhack.pingbypass.event.S2CCustomPacketEvent;
+import me.earth.earthhack.pingbypass.protocol.PbPacket;
+import me.earth.earthhack.pingbypass.protocol.ProtocolFactory;
+import me.earth.earthhack.pingbypass.protocol.ProtocolFactoryImpl;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 
-final class ListenerCustomPayload extends
-        EventListener<PacketEvent.Receive<SPacketCustomPayload>>
+import java.io.IOException;
+
+final class ListenerCustomPayload extends ModuleListener<
+    PingBypassModule, PacketEvent.Receive<SPacketCustomPayload>>
 {
+    private final ProtocolFactory factory = new ProtocolFactoryImpl();
     private final PayloadManager manager;
 
-    public ListenerCustomPayload(PayloadManager manager)
+    public ListenerCustomPayload(PingBypassModule module, PayloadManager manager)
     {
-        super(PacketEvent.Receive.class, SPacketCustomPayload.class);
+        super(module, PacketEvent.Receive.class, SPacketCustomPayload.class);
         this.manager = manager;
     }
 
@@ -24,8 +33,24 @@ final class ListenerCustomPayload extends
         {
             try
             {
-                manager.onPacket(event.getPacket());
                 event.setCancelled(true);
+                if (module.isOld())
+                {
+                    manager.onPacket(event.getPacket());
+                }
+                else
+                {
+                    PbPacket<?> packet = factory.convert(event.getPacket().getBufferData());
+                    Event customEvent = new S2CCustomPacketEvent<>(packet);
+                    Bus.EVENT_BUS.post(customEvent, packet.getClass());
+                    if (!customEvent.isCancelled()) {
+                        packet.execute(event.getNetworkManager());
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
             }
             finally
             {

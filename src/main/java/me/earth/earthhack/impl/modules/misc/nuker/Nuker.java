@@ -18,6 +18,7 @@ import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.mine.MineUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.SpecialBlocks;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.network.Packet;
@@ -276,7 +277,7 @@ public class Nuker extends Module
 
         if (rotate.getValue() == Rotate.Packet)
         {
-            mc.player.connection.sendPacket(
+            PingBypass.sendToActualServer(
                     new CPacketPlayer
                             .Rotation(rotations[0],
                             rotations[1],

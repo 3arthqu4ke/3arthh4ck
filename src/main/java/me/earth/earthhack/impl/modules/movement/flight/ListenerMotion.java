@@ -10,10 +10,7 @@ import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.movement.flight.mode.FlightMode;
 import me.earth.earthhack.impl.modules.movement.noslowdown.NoSlowDown;
 import me.earth.earthhack.impl.util.minecraft.MovementUtil;
-import me.earth.earthhack.impl.util.network.NetworkUtil;
-import me.earth.earthhack.impl.util.network.PacketUtil;
 import net.minecraft.init.MobEffects;
-import net.minecraft.network.play.client.CPacketEntityAction;
 
 final class ListenerMotion extends ModuleListener<Flight, MotionUpdateEvent> {
     private static final ModuleCache<NoSlowDown> NO_SLOW_DOWN =

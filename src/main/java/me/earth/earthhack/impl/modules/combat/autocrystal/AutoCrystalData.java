@@ -24,7 +24,6 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
     public AutoCrystalData(AutoCrystal module)
     {
         super(module);
-        this.presets.add(new EarthPreset(module));
         register(module.pages, "Structures the Settings in the ClickGui.");
         register(module.place, "If you want to place Crystals or not.");
         register(module.targetMode, Target.DESCRIPTION);
@@ -78,12 +77,29 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
             " Damage the SlowBreakDelay will be applied instead of the normal" +
             " BreakDelay.");
         register(module.slowBreakDelay, "Delay for less damaging crystals.");
-        register(module.instant, "Attacks Crystals in the moment they spawn.");
+        register(module.instant, "Attacks Crystals in the moment they spawn." +
+            " The Future equivalent is probably 'Await'.");
         register(module.asyncCalc, "For Instant: Normally Instant only" +
             " attacks Crystals we've placed, this will also calculate the " +
             "crystals we haven't placed in the moment they spawn.");
         register(module.alwaysCalc, "Ignores if we placed the crystal or not," +
             " will always apply the Async-Calc.");
+        register(module.ncpRange, "Takes NCP reach checks into account." +
+            " You can test if a server has this by manually punching a" +
+            " crystal from different y-levels. If it feels like you can reach" +
+            " further from underneath and the server decreases your range " +
+            "after too many attempts to hit a crystal outside range it's " +
+            "active.");
+        register(module.placeBreakRange, "Checks if a position in place" +
+            " range will also be in break range.");
+        register(module.smartTicks,
+                 "Extrapolates you for the PlaceBreakChange check," +
+                     " checking if you will be in break range of the crystal" +
+                     " in this amount of ticks.");
+        register(module.negativeTicks,
+                 "Similar to Smart-Ticks, but will not place if you are" +
+                     " outside break range for this crystal in this " +
+                     "amount of ticks.");
         register(module.packets, "Amount of crystals to attack per tick.");
         register(module.overrideBreak, "Similar to OverridePlace, will attack" +
             " crystals that deal more than the MaxSelfBreak, but only" +
@@ -366,10 +382,13 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
             " Surround. This setting leaves a crystal there until the next " +
             "DamageSync period.");
 
-        register(module.bExtrapol, "Not yet implemented.");
-        register(module.placeExtrapolation, "Not yet implemented.");
-        register(module.selfExtrapolation, "Not yet implemented.");
-        register(module.fullExtrapol, "Not yet implemented.");
+        register(module.extrapol, "Predicts where the targeted player " +
+            "will be in x ticks. In development!!!");
+        register(module.extrapol, "Same as Extrapolation but for the damage" +
+            " calculation when breaking. Should normally be lower" +
+            " than Extrapolation. In development!!!");
+        register(module.selfExtrapolation,
+                 "If you want to predict your own position.");
 
         register(module.idPredict, "Attacks crystals before the server" +
             " even spawned them, by predicting Entity Ids. This can allow " +

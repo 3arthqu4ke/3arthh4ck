@@ -2,7 +2,7 @@ package me.earth.earthhack.impl.modules.misc.autolog.util;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.client.pingbypass.PingBypass;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.modules.client.pingbypass.guis.GuiConnectingPingBypass;
 import me.earth.earthhack.impl.modules.misc.autolog.AutoLog;
 import me.earth.earthhack.impl.util.text.TextColor;
@@ -18,8 +18,8 @@ import java.io.IOException;
 
 public class LogScreen extends GuiScreen
 {
-    private static final ModuleCache<PingBypass> PINGBYPASS =
-            Caches.getModule(PingBypass.class);
+    private static final ModuleCache<PingBypassModule> PINGBYPASS =
+            Caches.getModule(PingBypassModule.class);
 
     private final AutoLog autoLog;
     private final ServerData data;

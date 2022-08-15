@@ -5,8 +5,9 @@ import me.earth.earthhack.api.register.exception.CantUnregisterException;
 import me.earth.earthhack.api.util.interfaces.Nameable;
 
 import java.util.Collection;
+import java.util.Iterator;
 
-public interface Register<T extends Nameable>
+public interface Register<T extends Nameable> extends Iterable<T>
 {
     void register(T object) throws AlreadyRegisteredException;
 
@@ -17,5 +18,10 @@ public interface Register<T extends Nameable>
     <C extends T> C getByClass(Class<C> clazz);
 
     Collection<T> getRegistered();
+
+    @Override
+    default Iterator<T> iterator() {
+        return getRegistered().iterator();
+    }
 
 }

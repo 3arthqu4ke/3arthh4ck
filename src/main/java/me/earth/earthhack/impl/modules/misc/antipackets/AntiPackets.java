@@ -14,6 +14,9 @@ import me.earth.earthhack.impl.gui.visibility.Visibilities;
 import me.earth.earthhack.impl.modules.misc.antipackets.util.Page;
 import me.earth.earthhack.impl.util.mcp.MappingProvider;
 import me.earth.earthhack.impl.util.network.PacketUtil;
+import me.earth.earthhack.pingbypass.event.PbPacketEvent;
+import me.earth.earthhack.pingbypass.protocol.C2SPacket;
+import me.earth.earthhack.pingbypass.protocol.S2CPacket;
 import net.minecraft.network.Packet;
 
 import java.util.Collection;
@@ -170,6 +173,11 @@ public class AntiPackets extends Module
                             : client.get(event.getPacket().getClass());
         if (s == null)
         {
+            if (event.getPacket() instanceof C2SPacket
+                || event.getPacket() instanceof S2CPacket) {
+                return;
+            }
+
             Earthhack.getLogger().info("Unknown packet: " + event.getPacket()
                                                                  .getClass()
                                                                  .getName());

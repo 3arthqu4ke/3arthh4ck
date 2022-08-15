@@ -30,6 +30,12 @@ public class ValueComponent extends SuppliedComponent
                 return "<...>";
             }
 
+            if (setting instanceof StringSetting
+                && ((StringSetting) setting).isPassword())
+            {
+                return ((StringSetting) setting).censor();
+            }
+
             return setting.getValue().toString();
         });
 

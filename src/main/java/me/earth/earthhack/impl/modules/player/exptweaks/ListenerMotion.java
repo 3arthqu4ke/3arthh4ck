@@ -7,7 +7,7 @@ import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemFood;
-import org.lwjgl.input.Mouse;
+import me.earth.earthhack.pingbypass.input.Mouse;
 
 final class ListenerMotion extends ModuleListener<ExpTweaks, MotionUpdateEvent>
 {

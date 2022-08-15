@@ -4,10 +4,9 @@ import me.earth.earthhack.impl.core.Core;
 import me.earth.earthhack.impl.core.transfomer.patch.EarthhackPatcher;
 import me.earth.earthhack.impl.core.transfomer.patch.patches.*;
 import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 
-@IFMLLoadingPlugin.SortingIndex(Integer.MAX_VALUE)
+//@IFMLLoadingPlugin.SortingIndex(Integer.MAX_VALUE)
 public class EarthhackTransformer implements IClassTransformer
 {
     private boolean changingPriority = true;

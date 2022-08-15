@@ -15,8 +15,9 @@ public class BowSpam extends Module
             register(new BooleanSetting("TPS-Sync", true));
     protected final Setting<Boolean> bowBomb =
             register(new BooleanSetting("BowBomb", false));
-    protected final Setting<Boolean> rape =
-            register(new BooleanSetting("Rape", false));
+    protected final Setting<Boolean> spam =
+            register(new BooleanSetting("Spam", false));
+
     public BowSpam()
     {
         super("BowSpam", Category.Combat);

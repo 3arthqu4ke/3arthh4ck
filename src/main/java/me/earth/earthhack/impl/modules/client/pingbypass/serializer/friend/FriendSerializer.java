@@ -7,8 +7,13 @@ import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.client.event.PlayerEvent;
 import me.earth.earthhack.impl.managers.client.event.PlayerEventType;
+import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.modules.client.pingbypass.serializer.Serializer;
+import me.earth.earthhack.pingbypass.protocol.c2s.C2SClearFriendsPacket;
+import me.earth.earthhack.pingbypass.protocol.c2s.C2SFriendPacket;
 import net.minecraft.network.play.client.CPacketChatMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -21,14 +26,18 @@ import java.util.Set;
 public class FriendSerializer extends SubscriberImpl
         implements Serializer<PlayerEvent>, Globals
 {
+    private static final Logger LOGGER = LogManager.getLogger(FriendSerializer.class);
+
     private final Observer<PlayerEvent> observer = new ListenerFriends(this);
     private final Set<PlayerEvent> changed  = new LinkedHashSet<>();
+    private final PingBypassModule module;
     private boolean cleared;
 
-    public FriendSerializer()
+    public FriendSerializer(PingBypassModule module)
     {
         this.listeners.add(new ListenerTick(this));
         this.listeners.add(new ListenerDisconnect(this));
+        this.module = module;
     }
 
     public void clear()
@@ -41,6 +50,7 @@ public class FriendSerializer extends SubscriberImpl
                 PlayerEvent event = new PlayerEvent(PlayerEventType.ADD, k, v);
                 changed.add(event);
             });
+
             cleared = true;
         }
     }
@@ -58,20 +68,28 @@ public class FriendSerializer extends SubscriberImpl
 
     protected void onTick()
     {
-        if (mc.player != null
-                && mc.getConnection() != null
-                && !changed.isEmpty())
+        if (mc.getConnection() != null)
         {
             if (cleared)
             {
-                mc.getConnection().sendPacket(new CPacketChatMessage("@ServerFriend clear"));
+                LOGGER.info("Clearing friends...");
+                if (module.isOld()) {
+                    mc.getConnection().sendPacket(new CPacketChatMessage("@ServerFriend clear"));
+                } else {
+                    mc.getConnection().sendPacket(new C2SClearFriendsPacket());
+                }
+
                 cleared = false;
             }
 
-            PlayerEvent friend = pollFriend();
-            if (friend != null)
+            if (!changed.isEmpty())
             {
-                serializeAndSend(friend);
+                PlayerEvent friend;
+                int i = 0;
+                while ((friend = pollFriend()) != null && i++ < 500)
+                {
+                    serializeAndSend(friend);
+                }
             }
         }
     }
@@ -79,6 +97,14 @@ public class FriendSerializer extends SubscriberImpl
     @Override
     public void serializeAndSend(PlayerEvent event)
     {
+        if (!module.isOld())
+        {
+            LOGGER.info("Sending C2SFriendPacket " + event.getName());
+            Objects.requireNonNull(mc.getConnection()).sendPacket(
+                new C2SFriendPacket(event));
+            return;
+        }
+
         String command = "@ServerFriend";
         if (event.getType() == PlayerEventType.ADD)
         {
@@ -96,11 +122,14 @@ public class FriendSerializer extends SubscriberImpl
 
     private PlayerEvent pollFriend()
     {
-        if (!changed.isEmpty())
+        synchronized (changed)
         {
-            PlayerEvent friend = changed.iterator().next();
-            changed.remove(friend);
-            return friend;
+            if (!changed.isEmpty())
+            {
+                PlayerEvent friend = changed.iterator().next();
+                changed.remove(friend);
+                return friend;
+            }
         }
 
         return null;

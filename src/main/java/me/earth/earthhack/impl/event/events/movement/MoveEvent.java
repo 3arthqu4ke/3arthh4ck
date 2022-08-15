@@ -1,8 +1,9 @@
 package me.earth.earthhack.impl.event.events.movement;
 
+import me.earth.earthhack.api.event.events.Event;
 import net.minecraft.entity.MoverType;
 
-public class MoveEvent
+public class MoveEvent extends Event
 {
     private final MoverType type;
     private double x;

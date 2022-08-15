@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.modules.combat.autocrystal.helpers;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.MotionTracker;
@@ -19,15 +20,18 @@ public class DamageHelper implements Globals
     private final Setting<Integer> pExtrapolation;
     private final Setting<Boolean> selfExtrapolation;
     private final Setting<Boolean> obbyTerrain;
-    private final PositionHelper positionHelper;
+    private final ExtrapolationHelper positionHelper;
+    private final AutoCrystal module;
 
-    public DamageHelper(PositionHelper positionHelper,
+    public DamageHelper(AutoCrystal module,
+                        ExtrapolationHelper positionHelper,
                         Setting<Boolean> terrainCalc,
                         Setting<Integer> extrapolation,
                         Setting<Integer> bExtrapolation,
                         Setting<Boolean> selfExtrapolation,
                         Setting<Boolean> obbyTerrain)
     {
+        this.module = module;
         this.positionHelper = positionHelper;
         this.terrainCalc       = terrainCalc;
         this.pExtrapolation    = extrapolation;
@@ -38,6 +42,11 @@ public class DamageHelper implements Globals
 
     public float getDamage(Entity crystal)
     {
+        if (module.isSuicideModule())
+        {
+            return 0.0f;
+        }
+
         return getDamage(crystal.posX,
                          crystal.posY,
                          crystal.posZ,
@@ -61,7 +70,8 @@ public class DamageHelper implements Globals
             return getDamage(crystal.posX,
                              crystal.posY,
                              crystal.posZ,
-                             extrapolateEntity(base, bExtrapolation.getValue()),
+                             extrapolateEntity(base, bExtrapolation.getValue(),
+                                               false),
                              base);
         }
 
@@ -70,6 +80,11 @@ public class DamageHelper implements Globals
 
     public float getDamage(BlockPos pos)
     {
+        if (module.isSuicideModule())
+        {
+            return 0.0f;
+        }
+
         return getDamage(pos, RotationUtil.getRotationPlayer());
     }
 
@@ -82,7 +97,8 @@ public class DamageHelper implements Globals
             return getDamage(pos.getX() + 0.5f,
                              pos.getY() + 1,
                              pos.getZ() + 0.5f,
-                             extrapolateEntity(base, pExtrapolation.getValue()),
+                             extrapolateEntity(base, pExtrapolation.getValue(),
+                                               true),
                              base);
         }
 
@@ -116,7 +132,7 @@ public class DamageHelper implements Globals
         if (selfExtrapolation.getValue())
         {
             bb = extrapolateEntity(RotationUtil.getRotationPlayer(),
-                                   pExtrapolation.getValue());
+                                   pExtrapolation.getValue(), true);
         }
         else
         {
@@ -135,7 +151,8 @@ public class DamageHelper implements Globals
     {
         return getObbyDamage(pos,
                              base,
-                             extrapolateEntity(base, pExtrapolation.getValue()),
+                             extrapolateEntity(base, pExtrapolation.getValue(),
+                                               true),
                              world);
     }
 
@@ -154,25 +171,24 @@ public class DamageHelper implements Globals
                 obbyTerrain.getValue());
     }
 
-    public AxisAlignedBB extrapolateEntity(Entity entity, int ticks)
+    public AxisAlignedBB extrapolateEntity(Entity entity, int ticks,
+                                           boolean place)
     {
         if (ticks == 0)
         {
             return entity.getEntityBoundingBox();
         }
 
-        // TODO THIS! earf can you test dis for me i am on my laptop :3
-        // no -_-
-        MotionTracker tracker = positionHelper.getTrackerFromEntity(entity);
-        if (tracker == null) return entity.getEntityBoundingBox();
+        MotionTracker tracker = place
+            ? positionHelper.getTrackerFromEntity(entity)
+            : positionHelper.getBreakTrackerFromEntity(entity);
 
-        MotionTracker copy = new MotionTracker(mc.world, tracker);
-        for (int i = 0; i < ticks; i++)
+        if (tracker == null || !tracker.active)
         {
-            copy.updateSilent();
+            return entity.getEntityBoundingBox();
         }
 
-        return copy.getEntityBoundingBox();
+        return tracker.getEntityBoundingBox();
     }
 
 }

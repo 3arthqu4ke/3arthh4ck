@@ -98,9 +98,9 @@ public class AutoMineCalc implements SafeRunnable, Globals
                     // skip position outside range
                     if (dsq(x, y, z) > rSquare
                         || dsq(x + 0.5f, y + 1, z + 0.5f) >= bSquare
-                            && !RayTraceUtil.canBeSeen(
-                                new Vec3d(x + 0.5f, y + 2.7, z + 0.5f),
-                                RotationUtil.getRotationPlayer()))
+                        && !RayTraceUtil.canBeSeen(
+                        new Vec3d(x + 0.5f, y + 2.7, z + 0.5f),
+                        RotationUtil.getRotationPlayer()))
                     {
                         continue;
                     }
@@ -113,11 +113,11 @@ public class AutoMineCalc implements SafeRunnable, Globals
 
                     IBlockState state = mc.world.getBlockState(mPos);
                     boolean isObbyState = state.getBlock() == Blocks.OBSIDIAN
-                            || state.getBlock() == Blocks.BEDROCK;
+                        || state.getBlock() == Blocks.BEDROCK;
                     if (!obby && !isObbyState
                         || !isObbyState
-                            && !state.getMaterial().isReplaceable()
-                            && !MineUtil.canBreak(state, mPos))
+                        && !state.getMaterial().isReplaceable()
+                        && !MineUtil.canBreak(state, mPos))
                     {
                         continue;
                     }
@@ -125,11 +125,11 @@ public class AutoMineCalc implements SafeRunnable, Globals
                     mPos.setY(y + 1);
                     IBlockState upState = mc.world.getBlockState(mPos);
                     if (upState.getBlock() != Blocks.AIR
-                            && !MineUtil.canBreak(upState, mPos)
+                        && !MineUtil.canBreak(upState, mPos)
                         || upState.getBlock() == Blocks.OBSIDIAN
-                            && !mineObby
+                        && !mineObby
                         || upState.getBlock() != Blocks.AIR
-                            && dsq(x, y + 1, z) > rSquare)
+                        && dsq(x, y + 1, z) > rSquare)
                     {
                         continue;
                     }
@@ -140,11 +140,11 @@ public class AutoMineCalc implements SafeRunnable, Globals
                         mPos.setY(y + 2);
                         upUpState = mc.world.getBlockState(mPos);
                         if (upUpState.getBlock() != Blocks.AIR
-                                && !MineUtil.canBreak(upUpState, mPos)
+                            && !MineUtil.canBreak(upUpState, mPos)
                             || upUpState.getBlock() == Blocks.OBSIDIAN
-                                && !mineObby
+                            && !mineObby
                             || upUpState.getBlock() != Blocks.AIR
-                                && dsq(x, y + 2, z) > rSquare)
+                            && dsq(x, y + 2, z) > rSquare)
                         {
                             continue;
                         }
@@ -157,7 +157,7 @@ public class AutoMineCalc implements SafeRunnable, Globals
                         {
                             mPos.setY(y);
                             if (BBUtil.intersects(
-                                    entity.getEntityBoundingBox(), mPos))
+                                entity.getEntityBoundingBox(), mPos))
                             {
                                 bad = true;
                                 break;
@@ -176,7 +176,7 @@ public class AutoMineCalc implements SafeRunnable, Globals
                         {
                             mPos.setY(y + 2);
                             if (BBUtil.intersects(
-                                    entity.getEntityBoundingBox(), mPos))
+                                entity.getEntityBoundingBox(), mPos))
                             {
                                 bad = true;
                                 break;
@@ -227,13 +227,13 @@ public class AutoMineCalc implements SafeRunnable, Globals
                             }
 
                             float d = DamageUtil.calculate(
-                                                x + 0.5f,
-                                                y + 1,
-                                                z + 0.5f,
-                                                player.getEntityBoundingBox(),
-                                                player,
-                                                helper,
-                                                true);
+                                x + 0.5f,
+                                y + 1,
+                                z + 0.5f,
+                                player.getEntityBoundingBox(),
+                                player,
+                                helper,
+                                true);
 
                             if (d > damage && ((damage = d) > minDamage))
                             {
@@ -244,13 +244,13 @@ public class AutoMineCalc implements SafeRunnable, Globals
                     else
                     {
                         damage = DamageUtil.calculate(
-                                                x + 0.5f,
-                                                y + 1,
-                                                z + 0.5f,
-                                                target.getEntityBoundingBox(),
-                                                target,
-                                                helper,
-                                                true);
+                            x + 0.5f,
+                            y + 1,
+                            z + 0.5f,
+                            target.getEntityBoundingBox(),
+                            target,
+                            helper,
+                            true);
                     }
 
                     if (damage < minDamage
@@ -278,7 +278,7 @@ public class AutoMineCalc implements SafeRunnable, Globals
 
                     maxDamage = damage;
                     constellation = new BigConstellation(
-                            automine, positions, states, target);
+                        automine, positions, states, target);
                 }
             }
         }
@@ -287,10 +287,10 @@ public class AutoMineCalc implements SafeRunnable, Globals
         {
             IConstellation finalConstellation = constellation;
             mc.addScheduledTask(() ->
-            {
-                automine.setFuture(null);
-                automine.offer(finalConstellation);
-            });
+                                {
+                                    automine.setFuture(null);
+                                    automine.offer(finalConstellation);
+                                });
         }
         else
         {

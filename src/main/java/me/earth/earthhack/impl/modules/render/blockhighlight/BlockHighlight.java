@@ -16,6 +16,8 @@ public class BlockHighlight extends BlockESPModule
             register(new BooleanSetting("HitVec", false));
     protected final Setting<Boolean> position =
             register(new BooleanSetting("Position", false));
+    protected final Setting<Boolean> eyes =
+            register(new BooleanSetting("Eyes", false));
 
     /** Name of the current mc.objectMouseOver. */
     protected String current;
