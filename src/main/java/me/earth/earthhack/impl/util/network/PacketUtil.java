@@ -280,11 +280,6 @@ public class PacketUtil implements Globals
 
     /*--------------- Utility for sending CPacketPlayers ---------------*/
 
-    public static void doOnGround(boolean onGround)
-    {
-        mc.player.connection.sendPacket(onGround(onGround));
-    }
-
     public static void doY(double y, boolean onGround)
     {
         doY(mc.player, y, onGround);
@@ -300,7 +295,9 @@ public class PacketUtil implements Globals
                                   double z,
                                   boolean onGround)
     {
-        mc.player.connection.sendPacket(position(x, y, z, onGround));
+        Packet<?> packet = position(x, y, z, onGround);
+        PingBypass.mayAuthorize(packet);
+        mc.player.connection.sendPacket(packet);
     }
 
     public static void doPositionNoEvent(double x,
@@ -315,7 +312,9 @@ public class PacketUtil implements Globals
                                   float pitch,
                                   boolean onGround)
     {
-        mc.player.connection.sendPacket(rotation(yaw, pitch, onGround));
+        Packet<?> packet = rotation(yaw, pitch, onGround);
+        PingBypass.mayAuthorize(packet);
+        mc.player.connection.sendPacket(packet);
     }
 
     public static void doPosRot(double x,
@@ -325,8 +324,9 @@ public class PacketUtil implements Globals
                                 float pitch,
                                 boolean onGround)
     {
-        mc.player.connection.sendPacket(
-                positionRotation(x, y, z, yaw, pitch, onGround));
+        Packet<?> packet = positionRotation(x, y, z, yaw, pitch, onGround);
+        PingBypass.mayAuthorize(packet);
+        mc.player.connection.sendPacket(packet);
     }
 
     public static void doPosRotNoEvent(double x,
