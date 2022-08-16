@@ -1,15 +1,11 @@
 package me.earth.earthhack.impl.gui.click.frame.impl;
 
-import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.gui.click.Click;
 import me.earth.earthhack.impl.gui.click.frame.Frame;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
