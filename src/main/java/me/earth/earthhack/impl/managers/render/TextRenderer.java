@@ -8,6 +8,8 @@ import me.earth.earthhack.impl.modules.client.customfont.FontMod;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 public class TextRenderer implements Globals
@@ -84,7 +86,7 @@ public class TextRenderer implements Globals
         return mc.fontRenderer.getStringWidth(text) * scale;
     }
 
-    public float getStringHeight()
+    public int getStringHeight()
     {
         if (fontMod.isEnabled())
         {
@@ -107,6 +109,16 @@ public class TextRenderer implements Globals
     public void setFontRenderer(Font font, boolean antiAlias, boolean metrics)
     {
         renderer = new CustomFontRenderer(font, antiAlias, metrics);
+    }
+
+    public List<String> listFormattedStringToWidth(String str, int wrapWidth)
+    {
+        if (fontMod.isEnabled())
+        {
+            return renderer.formatString(str, wrapWidth);
+        }
+
+        return mc.fontRenderer.listFormattedStringToWidth(str, wrapWidth);
     }
 
 }

@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.gui.click.component.impl;
 
 import me.earth.earthhack.api.setting.settings.StringSetting;
 import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
@@ -39,7 +40,7 @@ public class StringComponent extends Component {
             string += getIdleSign();
         }
 
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(string, getFinishedX() + 6.5f, getFinishedY() + getHeight() - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT - 1f, getState() ? 0xFFFFFFFF : 0xFFAAAAAA);
+        Managers.TEXT.drawStringWithShadow(string, getFinishedX() + 6.5f, getFinishedY() + getHeight() - Managers.TEXT.getStringHeight() - 1f, getState() ? 0xFFFFFFFF : 0xFFAAAAAA);
     }
 
     @Override
