@@ -1,0 +1,5 @@
+{
+    "name": "PbShowName",
+    "mainClass": "me.earth.pbshowname.PbShowName",
+    "mixinConfig": "mixins.pbshowname.json"
+}

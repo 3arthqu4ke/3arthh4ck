@@ -1,0 +1,9 @@
+{
+    "required": true,
+    "compatibilityLevel": "JAVA_8",
+    "package": "me.earth.pbshowname.mixins",
+    "refmap": "mixins.pbshowname.refmap.json",
+    "mixins": [
+        "MixinServerInfo"
+    ]
+}
