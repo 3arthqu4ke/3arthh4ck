@@ -8,7 +8,6 @@ import me.earth.earthhack.impl.modules.client.customfont.FontMod;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
