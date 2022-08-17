@@ -48,7 +48,7 @@ public class PbNetworkManager extends NetworkManager implements INetworkManager 
 
     @Override
     public DisconnectEvent getDisconnect(ITextComponent component) {
-        return new PbDisconnectEvent(component);
+        return new PbDisconnectEvent(component, this);
     }
 
 }
