@@ -4,7 +4,7 @@ import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.pingbypass.PingBypass;
-import me.earth.earthhack.pingbypass.listeners.AntiSelfConnectService;
+import me.earth.earthhack.pingbypass.listeners.AntiSelfConnectHelper;
 import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.network.PacketBuffer;
@@ -33,7 +33,7 @@ public class ListenerEnablePingBypass extends ModuleListener<PingBypassModule, P
             if (PingBypass.isServer()) {
                 Earthhack.getLogger().warn("PingBypass|Enable on server!");
                 PacketBuffer buf = event.getPacket().getBufferData();
-                byte[] current = AntiSelfConnectService.getCurrent();
+                byte[] current = AntiSelfConnectHelper.getCurrent();
                 if (current != null && buf.readableBytes() == 16) {
                     byte[] bytes = new byte[16];
                     buf.readBytes(bytes);
