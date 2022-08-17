@@ -6,13 +6,11 @@ import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.impl.gui.click.component.Component;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.managers.render.ColorManager;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
@@ -46,7 +44,7 @@ public class ColorComponent extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(getLabel(), getFinishedX() + 5, getFinishedY() + 7 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), 0xFFFFFFFF);
+        Managers.TEXT.drawStringWithShadow(getLabel(), getFinishedX() + 5, getFinishedY() + 7 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
         Render2DUtil.drawBorderedRect(getFinishedX() + getWidth() - 20, getFinishedY() + 4, getFinishedX() + getWidth() - 5, getFinishedY() + 11, 0.5f, getColorSetting().getRGB(), 0xff000000);
 
         setHeight(isColorExtended() ? ((getColorSetting() == Managers.COLOR.getColorSetting() ? 134 : 154) + (getColorSetting().isRainbow() ? 56 : 0)) : 14);
@@ -225,23 +223,23 @@ public class ColorComponent extends Component {
 
             Render2DUtil.drawGradientRect(colorPickerLeft, alphaSliderBottom + 2, colorPickerLeft + ((getWidth() - 16) / 2), alphaSliderBottom + 14, false, getClickGui().get().color.getValue().getRGB(), getClickGui().get().color.getValue().darker().darker().getRGB());
             Render2DUtil.drawBorderedRect(colorPickerLeft, alphaSliderBottom + 2, colorPickerLeft + ((getWidth() - 16) / 2), alphaSliderBottom + 14, 0.5f, 0, 0xff000000);
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Copy", colorPickerLeft + ((getWidth() - 16) / 2) / 2 - (Minecraft.getMinecraft().fontRenderer.getStringWidth("Copy") >> 1), alphaSliderBottom + 8 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), 0xFFFFFFFF);
+            Managers.TEXT.drawStringWithShadow("Copy", colorPickerLeft + ((getWidth() - 16) / 2) / 2 - (Managers.TEXT.getStringWidth("Copy") >> 1), alphaSliderBottom + 8 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
 
             Render2DUtil.drawGradientRect(hueSliderRight - ((getWidth() - 16) / 2), alphaSliderBottom + 2, hueSliderRight, alphaSliderBottom + 14, false, getClickGui().get().color.getValue().getRGB(), getClickGui().get().color.getValue().darker().darker().getRGB());
             Render2DUtil.drawBorderedRect(hueSliderRight - ((getWidth() - 16) / 2), alphaSliderBottom + 2, hueSliderRight, alphaSliderBottom + 14, 0.5f, 0, 0xff000000);
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Paste", hueSliderRight - ((getWidth() - 16) / 4) - (Minecraft.getMinecraft().fontRenderer.getStringWidth("Paste") >> 1), alphaSliderBottom + 8 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), 0xFFFFFFFF);
+            Managers.TEXT.drawStringWithShadow("Paste", hueSliderRight - ((getWidth() - 16) / 4) - (Managers.TEXT.getStringWidth("Paste") >> 1), alphaSliderBottom + 8 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
 
             if (getColorSetting() != Managers.COLOR.getColorSetting()) {
 
                 final boolean hoveredSync = RenderUtil.mouseWithinBounds(mouseX, mouseY, hueSliderRight - 12, alphaSliderBottom + 16, 12, 12);
-                Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Sync", colorPickerLeft, alphaSliderBottom + 17, getColorSetting().isSync() ? 0xFFFFFFFF : 0xFFAAAAAA);
+                Managers.TEXT.drawStringWithShadow("Sync", colorPickerLeft, alphaSliderBottom + 17, getColorSetting().isSync() ? 0xFFFFFFFF : 0xFFAAAAAA);
                 Render2DUtil.drawBorderedRect(hueSliderRight - 12, alphaSliderBottom + 16, hueSliderRight, alphaSliderBottom + 28, 0.5f, getColorSetting().isSync() ? (hoveredSync ? getClickGui().get().color.getValue().brighter().getRGB() : getClickGui().get().color.getValue().getRGB()) : (hoveredSync ? 0x66333333 : 0), 0xff000000);
                 if (getColorSetting().isSync())
                     Render2DUtil.drawCheckMark(hueSliderRight - 6, alphaSliderBottom + 16, 10, 0xFFFFFFFF);
             }
 
             final boolean hoveredRainbow = RenderUtil.mouseWithinBounds(mouseX, mouseY, hueSliderRight - 12, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 16 : 30), 12, 12);
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Rainbow", colorPickerLeft, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 17 : 31), getColorSetting().isRainbow() ? 0xFFFFFFFF : 0xFFAAAAAA);
+            Managers.TEXT.drawStringWithShadow("Rainbow", colorPickerLeft, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 17 : 31), getColorSetting().isRainbow() ? 0xFFFFFFFF : 0xFFAAAAAA);
             Render2DUtil.drawBorderedRect(hueSliderRight - 12, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 16 : 30), hueSliderRight, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 28 : 42), 0.5f, getColorSetting().isRainbow() ? (hoveredRainbow ? getClickGui().get().color.getValue().brighter().getRGB() : getClickGui().get().color.getValue().getRGB()) : (hoveredRainbow ? 0x66333333 : 0), 0xff000000);
             if (getColorSetting().isRainbow()) {
                 Render2DUtil.drawCheckMark(hueSliderRight - 6, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 16 : 30), 10, 0xFFFFFFFF);
@@ -252,16 +250,16 @@ public class ColorComponent extends Component {
                 final float offset = alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 17 : 31);
 
                 final boolean hoveredStatic = RenderUtil.mouseWithinBounds(mouseX, mouseY, hueSliderRight - 12, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 16 : 30) + 14, 12, 12);
-                Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Static", colorPickerLeft, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 17 : 31) + 14, getColorSetting().isStaticRainbow() ? 0xFFFFFFFF : 0xFFAAAAAA);
+                Managers.TEXT.drawStringWithShadow("Static", colorPickerLeft, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 17 : 31) + 14, getColorSetting().isStaticRainbow() ? 0xFFFFFFFF : 0xFFAAAAAA);
                 Render2DUtil.drawBorderedRect(hueSliderRight - 12, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 16 : 30) + 14, hueSliderRight, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 28 : 42) + 14, 0.5f, getColorSetting().isStaticRainbow() ? (hoveredStatic ? getClickGui().get().color.getValue().brighter().getRGB() : getClickGui().get().color.getValue().getRGB()) : (hoveredStatic ? 0x66333333 : 0), 0xff000000);
                 if (getColorSetting().isStaticRainbow())
                     Render2DUtil.drawCheckMark(hueSliderRight - 6, alphaSliderBottom + (getColorSetting() == Managers.COLOR.getColorSetting() ? 16 : 30) + 14, 10, 0xFFFFFFFF);
                 final boolean hoveredSpeed = RenderUtil.mouseWithinBounds(mouseX, mouseY, colorPickerLeft, offset + 28, smallWidth, 12.f);
                 final boolean hoveredSaturation = RenderUtil.mouseWithinBounds(mouseX, mouseY, colorPickerLeft, offset + 42, smallWidth, 12.f);
                 final boolean hoveredBrightness = RenderUtil.mouseWithinBounds(mouseX, mouseY, colorPickerLeft, offset + 56, smallWidth, 12.f);
-                Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Speed: " + ChatFormatting.GRAY + getColorSetting().getRainbowSpeed(), colorPickerLeft, offset + 28, 0xFFFFFFFF);
-                Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Saturation: " + ChatFormatting.GRAY + getColorSetting().getRainbowSaturation(), colorPickerLeft, offset + 42, 0xFFFFFFFF);
-                Minecraft.getMinecraft().fontRenderer.drawStringWithShadow("Brightness: " + ChatFormatting.GRAY + getColorSetting().getRainbowBrightness(), colorPickerLeft, offset + 56, 0xFFFFFFFF);
+                Managers.TEXT.drawStringWithShadow("Speed: " + ChatFormatting.GRAY + getColorSetting().getRainbowSpeed(), colorPickerLeft, offset + 28, 0xFFFFFFFF);
+                Managers.TEXT.drawStringWithShadow("Saturation: " + ChatFormatting.GRAY + getColorSetting().getRainbowSaturation(), colorPickerLeft, offset + 42, 0xFFFFFFFF);
+                Managers.TEXT.drawStringWithShadow("Brightness: " + ChatFormatting.GRAY + getColorSetting().getRainbowBrightness(), colorPickerLeft, offset + 56, 0xFFFFFFFF);
                 Render2DUtil.drawBorderedRect(colorPickerLeft, offset + 36.5f, colorPickerLeft + lengthSpeed, offset + 38.5f, 0.5f, hoveredSpeed ? getClickGui().get().color.getValue().brighter().getRGB() : getClickGui().get().color.getValue().getRGB(), 0xff000000);
                 if (slidingSpeed) {
                     float speedValue = ((mouseX - colorPickerLeft) * (200.f) / smallWidth);

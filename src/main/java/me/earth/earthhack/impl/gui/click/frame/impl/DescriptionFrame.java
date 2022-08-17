@@ -1,14 +1,11 @@
 package me.earth.earthhack.impl.gui.click.frame.impl;
 
-import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.gui.click.Click;
 import me.earth.earthhack.impl.gui.click.frame.Frame;
-import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -54,18 +51,18 @@ public class DescriptionFrame extends Frame
         }
         Render2DUtil.drawRect(getPosX(), getPosY(), getPosX() + getWidth(), getPosY() + getHeight(), Click.CLICK_GUI.get().color.getValue().getRGB());
         Render2DUtil.drawBorderedRect(getPosX(), getPosY(), getPosX() + getWidth(), getPosY() + getHeight(), 0.5f, 0, 0xff000000);
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(getLabel(), getPosX() + 3, getPosY() + getHeight() / 2 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), 0xFFFFFFFF);
+        Managers.TEXT.drawStringWithShadow(getLabel(), getPosX() + 3, getPosY() + getHeight() / 2 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
 
 
-        float y = this.getPosY() + 2 + (getHeight() / 2) + Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
-        List<String> strings = Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(this.getDescription(), (int) this.getWidth() - 1);
+        float y = this.getPosY() + 2 + (getHeight() / 2) + Managers.TEXT.getStringHeightI();
+        List<String> strings = Managers.TEXT.listFormattedStringToWidth(this.getDescription(), (int) this.getWidth() - 1);
 
-        Render2DUtil.drawRect(getPosX(), getPosY() + getHeight(), getPosX() + getWidth(), getPosY() + getHeight() + 3 + (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 1) * strings.size(), 0x92000000);
+        Render2DUtil.drawRect(getPosX(), getPosY() + getHeight(), getPosX() + getWidth(), getPosY() + getHeight() + 3 + (Managers.TEXT.getStringHeightI() + 1) * strings.size(), 0x92000000);
 
         for (String string : strings)
         {
-            Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(string, this.getPosX() + 3, y, 0xFFFFFFFF);
-            y += Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 1;
+            Managers.TEXT.drawStringWithShadow(string, this.getPosX() + 3, y, 0xFFFFFFFF);
+            y += Managers.TEXT.getStringHeightI() + 1;
         }
     }
 

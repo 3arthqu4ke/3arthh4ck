@@ -105,7 +105,7 @@ public class HudPanel extends AbstractGuiElement {
         GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Render2DUtil.drawRect(getX(), getY(), getX() + getWidth(), getY() + getHeight(), 0x92000000);
-        Render2DUtil.drawRect(getX(), getY(), getX() + getWidth(), getY() + Managers.TEXT.getStringHeight(1.0f) + 10, CLICK_GUI.get().color.getValue().getRGB());
+        Render2DUtil.drawRect(getX(), getY(), getX() + getWidth(), getY() + Managers.TEXT.getStringHeightI(1.0f) + 10, CLICK_GUI.get().color.getValue().getRGB());
         Managers.TEXT.drawStringScaled("Hud Elements", getX() + (getWidth() / 2) - (Managers.TEXT.getStringWidthScaled("Hud Elements", 1.0f) / 2.0f), getY() + 5, Color.WHITE.getRGB(), true, 1.0f);
 
         float yOffset = 0;
@@ -115,7 +115,7 @@ public class HudPanel extends AbstractGuiElement {
         for (HudElementButton button : elementButtons) {
             button.setX(getX());
             button.setWidth(getWidth());
-            button.setY(getY() + Managers.TEXT.getStringHeight() + 12 + yOffset);
+            button.setY(getY() + Managers.TEXT.getStringHeightI() + 12 + yOffset);
             button.draw(mouseX, mouseY, partialTicks);
             yOffset += button.getHeight() + 1;
         }

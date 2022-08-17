@@ -17,7 +17,7 @@ public class HudElementButton extends AbstractGuiElement {
     private final HudElement element;
 
     public HudElementButton(HudElement element) {
-        super(element.getName(), Managers.TEXT.getStringWidth(element.getName()), Managers.TEXT.getStringHeight());
+        super(element.getName(), Managers.TEXT.getStringWidth(element.getName()), Managers.TEXT.getStringHeightI());
         this.element = element;
     }
 
@@ -50,7 +50,7 @@ public class HudElementButton extends AbstractGuiElement {
 
     @Override
     public float getHeight() {
-        return Managers.TEXT.getStringHeight();
+        return Managers.TEXT.getStringHeightI();
     }
 
 }

@@ -147,15 +147,15 @@ public class HUD extends Module {
                     final String label = I18n.format(potion.getName()) + (effect.getAmplifier() > 0 ? " " + (effect.getAmplifier() + 1) : "") + ChatFormatting.GRAY + " " + Potion.getPotionDurationString(effect, 1.0F);
                     GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
                     final int x = width - 2 - RENDERER.getStringWidth(label);
-                    renderPotionText(label, x, height - 2 - RENDERER.getStringHeight() - offset - animationY, effect.getPotion());
-                    offset += RENDERER.getStringHeight() + 3;
+                    renderPotionText(label, x, height - 2 - RENDERER.getStringHeightI() - offset - animationY, effect.getPotion());
+                    offset += RENDERER.getStringHeightI() + 3;
                 }
             }
         }
         if (speed.getValue()) {
             String text = "Speed " + TextColor.GRAY + MathUtil.round(Managers.SPEED.getSpeed(), 2) + " km/h";
-            renderText(text, width - 2 - RENDERER.getStringWidth(text), height - 2 - RENDERER.getStringHeight() - offset - animationY);
-            offset += RENDERER.getStringHeight() + 3;
+            renderText(text, width - 2 - RENDERER.getStringWidth(text), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
+            offset += RENDERER.getStringHeightI() + 3;
         }
         if (tps.getValue()) {
             String tps = "TPS " + TextColor.GRAY + MathUtil.round(Managers.TPS.getTps(), 2);
@@ -164,17 +164,17 @@ public class HUD extends Module {
                 tps += TextColor.WHITE + " [" + TextColor.GRAY + MathUtil.round(Managers.TPS.getCurrentTps(), 2) + TextColor.WHITE + "]";
             }
 
-            renderText(tps, width - 2 - RENDERER.getStringWidth(tps), height - 2 - RENDERER.getStringHeight() - offset - animationY);
-            offset += RENDERER.getStringHeight() + 3;
+            renderText(tps, width - 2 - RENDERER.getStringWidth(tps), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
+            offset += RENDERER.getStringHeightI() + 3;
         }
         if (fps.getValue()) {
             String fps = "FPS " + TextColor.GRAY + Minecraft.getDebugFPS();
-            renderText(fps, width - 2 - RENDERER.getStringWidth(fps), height - 2 - RENDERER.getStringHeight() - offset - animationY);
-            offset += RENDERER.getStringHeight() + 3;
+            renderText(fps, width - 2 - RENDERER.getStringWidth(fps), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
+            offset += RENDERER.getStringHeightI() + 3;
         }
         if (ping.getValue()) {
             String ping = "Ping " + TextColor.GRAY + ServerUtil.getPing();
-            renderText(ping, width - 2 - RENDERER.getStringWidth(ping), height - 2 - RENDERER.getStringHeight() - offset - animationY);
+            renderText(ping, width - 2 - RENDERER.getStringWidth(ping), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
         }
 
         if (coordinates.getValue()) {
@@ -187,9 +187,9 @@ public class HUD extends Module {
                     y,
                     z,
                     z / 8) : String.format(ChatFormatting.PREFIX_CODE + "f%s" + ChatFormatting.PREFIX_CODE + "8, " + ChatFormatting.PREFIX_CODE + "f%s" + ChatFormatting.PREFIX_CODE + "8, " + ChatFormatting.PREFIX_CODE + "f%s", x, y, z));
-            renderText(coords, 2, height - 2 - RENDERER.getStringHeight() - animationY);
+            renderText(coords, 2, height - 2 - RENDERER.getStringHeightI() - animationY);
             final String dir = RotationUtil.getDirection4D(false);
-            renderText(dir, 2, height - 3 - RENDERER.getStringHeight() * 2 - animationY);
+            renderText(dir, 2, height - 3 - RENDERER.getStringHeightI() * 2 - animationY);
         }
         renderArmor();
 

@@ -80,6 +80,10 @@ public class Management extends Module
             .setComplexity(Complexity.Expert);
         register(new NumberSetting<>("EntityTracker-Updates", 2.0, 0.01, 1000.0))
             .setComplexity(Complexity.Expert);
+        // TODO: kinda ugly that this is here
+        register(new BooleanSetting("PB-SetPos", true))
+            .setComplexity(Complexity.Expert);
+
         this.setData(new ManagementData(this));
         this.clear.addObserver(event ->
         {

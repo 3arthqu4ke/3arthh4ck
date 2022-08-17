@@ -24,6 +24,7 @@ public class TickShift extends Module
     private final Setting<Boolean> sneaking = register(new BooleanSetting("Sneaking", false));
     private final Setting<Boolean> cancelGround = register(new BooleanSetting("CancelGround", false));
     private final Setting<Boolean> cancelRotations = register(new BooleanSetting("CancelRotation", false));
+    private final Setting<Boolean> fullResetOnPacket = register(new BooleanSetting("FullResetOnPacket", false));
     private final Setting<Integer> lagTime = register(new NumberSetting<>("LagTime", 1000, 0, 10_000));
 
     private int ticks;
@@ -125,6 +126,9 @@ public class TickShift extends Module
         }
 
         ticks = ticks <= 0 ? 0 : ticks - 1;
+        if (fullResetOnPacket.getValue() && Managers.TIMER.getSpeed() == 1.0f) {
+            ticks = 0;
+        }
     }
 
     private void reset()

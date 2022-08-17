@@ -31,7 +31,7 @@ public class FontMod extends Module
     protected final Setting<FontStyle> fontStyle =
             register(new EnumSetting<>("FontStyle", FontStyle.Plain));
     protected final Setting<Integer> fontSize    =
-            register(new NumberSetting<>("FontSize", 18, 15, 25));
+            register(new NumberSetting<>("FontSize", 18, 1, 64));
     protected final Setting<Boolean> antiAlias   =
             register(new BooleanSetting("AntiAlias", true));
     protected final Setting<Boolean> metrics     =

@@ -11,7 +11,7 @@ public class Welcomer extends HudElement {
     public static String text = "welcome to phobro hack megyn";
 
     public Welcomer() {
-        super("Welcomer", mc.displayWidth / 2.0f - Managers.TEXT.getStringWidth(text) / 2.0f, 2, Managers.TEXT.getStringWidth(text), Managers.TEXT.getStringHeight());
+        super("Welcomer", mc.displayWidth / 2.0f - Managers.TEXT.getStringWidth(text) / 2.0f, 2, Managers.TEXT.getStringWidth(text), Managers.TEXT.getStringHeightI());
     }
 
     @Override
@@ -26,14 +26,14 @@ public class Welcomer extends HudElement {
     public void guiUpdate(int mouseX, int mouseY, float partialTicks) {
         super.guiUpdate(mouseX, mouseY, partialTicks);
         setWidth(Managers.TEXT.getStringWidth(text));
-        setHeight(Managers.TEXT.getStringHeight());
+        setHeight(Managers.TEXT.getStringHeightI());
     }
 
     @Override
     public void hudUpdate(float partialTicks) {
         super.hudUpdate(partialTicks);
         setWidth(Managers.TEXT.getStringWidth(text));
-        setHeight(Managers.TEXT.getStringHeight());
+        setHeight(Managers.TEXT.getStringHeightI());
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Welcomer extends HudElement {
 
     @Override
     public float getHeight() {
-        return Managers.TEXT.getStringHeight();
+        return Managers.TEXT.getStringHeightI();
     }
 
 

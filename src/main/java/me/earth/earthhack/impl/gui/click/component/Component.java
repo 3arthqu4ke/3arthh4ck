@@ -3,7 +3,6 @@ package me.earth.earthhack.impl.gui.click.component;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.gui.click.Click;
 import me.earth.earthhack.impl.gui.hud.rewrite.HudEditorGui;
-import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 

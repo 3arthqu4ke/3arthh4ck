@@ -4,8 +4,8 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.util.EnumHelper;
 import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.RenderUtil;
-import net.minecraft.client.Minecraft;
 
 public class EnumComponent<E extends Enum<E>> extends Component {
     private final EnumSetting<E> enumSetting;
@@ -24,7 +24,7 @@ public class EnumComponent<E extends Enum<E>> extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(getLabel() + ": " +ChatFormatting.GRAY + getEnumSetting().getValue().name(), getFinishedX() + 5, getFinishedY() + getHeight() / 2 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), 0xFFFFFFFF);
+        Managers.TEXT.drawStringWithShadow(getLabel() + ": " +ChatFormatting.GRAY + getEnumSetting().getValue().name(), getFinishedX() + 5, getFinishedY() + getHeight() / 2 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
     }
 
     @Override

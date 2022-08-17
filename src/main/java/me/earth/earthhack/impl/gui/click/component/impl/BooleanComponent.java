@@ -2,9 +2,9 @@ package me.earth.earthhack.impl.gui.click.component.impl;
 
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
-import net.minecraft.client.Minecraft;
 
 public class BooleanComponent extends Component {
     private final BooleanSetting booleanSetting;
@@ -24,7 +24,7 @@ public class BooleanComponent extends Component {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         final boolean hovered = RenderUtil.mouseWithinBounds(mouseX, mouseY, getFinishedX() + getWidth() - 17,getFinishedY() + 1,12,getHeight() - 2);
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(getLabel(), getFinishedX() + 5, getFinishedY() + getHeight() / 2 - (Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT >> 1), getBooleanSetting().getValue() ? 0xFFFFFFFF : 0xFFAAAAAA);
+        Managers.TEXT.drawStringWithShadow(getLabel(), getFinishedX() + 5, getFinishedY() + getHeight() / 2 - (Managers.TEXT.getStringHeightI() >> 1), getBooleanSetting().getValue() ? 0xFFFFFFFF : 0xFFAAAAAA);
         Render2DUtil.drawBorderedRect(getFinishedX() + getWidth() - 17,getFinishedY() + 1,getFinishedX() + getWidth() - 5,getFinishedY() + getHeight() - 1,0.5f,getBooleanSetting().getValue() ? ( hovered ? getClickGui().get().color.getValue().brighter().getRGB():getClickGui().get().color.getValue().getRGB()):(hovered ? 0x66333333:0),0xff000000);
         if (getBooleanSetting().getValue())
             Render2DUtil.drawCheckMark(getFinishedX() + getWidth() - 11,getFinishedY() + 1,10,0xFFFFFFFF);
