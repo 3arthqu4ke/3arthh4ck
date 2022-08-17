@@ -38,6 +38,10 @@ public class PingBypassConfig {
         return Boolean.parseBoolean(getProperty("pb.enable.javascript", "false"));
     }
 
+    public boolean enableQuitCommand() {
+        return Boolean.parseBoolean(getProperty("pb.enable.quit", "false"));
+    }
+
     public int getCompressionThreshold() {
         return Integer.parseInt(getProperty("pb.compression.threshold", "256"));
     }
