@@ -646,6 +646,28 @@ public class AutoCrystal extends Module
     public final Setting<Boolean> doubleExtraCheck =
             register(new BooleanSetting("DoubleExtraCheck", true))
                 .setComplexity(Complexity.Expert);
+
+    public final Setting<Boolean> avgPlaceDamage =
+            register(new BooleanSetting("AvgPlaceExtra", false))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Double> placeExtraWeight =
+        register(new NumberSetting<>("P-Extra-Weight", 1.0, 0.0, 5.0))
+            .setComplexity(Complexity.Medium);
+    public final Setting<Double> placeNormalWeight =
+        register(new NumberSetting<>("P-Norm-Weight", 1.0, 0.0, 5.0))
+            .setComplexity(Complexity.Medium);
+
+    public final Setting<Boolean> avgBreakExtra =
+            register(new BooleanSetting("AvgBreakExtra", false))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Double> breakExtraWeight =
+        register(new NumberSetting<>("B-Extra-Weight", 1.0, 0.0, 5.0))
+            .setComplexity(Complexity.Medium);
+    public final Setting<Double> breakNormalWeight =
+        register(new NumberSetting<>("B-Norm-Weight", 1.0, 0.0, 5.0))
+            .setComplexity(Complexity.Medium);
+
+
     public final Setting<PushMode> pushOutOfBlocks =
             register(new EnumSetting<>("PushOutOfBlocks", PushMode.None))
                 .setComplexity(Complexity.Expert);
