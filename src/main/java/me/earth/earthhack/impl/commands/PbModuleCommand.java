@@ -30,7 +30,7 @@ public class PbModuleCommand extends Command implements Globals
             return;
         }
 
-        moduleCommand.execute(args);
+        moduleCommand.execute(array);
     }
 
     @Override
