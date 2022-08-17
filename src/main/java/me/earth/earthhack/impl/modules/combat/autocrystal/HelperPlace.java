@@ -164,19 +164,19 @@ public class HelperPlace implements Globals
         }
 
         PositionData data = PositionData.create(
-                            pos,
-                            obby,
-                            module.rotate.getValue() != ACRotate.None
+            pos,
+            obby,
+            module.rotate.getValue() != ACRotate.None
                                 && module.rotate.getValue() != ACRotate.Break
                                 ? 0 // TODO: ???
                                 : module.helpingBlocks.getValue(),
-                            module.newVer.getValue(),
-                            module.newVerEntities.getValue(),
-                            module.deathTime.getValue(),
-                            entities,
-                            module.lava.getValue(),
-                            module.water.getValue(),
-                            module.ignoreLavaItems.getValue());
+            module.newVer.getValue(),
+            module.newVerEntities.getValue(),
+            module.deathTime.getValue(),
+            entities,
+            module.lava.getValue(),
+            module.water.getValue(),
+            module.ignoreLavaItems.getValue(), module);
 
         if (data.isBlocked() && !module.fallBack.getValue())
         {
@@ -385,7 +385,7 @@ public class HelperPlace implements Globals
 
         if (positionData.isForce())
         {
-            ForcePosition forcePosition = new ForcePosition(positionData);
+            ForcePosition forcePosition = new ForcePosition(positionData, module);
             for (EntityPlayer forced : positionData.getForced())
             {
                 data.addForceData(forced, forcePosition);
@@ -394,7 +394,7 @@ public class HelperPlace implements Globals
 
         if (isAntiTotem)
         {
-            data.addAntiTotem(new AntiTotemData(positionData));
+            data.addAntiTotem(new AntiTotemData(positionData, module));
         }
 
         if (positionData.getFacePlacer() != null

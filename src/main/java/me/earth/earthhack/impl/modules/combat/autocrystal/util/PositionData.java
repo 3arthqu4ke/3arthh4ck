@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.modules.combat.autocrystal.util;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.entity.IEntity;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
 import me.earth.earthhack.impl.util.math.path.BasePath;
 import me.earth.earthhack.impl.util.math.path.BlockingEntity;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
@@ -26,6 +27,7 @@ import java.util.Set;
 public class PositionData extends BasePath
         implements Globals, Comparable<PositionData>
 {
+    private final AutoCrystal module;
     private final List<EntityPlayer> forced = new ArrayList<>();
     private final Set<EntityPlayer> antiTotems;
     private EntityPlayer target;
@@ -43,14 +45,18 @@ public class PositionData extends BasePath
     /**
      * Use the factory method.
      */
-    public PositionData(BlockPos pos, int blocks)
+    public PositionData(BlockPos pos, int blocks,
+                        AutoCrystal module)
     {
-        this(pos, blocks, new HashSet<>());
+        this(pos, blocks, module, new HashSet<>());
     }
 
-    public PositionData(BlockPos pos, int blocks, Set<EntityPlayer> antiTotems)
+    public PositionData(BlockPos pos, int blocks,
+                        AutoCrystal module,
+                        Set<EntityPlayer> antiTotems)
     {
         super(RotationUtil.getRotationPlayer(), pos, blocks);
+        this.module = module;
         this.antiTotems = antiTotems;
         this.minDiff = Float.MAX_VALUE;
     }
@@ -200,9 +206,10 @@ public class PositionData extends BasePath
                                       List<Entity> entities,
                                       boolean lava,
                                       boolean water,
-                                      boolean lavaItems)
+                                      boolean lavaItems,
+                                      AutoCrystal module)
     {
-        PositionData data = new PositionData(pos, helpingBlocks);
+        PositionData data = new PositionData(pos, helpingBlocks, module);
         data.state = mc.world.getBlockState(pos);
         if (data.state.getBlock() != Blocks.BEDROCK
                 && data.state.getBlock() != Blocks.OBSIDIAN)
@@ -291,7 +298,7 @@ public class PositionData extends BasePath
             if (entity == null
                 || spawning && !entity.preventEntitySpawning
                 || dead && EntityUtil.isDead(entity)
-                || !entity.getEntityBoundingBox().intersects(bb))
+                || !data.module.bbBlockingHelper.blocksBlock(bb, entity))
             {
                 continue;
             }

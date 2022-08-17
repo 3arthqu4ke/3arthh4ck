@@ -384,9 +384,18 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
 
         register(module.extrapol, "Predicts where the targeted player " +
             "will be in x ticks. In development!!!");
-        register(module.extrapol, "Same as Extrapolation but for the damage" +
+        register(module.bExtrapol, "Same as Extrapolation but for the damage" +
             " calculation when breaking. Should normally be lower" +
             " than Extrapolation. In development!!!");
+        register(module.blockExtrapol, "Same as Extrapolation but for checking"
+            + " if the entity blocks a crystal placement. In development!!!");
+        register(module.doubleExtraCheck, "Turn on if you dont entirely trust"
+            + " the BlockExtrapolation, will add a normal blocking check.");
+        register(module.blockExtraMode, "-Extrapolated: checks if the" +
+            " predicted position will block the placement of a crystal.\n" +
+            "-Pessimistic: checks if one of the current or extrapolated" +
+            " positions block.\n-Optimistic: checks that both the" +
+            " extrapolated and current position block the placement.");
         register(module.selfExtrapolation,
                  "If you want to predict your own position.");
 

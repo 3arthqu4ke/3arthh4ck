@@ -1,5 +1,6 @@
 package me.earth.earthhack.impl.modules.combat.autocrystal.util;
 
+import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Set;
@@ -9,9 +10,9 @@ public class AntiTotemData extends PositionData
 {
     private final Set<PositionData> corresponding = new TreeSet<>();
 
-    public AntiTotemData(PositionData data)
+    public AntiTotemData(PositionData data, AutoCrystal module)
     {
-        super(data.getPos(), data.getMaxLength(), data.getAntiTotems());
+        super(data.getPos(), data.getMaxLength(), module, data.getAntiTotems());
     }
 
     public void addCorrespondingData(PositionData data)

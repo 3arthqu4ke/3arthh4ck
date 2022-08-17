@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.modules.player.spectate.EntityPlayerNoInterp;
 import me.earth.earthhack.impl.modules.render.nametags.IEntityNoNametag;
-import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -37,15 +36,6 @@ public class MotionTracker extends EntityPlayerNoInterp
         super(worldIn, new GameProfile(from.getGameProfile().getId(), "Motion-Tracker-" + from.getName()));
         this.tracked = from;
         this.setEntityId(from.getEntityId() * -1);
-        this.copyLocationAndAnglesFrom(from);
-    }
-
-    public MotionTracker(World worldIn, MotionTracker from)
-    {
-        this(worldIn, from.tracked);
-        this.movementInput = from.movementInput;
-        this.safe = from.safe;
-        this.setEntityId(from.getEntityId());
         this.copyLocationAndAnglesFrom(from);
     }
 
@@ -87,11 +77,6 @@ public class MotionTracker extends EntityPlayerNoInterp
 
     public void updateFromTrackedEntity()
     {
-        // only push the player out of blocks if he was not phasing before
-        if (wasPhasing) {
-            ChatUtil.sendMessage(tracked.getName() + " was phasing!");
-        }
-
         this.motionX = tracked.motionX;
         this.motionY = tracked.motionY;
         this.motionZ = tracked.motionZ;

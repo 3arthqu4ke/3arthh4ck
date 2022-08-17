@@ -11,6 +11,10 @@ public interface IEntityPlayer {
 
     MotionTracker getBreakMotionTracker();
 
+    void setBlockMotionTracker(MotionTracker motionTracker);
+
+    MotionTracker getBlockMotionTracker();
+
     int getTicksWithoutMotionUpdate();
 
     void setTicksWithoutMotionUpdate(int ticksWithoutMotionUpdate);

@@ -636,6 +636,16 @@ public class AutoCrystal extends Module
     public final Setting<Integer> bExtrapol =
             register(new NumberSetting<>("Break-Extrapolation", 0, 0, 50))
                 .setComplexity(Complexity.Medium);
+    public final Setting<Integer> blockExtrapol =
+            register(new NumberSetting<>("Block-Extrapolation", 0, 0, 50))
+                .setComplexity(Complexity.Medium);
+    public final Setting<BlockExtrapolationMode> blockExtraMode =
+            register(new EnumSetting<>("BlockExtraMode",
+                                       BlockExtrapolationMode.Pessimistic))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Boolean> doubleExtraCheck =
+            register(new BooleanSetting("DoubleExtraCheck", true))
+                .setComplexity(Complexity.Expert);
     public final Setting<PushMode> pushOutOfBlocks =
             register(new EnumSetting<>("PushOutOfBlocks", PushMode.None))
                 .setComplexity(Complexity.Expert);
@@ -835,7 +845,7 @@ public class AutoCrystal extends Module
             new IDHelper();
 
     protected final HelperLiquids liquidHelper =
-            new HelperLiquids();
+            new HelperLiquids(this);
 
     protected final PositionHistoryHelper positionHistoryHelper =
             new PositionHistoryHelper();
@@ -860,6 +870,9 @@ public class AutoCrystal extends Module
 
     protected final RotationCanceller rotationCanceller =
             new RotationCanceller(this, maxCancel);
+
+    public HelperEntityBlocksPlace bbBlockingHelper =
+        new HelperEntityBlocksPlace(this);
 
     protected final ThreadHelper threadHelper =
             new ThreadHelper(this,

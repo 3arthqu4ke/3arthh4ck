@@ -9,7 +9,6 @@ import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.mine.MineUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
-import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,6 +23,13 @@ import java.util.List;
 
 public class HelperLiquids implements Globals
 {
+    private final AutoCrystal module;
+
+    public HelperLiquids(AutoCrystal module) {
+        this.module = module;
+    }
+
+
     public PlaceData calculate(HelperPlace placeHelper,
                                PlaceData placeData,
                                List<EntityPlayer> friends,
@@ -74,7 +80,7 @@ public class HelperLiquids implements Globals
                         continue;
                     }
 
-                    if (entity.getEntityBoundingBox().intersects(bb))
+                    if (module.bbBlockingHelper.blocksBlock(bb, entity))
                     {
                         found = true;
                         break;

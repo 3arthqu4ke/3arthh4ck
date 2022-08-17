@@ -48,6 +48,8 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
     @Unique
     private MotionTracker breakMotionTracker;
     @Unique
+    private MotionTracker blockMotionTracker;
+    @Unique
     private int ticksWithoutMotionUpdate;
 
     @Override
@@ -68,6 +70,16 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
     @Override
     public void setBreakMotionTracker(MotionTracker breakMotionTracker) {
         this.breakMotionTracker = breakMotionTracker;
+    }
+
+    @Override
+    public MotionTracker getBlockMotionTracker() {
+        return blockMotionTracker;
+    }
+
+    @Override
+    public void setBlockMotionTracker(MotionTracker blockMotionTracker) {
+        this.blockMotionTracker = blockMotionTracker;
     }
 
     @Override
