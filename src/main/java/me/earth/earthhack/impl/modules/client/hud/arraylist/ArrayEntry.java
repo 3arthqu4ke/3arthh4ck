@@ -36,7 +36,7 @@ public class ArrayEntry implements Globals {
         final float xSpeed = textWidth / (Minecraft.getDebugFPS() >> 2);
         GlStateManager.pushMatrix();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        RenderUtil.scissor(desiredX - textWidth - 1, desiredY - 1, desiredX + 1, desiredY + HUD.RENDERER.getStringHeight() + 3);
+        RenderUtil.scissor(desiredX - textWidth - 1, desiredY - 1, desiredX + 1, desiredY + HUD.RENDERER.getStringHeightI() + 3);
         HUD_MODULE_CACHE.get().renderText(ModuleUtil.getHudName(getModule()), getX(), desiredY);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();

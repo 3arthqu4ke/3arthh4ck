@@ -86,7 +86,7 @@ public class TextRenderer implements Globals
         return mc.fontRenderer.getStringWidth(text) * scale;
     }
 
-    public int getStringHeight()
+    public int getStringHeightI()
     {
         if (fontMod.isEnabled())
         {
@@ -96,7 +96,18 @@ public class TextRenderer implements Globals
         return mc.fontRenderer.FONT_HEIGHT;
     }
 
-    public float getStringHeight(float scale)
+    // this is here to not break compatibility with plugins that still use it
+    public float getStringHeight()
+    {
+        if (fontMod.isEnabled())
+        {
+            return renderer.getHeight();
+        }
+
+        return mc.fontRenderer.FONT_HEIGHT;
+    }
+
+    public float getStringHeightI(float scale)
     {
         if (fontMod.isEnabled())
         {

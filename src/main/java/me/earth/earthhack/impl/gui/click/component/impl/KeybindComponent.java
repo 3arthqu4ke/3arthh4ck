@@ -7,7 +7,6 @@ import me.earth.earthhack.impl.gui.click.component.Component;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
-import net.minecraft.client.Minecraft;
 import me.earth.earthhack.pingbypass.input.Keyboard;
 
 public class KeybindComponent extends Component {
@@ -29,7 +28,7 @@ public class KeybindComponent extends Component {
         super.drawScreen(mouseX, mouseY, partialTicks);
         final boolean hovered = RenderUtil.mouseWithinBounds(mouseX, mouseY, getFinishedX() + 5, getFinishedY() + 1, getWidth() - 10, getHeight() - 2);
         Render2DUtil.drawBorderedRect(getFinishedX() + 4.5f, getFinishedY() + 1.0f, getFinishedX() + getWidth() - 4.5f, getFinishedY() + getHeight() - 0.5f, 0.5f, hovered ? 0x66333333:0, 0xff000000);
-        Managers.TEXT.drawStringWithShadow(isBinding() ? "Press a key..." : getBindSetting().getName() + ": " + ChatFormatting.GRAY+ getBindSetting().getValue(), getFinishedX() + 6.5f, getFinishedY() + getHeight() - Managers.TEXT.getStringHeight() - 1f, 0xFFFFFFFF);
+        Managers.TEXT.drawStringWithShadow(isBinding() ? "Press a key..." : getBindSetting().getName() + ": " + ChatFormatting.GRAY+ getBindSetting().getValue(), getFinishedX() + 6.5f, getFinishedY() + getHeight() - Managers.TEXT.getStringHeightI() - 1f, 0xFFFFFFFF);
     }
 
     @Override

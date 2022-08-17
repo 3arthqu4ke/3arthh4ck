@@ -51,18 +51,18 @@ public class DescriptionFrame extends Frame
         }
         Render2DUtil.drawRect(getPosX(), getPosY(), getPosX() + getWidth(), getPosY() + getHeight(), Click.CLICK_GUI.get().color.getValue().getRGB());
         Render2DUtil.drawBorderedRect(getPosX(), getPosY(), getPosX() + getWidth(), getPosY() + getHeight(), 0.5f, 0, 0xff000000);
-        Managers.TEXT.drawStringWithShadow(getLabel(), getPosX() + 3, getPosY() + getHeight() / 2 - (Managers.TEXT.getStringHeight() >> 1), 0xFFFFFFFF);
+        Managers.TEXT.drawStringWithShadow(getLabel(), getPosX() + 3, getPosY() + getHeight() / 2 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
 
 
-        float y = this.getPosY() + 2 + (getHeight() / 2) + Managers.TEXT.getStringHeight();
+        float y = this.getPosY() + 2 + (getHeight() / 2) + Managers.TEXT.getStringHeightI();
         List<String> strings = Managers.TEXT.listFormattedStringToWidth(this.getDescription(), (int) this.getWidth() - 1);
 
-        Render2DUtil.drawRect(getPosX(), getPosY() + getHeight(), getPosX() + getWidth(), getPosY() + getHeight() + 3 + (Managers.TEXT.getStringHeight() + 1) * strings.size(), 0x92000000);
+        Render2DUtil.drawRect(getPosX(), getPosY() + getHeight(), getPosX() + getWidth(), getPosY() + getHeight() + 3 + (Managers.TEXT.getStringHeightI() + 1) * strings.size(), 0x92000000);
 
         for (String string : strings)
         {
             Managers.TEXT.drawStringWithShadow(string, this.getPosX() + 3, y, 0xFFFFFFFF);
-            y += Managers.TEXT.getStringHeight() + 1;
+            y += Managers.TEXT.getStringHeightI() + 1;
         }
     }
 

@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -128,7 +127,7 @@ final class ListenerRender extends ModuleListener<Nametags, Render3DEvent>
         GlStateManager.enableBlend();
 
         RenderUtil.prepare(-nameWidth - 1,
-                           -Managers.TEXT.getStringHeight(),
+                           -Managers.TEXT.getStringHeightI(),
                            nameWidth + 2,
                            1.0f,
                            1.8F,
@@ -140,7 +139,7 @@ final class ListenerRender extends ModuleListener<Nametags, Render3DEvent>
         Managers.TEXT.drawStringWithShadow(
                 nametag.nameString,
                 -nameWidth,
-                -(Managers.TEXT.getStringHeight() - 1),
+                -(Managers.TEXT.getStringHeightI() - 1),
                 nametag.nameColor);
 
         xOffset = -nametag.stacks.size() * 8
@@ -179,13 +178,13 @@ final class ListenerRender extends ModuleListener<Nametags, Render3DEvent>
         if (module.durability.getValue() && sr.isDamageable())
         {
             sr.renderDurability(xOffset, fontOffset);
-            fontOffset -= Managers.TEXT.getStringHeight();
+            fontOffset -= Managers.TEXT.getStringHeightI();
         }
         else
         {
             if (renderDurability)
             {
-                fontOffset -= Managers.TEXT.getStringHeight();
+                fontOffset -= Managers.TEXT.getStringHeightI();
             }
         }
 

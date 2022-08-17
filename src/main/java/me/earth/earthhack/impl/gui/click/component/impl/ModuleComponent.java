@@ -1,6 +1,5 @@
 package me.earth.earthhack.impl.gui.click.component.impl;
 
-import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.data.ModuleData;
 import me.earth.earthhack.api.setting.Setting;
@@ -8,13 +7,10 @@ import me.earth.earthhack.api.setting.settings.*;
 import me.earth.earthhack.impl.gui.click.component.Component;
 import me.earth.earthhack.impl.gui.visibility.Visibilities;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.modules.client.configs.ConfigHelperModule;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
-import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -101,9 +97,9 @@ public class ModuleComponent extends Component {
         }
 
         String label = module instanceof ConfigHelperModule && ((ConfigHelperModule) module).isDeleted() ? TextColor.RED + getLabel() : getLabel();
-        Managers.TEXT.drawStringWithShadow(label, getFinishedX() + 4, getFinishedY() + getHeight() / 2 - (Managers.TEXT.getStringHeight() >> 1), getModule().isEnabled() ? 0xFFFFFFFF : 0xFFAAAAAA);
+        Managers.TEXT.drawStringWithShadow(label, getFinishedX() + 4, getFinishedY() + getHeight() / 2 - (Managers.TEXT.getStringHeightI() >> 1), getModule().isEnabled() ? 0xFFFFFFFF : 0xFFAAAAAA);
         if (!getComponents().isEmpty())
-            Managers.TEXT.drawStringWithShadow(isExtended() ? getClickGui().get().close.getValue() : getClickGui().get().open.getValue(), getFinishedX() + getWidth() - 4 - Managers.TEXT.getStringWidth(isExtended() ? getClickGui().get().close.getValue() : getClickGui().get().open.getValue()), getFinishedY() + getHeight() / 2 - (Managers.TEXT.getStringHeight() >> 1), getModule().isEnabled() ? 0xFFFFFFFF : 0xFFAAAAAA);
+            Managers.TEXT.drawStringWithShadow(isExtended() ? getClickGui().get().close.getValue() : getClickGui().get().open.getValue(), getFinishedX() + getWidth() - 4 - Managers.TEXT.getStringWidth(isExtended() ? getClickGui().get().close.getValue() : getClickGui().get().open.getValue()), getFinishedY() + getHeight() / 2 - (Managers.TEXT.getStringHeightI() >> 1), getModule().isEnabled() ? 0xFFFFFFFF : 0xFFAAAAAA);
 
         if (getClickGui().get().showBind.getValue() && !getModule().getBind().toString().equalsIgnoreCase("none")) {
             GL11.glPushMatrix();
@@ -115,7 +111,7 @@ public class ModuleComponent extends Component {
             }
             disString = "[" + disString + "]";
             float offset = getFinishedX() + getWidth() - Managers.TEXT.getStringWidth(isExtended() ? getClickGui().get().close.getValue() : getClickGui().get().open.getValue());
-            Managers.TEXT.drawStringWithShadow(disString, (offset - (Managers.TEXT.getStringWidth(disString) >> 1)) * 2 - 12, (getFinishedY() + getHeight() / 1.5f - (Managers.TEXT.getStringHeight() >> 1)) * 2.0f, getModule().isEnabled() ? 0xFFFFFFFF : 0xFFAAAAAA);
+            Managers.TEXT.drawStringWithShadow(disString, (offset - (Managers.TEXT.getStringWidth(disString) >> 1)) * 2 - 12, (getFinishedY() + getHeight() / 1.5f - (Managers.TEXT.getStringHeightI() >> 1)) * 2.0f, getModule().isEnabled() ? 0xFFFFFFFF : 0xFFAAAAAA);
             GL11.glScalef(1.0f, 1.0f, 1.0f);
             GL11.glPopMatrix();
         }

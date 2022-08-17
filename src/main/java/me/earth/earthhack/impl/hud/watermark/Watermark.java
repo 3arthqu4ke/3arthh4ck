@@ -12,7 +12,7 @@ public class Watermark extends HudElement {
     public static String text = Earthhack.NAME + " " + Earthhack.VERSION;
 
     public Watermark() {
-        super("Watermark", 2, 2, Managers.TEXT.getStringWidth(text), Managers.TEXT.getStringHeight());
+        super("Watermark", 2, 2, Managers.TEXT.getStringWidth(text), Managers.TEXT.getStringHeightI());
     }
 
     @Override
@@ -27,14 +27,14 @@ public class Watermark extends HudElement {
     public void guiUpdate(int mouseX, int mouseY, float partialTicks) {
         super.guiUpdate(mouseX, mouseY, partialTicks);
         setWidth(Managers.TEXT.getStringWidth(text));
-        setHeight(Managers.TEXT.getStringHeight());
+        setHeight(Managers.TEXT.getStringHeightI());
     }
 
     @Override
     public void hudUpdate(float partialTicks) {
         super.hudUpdate(partialTicks);
         setWidth(Managers.TEXT.getStringWidth(text));
-        setHeight(Managers.TEXT.getStringHeight());
+        setHeight(Managers.TEXT.getStringHeightI());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Watermark extends HudElement {
 
     @Override
     public float getHeight() {
-        return Managers.TEXT.getStringHeight();
+        return Managers.TEXT.getStringHeightI();
     }
 
 }

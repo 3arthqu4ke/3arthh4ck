@@ -6,13 +6,11 @@ import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.impl.gui.click.component.Component;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.managers.render.ColorManager;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
@@ -46,7 +44,7 @@ public class ColorComponent extends Component {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        Managers.TEXT.drawStringWithShadow(getLabel(), getFinishedX() + 5, getFinishedY() + 7 - (Managers.TEXT.getStringHeight() >> 1), 0xFFFFFFFF);
+        Managers.TEXT.drawStringWithShadow(getLabel(), getFinishedX() + 5, getFinishedY() + 7 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
         Render2DUtil.drawBorderedRect(getFinishedX() + getWidth() - 20, getFinishedY() + 4, getFinishedX() + getWidth() - 5, getFinishedY() + 11, 0.5f, getColorSetting().getRGB(), 0xff000000);
 
         setHeight(isColorExtended() ? ((getColorSetting() == Managers.COLOR.getColorSetting() ? 134 : 154) + (getColorSetting().isRainbow() ? 56 : 0)) : 14);
@@ -225,11 +223,11 @@ public class ColorComponent extends Component {
 
             Render2DUtil.drawGradientRect(colorPickerLeft, alphaSliderBottom + 2, colorPickerLeft + ((getWidth() - 16) / 2), alphaSliderBottom + 14, false, getClickGui().get().color.getValue().getRGB(), getClickGui().get().color.getValue().darker().darker().getRGB());
             Render2DUtil.drawBorderedRect(colorPickerLeft, alphaSliderBottom + 2, colorPickerLeft + ((getWidth() - 16) / 2), alphaSliderBottom + 14, 0.5f, 0, 0xff000000);
-            Managers.TEXT.drawStringWithShadow("Copy", colorPickerLeft + ((getWidth() - 16) / 2) / 2 - (Managers.TEXT.getStringWidth("Copy") >> 1), alphaSliderBottom + 8 - (Managers.TEXT.getStringHeight() >> 1), 0xFFFFFFFF);
+            Managers.TEXT.drawStringWithShadow("Copy", colorPickerLeft + ((getWidth() - 16) / 2) / 2 - (Managers.TEXT.getStringWidth("Copy") >> 1), alphaSliderBottom + 8 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
 
             Render2DUtil.drawGradientRect(hueSliderRight - ((getWidth() - 16) / 2), alphaSliderBottom + 2, hueSliderRight, alphaSliderBottom + 14, false, getClickGui().get().color.getValue().getRGB(), getClickGui().get().color.getValue().darker().darker().getRGB());
             Render2DUtil.drawBorderedRect(hueSliderRight - ((getWidth() - 16) / 2), alphaSliderBottom + 2, hueSliderRight, alphaSliderBottom + 14, 0.5f, 0, 0xff000000);
-            Managers.TEXT.drawStringWithShadow("Paste", hueSliderRight - ((getWidth() - 16) / 4) - (Managers.TEXT.getStringWidth("Paste") >> 1), alphaSliderBottom + 8 - (Managers.TEXT.getStringHeight() >> 1), 0xFFFFFFFF);
+            Managers.TEXT.drawStringWithShadow("Paste", hueSliderRight - ((getWidth() - 16) / 4) - (Managers.TEXT.getStringWidth("Paste") >> 1), alphaSliderBottom + 8 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
 
             if (getColorSetting() != Managers.COLOR.getColorSetting()) {
 

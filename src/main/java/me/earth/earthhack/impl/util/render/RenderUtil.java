@@ -7,14 +7,11 @@ import me.earth.earthhack.impl.core.ducks.render.IRenderManager;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.Vec2d;
 import me.earth.earthhack.impl.util.misc.MutableBoundingBox;
-import me.earth.earthhack.impl.util.misc.MutableWrapper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -774,7 +771,7 @@ public class RenderUtil implements Globals
         if (rectangle)
         {
             GlStateManager.enableBlend();
-            RenderUtil.prepare(-textWidth - 1, -Managers.TEXT.getStringHeight(), textWidth + 2, 1.0F, 1.8F, 0x55000400, 0x33000000);
+            RenderUtil.prepare(-textWidth - 1, -Managers.TEXT.getStringHeightI(), textWidth + 2, 1.0F, 1.8F, 0x55000400, 0x33000000);
             GlStateManager.disableBlend();
         }
 

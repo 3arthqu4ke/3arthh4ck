@@ -1,14 +1,11 @@
 package me.earth.earthhack.impl.gui.click.component.impl;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
-import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.ListSetting;
-import me.earth.earthhack.api.util.EnumHelper;
 import me.earth.earthhack.api.util.interfaces.Nameable;
 import me.earth.earthhack.impl.gui.click.component.Component;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.RenderUtil;
-import net.minecraft.client.Minecraft;
 
 public class ListComponent extends Component
 {
@@ -29,7 +26,7 @@ public class ListComponent extends Component
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        Managers.TEXT.drawStringWithShadow(getLabel() + ": " + ChatFormatting.GRAY + ((Nameable) getListSetting().getValue()).getName(), getFinishedX() + 5, getFinishedY() + getHeight() / 2 - (Managers.TEXT.getStringHeight() >> 1), 0xFFFFFFFF);
+        Managers.TEXT.drawStringWithShadow(getLabel() + ": " + ChatFormatting.GRAY + ((Nameable) getListSetting().getValue()).getName(), getFinishedX() + 5, getFinishedY() + getHeight() / 2 - (Managers.TEXT.getStringHeightI() >> 1), 0xFFFFFFFF);
     }
 
     @Override

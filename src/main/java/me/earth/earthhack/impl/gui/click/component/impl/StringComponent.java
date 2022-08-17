@@ -6,7 +6,6 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
 import me.earth.earthhack.pingbypass.input.Keyboard;
 
@@ -40,7 +39,7 @@ public class StringComponent extends Component {
             string += getIdleSign();
         }
 
-        Managers.TEXT.drawStringWithShadow(string, getFinishedX() + 6.5f, getFinishedY() + getHeight() - Managers.TEXT.getStringHeight() - 1f, getState() ? 0xFFFFFFFF : 0xFFAAAAAA);
+        Managers.TEXT.drawStringWithShadow(string, getFinishedX() + 6.5f, getFinishedY() + getHeight() - Managers.TEXT.getStringHeightI() - 1f, getState() ? 0xFFFFFFFF : 0xFFAAAAAA);
     }
 
     @Override

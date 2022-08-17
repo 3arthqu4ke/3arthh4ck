@@ -4,7 +4,6 @@ import me.earth.earthhack.impl.event.events.render.Render2DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.MathUtil;
-import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.render.GLUProjection;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.RenderUtil;
@@ -143,12 +142,12 @@ final class ListenerRender2D extends ModuleListener<Nametags, Render2DEvent>
         if (module.durability.getValue() && sr.isDamageable())
         {
             sr.renderDurability(x + xOffset, (y * 2) + fontOffset);
-            fontOffset -= Managers.TEXT.getStringHeight();
+            fontOffset -= Managers.TEXT.getStringHeightI();
         } else
         {
             if (renderDurability)
             {
-                fontOffset -= Managers.TEXT.getStringHeight();
+                fontOffset -= Managers.TEXT.getStringHeightI();
             }
         }
 
