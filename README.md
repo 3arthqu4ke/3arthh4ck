@@ -1,5 +1,7 @@
 # 3arthh4ck
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/481441239d9d4d8684fc56545092b1ce)](https://app.codacy.com/gh/3arthqu4ke/3arthh4ck?utm_source=github.com&utm_medium=referral&utm_content=3arthqu4ke/3arthh4ck&utm_campaign=Badge_Grade_Settings)
+
 ![GitHub All Releases](https://img.shields.io/github/downloads/3arthqu4ke/3arthh4ck/total.svg)
 ![Code size](https://img.shields.io/github/languages/code-size/3arthqu4ke/3arthh4ck.svg)
 ![Repo size](https://img.shields.io/github/repo-size/3arthqu4ke/3arthh4ck.svg)
