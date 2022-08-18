@@ -12,7 +12,9 @@ import me.earth.earthhack.impl.modules.combat.autocrystal.modes.RotationThread;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.RotationFunction;
 import me.earth.earthhack.impl.modules.combat.legswitch.LegSwitch;
 import me.earth.earthhack.impl.util.math.MathUtil;
+import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import net.minecraft.util.MouseFilter;
+import net.minecraft.util.math.BlockPos;
 
 final class ListenerMotion extends
         ModuleListener<AutoCrystal, MotionUpdateEvent>
@@ -87,6 +89,15 @@ final class ListenerMotion extends
                 } else {
                     event.setYaw(rotations[0]);
                     event.setPitch(rotations[1]);
+                }
+            } else if (module.rayTraceBypass.getValue()
+                && module.forceBypass.getValue()) {
+                BlockPos bypassPos = module.getBypassPos();
+                if (bypassPos != null) {
+                    float[] rotations =
+                        RotationUtil.getRotationsToTopMiddleUp(bypassPos);
+                    event.setYaw((rotations[0] + 180) % 360);
+                    event.setPitch(-rotations[1]);
                 }
             }
         } else {

@@ -41,6 +41,7 @@ public class PositionData extends BasePath
     private boolean liquidValid;
     private boolean liquid;
     private float minDiff;
+    private boolean raytraceBypass;
 
     /**
      * Use the factory method.
@@ -347,6 +348,14 @@ public class PositionData extends BasePath
                             || block == Blocks.FLOWING_WATER)
                 || lava && (block == Blocks.LAVA
                             || block == Blocks.FLOWING_LAVA);
+    }
+
+    public boolean isRaytraceBypass() {
+        return raytraceBypass;
+    }
+
+    public void setRaytraceBypass(boolean raytraceBypass) {
+        this.raytraceBypass = raytraceBypass;
     }
 
 }

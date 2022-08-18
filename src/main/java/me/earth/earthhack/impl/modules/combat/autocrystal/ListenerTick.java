@@ -2,10 +2,6 @@ package me.earth.earthhack.impl.modules.combat.autocrystal;
 
 import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.RenderDamagePos;
-import me.earth.earthhack.impl.util.render.Interpolation;
-import me.earth.earthhack.impl.util.render.RenderUtil;
-import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.pingbypass.protocol.s2c.S2CRenderPacket;
 import net.minecraft.util.math.BlockPos;

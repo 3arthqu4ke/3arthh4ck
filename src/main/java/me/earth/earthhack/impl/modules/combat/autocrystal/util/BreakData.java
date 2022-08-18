@@ -3,8 +3,6 @@ package me.earth.earthhack.impl.modules.combat.autocrystal.util;
 import net.minecraft.entity.Entity;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class BreakData<T extends CrystalData>
 {

@@ -68,6 +68,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 // TODO: SmartRange for OBBY!!!
 public class AutoCrystal extends Module
 {
+    public static final PositionHistoryHelper POSITION_HISTORY =
+        new PositionHistoryHelper();
+
+    static {
+        Bus.EVENT_BUS.subscribe(POSITION_HISTORY);
+    }
+
     private static final ScheduledExecutorService EXECUTOR =
             ThreadUtil.newDaemonScheduledExecutor("AutoCrystal");
     private static final ModuleCache<PingBypassModule> PINGBYPASS =
@@ -92,9 +99,6 @@ public class AutoCrystal extends Module
             register(new NumberSetting<>("PlaceRange", 6.0f, 0.0f, 6.0f));
     protected final Setting<Float> placeTrace =
             register(new NumberSetting<>("PlaceTrace", 6.0f, 0.0f, 6.0f))
-                .setComplexity(Complexity.Expert);
-    protected final Setting<Boolean> ignoreNonFull =
-            register(new BooleanSetting("IgnoreNonFull", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Float> minDamage =
             register(new NumberSetting<>("MinDamage", 6.0f, 0.1f, 20.0f));
@@ -132,6 +136,27 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> fallbackTrace =
             register(new BooleanSetting("Fallback-Trace", true))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> rayTraceBypass =
+            register(new BooleanSetting("RayTraceBypass", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> forceBypass =
+            register(new BooleanSetting("ForceBypass", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> rayBypassFacePlace =
+            register(new BooleanSetting("RayBypassFacePlace", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> rayBypassFallback =
+            register(new BooleanSetting("RayBypassFallback", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> bypassTicks =
+            register(new NumberSetting<>("BypassTicks", 10, 0, 20))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> bypassRotationTime =
+            register(new NumberSetting<>("RayBypassRotationTime", 500, 0, 1000))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> ignoreNonFull =
+            register(new BooleanSetting("IgnoreNonFull", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Integer> simulatePlace =
             register(new NumberSetting<>("Simulate-Place", 0, 0, 10))
@@ -316,9 +341,9 @@ public class AutoCrystal extends Module
             register(new NumberSetting<>("Danger-Health", 0.0f, 0.0f, 36.0f))
                 .setComplexity(Complexity.Medium);
     protected final Setting<Integer> cooldown =
-            register(new NumberSetting<>("CoolDown", 500, 0, 500));
+            register(new NumberSetting<>("CoolDown", 500, 0, 10_000));
     protected final Setting<Integer> placeCoolDown =
-            register(new NumberSetting<>("PlaceCooldown", 0, 0, 500))
+            register(new NumberSetting<>("PlaceCooldown", 0, 0, 10_000))
                 .setComplexity(Complexity.Medium);
     protected final Setting<AntiFriendPop> antiFriendPop =
             register(new EnumSetting<>("AntiFriendPop", AntiFriendPop.None));
@@ -836,6 +861,7 @@ public class AutoCrystal extends Module
     protected final DiscreteTimer breakTimer =
             new GuardTimer(1000, 5).reset(breakDelay.getValue());
     protected final StopWatch renderTimer = new StopWatch();
+    protected final StopWatch bypassTimer = new StopWatch();
     protected final StopWatch obbyTimer = new StopWatch();
     protected final StopWatch obbyCalcTimer = new StopWatch();
     protected final StopWatch targetTimer = new StopWatch();
@@ -847,6 +873,7 @@ public class AutoCrystal extends Module
     /* ---------------- States -------------- */
     protected final Queue<Runnable> post = new ConcurrentLinkedQueue<>();
     protected volatile RotationFunction rotation;
+    private BlockPos bypassPos;
     protected EntityPlayer target;
     protected Entity crystal;
     protected Entity focus;
@@ -863,14 +890,12 @@ public class AutoCrystal extends Module
     public final HelperSequential sequentialHelper =
             new HelperSequential(this);
 
+    // TODO: static
     protected final IDHelper idHelper =
             new IDHelper();
 
     protected final HelperLiquids liquidHelper =
             new HelperLiquids(this);
-
-    protected final PositionHistoryHelper positionHistoryHelper =
-            new PositionHistoryHelper();
 
     protected final HelperPlace placeHelper =
             new HelperPlace(this);
@@ -949,7 +974,6 @@ public class AutoCrystal extends Module
 
     public AutoCrystal(String name, Category category) {
         super(name, category);
-        Bus.EVENT_BUS.subscribe(positionHistoryHelper);
         Bus.EVENT_BUS.subscribe(idHelper);
         this.listeners.add(new ListenerBlockChange(this));
         this.listeners.add(new ListenerBlockMulti(this));
@@ -1049,6 +1073,7 @@ public class AutoCrystal extends Module
         renderTimer.reset();
         this.renderPos = pos;
         this.damage = text;
+        this.bypassPos = null;
     }
 
     public BlockPos getRenderPos() {
@@ -1153,6 +1178,7 @@ public class AutoCrystal extends Module
         renderPos = null;
         rotation = null;
         switching = false;
+        bypassPos = null;
         post.clear();
         mc.addScheduledTask(crystalRender::clear);
 
@@ -1266,6 +1292,21 @@ public class AutoCrystal extends Module
      */
     public boolean isSuicideModule() {
         return false;
+    }
+
+    public BlockPos getBypassPos() {
+        if (bypassTimer.passed(bypassRotationTime.getValue())
+            || !forceBypass.getValue()
+            || !rayTraceBypass.getValue()) {
+            bypassPos = null;
+        }
+
+        return bypassPos;
+    }
+
+    public void setBypassPos(BlockPos pos) {
+        bypassTimer.reset();
+        this.bypassPos = pos;
     }
 
 }

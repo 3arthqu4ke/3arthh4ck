@@ -85,6 +85,12 @@ public class RotationUtil implements Globals
         return getRotations(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
     }
 
+    // TODO: check why getRotationsToTopMiddle doesnt do that and if thats ok!
+    public static float[] getRotationsToTopMiddleUp(BlockPos pos)
+    {
+        return getRotations(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
+    }
+
     public static float[] getRotationsMaxYaw(BlockPos pos, float max, float current)
     {
         return new float[]

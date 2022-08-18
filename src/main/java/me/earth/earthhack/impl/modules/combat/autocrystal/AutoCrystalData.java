@@ -63,6 +63,11 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
             "-Calc, Similar to Crystal, but will show an ESP " +
             "when you aren't holding a crystal.");
 
+        register(module.rayTraceBypass,
+                 "Checks if you are eligible for a RayTraceBypass.");
+        register(module.forceBypass, "Will flip your rotations in order" +
+            " to RayTraceBypass, needs RayTraceBypass on.");
+
         register(module.attack, "If you want to attack crystals.");
         register(module.breakRange,
             "Only Crystals within this range will be attacked.");

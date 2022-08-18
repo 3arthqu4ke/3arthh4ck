@@ -14,7 +14,6 @@ import me.earth.earthhack.impl.modules.combat.legswitch.LegSwitch;
 import me.earth.earthhack.impl.modules.combat.offhand.Offhand;
 import me.earth.earthhack.impl.modules.combat.offhand.modes.OffhandMode;
 import me.earth.earthhack.impl.modules.player.speedmine.Speedmine;
-import me.earth.earthhack.impl.modules.player.suicide.SuicideAutoCrystal;
 import me.earth.earthhack.impl.util.helpers.Finishable;
 import me.earth.earthhack.impl.util.helpers.blocks.modes.Rotate;
 import me.earth.earthhack.impl.util.math.MathUtil;
@@ -28,6 +27,7 @@ import me.earth.earthhack.impl.util.minecraft.blocks.states.BlockStateHelper;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.misc.MutableWrapper;
 import me.earth.earthhack.impl.util.misc.collections.CollectionUtil;
+import me.earth.earthhack.impl.util.ncp.Visible;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -800,10 +800,34 @@ public abstract class AbstractCalculation<T extends CrystalData>
             break;
         }
 
+        boolean isRayBypass = false;
+        if (module.rayTraceBypass.getValue()
+            && module.forceBypass.getValue()
+            && firstData == null)
+        {
+            for (PositionData d : data.getRaytraceData())
+            {
+                if (d.isBlocked())
+                {
+                    if (maxBlockedDamage < d.getMaxDamage())
+                    {
+                        maxBlockedDamage = d.getMaxDamage();
+                        isRayBypass = true;
+                    }
+
+                    continue;
+                }
+
+                firstData = d;
+                break;
+            }
+        }
+
         if (breakData != null && !attacking)
         {
             Entity fallback = breakData.getFallBack();
             if (module.fallBack.getValue()
+                    && (!isRayBypass || module.rayBypassFallback.getValue())
                     && breakData.getFallBackDmg()
                         < module.fallBackDmg.getValue()
                     && fallback != null
@@ -815,6 +839,15 @@ public abstract class AbstractCalculation<T extends CrystalData>
                 attack(fallback, HelperUtil.isValid(module, fallback));
                 return false;
             }
+        }
+
+        if (firstData != null && firstData.isRaytraceBypass())
+        {
+            module.setRenderPos(firstData.getPos(),
+                                MathUtil.round(firstData.getMaxDamage(), 1)
+                                    + " (RB)");
+            module.setBypassPos(firstData.getPos());
+            return false;
         }
 
         if (firstData != null
@@ -1082,6 +1115,12 @@ public abstract class AbstractCalculation<T extends CrystalData>
         if (pos.distanceSqToCenter(x, y, z)
                 >= MathUtil.square(module.placeTrace.getValue()))
         {
+            if (module.rayTraceBypass.getValue()
+                && !Visible.INSTANCE.check(pos, module.bypassTicks.getValue()))
+            {
+                return true;
+            }
+
             RayTraceResult result;
             if (module.isNotCheckingRotations())
             {
