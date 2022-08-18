@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.client.customfont;
 
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -41,12 +42,24 @@ public class FontMod extends Module
     protected final Setting<Boolean> showFonts   =
             register(new BooleanSetting("Fonts", false));
 
+    public final Setting<Boolean> changeHeight =
+        register(new BooleanSetting("Height-Change", false))
+            .setComplexity(Complexity.Expert);
+    public final Setting<Integer> heightSub =
+        register(new NumberSetting<>("Height-Subtract", 8, -10, 10))
+            .setComplexity(Complexity.Expert);
+    public final Setting<Integer> heightFactor =
+        register(new NumberSetting<>("Height-Factor", 2, 1, 4))
+            .setComplexity(Complexity.Expert);
+    public final Setting<Integer> heightAdd =
+        register(new NumberSetting<>("Height-Add", 0, -10, 10))
+            .setComplexity(Complexity.Expert);
+
     protected final List<String> fonts = new ArrayList<>();
 
     public FontMod()
     {
         super("CustomFont", Category.Client);
-
         Collections.addAll(fonts,
                            GraphicsEnvironment.getLocalGraphicsEnvironment()
                                               .getAvailableFontFamilyNames());
