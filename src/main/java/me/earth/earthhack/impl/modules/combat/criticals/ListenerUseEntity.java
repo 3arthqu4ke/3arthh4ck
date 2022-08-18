@@ -7,6 +7,7 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.killaura.KillAura;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.CPacketPlayer;
@@ -16,13 +17,13 @@ import net.minecraft.util.math.Vec3d;
 /**
  *  Optional offsets:
  *  
- *  mc.player.connection.sendPacket(new CPacketPlayer.Position(
+ *  me.earth.earthhack.pingbypass.PingBypass.sendToActualServer();(new CPacketPlayer.Position(
  *      pos.x, pos.y + 0.05, pos.z, false));
- *  mc.player.connection.sendPacket(new CPacketPlayer.Position(
+ *  me.earth.earthhack.pingbypass.PingBypass.sendToActualServer();(new CPacketPlayer.Position(
  *      pos.x, pos.y, pos.z, false));
- *  mc.player.connection.sendPacket(new CPacketPlayer.Position(
+ *  me.earth.earthhack.pingbypass.PingBypass.sendToActualServer();(new CPacketPlayer.Position(
  *      pos.x, pos.y + 0.03, pos.z, false));
- *  mc.player.connection.sendPacket(new CPacketPlayer.Position(
+ *  me.earth.earthhack.pingbypass.PingBypass.sendToActualServer();(new CPacketPlayer.Position(
  *      pos.x, pos.y, pos.z, false))
  */
 final class ListenerUseEntity extends
@@ -60,25 +61,25 @@ final class ListenerUseEntity extends
                 switch (module.mode.getValue())
                 {
                     case Packet:
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                             new CPacketPlayer.Position(
                                 pos.x,
                                 pos.y + 0.0625101,
                                 pos.z,
                                 false));
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                             new CPacketPlayer.Position(
                                 pos.x,
                                 pos.y,
                                 pos.z,
                                 false));
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                             new CPacketPlayer.Position(
                                 pos.x,
                                 pos.y + 1.1E-5,
                                 pos.z,
                                 false));
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                             new CPacketPlayer.Position(
                                 pos.x,
                                 pos.y,
@@ -86,25 +87,25 @@ final class ListenerUseEntity extends
                                 false));
                         break;
                     case Bypass:
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                             new CPacketPlayer.Position(
                                 pos.x,
                                 pos.y + 0.062600301692775,
                                 pos.z,
                                 false));
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                             new CPacketPlayer.Position(
                                 pos.x,
                                 pos.y + 0.07260029960661,
                                 pos.z,
                                 false));
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                             new CPacketPlayer.Position(
                                 pos.x,
                                 pos.y,
                                 pos.z,
                                 false));
-                        mc.player.connection.sendPacket(
+                        PingBypass.sendToActualServer(
                             new CPacketPlayer.Position(
                                 pos.x,
                                 pos.y,
