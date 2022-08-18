@@ -13,6 +13,7 @@ import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -263,13 +264,13 @@ final class ListenerMotion extends ModuleListener<KillAura, MotionUpdateEvent>
 
         if (stopSneak)
         {
-            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player,
-                    CPacketEntityAction.Action.STOP_SNEAKING));
+            PingBypass.sendToActualServer(new CPacketEntityAction(mc.player,
+                                               CPacketEntityAction.Action.STOP_SNEAKING));
         }
 
         if (stopSprint)
         {
-            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player,
+            PingBypass.sendToActualServer(new CPacketEntityAction(mc.player,
                     CPacketEntityAction.Action.STOP_SPRINTING));
         }
 
@@ -300,13 +301,13 @@ final class ListenerMotion extends ModuleListener<KillAura, MotionUpdateEvent>
 
         if (stopSneak)
         {
-            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player,
+            PingBypass.sendToActualServer(new CPacketEntityAction(mc.player,
                     CPacketEntityAction.Action.START_SNEAKING));
         }
 
         if (stopSprint)
         {
-            mc.player.connection.sendPacket(new CPacketEntityAction(mc.player,
+            PingBypass.sendToActualServer(new CPacketEntityAction(mc.player,
                     CPacketEntityAction.Action.START_SPRINTING));
         }
 
