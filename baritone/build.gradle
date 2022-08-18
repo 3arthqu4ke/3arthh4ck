@@ -21,7 +21,7 @@ buildscript {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 
 version = '1.0.0'
@@ -73,6 +73,7 @@ dependencies {
         exclude module: 'commons-io'
     }
 
+    // TODO: get baritone from jitpack and remove excludes
     jarLibs('com.github.cabaletta:baritone:v1.2.15') {
         exclude module: 'mixin'
         exclude module: 'launchwrapper'
@@ -85,6 +86,7 @@ jar {
     manifest {
         attributes(
             'MixinConfigs': 'mixins.baritone.json',
+            'TweakClass': 'baritone.launch.BaritoneTweaker',
             '3arthh4ckConfig': 'BaritonePluginConfig.json'
         )
     }
