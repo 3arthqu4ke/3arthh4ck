@@ -15,9 +15,7 @@ import me.earth.earthhack.impl.modules.movement.packetfly.util.Mode;
 import me.earth.earthhack.impl.modules.movement.packetfly.util.Phase;
 import me.earth.earthhack.impl.modules.movement.packetfly.util.TimeVec;
 import me.earth.earthhack.impl.modules.movement.packetfly.util.Type;
-import me.earth.earthhack.impl.util.client.ModuleUtil;
 import me.earth.earthhack.impl.util.network.PacketUtil;
-import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.pingbypass.protocol.c2s.C2SNoRotation;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketEntityAction;
@@ -131,13 +129,6 @@ public class PacketFly extends Module
         if (mc.player == null)
         {
             this.disable();
-            return;
-        }
-
-        if (mc.isSingleplayer())
-        {
-            ModuleUtil.disable(this, TextColor.RED
-                    + "Can't enable PacketFly in SinglePlayer!");
         }
 
         // teleportID.set(Managers.POSITION.getTeleportID());
@@ -209,10 +200,13 @@ public class PacketFly extends Module
         double lastZ = Managers.POSITION.getZ();
         boolean last = Managers.POSITION.isOnGround();
 
-        for (int i = 0; i < invalids.getValue(); i++)
+        if (!mc.isSingleplayer())
         {
-            sendCPacket(PacketUtil.position(oOB.x, oOB.y, oOB.z));
-            oOB = type.getValue().createOutOfBounds(oOB, invalidY.getValue());
+            for (int i = 0; i < invalids.getValue(); i++)
+            {
+                sendCPacket(PacketUtil.position(oOB.x, oOB.y, oOB.z));
+                oOB = type.getValue().createOutOfBounds(oOB, invalidY.getValue());
+            }
         }
 
         if (fixPosition.getValue())
