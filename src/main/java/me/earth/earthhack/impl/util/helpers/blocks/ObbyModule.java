@@ -31,6 +31,7 @@ import me.earth.earthhack.impl.util.minecraft.blocks.BlockingType;
 import me.earth.earthhack.impl.util.minecraft.blocks.SpecialBlocks;
 import me.earth.earthhack.impl.util.minecraft.blocks.states.BlockStateHelper;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
+import me.earth.earthhack.impl.util.ncp.Visible;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -97,6 +98,10 @@ public abstract class ObbyModule extends BlockPlacingModule
     public final Setting<Integer> breakDelay =
             register(new NumberSetting<>("BreakDelay", 250, 0, 500))
                 .setComplexity(Complexity.Medium);
+    public final Setting<Boolean> rayTraceBypass =
+            register(new BooleanSetting("RayTrace-Bypass", false))
+                .setComplexity(Complexity.Expert);
+    // TODO: force RayTraceBypass
     public final Setting<FastHelping> fastHelpingBlocks =
             register(new EnumSetting<>("Fast-Helping", FastHelping.Fast))
                 .setComplexity(Complexity.Expert);
@@ -355,7 +360,8 @@ public abstract class ObbyModule extends BlockPlacingModule
      */
     public boolean placeBlock(BlockPos pos)
     {
-        if (smartRay.getValue() != RayTraceMode.Fast)
+        if (smartRay.getValue() != RayTraceMode.Fast
+            && (!rayTraceBypass.getValue() || Visible.INSTANCE.check(pos)))
         {
             Entity entity = getPlayerForRotations();
             Ray forceRay = null;
