@@ -6,6 +6,7 @@ import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.pingbypass.nethandler.LoginHandler;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketDisconnect;
+import net.minecraft.network.status.INetHandlerStatusClient;
 import net.minecraft.util.text.TextComponentString;
 
 public class PbDisconnectListener extends EventListener<DisconnectEvent> {
@@ -18,6 +19,10 @@ public class PbDisconnectListener extends EventListener<DisconnectEvent> {
     @Override
     @SuppressWarnings("unchecked")
     public void invoke(DisconnectEvent event) {
+        if (event.getManager().getNetHandler() instanceof INetHandlerStatusClient) {
+            return;
+        }
+
         NetworkManager manager = PingBypass.getNetworkManager();
         if (manager != null && !isAllowingDisconnect()) {
             TextComponentString component = new TextComponentString(

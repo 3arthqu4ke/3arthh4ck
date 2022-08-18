@@ -4,12 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class PlaceData
 {
@@ -22,6 +17,7 @@ public class PlaceData
     private final Set<PositionData> data       = new TreeSet<>();
     private final Set<AntiTotemData> antiTotem = new TreeSet<>();
     private final Set<PositionData> shieldData = new TreeSet<>();
+    private final Set<PositionData> raytraceData = new TreeSet<>();
 
     private EntityPlayer shieldPlayer;
     private float highestSelfDamage;
@@ -158,6 +154,10 @@ public class PlaceData
     public Set<PositionData> getShieldData()
     {
         return shieldData;
+    }
+
+    public Set<PositionData> getRaytraceData() {
+        return raytraceData;
     }
 
 }

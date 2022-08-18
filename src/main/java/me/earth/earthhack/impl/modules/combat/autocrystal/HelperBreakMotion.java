@@ -95,9 +95,7 @@ public class HelperBreakMotion extends AbstractBreakHelper<CrystalDataMotion>
                     break;
                 }
             case POST:
-                float postDamage = module.isSuicideModule()
-                    ? 0.0f
-                    : module.damageHelper.getDamage(
+                float postDamage = module.damageHelper.getDamage(
                         crystal, RotationUtil.getRotationPlayer()
                                              .getEntityBoundingBox());
                 if (!incrementedCount

@@ -136,7 +136,7 @@ public class PositionHistoryHelper extends SubscriberImpl implements Globals
                 && entity.equals(result.entityHit);
     }
 
-    private static final class RotationHistory
+    public static final class RotationHistory
     {
         public final double x;
         public final double y;
@@ -145,6 +145,9 @@ public class PositionHistoryHelper extends SubscriberImpl implements Globals
         public final float pitch;
         public final long time;
         public final AxisAlignedBB bb;
+        public final boolean hasLook;
+        public final boolean hasPos;
+        public final boolean hasChanged;
 
         public RotationHistory(CPacketPlayer packet)
         {
@@ -152,25 +155,37 @@ public class PositionHistoryHelper extends SubscriberImpl implements Globals
                  packet.getY(Managers.POSITION.getY()),
                  packet.getZ(Managers.POSITION.getZ()),
                  packet.getYaw(Managers.ROTATION.getServerYaw()),
-                 packet.getPitch(Managers.ROTATION.getServerPitch()));
+                 packet.getPitch(Managers.ROTATION.getServerPitch()),
+                 packet instanceof CPacketPlayer.Rotation || packet instanceof CPacketPlayer.PositionRotation,
+                 packet instanceof CPacketPlayer.Position || packet instanceof CPacketPlayer.PositionRotation);
         }
 
         public RotationHistory(double x,
                                double y,
                                double z,
                                float yaw,
-                               float pitch)
+                               float pitch,
+                               boolean hasLook,
+                               boolean hasPos)
         {
             this.x = x;
             this.y = y;
             this.z = z;
             this.yaw = yaw;
             this.pitch = pitch;
+            this.hasLook = hasLook;
+            this.hasPos = hasPos;
             this.time = System.currentTimeMillis();
             float w = mc.player.width / 2.0f;
             float h = mc.player.height;
             this.bb = new AxisAlignedBB(x - w, y, z - w, x + w, y + h, z + w);
+            this.hasChanged = hasLook || hasPos;
         }
+    }
+
+    public Deque<RotationHistory> getPackets()
+    {
+        return packets;
     }
 
 }

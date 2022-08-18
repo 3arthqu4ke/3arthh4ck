@@ -1,5 +1,6 @@
 package me.earth.earthhack.impl.modules.combat.autocrystal.util;
 
+import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Set;
@@ -8,9 +9,10 @@ public class ForcePosition extends PositionData
 {
     private final PositionData data;
 
-    public ForcePosition(PositionData data)
+    public ForcePosition(PositionData data,
+                         AutoCrystal module)
     {
-        super(data.getPos(), data.getMaxLength());
+        super(data.getPos(), data.getMaxLength(), module);
         this.data = data;
     }
 

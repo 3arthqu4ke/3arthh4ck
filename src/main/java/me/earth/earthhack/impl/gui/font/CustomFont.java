@@ -1,5 +1,8 @@
 package me.earth.earthhack.impl.gui.font;
 
+import me.earth.earthhack.api.cache.ModuleCache;
+import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.customfont.FontMod;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.lwjgl.opengl.GL11;
 
@@ -10,6 +13,8 @@ import java.awt.image.BufferedImage;
 @SuppressWarnings("unused")
 public class CustomFont
 {
+    private static final ModuleCache<FontMod> FONT =
+        Caches.getModule(FontMod.class);
     private static final int IMG_SIZE = 512;
 
     protected CharData[] charData = new CharData[256];
@@ -184,6 +189,13 @@ public class CustomFont
 
     public int getHeight()
     {
+        if (FONT.isPresent() && FONT.get().changeHeight.getValue())
+        {
+            return (fontHeight - FONT.get().heightSub.getValue())
+                            / FONT.get().heightFactor.getValue()
+                            + FONT.get().heightAdd.getValue();
+        }
+
         return (fontHeight - 8) / 2;
     }
 

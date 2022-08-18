@@ -21,6 +21,7 @@ public class ExtrapolationHelper extends SubscriberImpl implements Globals {
             for (EntityPlayer player : mc.world.playerEntities) {
                 MotionTracker tracker = ((IEntityPlayer) player).getMotionTracker();
                 MotionTracker breakTracker = ((IEntityPlayer) player).getBreakMotionTracker();
+                MotionTracker blockTracker = ((IEntityPlayer) player).getBlockMotionTracker();
                 if (EntityUtil.isDead(player)
                     || RotationUtil.getRotationPlayer().getDistanceSq(player) > 400
                     || !module.selfExtrapolation.getValue()
@@ -33,26 +34,40 @@ public class ExtrapolationHelper extends SubscriberImpl implements Globals {
                         breakTracker.active = false;
                     }
 
+                    if (blockTracker != null) {
+                        blockTracker.active = false;
+                    }
+
                     continue;
                 }
 
-                if (tracker == null) {
+                if (tracker == null && module.extrapol.getValue() != 0) {
                     tracker = new MotionTracker(mc.world, player);
                     ((IEntityPlayer) player).setMotionTracker(tracker);
                 }
 
-                if (breakTracker == null) {
+                if (breakTracker == null && module.bExtrapol.getValue() != 0) {
                     breakTracker = new MotionTracker(mc.world, player);
                     ((IEntityPlayer) player).setBreakMotionTracker(breakTracker);
                 }
 
+                if (blockTracker == null && module.blockExtrapol.getValue() != 0) {
+                    blockTracker = new MotionTracker(mc.world, player);
+                    ((IEntityPlayer) player).setBlockMotionTracker(blockTracker);
+                }
+
                 updateTracker(tracker, module.extrapol.getValue());
                 updateTracker(breakTracker, module.bExtrapol.getValue());
+                updateTracker(blockTracker, module.blockExtrapol.getValue());
             }
         }));
     }
 
     private void updateTracker(MotionTracker tracker, int ticks) {
+        if (tracker == null) {
+            return;
+        }
+
         tracker.active = false;
         tracker.shouldPushOutOfBlocks = module.pushOutOfBlocks.getValue();
         tracker.shrinkPush = module.shrinkPush.getValue();

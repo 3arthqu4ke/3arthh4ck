@@ -195,8 +195,7 @@ final class ListenerSpawnObject extends
                     if (module.antiFriendPop.getValue()
                                             .shouldCalc(AntiFriendPop.Break))
                     {
-                        if (module.damageHelper
-                                  .getDamage(x, y, z, player)
+                        if (module.damageHelper.getDamage(entity, player)
                                 > EntityUtil.getHealth(player) - 0.5f)
                         {
                             attack = false;
@@ -207,7 +206,7 @@ final class ListenerSpawnObject extends
                     continue;
                 }
 
-                float dmg = module.damageHelper.getDamage(x, y, z, player);
+                float dmg = module.damageHelper.getDamage(entity, player);
                 if ((dmg > self
                         || module.suicide.getValue()
                             && dmg >= module.minDamage.getValue())

@@ -10,7 +10,10 @@ import me.earth.earthhack.impl.modules.client.safety.Safety;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.ACRotate;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.AntiFriendPop;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.Target;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.*;
+import me.earth.earthhack.impl.modules.combat.autocrystal.util.AntiTotemData;
+import me.earth.earthhack.impl.modules.combat.autocrystal.util.ForcePosition;
+import me.earth.earthhack.impl.modules.combat.autocrystal.util.PlaceData;
+import me.earth.earthhack.impl.modules.combat.autocrystal.util.PositionData;
 import me.earth.earthhack.impl.util.math.DistanceUtil;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.RayTraceUtil;
@@ -22,6 +25,7 @@ import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
+import me.earth.earthhack.impl.util.ncp.Visible;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -164,19 +168,19 @@ public class HelperPlace implements Globals
         }
 
         PositionData data = PositionData.create(
-                            pos,
-                            obby,
-                            module.rotate.getValue() != ACRotate.None
+            pos,
+            obby,
+            module.rotate.getValue() != ACRotate.None
                                 && module.rotate.getValue() != ACRotate.Break
                                 ? 0 // TODO: ???
                                 : module.helpingBlocks.getValue(),
-                            module.newVer.getValue(),
-                            module.newVerEntities.getValue(),
-                            module.deathTime.getValue(),
-                            entities,
-                            module.lava.getValue(),
-                            module.water.getValue(),
-                            module.ignoreLavaItems.getValue());
+            module.newVer.getValue(),
+            module.newVerEntities.getValue(),
+            module.deathTime.getValue(),
+            entities,
+            module.lava.getValue(),
+            module.water.getValue(),
+            module.ignoreLavaItems.getValue(), module);
 
         if (data.isBlocked() && !module.fallBack.getValue())
         {
@@ -241,7 +245,17 @@ public class HelperPlace implements Globals
                 >= MathUtil.square(module.placeTrace.getValue())
             && noPlaceTrace(data.getPos()))
         {
-            return null;
+            if (module.rayTraceBypass.getValue()
+                && module.forceBypass.getValue()
+                && !data.isLiquid()
+                && !data.usesObby())
+            {
+                data.setRaytraceBypass(true);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         float selfDamage = module.damageHelper.getDamage(data.getPos());
@@ -286,7 +300,9 @@ public class HelperPlace implements Globals
 
     private boolean noPlaceTrace(BlockPos pos)
     {
-        if (module.isNotCheckingRotations())
+        if (module.isNotCheckingRotations()
+            || module.rayTraceBypass.getValue()
+            && !Visible.INSTANCE.check(pos, module.bypassTicks.getValue()))
         {
             return false;
         }
@@ -383,9 +399,18 @@ public class HelperPlace implements Globals
             isAntiTotem = checkPlayer(data, data.getTarget(), positionData);
         }
 
+        if (positionData.isRaytraceBypass()
+            && (module.rayBypassFacePlace.getValue()
+                    && positionData.getFacePlacer() != null
+                || positionData.getMaxDamage() > data.getMinDamage()))
+        {
+            data.getRaytraceData().add(positionData);
+            return;
+        }
+
         if (positionData.isForce())
         {
-            ForcePosition forcePosition = new ForcePosition(positionData);
+            ForcePosition forcePosition = new ForcePosition(positionData, module);
             for (EntityPlayer forced : positionData.getForced())
             {
                 data.addForceData(forced, forcePosition);
@@ -394,7 +419,7 @@ public class HelperPlace implements Globals
 
         if (isAntiTotem)
         {
-            data.addAntiTotem(new AntiTotemData(positionData));
+            data.addAntiTotem(new AntiTotemData(positionData, module));
         }
 
         if (positionData.getFacePlacer() != null
@@ -487,7 +512,8 @@ public class HelperPlace implements Globals
         float damage = module.damageHelper.getDamage(pos, player);
         if (module.antiTotem.getValue()
                 && !positionData.usesObby()
-                && !positionData.isLiquid())
+                && !positionData.isLiquid()
+                && !positionData.isRaytraceBypass())
         {
             if (module.antiTotemHelper.isDoublePoppable(player))
             {

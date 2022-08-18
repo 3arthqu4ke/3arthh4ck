@@ -10,7 +10,9 @@ final class CriticalsData extends DefaultData<Criticals>
         register(module.delay, "-Packet will deal criticals silently." +
                 " \n-Bypass is like packet but works on 2b2t." +
                 " \n-Jump will automatically jump." +
-                " \n -MiniJump will jump as well but less.");
+                " (Only use this on your client, not on the PingBypass)" +
+                " \n -MiniJump will jump as well but less." +
+                " (Only use this on your client, not on the PingBypass)");
         register(module.noDesync, "Will not deal criticals against crystals " +
                 "which would otherwise make your AutoCrystal desync you.");
         register(module.delay, "The Delay in milliseconds between 2 criticals."

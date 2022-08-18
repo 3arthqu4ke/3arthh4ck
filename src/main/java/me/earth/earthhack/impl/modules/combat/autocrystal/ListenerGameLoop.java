@@ -5,15 +5,8 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.ACRotate;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.RotationThread;
-import me.earth.earthhack.impl.util.math.geocache.Sphere;
-import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-
-import java.util.ArrayList;
-import java.util.List;
 
 final class ListenerGameLoop extends ModuleListener<AutoCrystal, GameLoopEvent>
 {

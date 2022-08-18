@@ -153,7 +153,7 @@ public class CalculationMotion extends AbstractCalculation<CrystalDataMotion>
         if (module.rotate.getValue().noRotate(ACRotate.Break)
             || module.isNotCheckingRotations()
             || (RotationUtil.isLegit(crystal, crystal)
-                && module.positionHistoryHelper
+                && AutoCrystal.POSITION_HISTORY
                          .arePreviousRotationsLegit(crystal,
                             module.rotationTicks
                                   .getValue(),

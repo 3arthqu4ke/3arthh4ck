@@ -24,6 +24,11 @@ public class ObbyData<T extends ObbyModule> extends BlockPlacingData<T>
                 " rotations.\n-Down might cause illegitimate Rotation" +
                 "s when placing downwards.\n-Fast might cause illegitimate" +
                 " Rotations.");
+        register(module.rayTraceBypass, "This is only for ObbyModules and " +
+            "only checks if you are eligible for a RayTraceBypass. This will " +
+            "not try to force a RayTraceBypass, that feature is not yet" +
+            " planned. That means this only works in conjunction with" +
+            " AntiAim Flip.");
     }
 
     @Override

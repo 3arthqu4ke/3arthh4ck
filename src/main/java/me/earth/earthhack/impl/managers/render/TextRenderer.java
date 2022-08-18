@@ -125,7 +125,7 @@ public class TextRenderer implements Globals
     {
         if (fontMod.isEnabled())
         {
-            return renderer.formatString(str, wrapWidth);
+            return renderer.wrapWords(str, wrapWidth);
         }
 
         return mc.fontRenderer.listFormattedStringToWidth(str, wrapWidth);

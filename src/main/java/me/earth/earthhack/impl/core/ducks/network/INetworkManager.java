@@ -86,10 +86,10 @@ public interface INetworkManager
 
     default DisconnectEvent getDisconnect(ITextComponent component) {
         if (isIntegratedServerNetworkManager()) {
-            return new IntegratedDisconnectEvent(component);
+            return new IntegratedDisconnectEvent(component, (NetworkManager) this);
         }
 
-        return new DisconnectEvent(component);
+        return new DisconnectEvent(component, (NetworkManager) this);
     }
 
 }

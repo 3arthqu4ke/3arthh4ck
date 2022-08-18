@@ -1,11 +1,11 @@
 package me.earth.earthhack.impl.gui.font;
 
+import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.customfont.FontMod;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.lwjgl.opengl.GL11;
@@ -596,17 +596,43 @@ public class CustomFontRenderer extends CustomFont
             String[] words = text.split(" ");
             StringBuilder current = new StringBuilder();
             char lastColorCode = 65535;
-
             for (String word : words)
             {
-                char[] array = word.toCharArray();
-                for (int i = 0; i < array.length; i++)
+                String[] lineBreak = word.split("\n");
+                if (lineBreak.length > 1)
                 {
-                    char c = array[i];
-                    if (c == '\u00a7' && i + 1 < array.length)
+                    current.append(lineBreak[0]);
+                    char checkColorCode = getLastColorCode(lineBreak[0]);
+                    if (checkColorCode != ' ')
                     {
-                        lastColorCode = array[i + 1];
+                        lastColorCode = checkColorCode;
                     }
+
+                    for (int i = 1; i < lineBreak.length; i++)
+                    {
+                        result.add(current.toString());
+                        current = new StringBuilder("\u00a7")
+                            .append(lastColorCode)
+                            .append(lineBreak[i]);
+
+                        if (i == lineBreak.length - 1)
+                        {
+                            current.append(" ");
+                        }
+
+                        checkColorCode = getLastColorCode(lineBreak[i]);
+                        if (checkColorCode != ' ')
+                        {
+                            lastColorCode = checkColorCode;
+                        }
+                    }
+
+                    continue;
+                }
+
+                char checkColorCode = getLastColorCode(word);
+                if (checkColorCode != ' ') {
+                    lastColorCode = checkColorCode;
                 }
 
                 if (getStringWidth(current + word + " ") < width) // ???
@@ -646,21 +672,33 @@ public class CustomFontRenderer extends CustomFont
         return result;
     }
 
+    private Character getLastColorCode(String word)
+    {
+        char lastColorCode = ' ';
+        for (int i = 0; i < word.length(); i++)
+        {
+            char c = word.charAt(i);
+            if (c == '\u00a7' && i + 1 < word.length())
+            {
+                lastColorCode = word.charAt(i + 1);
+            }
+        }
+
+        return lastColorCode;
+    }
+
     public List<String> formatString(String string, double width)
     {
         List<String> result = new ArrayList<>();
 
         StringBuilder current = new StringBuilder();
         char lastColorCode = 65535;
-        char[] chars = string.toCharArray();
-
-        for (int i = 0; i < chars.length; i++)
+        for (int i = 0; i < string.length(); i++)
         {
-            char c = chars[i];
-
-            if ((c == '\u00a7') && (i < chars.length - 1))
+            char c = string.charAt(i);
+            if ((c == '\u00a7') && (i < string.length() - 1))
             {
-                lastColorCode = chars[(i + 1)];
+                lastColorCode = string.charAt(i + 1);
             }
 
             if (getStringWidth(current.toString() + c) < width)
