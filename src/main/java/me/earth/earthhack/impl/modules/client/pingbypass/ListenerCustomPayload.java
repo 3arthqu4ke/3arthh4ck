@@ -2,10 +2,12 @@ package me.earth.earthhack.impl.modules.client.pingbypass;
 
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.event.events.Event;
+import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.commands.packet.util.BufferUtil;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.client.pingbypass.packets.PayloadManager;
+import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.pingbypass.event.S2CCustomPacketEvent;
 import me.earth.earthhack.pingbypass.protocol.PbPacket;
 import me.earth.earthhack.pingbypass.protocol.ProtocolFactory;
@@ -31,6 +33,13 @@ final class ListenerCustomPayload extends ModuleListener<
     {
         if (event.getPacket().getChannelName().equalsIgnoreCase("PingBypass"))
         {
+            if ((!event.isPingBypassCancelled() || !event.isCancelled()) && PingBypass.isServer()) {
+                Earthhack.getLogger().warn("Received unexpected PingBypass CustomPayload!");
+                event.setCancelled(true);
+                event.setPingBypassCancelled(true);
+                return;
+            }
+
             try
             {
                 event.setCancelled(true);

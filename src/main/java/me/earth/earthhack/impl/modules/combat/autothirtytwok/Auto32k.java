@@ -138,8 +138,6 @@ public class Auto32k extends Module {
     private boolean spoof;
     public boolean switching;
 
-    private int lastHotbarSlot = -1;
-
     private int shulkerSlot = -1;
     private int hopperSlot = -1;
 
@@ -155,10 +153,8 @@ public class Auto32k extends Module {
     private DispenserData finalDispenserData;
     private int actionsThisTick = 0;
     private boolean checkedThisTick = false;
-    private boolean authSneakPacket = false;
     private StopWatch disableTimer = new StopWatch();
     private boolean shouldDisable;
-    private boolean rotationprepared = false;
 
     public Auto32k() {
         super("Auto32k", Category.Combat);
@@ -420,7 +416,6 @@ public class Auto32k extends Module {
             return;
         }
 
-        lastHotbarSlot = mc.player.inventory.currentItem;
         hopperSlot = InventoryUtil.findHotbarBlock(Blocks.HOPPER);
         shulkerSlot = InventoryUtil.findInHotbar(item -> item.getItem() instanceof ItemShulkerBox);
         // shulkerSlot = InventoryUtil.findHotbarBlock(BlockShulkerBox.class);
@@ -617,9 +612,7 @@ public class Auto32k extends Module {
         Block neighbourBlock = mc.world.getBlockState(neighbour).getBlock();
 
         //if(!mc.player.isSneaking() && (BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock))) {
-        authSneakPacket = true;
         PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
-        authSneakPacket = false;
         //mc.player.setSneaking(true);
         //}
 
@@ -637,9 +630,7 @@ public class Auto32k extends Module {
 
         InventoryUtil.switchTo(slot);
         rightClickBlock(neighbour, hitVec, slot == -2 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, opposite, packet.getValue(), swing.getValue());
-        authSneakPacket = true;
         PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
-        authSneakPacket = false;
         placeTimer.reset();
         actionsThisTick++;
     }
@@ -711,6 +702,7 @@ public class Auto32k extends Module {
             case SAFE:
                 positions.sort(Comparator.comparingInt(pos2 -> -safetyFactor(pos2)));
                 pos = positions.get(0);
+            default:
         }
 
         return pos;
@@ -890,9 +882,7 @@ public class Auto32k extends Module {
             return;
         }
         //if(mc.player.isSneaking()) {
-        authSneakPacket = true;
         PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
-        authSneakPacket = false;
         //mc.player.setSneaking(false);
         //}
         Vec3d hitVec = new Vec3d(pos).add(0.5, -0.5, 0.5);
@@ -957,9 +947,7 @@ public class Auto32k extends Module {
             Block neighbourBlock = mc.world.getBlockState(neighbour).getBlock();
 
             //if(!mc.player.isSneaking() && (BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock))) {
-            authSneakPacket = true;
             PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
-            authSneakPacket = false;
             //mc.player.setSneaking(true);
             //}
 
@@ -978,9 +966,7 @@ public class Auto32k extends Module {
             int slot = (preferObby.getValue() && obbySlot != -1) ? obbySlot : dispenserSlot;
             InventoryUtil.switchTo(slot);
             rightClickBlock(neighbour, hitVec, slot == -2 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, opposite, packet.getValue(), swing.getValue());
-            authSneakPacket = true;
             PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
-            authSneakPacket = false;
             placeTimer.reset();
             actionsThisTick++;
             return;
@@ -1009,9 +995,7 @@ public class Auto32k extends Module {
         Vec3d hitVec = new Vec3d(helpingPos).add(0.5, 0.5, 0.5).add(new Vec3d(opposite.getDirectionVec()).scale(0.5));
         Block neighbourBlock = mc.world.getBlockState(helpingPos).getBlock();
         //if(BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock)) {
-        authSneakPacket = true;
         PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
-        authSneakPacket = false;
         //mc.player.setSneaking(true);
         //}
 
@@ -1065,9 +1049,7 @@ public class Auto32k extends Module {
 
         InventoryUtil.switchTo(dispenserSlot);
         rightClickBlock(helpingPos, rotationVec, dispenserSlot == -2 ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND, opposite, packet.getValue(), swing.getValue());
-        authSneakPacket = true;
         PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
-        authSneakPacket = false;
         placeTimer.reset();
         actionsThisTick++;
         currentStep = Step.CLICK_DISPENSER;
@@ -1089,7 +1071,6 @@ public class Auto32k extends Module {
             return;
         }
 
-        lastHotbarSlot = mc.player.inventory.currentItem;
         hopperSlot = InventoryUtil.findHotbarBlock(Blocks.HOPPER);
         shulkerSlot = InventoryUtil.findInInventory(item -> item.getItem() instanceof ItemShulkerBox, false);
         dispenserSlot = InventoryUtil.findHotbarBlock(Blocks.DISPENSER);
@@ -1474,7 +1455,6 @@ public class Auto32k extends Module {
         shouldDisable = false;
         spoof = false;
         switching = false;
-        lastHotbarSlot = -1;
         shulkerSlot = -1;
         hopperSlot = -1;
         hopperPos = null;
@@ -1485,7 +1465,7 @@ public class Auto32k extends Module {
         redstoneSlot = -1;
         finalDispenserData = null;
         actionsThisTick = 0;
-        rotationprepared = false;
+        boolean rotationprepared = false;
     }
 
     public static class DispenserData {

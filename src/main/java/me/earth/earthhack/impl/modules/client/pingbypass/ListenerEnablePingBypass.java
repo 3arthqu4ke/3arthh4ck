@@ -31,26 +31,15 @@ public class ListenerEnablePingBypass extends ModuleListener<PingBypassModule, P
         if ("PingBypass|Enable".equals(event.getPacket().getChannelName()))
         {
             if (PingBypass.isServer()) {
-                Earthhack.getLogger().warn("PingBypass|Enable on server!");
-                PacketBuffer buf = event.getPacket().getBufferData();
-                byte[] current = AntiSelfConnectHelper.getCurrent();
-                if (current != null && buf.readableBytes() == 16) {
-                    byte[] bytes = new byte[16];
-                    buf.readBytes(bytes);
-                    if (Arrays.equals(current, bytes)) {
-                        ITextComponent reason = new TextComponentString(
-                            "Cant connect PingBypass server to itself!");
-                        Earthhack.getLogger().error(reason.getFormattedText());
-                        event.getNetworkManager().closeChannel(reason);
-                        mc.addScheduledTask(() -> mc.displayGuiScreen(
-                            new GuiDisconnected(new GuiMainMenu(),
-                                                "connect.failed", reason)));
-                        return;
-                    }
-                } else {
-                    Earthhack.getLogger().warn(
-                        "PingBypass|Enable didnt have the correct amount of bytes!");
-                }
+                ITextComponent reason = new TextComponentString(
+                    "PingBypass server should not connect" +
+                        " to other PingBypass server!");
+                Earthhack.getLogger().error(reason.getFormattedText());
+                event.getNetworkManager().closeChannel(reason);
+                mc.addScheduledTask(() -> mc.displayGuiScreen(
+                    new GuiDisconnected(new GuiMainMenu(),
+                                        "connect.failed", reason)));
+                return;
             }
 
             event.setCancelled(true);
