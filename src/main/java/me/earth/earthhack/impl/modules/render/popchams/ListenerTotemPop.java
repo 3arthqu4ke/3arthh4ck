@@ -40,7 +40,7 @@ final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
                         event.getEntity().rotationPitch,
                         event.getEntity().posX,
                         event.getEntity().posY,
-                        event.getEntity().posZ,
-                        module.copyAnimations.getValue()));
+                        event.getEntity().posZ
+        ));
     }
 }

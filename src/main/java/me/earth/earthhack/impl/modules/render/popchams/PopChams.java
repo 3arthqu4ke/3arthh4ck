@@ -85,7 +85,7 @@ public class PopChams extends BlockESPModule
         private final double y;
         private final double z;
 
-        public PopData(EntityPlayer player, long time, float yaw, float pitch, double x, double y, double z, boolean copyLimbSwing) {
+        public PopData(EntityPlayer player, long time, float yaw, float pitch, double x, double y, double z) {
             this.player = player;
             this.limbSwing = player.limbSwing;
             this.limbSwingAmount = player.limbSwingAmount;
