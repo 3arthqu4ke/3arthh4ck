@@ -28,10 +28,12 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
             register(new BooleanSetting("Incoming", true));
     protected final Setting<Boolean> outgoing =
             register(new BooleanSetting("Outgoing", true));
-    protected final Setting<Boolean> pb2C =
+    protected final Setting<Boolean> pbCustom =
             register(new BooleanSetting("PB-Custom", true));
     protected final Setting<Boolean> c2Pb =
             register(new BooleanSetting("Client-2-PB", true));
+    protected final Setting<Boolean> pb2C =
+            register(new BooleanSetting("PB-2-Client", false));
     protected final Setting<Boolean> info =
             register(new BooleanSetting("Info", true));
     protected final Setting<Boolean> chat =
@@ -70,6 +72,7 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
         this.listeners.add(new ListenerSend(this));
         this.listeners.add(new ListenerCustomPbPacket(this));
         this.listeners.add(new ListenerPbReceive(this));
+        this.listeners.add(new ListenerPb2Client(this));
         this.setData(new LoggerData(this));
     }
 
@@ -110,6 +113,11 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
     }
 
     public void logPacket(Packet<?> packet, String message, boolean cancelled, boolean out)
+    {
+        logPacket(packet, message, cancelled, out, true);
+    }
+
+    public void logPacket(Packet<?> packet, String message, boolean cancelled, boolean out, boolean allowChat)
     {
         String simpleName = MappingProvider.simpleName(packet.getClass());
         if (filter.getValue() && !isValid(simpleName))
@@ -194,7 +202,7 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
         }
 
         String s = outPut.toString();
-        if (chat.getValue())
+        if (chat.getValue() && allowChat)
         {
             mc.addScheduledTask(() ->
             {
@@ -202,7 +210,8 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                 try
                 {
                     ChatUtil.sendMessage(s);
-                } finally
+                }
+                finally
                 {
                     cancel = false;
                 }
