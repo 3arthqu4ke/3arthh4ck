@@ -10,7 +10,6 @@ import me.earth.earthhack.impl.event.events.network.NoMotionUpdateEvent;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.CPacketPlayerListener;
 import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
-import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.pingbypass.protocol.c2s.C2SNoMotionUpdateEvent;
 import net.minecraft.network.play.client.CPacketPlayer;
 

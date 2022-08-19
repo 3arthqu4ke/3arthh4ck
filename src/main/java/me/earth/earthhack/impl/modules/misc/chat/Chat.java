@@ -13,7 +13,6 @@ import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.misc.collections.CollectionUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.client.gui.ChatLine;
-import net.minecraft.entity.player.EntityPlayer;
 
 import java.awt.*;
 import java.util.HashMap;

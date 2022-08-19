@@ -10,7 +10,6 @@ import me.earth.earthhack.impl.commands.packet.factory.DefaultFactory;
 import me.earth.earthhack.impl.commands.packet.generic.GenericArgument;
 import me.earth.earthhack.impl.commands.packet.generic.GenericIterableArgument;
 import me.earth.earthhack.impl.util.misc.ReflectionUtil;
-import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
 

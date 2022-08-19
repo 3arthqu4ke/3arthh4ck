@@ -1,6 +1,6 @@
 package me.earth.earthhack.installer.version;
 
-import com.google.gson.*;
+import com.google.gson.JsonObject;
 
 import java.io.File;
 

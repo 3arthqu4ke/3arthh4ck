@@ -4,8 +4,6 @@ import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.render.itemchams.ItemChams;
 import me.earth.earthhack.impl.util.render.image.EfficientTexture;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;

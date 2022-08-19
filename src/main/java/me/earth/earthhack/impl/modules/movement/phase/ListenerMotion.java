@@ -13,7 +13,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemFood;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -21,7 +20,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 
 final class ListenerMotion extends ModuleListener<Phase, MotionUpdateEvent>
 {

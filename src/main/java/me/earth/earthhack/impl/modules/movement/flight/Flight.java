@@ -7,13 +7,10 @@ import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.modules.movement.flight.mode.FlightMode;
-import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionUtils;
 
 //TODO: more modes and check bugs idk
 public class Flight extends Module {

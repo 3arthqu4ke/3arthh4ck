@@ -19,7 +19,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.EXTFramebufferObject;
+import org.lwjgl.opengl.EXTPackedDepthStencil;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.nio.ByteBuffer;

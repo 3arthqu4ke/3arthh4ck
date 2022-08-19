@@ -4,7 +4,6 @@ import me.earth.earthhack.api.event.bus.EventListener;
 import me.earth.earthhack.api.event.bus.SubscriberImpl;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityRenderer;
-import me.earth.earthhack.impl.event.events.render.BeginRenderHandEvent;
 import me.earth.earthhack.impl.event.events.render.RenderItemInFirstPersonEvent;
 import me.earth.earthhack.impl.event.events.render.WorldRenderEvent;
 

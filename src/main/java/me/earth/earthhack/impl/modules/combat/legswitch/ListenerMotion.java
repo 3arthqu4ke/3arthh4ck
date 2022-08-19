@@ -5,7 +5,6 @@ import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.combat.legswitch.modes.LegAutoSwitch;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
-import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.init.Items;
 
 final class ListenerMotion extends ModuleListener<LegSwitch, MotionUpdateEvent>

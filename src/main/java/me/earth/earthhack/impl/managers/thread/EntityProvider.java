@@ -5,17 +5,12 @@ import me.earth.earthhack.api.event.bus.SubscriberImpl;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.NetHandlerPlayServer;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Makes snapshots of {@link WorldClient#loadedEntityList} and

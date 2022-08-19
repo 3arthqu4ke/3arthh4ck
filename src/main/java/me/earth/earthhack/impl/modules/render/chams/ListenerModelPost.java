@@ -1,38 +1,15 @@
 package me.earth.earthhack.impl.modules.render.chams;
 
-import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.event.events.render.ModelRenderEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
-import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
 import me.earth.earthhack.impl.modules.render.esp.ESP;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-import static org.lwjgl.opengl.GL11.GL_ALL_ATTRIB_BITS;
-import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.GL_POLYGON_OFFSET_LINE;
-import static org.lwjgl.opengl.GL11.GL_STENCIL_TEST;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDepthMask;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLineWidth;
-import static org.lwjgl.opengl.GL11.glPopAttrib;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushAttrib;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.*;
 
 final class ListenerModelPost extends ModuleListener<Chams, ModelRenderEvent.Post> {
 

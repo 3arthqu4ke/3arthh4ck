@@ -3,9 +3,7 @@ package me.earth.earthhack.impl.event.events.render;
 import me.earth.earthhack.api.event.events.Event;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderEnderCrystal;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 
 public class CrystalRenderEvent extends Event
 {

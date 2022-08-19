@@ -22,7 +22,6 @@ import net.minecraft.network.play.server.SPacketMultiBlockChange;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.EmptyChunk;
 
 import java.util.*;
 

@@ -13,11 +13,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.*;
 
 public class VoidESP extends BlockESPModule
 {

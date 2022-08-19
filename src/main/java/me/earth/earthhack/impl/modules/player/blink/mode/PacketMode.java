@@ -1,12 +1,7 @@
 package me.earth.earthhack.impl.modules.player.blink.mode;
 
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.CPacketChatMessage;
-import net.minecraft.network.play.client.CPacketClientStatus;
-import net.minecraft.network.play.client.CPacketConfirmTeleport;
-import net.minecraft.network.play.client.CPacketKeepAlive;
-import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.network.play.client.CPacketTabComplete;
+import net.minecraft.network.play.client.*;
 
 public enum PacketMode
 {

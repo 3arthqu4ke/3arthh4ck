@@ -3,13 +3,7 @@ package me.earth.earthhack.impl.modules.player.freecam;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.CPacketChatMessage;
-import net.minecraft.network.play.client.CPacketKeepAlive;
-import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
-import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
-import net.minecraft.network.play.client.CPacketUseEntity;
-import net.minecraft.network.play.client.CPacketVehicleMove;
+import net.minecraft.network.play.client.*;
 
 final class ListenerPacket extends ModuleListener<Freecam, PacketEvent.Send<?>>
 {

@@ -10,7 +10,6 @@ import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.api.setting.settings.StringSetting;
-import me.earth.earthhack.impl.event.events.network.NoMotionUpdateEvent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.media.Media;

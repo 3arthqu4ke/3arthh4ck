@@ -5,14 +5,11 @@ import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.render.ambience.Ambience;
 import me.earth.earthhack.impl.modules.render.xray.XRay;
 import me.earth.earthhack.impl.modules.render.xray.mode.XrayMode;
-import me.earth.earthhack.impl.util.math.MathUtil;
 import net.minecraft.client.renderer.BufferBuilder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.awt.*;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 @Mixin(BufferBuilder.class)

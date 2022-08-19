@@ -10,24 +10,19 @@ import me.earth.earthhack.impl.commands.util.CommandDescriptions;
 import me.earth.earthhack.impl.commands.util.CommandScheduler;
 import me.earth.earthhack.impl.commands.util.CommandUtil;
 import me.earth.earthhack.impl.commands.util.EarthhackJsBridge;
-import me.earth.earthhack.pingbypass.PingBypass;
-import me.earth.earthhack.tweaker.launch.Argument;
-import me.earth.earthhack.tweaker.launch.DevArguments;
 import me.earth.earthhack.impl.managers.thread.GlobalExecutor;
 import me.earth.earthhack.impl.modules.client.commands.Commands;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.impl.util.thread.SafeRunnable;
+import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.tweaker.launch.Argument;
+import me.earth.earthhack.tweaker.launch.DevArguments;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 

@@ -2,7 +2,6 @@ package me.earth.earthhack.pingbypass.event;
 
 import me.earth.earthhack.api.event.events.Event;
 import me.earth.earthhack.pingbypass.protocol.PbPacket;
-import net.minecraft.network.Packet;
 
 /**
  * Fired on the PingBypass client when a PbPacket is received.

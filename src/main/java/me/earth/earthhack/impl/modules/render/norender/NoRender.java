@@ -5,9 +5,7 @@ import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.world.border.WorldBorder;
 
-import java.awt.font.TextHitInfo;
 import java.util.HashSet;
 import java.util.Set;
 

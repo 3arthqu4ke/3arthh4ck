@@ -14,7 +14,6 @@ import me.earth.earthhack.impl.gui.visibility.Visibilities;
 import me.earth.earthhack.impl.modules.misc.antipackets.util.Page;
 import me.earth.earthhack.impl.util.mcp.MappingProvider;
 import me.earth.earthhack.impl.util.network.PacketUtil;
-import me.earth.earthhack.pingbypass.event.PbPacketEvent;
 import me.earth.earthhack.pingbypass.protocol.C2SPacket;
 import me.earth.earthhack.pingbypass.protocol.S2CPacket;
 import net.minecraft.network.Packet;

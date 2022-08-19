@@ -1,6 +1,5 @@
 package me.earth.earthhack.impl.modules.player.suicide;
 
-import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;

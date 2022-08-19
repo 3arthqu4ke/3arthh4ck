@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import me.earth.earthhack.api.config.Jsonable;
 import me.earth.earthhack.api.config.preset.ElementConfig;
 import me.earth.earthhack.api.config.preset.HudValuePreset;
-import me.earth.earthhack.api.config.preset.ValuePreset;
 import me.earth.earthhack.api.hud.HudElement;
 import me.earth.earthhack.api.register.Register;
 import me.earth.earthhack.api.setting.GeneratedSettings;

@@ -3,7 +3,6 @@ package me.earth.earthhack.impl.modules.render.esp;
 import me.earth.earthhack.impl.event.events.render.Render3DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.render.esp.mode.EspMode;
-import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.impl.util.render.mutables.BBRender;

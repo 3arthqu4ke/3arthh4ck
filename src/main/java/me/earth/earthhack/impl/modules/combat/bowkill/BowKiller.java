@@ -1,6 +1,5 @@
 package me.earth.earthhack.impl.modules.combat.bowkill;
 
-import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
@@ -9,8 +8,6 @@ import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.combat.killaura.util.AuraTarget;
-import me.earth.earthhack.impl.modules.render.popchams.PopChams;
-import me.earth.earthhack.impl.util.helpers.blocks.ObbyModule;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationSmoother;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
@@ -28,14 +25,9 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayer;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.Vec3d;
 
-import javax.swing.text.TabExpander;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class BowKiller extends EntityTypeModule {

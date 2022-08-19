@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Mixin(FontRenderer.class)

@@ -1,6 +1,5 @@
 package me.earth.earthhack.impl.commands.packet.util;
 
-import me.earth.earthhack.impl.core.ducks.entity.IEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;

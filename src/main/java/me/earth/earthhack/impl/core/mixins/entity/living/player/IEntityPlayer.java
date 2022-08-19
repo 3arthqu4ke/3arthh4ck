@@ -1,7 +1,6 @@
 package me.earth.earthhack.impl.core.mixins.entity.living.player;
 
 import com.mojang.authlib.GameProfile;
-import me.earth.earthhack.impl.util.minecraft.MotionTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.datasync.DataParameter;
 import org.spongepowered.asm.mixin.Mixin;

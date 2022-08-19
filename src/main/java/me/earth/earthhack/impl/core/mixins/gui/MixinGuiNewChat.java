@@ -23,11 +23,7 @@ import me.earth.earthhack.impl.util.animation.TimeAnimation;
 import me.earth.earthhack.impl.util.misc.collections.ConvenientStack;
 import me.earth.earthhack.impl.util.text.ChatIDs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ChatLine;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.gui.GuiUtilRenderComponents;
+import net.minecraft.client.gui.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentKeybind;
@@ -42,11 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 
 @Mixin(GuiNewChat.class)
 public abstract class MixinGuiNewChat implements IGuiNewChat

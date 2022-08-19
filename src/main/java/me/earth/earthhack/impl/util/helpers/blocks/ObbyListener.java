@@ -14,14 +14,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static me.earth.earthhack.impl.util.helpers.blocks.ObbyModule.HELPER;
-import static me.earth.earthhack.impl.util.helpers.disabling.DisablingModule.newDeathDisabler;
 
 public abstract class ObbyListener<T extends ObbyListenerModule<?>>
         extends ModuleListener<T, MotionUpdateEvent>

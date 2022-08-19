@@ -2,16 +2,7 @@ package me.earth.earthhack.impl.util.minecraft;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemEgg;
-import net.minecraft.item.ItemEnderPearl;
-import net.minecraft.item.ItemExpBottle;
-import net.minecraft.item.ItemFishingRod;
-import net.minecraft.item.ItemLingeringPotion;
-import net.minecraft.item.ItemSnowball;
-import net.minecraft.item.ItemSplashPotion;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 
 /**
  * ... == would suffice probably

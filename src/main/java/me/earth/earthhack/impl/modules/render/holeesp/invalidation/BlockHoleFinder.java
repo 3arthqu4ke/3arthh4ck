@@ -3,7 +3,6 @@ package me.earth.earthhack.impl.modules.render.holeesp.invalidation;
 import me.earth.earthhack.impl.core.ducks.world.IChunk;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.chunk.EmptyChunk;
 
 /**
  * Finds holes which could have been created when a block was placed.

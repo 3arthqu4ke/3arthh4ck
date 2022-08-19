@@ -10,7 +10,6 @@ import net.minecraft.init.Items;
 import net.minecraft.network.play.client.CPacketConfirmTeleport;
 import net.minecraft.network.play.client.CPacketEntityAction;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
-import org.apache.commons.io.filefilter.MagicNumberFileFilter;
 
 final class ListenerStopUsingItem extends ModuleListener<BowKiller, PacketEvent.Send<CPacketPlayerDigging>> {
 

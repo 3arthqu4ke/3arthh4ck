@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.gui.hud.rewrite.component;
 
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.hud.HudElement;
-import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.data.ModuleData;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.*;

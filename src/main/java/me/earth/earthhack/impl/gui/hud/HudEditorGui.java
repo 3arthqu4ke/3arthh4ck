@@ -3,25 +3,14 @@ package me.earth.earthhack.impl.gui.hud;
 import me.earth.earthhack.api.hud.HudElement;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.modules.render.chams.Chams;
 import me.earth.earthhack.impl.util.misc.GuiUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static me.earth.earthhack.impl.gui.hud.Orientation.BOTTOM;
-import static me.earth.earthhack.impl.gui.hud.Orientation.LEFT;
-import static me.earth.earthhack.impl.gui.hud.Orientation.RIGHT;
-import static me.earth.earthhack.impl.gui.hud.Orientation.TOP;
+import static me.earth.earthhack.impl.gui.hud.Orientation.*;
 
 public class HudEditorGui extends GuiScreen {
 

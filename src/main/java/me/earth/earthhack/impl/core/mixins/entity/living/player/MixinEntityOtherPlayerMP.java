@@ -1,14 +1,10 @@
 package me.earth.earthhack.impl.core.mixins.entity.living.player;
 
 import me.earth.earthhack.api.cache.ModuleCache;
-import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityOtherPlayerMP;
 import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.misc.chat.Chat;
 import me.earth.earthhack.impl.modules.misc.nointerp.NoInterp;
 import me.earth.earthhack.impl.modules.player.spectate.Spectate;
-import me.earth.earthhack.impl.util.text.ChatUtil;
-import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;

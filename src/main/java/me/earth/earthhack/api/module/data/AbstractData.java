@@ -1,15 +1,10 @@
 package me.earth.earthhack.api.module.data;
 
 import me.earth.earthhack.api.config.preset.ModulePreset;
-import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.SettingContainer;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 // TODO: implement abstraction so this can be used for hud elements too!
 public abstract class AbstractData<M extends SettingContainer> implements ModuleData<M>

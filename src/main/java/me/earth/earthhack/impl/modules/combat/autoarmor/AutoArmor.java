@@ -30,6 +30,7 @@ import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -46,7 +47,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.CombatRules;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import me.earth.earthhack.pingbypass.input.Mouse;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

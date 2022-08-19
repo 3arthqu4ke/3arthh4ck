@@ -11,7 +11,6 @@ import me.earth.earthhack.api.setting.GeneratedSettings;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
-import me.earth.earthhack.pingbypass.PingBypass;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

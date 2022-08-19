@@ -1,11 +1,7 @@
 package me.earth.earthhack.impl.modules.client.server.protocol;
 
 import com.google.common.base.Charsets;
-import me.earth.earthhack.impl.modules.client.server.api.IConnection;
-import me.earth.earthhack.impl.modules.client.server.api.IConnectionEntry;
-import me.earth.earthhack.impl.modules.client.server.api.IConnectionManager;
-import me.earth.earthhack.impl.modules.client.server.api.IPacket;
-import me.earth.earthhack.impl.modules.client.server.api.SimpleEntry;
+import me.earth.earthhack.impl.modules.client.server.api.*;
 
 import java.io.DataInputStream;
 import java.io.IOException;

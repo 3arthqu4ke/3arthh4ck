@@ -7,11 +7,7 @@ import me.earth.earthhack.api.util.bind.Bind;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.chat.CommandManager;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A Macro representing another Macro for the sake of being

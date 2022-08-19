@@ -3,14 +3,10 @@ package me.earth.earthhack.impl.modules.player.exptweaks;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
-import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
-import net.minecraft.util.EnumHand;
 
 final class ListenerUseItem extends
         ModuleListener<ExpTweaks, PacketEvent.Send<CPacketPlayerTryUseItem>>

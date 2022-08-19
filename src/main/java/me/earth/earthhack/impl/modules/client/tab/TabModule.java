@@ -6,8 +6,8 @@ import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import me.earth.earthhack.impl.util.helpers.gui.GuiModule;
-import net.minecraft.client.gui.GuiScreen;
 import me.earth.earthhack.pingbypass.input.Mouse;
+import net.minecraft.client.gui.GuiScreen;
 
 public class TabModule extends GuiModule
 {

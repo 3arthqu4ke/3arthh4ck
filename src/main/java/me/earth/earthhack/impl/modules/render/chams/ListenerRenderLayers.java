@@ -4,8 +4,6 @@ import me.earth.earthhack.api.event.events.Stage;
 import me.earth.earthhack.impl.event.events.render.RenderLayersEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 
-import static org.lwjgl.opengl.GL11.*;
-
 public class ListenerRenderLayers extends ModuleListener<Chams, RenderLayersEvent>
 {
     public ListenerRenderLayers(Chams module)

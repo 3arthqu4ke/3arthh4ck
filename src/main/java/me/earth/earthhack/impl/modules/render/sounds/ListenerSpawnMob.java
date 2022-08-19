@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.modules.render.sounds;
 
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
-import me.earth.earthhack.impl.modules.render.sounds.util.CoordLogger;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.play.server.SPacketSpawnMob;
 import net.minecraft.util.math.BlockPos;

@@ -12,7 +12,6 @@ import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.module.EntityTypeModule;
-import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;

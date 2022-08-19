@@ -4,17 +4,11 @@ import me.earth.earthhack.api.event.events.Stage;
 import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.modules.misc.announcer.util.Announcement;
-import me.earth.earthhack.impl.modules.misc.announcer.util.AnnouncementType;
 import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-
-import java.util.Map;
-import java.util.Objects;
 
 final class ListenerMotion extends ModuleListener<Announcer, MotionUpdateEvent>
 {

@@ -1,10 +1,7 @@
 package me.earth.earthhack.impl.core.mixins.entity;
 
 import net.minecraft.entity.item.EntityEnderCrystal;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProviderEnd;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

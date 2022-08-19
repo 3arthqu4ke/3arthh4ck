@@ -1,7 +1,6 @@
 package me.earth.earthhack.impl.util.minecraft.blocks;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
-import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.RayTraceUtil;
@@ -22,7 +21,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 import static net.minecraft.util.EnumFacing.HORIZONTALS;

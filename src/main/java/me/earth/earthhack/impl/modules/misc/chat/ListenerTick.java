@@ -6,7 +6,6 @@ import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 
 final class ListenerTick extends ModuleListener<Chat, TickEvent>
 {

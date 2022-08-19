@@ -9,8 +9,8 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.client.commands.Commands;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
-import net.minecraft.client.gui.GuiChat;
 import me.earth.earthhack.pingbypass.input.Mouse;
+import net.minecraft.client.gui.GuiChat;
 
 public class HModulesCommand extends Command implements Globals
 {

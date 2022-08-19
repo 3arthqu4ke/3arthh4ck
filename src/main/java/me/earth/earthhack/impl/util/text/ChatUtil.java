@@ -4,7 +4,6 @@ import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.pingbypass.protocol.s2c.S2CChatPacket;
 import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;

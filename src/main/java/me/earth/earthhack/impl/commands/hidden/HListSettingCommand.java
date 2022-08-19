@@ -15,14 +15,11 @@ import me.earth.earthhack.impl.modules.client.commands.Commands;
 import me.earth.earthhack.impl.modules.client.settings.SettingsModule;
 import me.earth.earthhack.impl.util.text.ChatIDs;
 import me.earth.earthhack.impl.util.text.TextColor;
-import me.earth.earthhack.impl.util.thread.ThreadUtil;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.HoverEvent;
-
-import java.util.concurrent.ScheduledExecutorService;
 
 //TODO: pages when too many settings (With +- component)?
 //TODO: maybe a ChatGui Handler, to update ChatLines etc?

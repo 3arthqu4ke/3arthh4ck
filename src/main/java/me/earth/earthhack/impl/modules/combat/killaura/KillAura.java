@@ -22,6 +22,7 @@ import me.earth.earthhack.impl.util.minecraft.entity.module.EntityTypeModule;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.impl.util.thread.Locks;
 import me.earth.earthhack.pingbypass.PingBypass;
+import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -29,17 +30,12 @@ import net.minecraft.entity.item.EntityExpBottle;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.item.ItemAxe;
-import net.minecraft.item.ItemElytra;
-import net.minecraft.item.ItemShield;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
+import net.minecraft.item.*;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import me.earth.earthhack.pingbypass.input.Mouse;
 
 public class KillAura extends EntityTypeModule
 {

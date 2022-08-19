@@ -5,13 +5,10 @@ import me.earth.earthhack.impl.util.thread.SafeRunnable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 
 /**
  * Allows rendering to a framebuffer with more ease than with the normal Minecraft Framebuffer class.

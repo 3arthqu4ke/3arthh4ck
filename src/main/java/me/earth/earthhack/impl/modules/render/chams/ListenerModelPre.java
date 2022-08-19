@@ -1,44 +1,29 @@
 package me.earth.earthhack.impl.modules.render.chams;
 
-import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.core.mixins.render.entity.IEntityRenderer;
 import me.earth.earthhack.impl.event.events.render.ModelRenderEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
-import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
 import me.earth.earthhack.impl.modules.render.esp.ESP;
 import me.earth.earthhack.impl.util.math.Vec2d;
-import me.earth.earthhack.impl.util.math.position.PositionUtil;
-import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
-import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.*;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.EXTFramebufferObject;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.util.glu.Project;
 import org.lwjgl.util.vector.Vector4f;
 
 import java.awt.*;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL11.*;
 

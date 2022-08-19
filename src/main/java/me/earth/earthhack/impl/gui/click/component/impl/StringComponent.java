@@ -6,8 +6,8 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
-import net.minecraft.util.ChatAllowedCharacters;
 import me.earth.earthhack.pingbypass.input.Keyboard;
+import net.minecraft.util.ChatAllowedCharacters;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
