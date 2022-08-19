@@ -1,6 +1,5 @@
 package me.earth.earthhack.impl.modules.render.popchams;
 
-import com.mojang.authlib.GameProfile;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
@@ -14,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class PopChams extends BlockESPModule
 {
