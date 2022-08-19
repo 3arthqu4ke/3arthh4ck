@@ -175,9 +175,9 @@ public class EnchantCommand extends Command implements Globals
     }
 
     @SuppressWarnings("deprecation")
-    public static Enchantment getEnchantment(String prefix)
+    public static Enchantment getEnchantment(String prefixIn)
     {
-        prefix = prefix.toLowerCase();
+        String prefix = prefixIn.toLowerCase();
         for (Enchantment enchantment : Enchantment.REGISTRY)
         {
             String s = I18n.translateToLocal(enchantment.getName());

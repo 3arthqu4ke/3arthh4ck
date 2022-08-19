@@ -6,8 +6,12 @@ import net.minecraft.util.math.BlockPos;
 
 public class NcpInteractTrace extends NcpTrace implements Globals {
     protected final boolean strict = false;
-    protected int lastBx, lastBy, lastBz;
-    protected int targetX, targetY, targetZ;
+    protected int lastBx;
+    protected int lastBy;
+    protected int lastBz;
+    protected int targetX;
+    protected int targetY;
+    protected int targetZ;
 
     public NcpInteractTrace() {
         this.forceStepEndPos = false;

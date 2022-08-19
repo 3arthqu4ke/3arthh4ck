@@ -284,9 +284,9 @@ public class AutoConfig extends RegisteringModule<String, RemovingString>
         }
     }
 
-    private String getIpStartingWith(String prefix, ServerList list)
+    private String getIpStartingWith(String prefixIn, ServerList list)
     {
-        prefix = prefix.toLowerCase();
+        String prefix = prefixIn.toLowerCase();
         for (int i = 0; i < list.countServers(); i++)
         {
             ServerData data = list.getServerData(i);

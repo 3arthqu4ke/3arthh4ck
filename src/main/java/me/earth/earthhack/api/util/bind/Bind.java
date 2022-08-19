@@ -56,9 +56,9 @@ public class Bind
     }
 
     /** Uses {@link Keyboard#getKeyIndex(java.lang.String)} to parse. */
-    public static Bind fromString(String string)
+    public static Bind fromString(String stringIn)
     {
-        string = string.toUpperCase();
+        String string = stringIn.toUpperCase();
         if (string.equals("NONE")) // NONE exists and is 0... maybe fix?
         {
             return none();

@@ -66,6 +66,7 @@ public class PlainQuad
                         float a = size >= 4 ? buffer.get(bufferIndex + 3) : 1.0f;
                         renderer.color(r * scale, g * scale, b * scale, a * scale);
                         break;
+                    default:
                 }
                 bufferIndex += size;
             }

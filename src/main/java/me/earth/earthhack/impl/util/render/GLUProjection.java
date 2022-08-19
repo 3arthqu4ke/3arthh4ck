@@ -15,6 +15,27 @@ import java.nio.IntBuffer;
  * Author TheCyberBrick
  */
 public final class GLUProjection {
+    private IntBuffer viewport;
+    private FloatBuffer modelview;
+    private FloatBuffer projection;
+    private FloatBuffer coords = BufferUtils.createFloatBuffer(3);
+    private Vector3D frustumPos;
+    private Vector3D[] frustum;
+    private Vector3D[] invFrustum;
+    private Vector3D viewVec;
+    private double displayWidth;
+    private double displayHeight;
+    private double widthScale;
+    private double heightScale;
+    private double bra;
+    private double bla;
+    private double tra;
+    private double tla;
+    private Line tb, bb, lb, rb;
+    private float fovY;
+    private float fovX;
+    private Vector3D lookVec;
+
     public static class Line {
         public Vector3D sourcePoint = new Vector3D(0, 0, 0);
         public Vector3D direction = new Vector3D(0, 0, 0);
@@ -263,24 +284,6 @@ public final class GLUProjection {
         }
         return instance;
     }
-
-    private IntBuffer viewport;
-    private FloatBuffer modelview;
-    private FloatBuffer projection;
-    private FloatBuffer coords = BufferUtils.createFloatBuffer(3);
-    private Vector3D frustumPos;
-    private Vector3D[] frustum;
-    private Vector3D[] invFrustum;
-    private Vector3D viewVec;
-    private double displayWidth;
-    private double displayHeight;
-    private double widthScale;
-    private double heightScale;
-    private double bra, bla, tra, tla;
-    private Line tb, bb, lb, rb;
-    private float fovY;
-    private float fovX;
-    private Vector3D lookVec;
 
     /**
      * Updates the matrices. Needed whenever the viewport or one of the matrices has changed.

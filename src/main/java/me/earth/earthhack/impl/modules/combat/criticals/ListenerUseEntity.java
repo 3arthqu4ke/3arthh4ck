@@ -119,6 +119,7 @@ final class ListenerUseEntity extends
                         mc.player.jump();
                         mc.player.motionY /= 2.0;
                         break;
+                    default:
                 }
 
                 module.timer.reset();

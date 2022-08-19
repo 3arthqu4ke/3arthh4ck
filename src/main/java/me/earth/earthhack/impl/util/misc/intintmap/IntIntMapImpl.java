@@ -166,7 +166,8 @@ public class IntIntMapImpl implements IntIntMap
     private void shiftKeys(int pos)
     {
         // Shift entries with the same hash.
-        int last, slot;
+        int last;
+        int slot;
         int k;
         final int[] data = this.m_data;
         while ( true )

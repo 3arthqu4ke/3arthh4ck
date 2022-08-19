@@ -277,6 +277,7 @@ public class PacketCommandImpl extends Command implements Globals, PacketCommand
                     return completer;
                 case SUPER:
                     return super.onTabComplete(completer);
+                default:
             }
         }
 
