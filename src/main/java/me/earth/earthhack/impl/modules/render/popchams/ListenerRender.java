@@ -3,63 +3,16 @@ package me.earth.earthhack.impl.modules.render.popchams;
 import me.earth.earthhack.impl.event.events.render.Render3DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.util.render.RenderUtil;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.util.Map;
 
-// TODO: Do it with RenderPlayer :(
 final class ListenerRender extends ModuleListener<PopChams, Render3DEvent>
 {
-    private static final double HEAD_X = -0.2;
-    private static final double HEAD_Y = 1.5;
-    private static final double HEAD_Z = -0.25;
-
-    private static final double HEAD_X1 = 0.2;
-    private static final double HEAD_Y1 = 1.95; // Too big...
-    private static final double HEAD_Z1 = 0.25;
-
-    private static final double CHEST_X = -0.18;
-    private static final double CHEST_Y = 0.8;
-    private static final double CHEST_Z = -0.275;
-
-    private static final double CHEST_X1 = 0.18;
-    private static final double CHEST_Y1 = 1.5;
-    private static final double CHEST_Z1 = 0.275;
-
-    private static final double ARM1_X = -0.1;
-    private static final double ARM1_Y = 0.75;
-    private static final double ARM1_Z = 0.275;
-
-    private static final double ARM1_X1 = 0.1;
-    private static final double ARM1_Y1 = 1.5;
-    private static final double ARM1_Z1 = 0.5;
-
-    private static final double ARM2_X = -0.1;
-    private static final double ARM2_Y = 0.75;
-    private static final double ARM2_Z = -0.275;
-
-    private static final double ARM2_X1 = 0.1;
-    private static final double ARM2_Y1 = 1.5;
-    private static final double ARM2_Z1 = -0.5;
-
-    private static final double LEG1_X = -0.15;
-    private static final double LEG1_Y = 0.0;
-    private static final double LEG1_Z = 0.0;
-
-    private static final double LEG1_X1 = 0.15;
-    private static final double LEG1_Y1 = 0.8;
-    private static final double LEG1_Z1 = 0.25;
-
-    private static final double LEG2_X = -0.15;
-    private static final double LEG2_Y = 0.0;
-    private static final double LEG2_Z = 0.0;
-
-    private static final double LEG2_X1 = 0.15;
-    private static final double LEG2_Y1 = 0.8;
-    private static final double LEG2_Z1 = -0.25;
 
     public ListenerRender(PopChams module) {
         super(module, Render3DEvent.class);
@@ -68,37 +21,23 @@ final class ListenerRender extends ModuleListener<PopChams, Render3DEvent>
     @Override
     @SuppressWarnings("DuplicatedCode")
     public void invoke(Render3DEvent event) {
-        for (Map.Entry<String, PopChams.PopData> set : module.getPopDataHashMap().entrySet()) {
-            PopChams.PopData data = set.getValue();
+        for (PopChams.PopData data : module.getPopDataList()) {
+            EntityPlayer player = data.getPlayer();
+            ModelPlayer model = data.getModel();
             double x = data.getX() - mc.getRenderManager().viewerPosX;
             double y = data.getY() - mc.getRenderManager().viewerPosY;
             double z = data.getZ() - mc.getRenderManager().viewerPosZ;
             float yaw = data.getYaw();
+            float headYaw = data.getHeadYaw();
             float pitch = data.getPitch();
+            float limbSwing = data.getLimbSwing();
+            float limbSwingAmount = data.getLimbSwingAmount();
 
-            AxisAlignedBB head = new AxisAlignedBB(
-                    x + HEAD_X, y + HEAD_Y, z + HEAD_Z,
-                    x + HEAD_X1, y + HEAD_Y1, z + HEAD_Z1);
-            AxisAlignedBB chest = new AxisAlignedBB(
-                    x + CHEST_X, y + CHEST_Y, z + CHEST_Z,
-                    x + CHEST_X1, y + CHEST_Y1, z + CHEST_Z1);
-            AxisAlignedBB arm1 = new AxisAlignedBB(
-                    x + ARM1_X, y + ARM1_Y, z + ARM1_Z,
-                    x + ARM1_X1, y + ARM1_Y1, z + ARM1_Z1);
-            AxisAlignedBB arm2 = new AxisAlignedBB(
-                    x + ARM2_X, y + ARM2_Y, z + ARM2_Z,
-                    x + ARM2_X1, y + ARM2_Y1, z + ARM2_Z1);
-            AxisAlignedBB leg1 = new AxisAlignedBB(
-                    x + LEG1_X, y + LEG1_Y, z + LEG1_Z,
-                    x + LEG1_X1, y + LEG1_Y1, z + LEG1_Z1);
-            AxisAlignedBB leg2 = new AxisAlignedBB(
-                    x + LEG2_X, y + LEG2_Y, z + LEG2_Z,
-                    x + LEG2_X1, y + LEG2_Y1, z + LEG2_Z1);
             GlStateManager.pushMatrix();
+            RenderUtil.startRender();
 
             GlStateManager.translate(x, y, z);
-            GlStateManager.rotate(180 + (-(yaw + 90)), 0.0f, 1.0f, 0.0f);
-            GlStateManager.translate(-x, -y, -z);
+            GlStateManager.rotate(180 - yaw, 0, 1, 0);
 
             final Color boxColor = module.getColor(data.getPlayer());
             final Color outlineColor = module.getOutlineColor(data.getPlayer());
@@ -112,25 +51,30 @@ final class ListenerRender extends ModuleListener<PopChams, Render3DEvent>
             Color box = new Color(boxColor.getRed(),boxColor.getGreen(),boxColor.getBlue(),fadeBoxAlpha);
             Color out = new Color(outlineColor.getRed(),outlineColor.getGreen(),outlineColor.getBlue(),fadeOutlineAlpha);
 
-            renderAxis(chest, box, out);
-            renderAxis(arm1, box, out);
-            renderAxis(arm2, box, out);
-            renderAxis(leg1, box, out);
-            renderAxis(leg2, box, out);
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.scale(-1.0F, -1.0F, 1.0F);
+            double widthX = player.getEntityBoundingBox().maxX - player.getRenderBoundingBox().minX + 1;
+            double widthZ = player.getEntityBoundingBox().maxZ - player.getEntityBoundingBox().minZ + 1;
 
-            GlStateManager.translate(x, y + 1.5, z);
-            GlStateManager.rotate(pitch, 0.0f, 0.0f, 1.0f);
-            GlStateManager.translate(-x, -y - 1.5, -z);
+            GlStateManager.scale(widthX, player.height, widthZ);
 
-            renderAxis(head, box, out);
+            GlStateManager.translate(0.0F, -1.501F, 0.0F);
+
+            RenderUtil.color(box);
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+            model.render(player, limbSwing, limbSwingAmount, 0, headYaw, pitch, 0.0625f);
+
+            RenderUtil.color(out);
+            GL11.glLineWidth(module.lineWidth.getValue());
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+            model.render(player, limbSwing, limbSwingAmount, 0, headYaw, pitch, 0.0625f);
+
+            RenderUtil.endRender();
             GlStateManager.popMatrix();
 
         }
 
-        module.getPopDataHashMap().entrySet().removeIf(e -> e.getValue().getTime() + module.fadeTime.getValue() < System.currentTimeMillis());
+        module.getPopDataList().removeIf(e -> e.getTime() + module.fadeTime.getValue() < System.currentTimeMillis());
     }
 
-    private void renderAxis(AxisAlignedBB bb, Color color, Color outline) {
-        RenderUtil.renderBox(bb, color, outline, module.lineWidth.getValue());
-    }
 }
