@@ -14,13 +14,13 @@ final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
         if (!module.isValidEntity(event.getEntity()))
             return;
 
-        module.getPopDataHashMap().put(event.getEntity().getName(),
-                new PopChams.PopData(event.getEntity(),
+        module.getPopDataList().add(new PopChams.PopData(event.getEntity(),
                         System.currentTimeMillis(),
                         event.getEntity().rotationYaw,
                         event.getEntity().rotationPitch,
                         event.getEntity().posX,
                         event.getEntity().posY,
-                        event.getEntity().posZ));
+                        event.getEntity().posZ,
+                        module.copyAnimations.getValue()));
     }
 }

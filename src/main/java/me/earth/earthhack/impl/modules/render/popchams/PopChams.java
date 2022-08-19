@@ -1,5 +1,6 @@
 package me.earth.earthhack.impl.modules.render.popchams;
 
+import com.mojang.authlib.GameProfile;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
@@ -7,10 +8,13 @@ import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.helpers.render.BlockESPModule;
+import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.awt.*;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class PopChams extends BlockESPModule
 {
@@ -22,13 +26,15 @@ public class PopChams extends BlockESPModule
             register(new ColorSetting("Self-Color", new Color(80, 80, 255, 80)));
     public final ColorSetting selfOutline =
             register(new ColorSetting("Self-Outline", new Color(80, 80, 255, 255)));
+    public final BooleanSetting copyAnimations =
+            register(new BooleanSetting("Copy-Animations", true));
     protected final Setting<Boolean> friendPop =
             register(new BooleanSetting("Friend-Pop", false));
     public final ColorSetting friendColor =
             register(new ColorSetting("Friend-Color", new Color(45, 255, 45, 80)));
     public final ColorSetting friendOutline =
             register(new ColorSetting("Friend-Outline", new Color(45, 255, 45, 255)));
-    private final HashMap<String,PopData> popDataHashMap = new HashMap<>();
+    private final List<PopData> popDataList = new ArrayList<>();
 
     public PopChams()
     {
@@ -40,14 +46,8 @@ public class PopChams extends BlockESPModule
         this.unregister(super.height);
     }
 
-    @Override
-    protected void onEnable()
-    {
-        popDataHashMap.clear();
-    }
-
-    public HashMap<String, PopData> getPopDataHashMap() {
-        return popDataHashMap;
+    public List<PopData> getPopDataList() {
+        return popDataList;
     }
 
     protected Color getColor(EntityPlayer entity) {
@@ -76,21 +76,37 @@ public class PopChams extends BlockESPModule
 
     public static class PopData {
         private final EntityPlayer player;
+        private final ModelPlayer model;
         private final long time;
+        private final float limbSwing;
+        private final float limbSwingAmount;
         private final float yaw;
+        private final float headYaw;
         private final float pitch;
         private final double x;
         private final double y;
         private final double z;
 
-        public PopData(EntityPlayer player, long time, float yaw, float pitch, double x, double y, double z) {
+        public PopData(EntityPlayer player, long time, float yaw, float pitch, double x, double y, double z, boolean copyLimbSwing) {
             this.player = player;
+            this.limbSwing = copyLimbSwing ? player.limbSwing : 0;
+            this.limbSwingAmount = copyLimbSwing ? player.limbSwingAmount : 0;
+            this.headYaw = player.rotationYawHead;
             this.time = time;
             this.yaw = yaw;
             this.pitch = pitch;
             this.x = x;
-            this.y = y;
+            this.y = y - (player.isSneaking() ? 0.125 : 0);
             this.z = z;
+            this.model = new ModelPlayer(0, false);
+            this.model.bipedBodyWear.showModel = false;
+            this.model.bipedLeftLegwear.showModel = false;
+            this.model.bipedRightLegwear.showModel = false;
+            this.model.bipedLeftArmwear.showModel = false;
+            this.model.bipedRightArmwear.showModel = false;
+            this.model.bipedHeadwear.showModel = true;
+            this.model.bipedHead.showModel = false;
+            this.model.setLivingAnimations(player, limbSwing, limbSwingAmount, mc.getRenderPartialTicks());
         }
 
         public EntityPlayer getPlayer() {
@@ -105,8 +121,20 @@ public class PopChams extends BlockESPModule
             return yaw;
         }
 
+        public float getHeadYaw() {
+            return headYaw;
+        }
+
         public float getPitch() {
             return pitch;
+        }
+
+        public float getLimbSwing() {
+            return limbSwing;
+        }
+
+        public float getLimbSwingAmount() {
+            return limbSwingAmount;
         }
 
         public double getX() {
@@ -119,6 +147,10 @@ public class PopChams extends BlockESPModule
 
         public double getZ() {
             return z;
+        }
+
+        public ModelPlayer getModel() {
+            return model;
         }
     }
 }
