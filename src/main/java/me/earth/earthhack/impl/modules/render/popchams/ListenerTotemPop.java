@@ -31,7 +31,7 @@ final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
         if (module.copyAnimations.getValue()) {
             playerCopy.setSneaking(player.isSneaking());
             playerCopy.limbSwing = player.limbSwing;
-            playerCopy.limbSwingAmount = player.limbSwingAmount;
+            playerCopy.limbSwingAmount = player.prevLimbSwingAmount;
         }
         playerCopy.setEntityId(player.getEntityId());
         playerCopy.copyLocationAndAnglesFrom(player);
