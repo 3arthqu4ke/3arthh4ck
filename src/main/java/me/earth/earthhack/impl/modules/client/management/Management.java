@@ -83,6 +83,8 @@ public class Management extends Module
         // TODO: kinda ugly that this is here
         register(new BooleanSetting("PB-SetPos", true))
             .setComplexity(Complexity.Expert);
+        register(new BooleanSetting("PB-FixChunks", false))
+            .setComplexity(Complexity.Expert);
 
         this.setData(new ManagementData(this));
         this.clear.addObserver(event ->

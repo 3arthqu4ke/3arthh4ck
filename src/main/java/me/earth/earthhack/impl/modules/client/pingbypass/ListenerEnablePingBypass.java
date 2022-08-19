@@ -30,7 +30,7 @@ public class ListenerEnablePingBypass extends ModuleListener<PingBypassModule, P
             if (PingBypass.isServer()) {
                 ITextComponent reason = new TextComponentString(
                     "PingBypass server should not connect" +
-                        " to other PingBypass server!");
+                        " to another PingBypass server!");
                 Earthhack.getLogger().error(reason.getFormattedText());
                 event.getNetworkManager().closeChannel(reason);
                 mc.addScheduledTask(() -> mc.displayGuiScreen(
