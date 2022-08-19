@@ -343,7 +343,7 @@ public class BlockUtil implements Globals
         for (EnumFacing face : HORIZONTALS)
         {
             BlockPos off = up.offset(face);
-            IBlockState state = mc.world.getBlockState(off);
+            //IBlockState state = mc.world.getBlockState(off);
             if (mc.world.getEntitiesWithinAABB(EntityPlayer.class,
                     new AxisAlignedBB(off))
                     .contains(player))
@@ -352,7 +352,7 @@ public class BlockUtil implements Globals
             }
 
             BlockPos off2 = off.offset(face);
-            IBlockState offState = mc.world.getBlockState(off2);
+            //IBlockState offState = mc.world.getBlockState(off2);
             if (mc.world.getEntitiesWithinAABB(EntityPlayer.class,
                     new AxisAlignedBB(off2))
                     .contains(player))

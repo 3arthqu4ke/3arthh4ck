@@ -142,6 +142,7 @@ public class Offhand extends Module
                 return mode.getName();
             case Name:
                 return InventoryUtil.getCount(mode.getItem()) + "";
+            default:
         }
 
         return null;

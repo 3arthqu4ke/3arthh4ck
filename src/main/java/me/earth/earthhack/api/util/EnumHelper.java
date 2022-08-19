@@ -67,15 +67,15 @@ public class EnumHelper {
         return null;
     }
 
-    public static Enum<?> getEnumStartingWith(String prefix,
+    public static Enum<?> getEnumStartingWith(String prefixIn,
                                               Class<? extends Enum<?>> type)
     {
-        if (prefix == null)
+        if (prefixIn == null)
         {
             return null;
         }
 
-        prefix = prefix.toLowerCase();
+        String prefix = prefixIn.toLowerCase();
         Enum<?>[] array = type.getEnumConstants();
         for (Enum<?> entry : array)
         {

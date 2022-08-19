@@ -1,11 +1,21 @@
 package me.earth.earthhack.impl.util.ncp;
 
 public abstract class NcpTrace {
-    protected double x0, y0, z0;
-    protected double dX, dY, dZ;
-    protected int blockX, blockY, blockZ;
-    protected int endBlockX, endBlockY, endBlockZ;
-    protected double oX, oY, oZ;
+    protected double x0;
+    protected double y0;
+    protected double z0;
+    protected double dX;
+    protected double dY;
+    protected double dZ;
+    protected int blockX;
+    protected int blockY;
+    protected int blockZ;
+    protected int endBlockX;
+    protected int endBlockY;
+    protected int endBlockZ;
+    protected double oX;
+    protected double oY;
+    protected double oZ;
     protected double t = Double.MIN_VALUE;
     protected double tol = 0.0;
     protected boolean forceStepEndPos = true;

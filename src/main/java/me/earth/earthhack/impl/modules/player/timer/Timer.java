@@ -95,6 +95,7 @@ public class Timer extends DisablingModule
             case Blink:
                 return (packets > 0 && pSpeed != 1.0f ? TextColor.GREEN : color)
                         + packets;
+            default:
         }
 
         return color + speed.getValue().toString();

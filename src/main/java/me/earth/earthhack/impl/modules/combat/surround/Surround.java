@@ -247,6 +247,7 @@ public class Surround extends ObbyModule
                     return false;
                 }
                 break;
+            default:
         }
 
         return timer.passed(delay.getValue());
