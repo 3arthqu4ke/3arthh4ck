@@ -28,10 +28,12 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
             register(new BooleanSetting("Incoming", true));
     protected final Setting<Boolean> outgoing =
             register(new BooleanSetting("Outgoing", true));
-    protected final Setting<Boolean> pb2C =
+    protected final Setting<Boolean> pbCustom =
             register(new BooleanSetting("PB-Custom", true));
     protected final Setting<Boolean> c2Pb =
             register(new BooleanSetting("Client-2-PB", true));
+    protected final Setting<Boolean> pb2C =
+            register(new BooleanSetting("PB-2-Client", false));
     protected final Setting<Boolean> info =
             register(new BooleanSetting("Info", true));
     protected final Setting<Boolean> chat =
@@ -70,6 +72,7 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
         this.listeners.add(new ListenerSend(this));
         this.listeners.add(new ListenerCustomPbPacket(this));
         this.listeners.add(new ListenerPbReceive(this));
+        this.listeners.add(new ListenerPb2Client(this));
         this.setData(new LoggerData(this));
     }
 
@@ -111,6 +114,11 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
 
     public void logPacket(Packet<?> packet, String message, boolean cancelled, boolean out)
     {
+        logPacket(packet, message, cancelled, out, true);
+    }
+
+    public void logPacket(Packet<?> packet, String message, boolean cancelled, boolean out, boolean allowChat)
+    {
         String simpleName = MappingProvider.simpleName(packet.getClass());
         if (filter.getValue() && !isValid(simpleName))
         {
@@ -122,6 +130,22 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                 .append(", cancelled : ")
                 .append(cancelled);
 
+        appendDelay(outPut, out);
+        outPut.append("\n");
+        appendInfo(outPut, packet);
+
+        String s = outPut.toString();
+        printChat(s, allowChat);
+        Earthhack.getLogger().info(s);
+
+        if (stackTrace.getValue())
+        {
+            Thread.dumpStack();
+        }
+    }
+
+    private void appendDelay(StringBuilder outPut, boolean out)
+    {
         if (delay.getValue())
         {
             long difference;
@@ -138,11 +162,13 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
             }
 
             outPut.append(", last : ")
-                    .append(difference)
-                    .append("ms");
+                  .append(difference)
+                  .append("ms");
         }
+    }
 
-        outPut.append("\n");
+    private void appendInfo(StringBuilder outPut, Packet<?> packet)
+    {
         if (info.getValue())
         {
             try
@@ -155,7 +181,7 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                         if (field != null)
                         {
                             if (Modifier.isStatic(field.getModifiers())
-                                    && !statics.getValue())
+                                && !statics.getValue())
                             {
                                 continue;
                             }
@@ -178,42 +204,39 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                             }
 
                             outPut.append("     ")
-                                    .append(getName(clazz, field))
-                                    .append(" : ")
-                                    .append(objToString)
-                                    .append("\n");
+                                  .append(getName(clazz, field))
+                                  .append(" : ")
+                                  .append(objToString)
+                                  .append("\n");
                         }
                     }
 
                     clazz = clazz.getSuperclass();
                 }
-            } catch (IllegalAccessException e)
+            }
+            catch (IllegalAccessException e)
             {
                 e.printStackTrace();
             }
         }
+    }
 
-        String s = outPut.toString();
-        if (chat.getValue())
+    private void printChat(String message, boolean allowChat)
+    {
+        if (chat.getValue() && allowChat)
         {
             mc.addScheduledTask(() ->
             {
                 cancel = true;
                 try
                 {
-                    ChatUtil.sendMessage(s);
-                } finally
+                    ChatUtil.sendMessage(message);
+                }
+                finally
                 {
                     cancel = false;
                 }
             });
-        }
-
-        Earthhack.getLogger().info(s);
-
-        if (stackTrace.getValue())
-        {
-            Thread.dumpStack();
         }
     }
 

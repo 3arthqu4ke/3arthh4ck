@@ -55,6 +55,7 @@ public class PingBypass implements Globals {
 
     public static void init() {
         SplashScreenHelper.setSubStep("Loading PingBypass");
+        Bus.EVENT_BUS.register(new PbAntiTrollListener());
         if (isServer()) {
             LOGGER.info("Initializing PingBypass-Server!");
             // preload these LazyLoadBase because they are not really made for
