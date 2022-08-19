@@ -7,8 +7,6 @@ import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.modules.misc.rpc.RPC;
 import me.earth.earthhack.impl.util.math.StopWatch;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,14 +34,13 @@ public class DiscordPresence implements Globals
 
         LOGGER.info("Initializing Discord RPC");
         DiscordEventHandlers handlers = new DiscordEventHandlers();
-        rpc.Discord_Initialize("964981608941776966", handlers, true, "");
+        rpc.Discord_Initialize("1010130512439955496", handlers, true, "");
         presence.startTimestamp = System.currentTimeMillis() / 1000L;
         presence.details = getDetails();
         presence.state = module.state.getValue();
-        presence.largeImageKey = "phobosrpc";
-        presence.largeImageText = Earthhack.NAME;
-        presence.smallImageKey = "phobosrpc";
-        presence.smallImageText = Earthhack.NAME;
+        presence.largeImageKey = "logo_1024x1024";
+        presence.smallImageKey = "skin";
+        presence.smallImageText = Earthhack.NAME + " " + Earthhack.VERSION;
         presence.largeImageText = Earthhack.NAME + " " + Earthhack.VERSION;
         rpc.Discord_UpdatePresence(DiscordPresence.presence);
         StopWatch timer = new StopWatch();
