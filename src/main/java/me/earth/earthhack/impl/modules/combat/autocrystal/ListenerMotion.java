@@ -96,8 +96,15 @@ final class ListenerMotion extends
                 if (bypassPos != null) {
                     float[] rotations =
                         RotationUtil.getRotationsToTopMiddleUp(bypassPos);
-                    event.setYaw((rotations[0] + 180) % 360);
-                    event.setPitch(-rotations[1]);
+                    float pitch =
+                        rotations[1] == 0.0f && module.rbYaw.getValue() != 0.0f
+                            ? 0.0f
+                            : rotations[1] < 0.0f
+                                ? rotations[1] + module.rbPitch.getValue()
+                                : rotations[1] - module.rbPitch.getValue();
+
+                    event.setYaw((rotations[0] + module.rbYaw.getValue()) % 360);
+                    event.setPitch(pitch);
                 }
             }
         } else {

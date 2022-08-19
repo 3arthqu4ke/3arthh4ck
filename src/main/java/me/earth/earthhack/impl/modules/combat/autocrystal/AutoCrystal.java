@@ -152,6 +152,12 @@ public class AutoCrystal extends Module
     protected final Setting<Integer> bypassTicks =
             register(new NumberSetting<>("BypassTicks", 10, 0, 20))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Float> rbYaw =
+            register(new NumberSetting<>("RB-Yaw", 180.0f, 0.0f, 180.0f))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Float> rbPitch =
+            register(new NumberSetting<>("RB-Pitch", 90.0f, 0.0f, 90.0f))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> bypassRotationTime =
             register(new NumberSetting<>("RayBypassRotationTime", 500, 0, 1000))
                 .setComplexity(Complexity.Expert);
