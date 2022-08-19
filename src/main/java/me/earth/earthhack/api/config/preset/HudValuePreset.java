@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.earth.earthhack.api.config.Jsonable;
 import me.earth.earthhack.api.hud.HudElement;
-import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.setting.GeneratedSettings;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BindSetting;

@@ -2,9 +2,9 @@ package me.earth.earthhack.impl.util.minecraft;
 
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.util.bind.Bind;
-import net.minecraft.client.settings.KeyBinding;
 import me.earth.earthhack.pingbypass.input.Keyboard;
 import me.earth.earthhack.pingbypass.input.Mouse;
+import net.minecraft.client.settings.KeyBinding;
 
 public class KeyBoardUtil
 {

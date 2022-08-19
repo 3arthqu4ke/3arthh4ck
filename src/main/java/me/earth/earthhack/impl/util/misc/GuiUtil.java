@@ -4,9 +4,6 @@ import me.earth.earthhack.api.hud.HudElement;
 import me.earth.earthhack.impl.gui.click.frame.Frame;
 import me.earth.earthhack.impl.gui.hud.AbstractGuiElement;
 import me.earth.earthhack.impl.gui.hud.rewrite.SnapPoint;
-import me.earth.earthhack.impl.util.render.Render2DUtil;
-
-import java.awt.*;
 
 public class GuiUtil {
 

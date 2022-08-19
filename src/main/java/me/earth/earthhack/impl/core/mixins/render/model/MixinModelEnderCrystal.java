@@ -2,11 +2,9 @@ package me.earth.earthhack.impl.core.mixins.render.model;
 
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.event.events.Stage;
-import me.earth.earthhack.impl.event.events.render.CrystalRenderEvent;
 import me.earth.earthhack.impl.event.events.render.RenderCrystalCubeEvent;
 import net.minecraft.client.model.ModelEnderCrystal;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

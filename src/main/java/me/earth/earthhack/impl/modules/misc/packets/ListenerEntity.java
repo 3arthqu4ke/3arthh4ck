@@ -1,7 +1,6 @@
 package me.earth.earthhack.impl.modules.misc.packets;
 
 import me.earth.earthhack.impl.core.ducks.entity.IEntity;
-import me.earth.earthhack.impl.core.ducks.network.ISPacketEntityTeleport;
 import me.earth.earthhack.impl.core.mixins.network.server.ISPacketEntity;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.SPacketEntityListener;

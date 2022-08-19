@@ -3,7 +3,6 @@ package me.earth.earthhack.forge.mixins.minecraftforge;
 import me.earth.earthhack.impl.util.thread.Locks;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.common.ForgeHooks;
-import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;

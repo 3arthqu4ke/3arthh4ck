@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.modules.combat.bowkill;
 
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.CPacketPlayerListener;
-import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import net.minecraft.network.play.client.CPacketPlayer;
 
 final class ListenerCPacket extends CPacketPlayerListener

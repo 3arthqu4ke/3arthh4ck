@@ -1,7 +1,6 @@
 package me.earth.earthhack.impl.util.render.image;
 
 import me.earth.earthhack.api.util.interfaces.Nameable;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 
 public class NameableImage implements Nameable
 {

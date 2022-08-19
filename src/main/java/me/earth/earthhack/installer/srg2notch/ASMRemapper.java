@@ -1,12 +1,7 @@
 package me.earth.earthhack.installer.srg2notch;
 
 import me.earth.earthhack.impl.core.util.AsmUtil;
-import me.earth.earthhack.installer.srg2notch.remappers.AnnotationRemapper;
-import me.earth.earthhack.installer.srg2notch.remappers.ClassRemapper;
-import me.earth.earthhack.installer.srg2notch.remappers.FieldRemapper;
-import me.earth.earthhack.installer.srg2notch.remappers.InstructionRemapper;
-import me.earth.earthhack.installer.srg2notch.remappers.MethodRemapper;
-import me.earth.earthhack.installer.srg2notch.remappers.Remapper;
+import me.earth.earthhack.installer.srg2notch.remappers.*;
 import org.objectweb.asm.tree.ClassNode;
 
 public class ASMRemapper

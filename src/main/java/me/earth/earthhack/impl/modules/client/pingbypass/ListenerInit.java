@@ -1,7 +1,6 @@
 package me.earth.earthhack.impl.modules.client.pingbypass;
 
 import me.earth.earthhack.api.event.bus.instance.Bus;
-import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.event.events.client.InitEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.pingbypass.PingBypass;

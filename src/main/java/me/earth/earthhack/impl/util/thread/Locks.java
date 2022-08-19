@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.util.thread;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Supplier;
 
 /**
  * Locks that the client uses.

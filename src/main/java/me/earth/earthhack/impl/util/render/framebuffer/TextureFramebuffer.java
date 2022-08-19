@@ -3,7 +3,6 @@ package me.earth.earthhack.impl.util.render.framebuffer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import org.lwjgl.opengl.*;
 
 import java.nio.IntBuffer;
 

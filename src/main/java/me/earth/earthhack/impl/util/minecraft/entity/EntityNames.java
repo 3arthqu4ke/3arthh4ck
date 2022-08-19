@@ -1,12 +1,7 @@
 package me.earth.earthhack.impl.util.minecraft.entity;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityEnderCrystal;
-import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.item.EntityMinecartEmpty;
-import net.minecraft.entity.item.EntityMinecartFurnace;
-import net.minecraft.entity.item.EntityMinecartTNT;
+import net.minecraft.entity.item.*;
 
 import java.util.AbstractMap;
 import java.util.LinkedList;

@@ -1,11 +1,8 @@
 package me.earth.earthhack.impl.modules.render.sounds;
 
-import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
-import me.earth.earthhack.impl.modules.render.sounds.util.CoordLogger;
 import me.earth.earthhack.impl.modules.render.sounds.util.SoundPosition;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundEventAccessor;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketSoundEffect;

@@ -11,7 +11,6 @@ import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
 import me.earth.earthhack.impl.modules.misc.nointerp.NoInterp;
 import me.earth.earthhack.impl.modules.player.fakeplayer.FakePlayer;
 import me.earth.earthhack.impl.modules.player.suicide.Suicide;
-import me.earth.earthhack.pingbypass.PingBypass;
 
 public class PbModuleManager extends ModuleManager {
     public void init(ModuleManager manager) {

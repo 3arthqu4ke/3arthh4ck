@@ -3,9 +3,7 @@ package me.earth.earthhack.impl.modules.movement.phase;
 import me.earth.earthhack.impl.event.events.misc.CollisionEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
-import me.earth.earthhack.impl.util.network.PacketUtil;
 import net.minecraft.init.Blocks;
-import net.minecraft.network.play.client.CPacketEntityAction;
 
 final class ListenerCollision extends ModuleListener<Phase, CollisionEvent>
 {

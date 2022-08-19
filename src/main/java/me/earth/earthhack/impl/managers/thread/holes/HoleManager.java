@@ -7,15 +7,10 @@ import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import me.earth.earthhack.impl.event.events.network.WorldClientEvent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.minecraft.blocks.HoleUtil;
-import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**

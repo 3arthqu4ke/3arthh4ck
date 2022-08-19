@@ -1,6 +1,5 @@
 package me.earth.earthhack.impl.modules.render.trails;
 
-import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import net.minecraft.network.play.server.SPacketDestroyEntities;

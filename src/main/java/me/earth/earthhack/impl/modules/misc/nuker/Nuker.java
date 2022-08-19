@@ -15,8 +15,8 @@ import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.Swing;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
-import me.earth.earthhack.impl.util.minecraft.blocks.mine.MineUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.SpecialBlocks;
+import me.earth.earthhack.impl.util.minecraft.blocks.mine.MineUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
 import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.block.Block;
@@ -31,11 +31,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 public class Nuker extends Module
 {

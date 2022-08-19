@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.util.render.framebuffer;
 
 import me.earth.earthhack.impl.util.render.GlObject;
 import net.minecraft.client.renderer.OpenGlHelper;
-import org.lwjgl.opengl.GL30;
 
 import static org.lwjgl.opengl.GL30.*;
 

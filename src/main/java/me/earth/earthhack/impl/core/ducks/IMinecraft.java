@@ -1,7 +1,6 @@
 package me.earth.earthhack.impl.core.ducks;
 
 import net.minecraft.client.resources.data.MetadataSerializer;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.util.Timer;
 
 /**

@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.modules.misc.packetdelay;
 
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
-import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.impl.util.helpers.addable.RegisteringModule;
@@ -11,9 +10,6 @@ import me.earth.earthhack.impl.util.mcp.MappingProvider;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.thread.ThreadUtil;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.client.CPacketConfirmTransaction;
-import net.minecraft.network.play.client.CPacketKeepAlive;
-import net.minecraft.network.play.client.CPacketResourcePackStatus;
 
 import java.util.Collections;
 import java.util.List;

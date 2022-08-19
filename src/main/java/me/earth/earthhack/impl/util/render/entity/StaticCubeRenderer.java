@@ -1,12 +1,10 @@
 package me.earth.earthhack.impl.util.render.entity;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 

@@ -11,10 +11,10 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.movement.longjump.mode.JumpMode;
 import me.earth.earthhack.impl.util.helpers.disabling.DisablingModule;
 import me.earth.earthhack.impl.util.minecraft.MovementUtil;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
-import me.earth.earthhack.pingbypass.input.Keyboard;
 
 import java.util.List;
 

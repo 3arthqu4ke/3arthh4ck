@@ -1,7 +1,6 @@
 package me.earth.earthhack.impl.event.events.render;
 
 import me.earth.earthhack.api.event.events.Event;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 
 public class RenderEntityInWorldEvent extends Event {

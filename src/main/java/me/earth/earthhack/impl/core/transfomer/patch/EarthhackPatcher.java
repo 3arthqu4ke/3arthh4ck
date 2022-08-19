@@ -4,10 +4,7 @@ import me.earth.earthhack.impl.core.Core;
 import me.earth.earthhack.impl.core.transfomer.Patch;
 import me.earth.earthhack.impl.core.transfomer.PatchManager;
 import me.earth.earthhack.impl.core.util.AsmUtil;
-import me.earth.earthhack.impl.core.util.NoSuperClassWriter;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.List;

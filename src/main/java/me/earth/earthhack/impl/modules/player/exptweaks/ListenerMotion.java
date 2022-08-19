@@ -5,9 +5,9 @@ import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemFood;
-import me.earth.earthhack.pingbypass.input.Mouse;
 
 final class ListenerMotion extends ModuleListener<ExpTweaks, MotionUpdateEvent>
 {

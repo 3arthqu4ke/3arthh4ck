@@ -1,7 +1,6 @@
 package me.earth.earthhack.impl.managers.client;
 
 import me.earth.earthhack.api.observable.Observable;
-import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.client.event.PlayerEvent;
 import me.earth.earthhack.impl.managers.client.event.PlayerEventType;

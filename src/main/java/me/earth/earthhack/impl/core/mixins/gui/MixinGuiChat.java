@@ -2,11 +2,11 @@ package me.earth.earthhack.impl.core.mixins.gui;
 
 import me.earth.earthhack.impl.core.ducks.gui.IGuiChat;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.TabCompleter;
 import net.minecraft.util.text.ITextComponent;
-import me.earth.earthhack.pingbypass.input.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

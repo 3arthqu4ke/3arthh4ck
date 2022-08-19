@@ -7,11 +7,8 @@ import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityRenderer;
-import me.earth.earthhack.impl.modules.render.xray.mode.XrayMode;
 import me.earth.earthhack.impl.util.render.WorldRenderUtil;
 import me.earth.earthhack.vanilla.Environment;
-import net.minecraft.block.BlockVine;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 
 import java.awt.*;
 import java.lang.reflect.Field;

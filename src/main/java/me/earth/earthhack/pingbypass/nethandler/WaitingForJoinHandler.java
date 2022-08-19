@@ -1,13 +1,8 @@
 package me.earth.earthhack.pingbypass.nethandler;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
-import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.pingbypass.protocol.ProtocolFactory;
 import me.earth.earthhack.pingbypass.protocol.ProtocolFactoryImpl;
-import me.earth.earthhack.pingbypass.protocol.s2c.S2CPositionPacket;
-import me.earth.earthhack.pingbypass.proxy.WorldSender;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.CPacketChatMessage;
 import net.minecraft.network.play.client.CPacketCustomPayload;

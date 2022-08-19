@@ -1,11 +1,7 @@
 package me.earth.earthhack.impl.commands.packet.array;
 
-import me.earth.earthhack.api.command.Completer;
-import me.earth.earthhack.api.command.PossibleInputs;
-import me.earth.earthhack.impl.commands.packet.AbstractArgument;
 import me.earth.earthhack.impl.commands.packet.PacketArgument;
 import me.earth.earthhack.impl.commands.packet.exception.ArgParseException;
-import me.earth.earthhack.impl.util.helpers.command.CustomCompleterResult;
 
 public class SimpleArrayArgument extends AbstractArrayArgument<Object>
 {

@@ -10,24 +10,17 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.anvilaura.AnvilAura;
 import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.SwingTime;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalTimeStamp;
 import me.earth.earthhack.impl.modules.misc.nuker.Nuker;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.ESPMode;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.MineMode;
 import me.earth.earthhack.impl.util.math.MathUtil;
-import me.earth.earthhack.impl.util.math.RayTraceUtil;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.ArmUtil;
-import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.PlayerUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.mine.MineUtil;
-import me.earth.earthhack.impl.util.minecraft.blocks.states.BlockStateHelper;
-import me.earth.earthhack.impl.util.minecraft.blocks.states.IBlockStateHelper;
-import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
 import me.earth.earthhack.pingbypass.PingBypass;
@@ -43,7 +36,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 
 //TODO: maybe account for Tps?
 final class ListenerUpdate extends ModuleListener<Speedmine, UpdateEvent>

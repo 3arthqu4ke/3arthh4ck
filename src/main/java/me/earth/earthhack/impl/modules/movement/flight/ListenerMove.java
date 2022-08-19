@@ -5,9 +5,6 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import net.minecraft.init.MobEffects;
-import net.minecraft.potion.Potion;
-
-import java.util.Objects;
 
 final class ListenerMove extends ModuleListener<Flight, MoveEvent> {
     public ListenerMove(Flight module) {

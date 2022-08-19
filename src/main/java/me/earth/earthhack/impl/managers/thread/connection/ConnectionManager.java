@@ -9,7 +9,6 @@ import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.thread.lookup.LookUp;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.play.client.CPacketKeepAlive;
 import net.minecraft.network.play.server.SPacketPlayerListItem;
 
 import java.util.Objects;

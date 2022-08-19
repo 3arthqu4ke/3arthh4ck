@@ -5,7 +5,6 @@ import me.earth.earthhack.api.event.bus.SubscriberImpl;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.util.interfaces.Globals;
-import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.core.ducks.entity.IEntity;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityPlayer;
 import me.earth.earthhack.impl.core.ducks.network.ISPacketEntityTeleport;

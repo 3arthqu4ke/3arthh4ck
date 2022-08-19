@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.core.mixins.render;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.event.bus.instance.Bus;
-import me.earth.earthhack.api.event.events.Stage;
 import me.earth.earthhack.impl.event.events.render.RenderArmorEvent;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.render.chams.Chams;
@@ -11,9 +10,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.layers.LayerArmorBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
 
 @Mixin(LayerArmorBase.class)
 public abstract class MixinLayerArmorBase {

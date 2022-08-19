@@ -1,8 +1,5 @@
 package me.earth.earthhack.impl.commands;
 
-import me.earth.earthhack.api.command.Command;
-import me.earth.earthhack.api.command.Completer;
-import me.earth.earthhack.api.command.PossibleInputs;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.commands.abstracts.AbstractTextCommand;
 import me.earth.earthhack.impl.commands.util.CommandDescriptions;

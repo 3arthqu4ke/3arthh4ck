@@ -7,8 +7,8 @@ import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.util.math.StopWatch;
-import net.minecraft.item.ItemFood;
 import me.earth.earthhack.pingbypass.input.Mouse;
+import net.minecraft.item.ItemFood;
 
 public class AntiAim extends Module
 {

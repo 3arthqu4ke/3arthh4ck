@@ -5,7 +5,6 @@ import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.event.listeners.ReceiveListener;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.network.play.server.SPacketPlayerListHeaderFooter;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.regex.Matcher;

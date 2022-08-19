@@ -1,7 +1,6 @@
 package me.earth.earthhack.pingbypass.listeners;
 
 import me.earth.earthhack.api.event.bus.EventListener;
-import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import me.earth.earthhack.pingbypass.netty.PbNetworkSystem;
 

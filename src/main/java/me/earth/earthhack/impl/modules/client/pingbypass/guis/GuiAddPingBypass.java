@@ -4,10 +4,10 @@ import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.setting.settings.StringSetting;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import me.earth.earthhack.pingbypass.input.Keyboard;
 
 import java.io.IOException;
 

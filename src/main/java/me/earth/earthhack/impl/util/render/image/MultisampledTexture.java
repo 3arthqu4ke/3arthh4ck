@@ -1,15 +1,8 @@
 package me.earth.earthhack.impl.util.render.image;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.client.resources.IResourceManager;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL32;
-
-import java.io.IOException;
 
 /**
  * Multisampled 2 dimensional texture for use as a framebuffer attachment.

@@ -6,13 +6,7 @@ import me.earth.earthhack.impl.core.util.AsmUtil;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.I2L;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.IRETURN;
-import static org.objectweb.asm.Opcodes.L2I;
-import static org.objectweb.asm.Opcodes.LADD;
-import static org.objectweb.asm.Opcodes.LMUL;
+import static org.objectweb.asm.Opcodes.*;
 
 /**
  * Implements leijurvs BetterBlockPos directly.

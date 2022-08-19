@@ -1,8 +1,6 @@
 package me.earth.earthhack.impl.util.mcp;
 
 import me.earth.earthhack.impl.util.misc.ReflectionUtil;
-import me.earth.earthhack.tweaker.launch.Argument;
-import me.earth.earthhack.tweaker.launch.DevArguments;
 import me.earth.earthhack.vanilla.Environment;
 
 import java.io.BufferedReader;

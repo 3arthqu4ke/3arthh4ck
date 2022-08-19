@@ -6,7 +6,6 @@ import me.earth.earthhack.impl.gui.chat.components.SettingComponent;
 import me.earth.earthhack.impl.gui.chat.components.SimpleComponent;
 import me.earth.earthhack.impl.gui.chat.factory.ComponentFactory;
 import me.earth.earthhack.impl.modules.client.commands.Commands;
-import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.Style;

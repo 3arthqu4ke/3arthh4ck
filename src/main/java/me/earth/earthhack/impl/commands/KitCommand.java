@@ -10,8 +10,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 
-import java.io.IOException;
-
 public class KitCommand extends AbstractStackCommand implements Globals
 {
     private static final ItemStack KIT;

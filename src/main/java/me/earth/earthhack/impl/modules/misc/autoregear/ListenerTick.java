@@ -3,21 +3,17 @@ package me.earth.earthhack.impl.modules.misc.autoregear;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
-import me.earth.earthhack.impl.util.helpers.addable.setting.SimpleRemovingSetting;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
-import net.minecraft.block.BlockEnderChest;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiShulkerBox;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.util.NonNullList;
 
 // TODO: make code not shit

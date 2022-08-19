@@ -4,12 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.earth.earthhack.api.config.Jsonable;
 import me.earth.earthhack.api.util.bind.Bind;
-import me.earth.earthhack.impl.managers.client.macro.CombinedMacro;
-import me.earth.earthhack.impl.managers.client.macro.DelegateMacro;
-import me.earth.earthhack.impl.managers.client.macro.FlowMacro;
-import me.earth.earthhack.impl.managers.client.macro.Macro;
-import me.earth.earthhack.impl.managers.client.macro.MacroManager;
-import me.earth.earthhack.impl.managers.client.macro.MacroType;
+import me.earth.earthhack.impl.managers.client.macro.*;
 import me.earth.earthhack.impl.managers.config.util.MacroConfig;
 
 import java.io.InputStream;

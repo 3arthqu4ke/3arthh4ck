@@ -3,7 +3,6 @@ package me.earth.earthhack.impl.modules.movement.speed;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import net.minecraft.network.play.server.SPacketPlayerPosLook;
 
 final class ListenerPosLook extends

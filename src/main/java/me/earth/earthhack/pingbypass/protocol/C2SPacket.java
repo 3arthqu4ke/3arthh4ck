@@ -4,7 +4,6 @@ import io.netty.buffer.Unpooled;
 import me.earth.earthhack.impl.util.network.CustomPacket;
 import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 

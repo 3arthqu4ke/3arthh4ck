@@ -4,21 +4,13 @@ import me.earth.earthhack.api.event.bus.EventListener;
 import me.earth.earthhack.api.event.bus.SubscriberImpl;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityRenderer;
-import me.earth.earthhack.impl.event.events.misc.TickEvent;
-import me.earth.earthhack.impl.event.events.render.Render2DEvent;
 import me.earth.earthhack.impl.event.events.render.Render3DEvent;
-import me.earth.earthhack.impl.util.misc.collections.CollectionUtil;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
-import org.lwjgl.opengl.GL11;
-
-import java.nio.FloatBuffer;
-import java.util.HashSet;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.GL_CURRENT_PROGRAM;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 /**
  * @author megyn

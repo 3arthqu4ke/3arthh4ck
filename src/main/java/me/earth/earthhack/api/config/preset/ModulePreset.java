@@ -1,7 +1,6 @@
 package me.earth.earthhack.api.config.preset;
 
 import me.earth.earthhack.api.config.Config;
-import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.setting.SettingContainer;
 
 // TODO: this class could probably be generified and any references to the module class could be replaced with a generic extending SettingContainer

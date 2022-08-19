@@ -4,12 +4,7 @@ import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.SettingContainer;
 import me.earth.earthhack.impl.Earthhack;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 

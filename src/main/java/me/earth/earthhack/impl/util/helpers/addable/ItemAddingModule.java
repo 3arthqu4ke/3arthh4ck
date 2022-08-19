@@ -7,7 +7,6 @@ import me.earth.earthhack.impl.util.helpers.addable.setting.Removable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import java.util.Locale;
 import java.util.function.Function;
 import java.util.function.Predicate;
 

@@ -7,22 +7,13 @@ import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.IBlockAccess;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static net.minecraft.util.EnumFacing.DOWN;
-import static net.minecraft.util.EnumFacing.EAST;
-import static net.minecraft.util.EnumFacing.NORTH;
-import static net.minecraft.util.EnumFacing.SOUTH;
-import static net.minecraft.util.EnumFacing.UP;
-import static net.minecraft.util.EnumFacing.WEST;
+import static net.minecraft.util.EnumFacing.*;
 
 /**
  * Smart Raytracing.

@@ -1,12 +1,8 @@
 package me.earth.earthhack.impl.event.events.render;
 
 import me.earth.earthhack.api.event.events.Event;
-import me.earth.earthhack.api.event.events.Stage;
-import me.earth.earthhack.api.event.events.StageEvent;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 
 public class RenderArmorEvent extends Event
 {

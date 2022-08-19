@@ -7,10 +7,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiCrafting;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.item.ItemBlock;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 final class ListenerTick
         extends ModuleListener<AutoCraft, TickEvent>

@@ -2,12 +2,11 @@ package me.earth.earthhack.impl.util.minecraft;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.event.events.movement.MoveEvent;
+import me.earth.earthhack.pingbypass.input.Keyboard;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.BlockPos;
-import me.earth.earthhack.pingbypass.input.Keyboard;
 
 import java.util.Objects;
 

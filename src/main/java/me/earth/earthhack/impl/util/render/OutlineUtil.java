@@ -7,8 +7,6 @@ import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.EXTPackedDepthStencil;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
-
 public class OutlineUtil {
 
 

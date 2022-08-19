@@ -4,7 +4,6 @@ import me.earth.earthhack.api.command.Command;
 import me.earth.earthhack.api.command.PossibleInputs;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.commands.util.CommandDescriptions;
-import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.entity.Entity;

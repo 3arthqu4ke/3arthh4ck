@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.gui.hud.rewrite.frame;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.hud.HudElement;
-import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.impl.gui.click.component.Component;
 import me.earth.earthhack.impl.gui.click.component.impl.*;
 import me.earth.earthhack.impl.gui.click.frame.Frame;
@@ -13,16 +12,15 @@ import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
+import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import me.earth.earthhack.pingbypass.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
