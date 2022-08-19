@@ -10,7 +10,7 @@ final class ListenerCustomPbPacket extends ModuleListener<Logger, S2CCustomPacke
 
     @Override
     public void invoke(S2CCustomPacketEvent<?> event) {
-        if (module.pb2C.getValue()) {
+        if (module.pbCustom.getValue()) {
             module.logPacket(event.getPacket(),
                              "Receiving PingBypass Packet ",
                              event.isCancelled(),
