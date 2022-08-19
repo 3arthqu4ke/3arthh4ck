@@ -130,6 +130,22 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                 .append(", cancelled : ")
                 .append(cancelled);
 
+        appendDelay(outPut, out);
+        outPut.append("\n");
+        appendInfo(outPut, packet);
+
+        String s = outPut.toString();
+        printChat(s, allowChat);
+        Earthhack.getLogger().info(s);
+
+        if (stackTrace.getValue())
+        {
+            Thread.dumpStack();
+        }
+    }
+
+    private void appendDelay(StringBuilder outPut, boolean out)
+    {
         if (delay.getValue())
         {
             long difference;
@@ -146,11 +162,13 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
             }
 
             outPut.append(", last : ")
-                    .append(difference)
-                    .append("ms");
+                  .append(difference)
+                  .append("ms");
         }
+    }
 
-        outPut.append("\n");
+    private void appendInfo(StringBuilder outPut, Packet<?> packet)
+    {
         if (info.getValue())
         {
             try
@@ -163,7 +181,7 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                         if (field != null)
                         {
                             if (Modifier.isStatic(field.getModifiers())
-                                    && !statics.getValue())
+                                && !statics.getValue())
                             {
                                 continue;
                             }
@@ -186,22 +204,25 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                             }
 
                             outPut.append("     ")
-                                    .append(getName(clazz, field))
-                                    .append(" : ")
-                                    .append(objToString)
-                                    .append("\n");
+                                  .append(getName(clazz, field))
+                                  .append(" : ")
+                                  .append(objToString)
+                                  .append("\n");
                         }
                     }
 
                     clazz = clazz.getSuperclass();
                 }
-            } catch (IllegalAccessException e)
+            }
+            catch (IllegalAccessException e)
             {
                 e.printStackTrace();
             }
         }
+    }
 
-        String s = outPut.toString();
+    private void printChat(String message, boolean allowChat)
+    {
         if (chat.getValue() && allowChat)
         {
             mc.addScheduledTask(() ->
@@ -209,20 +230,13 @@ public class Logger extends RegisteringModule<Boolean, SimpleRemovingSetting>
                 cancel = true;
                 try
                 {
-                    ChatUtil.sendMessage(s);
+                    ChatUtil.sendMessage(message);
                 }
                 finally
                 {
                     cancel = false;
                 }
             });
-        }
-
-        Earthhack.getLogger().info(s);
-
-        if (stackTrace.getValue())
-        {
-            Thread.dumpStack();
         }
     }
 

@@ -1465,7 +1465,6 @@ public class Auto32k extends Module {
         redstoneSlot = -1;
         finalDispenserData = null;
         actionsThisTick = 0;
-        boolean rotationprepared = false;
     }
 
     public static class DispenserData {
