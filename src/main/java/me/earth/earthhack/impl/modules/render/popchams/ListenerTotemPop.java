@@ -33,6 +33,7 @@ final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
             playerCopy.limbSwing = player.limbSwing;
             playerCopy.limbSwingAmount = player.limbSwingAmount;
         }
+        playerCopy.setEntityId(player.getEntityId());
         playerCopy.copyLocationAndAnglesFrom(player);
         module.getPopDataList().add(new PopChams.PopData(playerCopy,
                         System.currentTimeMillis(),

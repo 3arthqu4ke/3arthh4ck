@@ -49,7 +49,7 @@ public class PopChams extends BlockESPModule
     }
 
     protected Color getColor(EntityPlayer entity) {
-        if (entity.getName().equals(entity.getName())) {
+        if (entity.equals(mc.player)) {
             return selfColor.getValue();
         } else if (Managers.FRIENDS.contains(entity)) {
             return friendColor.getValue();
@@ -59,7 +59,7 @@ public class PopChams extends BlockESPModule
     }
 
     protected Color getOutlineColor(EntityPlayer entity) {
-        if (entity.getName().equals(entity.getName())) {
+        if (entity.equals(mc.player)) {
             return selfOutline.getValue();
         } else if (Managers.FRIENDS.contains(entity)) {
             return friendOutline.getValue();
