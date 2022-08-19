@@ -137,7 +137,7 @@ public class Packets extends Module
 
         new PageBuilder<>(this, page)
            .addPage(v -> v == PacketPages.Safe, fastTransactions, miniTeleports)
-           .addPage(v -> v == PacketPages.Danger, noBookBan)
+           .addPage(v -> v == PacketPages.Danger, noBookBan, volatileFix)
            .register(Visibilities.VISIBILITY_MANAGER);
 
         SimpleData data = new SimpleData(this, "Exploits with packets.");
