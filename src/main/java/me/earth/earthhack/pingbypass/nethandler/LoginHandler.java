@@ -6,7 +6,6 @@ import io.netty.channel.ChannelFutureListener;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.network.IC00Handshake;
 import me.earth.earthhack.pingbypass.PingBypass;
-import me.earth.earthhack.pingbypass.listeners.AntiSelfConnectHelper;
 import me.earth.earthhack.pingbypass.protocol.s2c.S2CPasswordPacket;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.network.NetworkManager;
@@ -132,7 +131,7 @@ public class LoginHandler extends BaseNetHandler
         }
 
         this.networkManager.sendPacket(new SPacketCustomPayload(
-            "PingBypass|Enable", AntiSelfConnectHelper.generate(new PacketBuffer(Unpooled.buffer()))));
+            "PingBypass|Enable", new PacketBuffer(Unpooled.buffer())));
 
         String password = PingBypass.CONFIG.getPassword();
         if (password != null && !password.isEmpty()) {

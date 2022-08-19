@@ -4,15 +4,12 @@ import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.pingbypass.PingBypass;
-import me.earth.earthhack.pingbypass.listeners.AntiSelfConnectHelper;
 import net.minecraft.client.gui.GuiDisconnected;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.server.SPacketCustomPayload;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class ListenerEnablePingBypass extends ModuleListener<PingBypassModule, PacketEvent.Receive<SPacketCustomPayload>>
