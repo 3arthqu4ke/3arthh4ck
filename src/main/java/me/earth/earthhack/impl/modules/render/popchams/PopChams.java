@@ -49,7 +49,7 @@ public class PopChams extends BlockESPModule
     }
 
     protected Color getColor(EntityPlayer entity) {
-        if (entity == mc.player) {
+        if (entity.getName().equals(entity.getName())) {
             return selfColor.getValue();
         } else if (Managers.FRIENDS.contains(entity)) {
             return friendColor.getValue();
@@ -59,7 +59,7 @@ public class PopChams extends BlockESPModule
     }
 
     protected Color getOutlineColor(EntityPlayer entity) {
-        if (entity == mc.player) {
+        if (entity.getName().equals(entity.getName())) {
             return selfOutline.getValue();
         } else if (Managers.FRIENDS.contains(entity)) {
             return friendOutline.getValue();
@@ -87,14 +87,14 @@ public class PopChams extends BlockESPModule
 
         public PopData(EntityPlayer player, long time, float yaw, float pitch, double x, double y, double z, boolean copyLimbSwing) {
             this.player = player;
-            this.limbSwing = copyLimbSwing ? player.limbSwing : 0;
-            this.limbSwingAmount = copyLimbSwing ? player.limbSwingAmount : 0;
+            this.limbSwing = player.limbSwing;
+            this.limbSwingAmount = player.limbSwingAmount;
             this.headYaw = player.rotationYawHead;
             this.time = time;
             this.yaw = yaw;
             this.pitch = pitch;
             this.x = x;
-            this.y = y;
+            this.y = y - (player.isSneaking() ? 0.125 : 0);
             this.z = z;
             this.model = new ModelPlayer(0, false);
             this.model.bipedBodyWear.showModel = false;
@@ -104,6 +104,7 @@ public class PopChams extends BlockESPModule
             this.model.bipedRightArmwear.showModel = false;
             this.model.bipedHeadwear.showModel = true;
             this.model.bipedHead.showModel = false;
+            this.model.isSneak = player.isSneaking();
             this.model.setLivingAnimations(player, limbSwing, limbSwingAmount, mc.getRenderPartialTicks());
         }
 

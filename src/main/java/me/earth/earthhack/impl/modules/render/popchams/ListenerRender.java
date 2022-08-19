@@ -56,7 +56,7 @@ final class ListenerRender extends ModuleListener<PopChams, Render3DEvent>
             double widthX = player.getEntityBoundingBox().maxX - player.getRenderBoundingBox().minX + 1;
             double widthZ = player.getEntityBoundingBox().maxZ - player.getEntityBoundingBox().minZ + 1;
 
-            GlStateManager.scale(widthX, 1.8, widthZ);
+            GlStateManager.scale(widthX, player.height, widthZ);
 
             GlStateManager.translate(0.0F, -1.501F, 0.0F);
 
