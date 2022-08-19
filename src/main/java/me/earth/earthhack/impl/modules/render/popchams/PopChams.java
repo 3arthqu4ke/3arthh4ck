@@ -94,7 +94,7 @@ public class PopChams extends BlockESPModule
             this.yaw = yaw;
             this.pitch = pitch;
             this.x = x;
-            this.y = y - (player.isSneaking() ? 0.125 : 0);
+            this.y = y;
             this.z = z;
             this.model = new ModelPlayer(0, false);
             this.model.bipedBodyWear.showModel = false;
