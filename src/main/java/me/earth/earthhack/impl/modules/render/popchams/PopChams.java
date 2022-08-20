@@ -7,8 +7,12 @@ import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.helpers.render.BlockESPModule;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -26,6 +30,8 @@ public class PopChams extends BlockESPModule
             register(new ColorSetting("Self-Outline", new Color(80, 80, 255, 255)));
     public final BooleanSetting copyAnimations =
             register(new BooleanSetting("Copy-Animations", true));
+    public final NumberSetting<Double> yAnimations =
+            register(new NumberSetting<>("Y-Animation", 0., -7., 7.));
     protected final Setting<Boolean> friendPop =
             register(new BooleanSetting("Friend-Pop", false));
     public final ColorSetting friendColor =
@@ -85,7 +91,7 @@ public class PopChams extends BlockESPModule
         private final double y;
         private final double z;
 
-        public PopData(EntityPlayer player, long time, float yaw, float pitch, double x, double y, double z) {
+        public PopData(EntityPlayer player, long time, float yaw, float pitch, double x, double y, double z, boolean slim) {
             this.player = player;
             this.limbSwing = player.limbSwing;
             this.limbSwingAmount = player.limbSwingAmount;
@@ -96,7 +102,7 @@ public class PopChams extends BlockESPModule
             this.x = x;
             this.y = y - (player.isSneaking() ? 0.125 : 0);
             this.z = z;
-            this.model = new ModelPlayer(0, false);
+            this.model = new ModelPlayer(0, slim);
             this.model.bipedBodyWear.showModel = false;
             this.model.bipedLeftLegwear.showModel = false;
             this.model.bipedRightLegwear.showModel = false;
@@ -105,6 +111,9 @@ public class PopChams extends BlockESPModule
             this.model.bipedHeadwear.showModel = true;
             this.model.bipedHead.showModel = false;
             this.model.isSneak = player.isSneaking();
+            this.model.rightArmPose = getArmPose(player, player.getPrimaryHand() == EnumHandSide.RIGHT ? player.getHeldItemMainhand() : player.getHeldItemOffhand());
+            this.model.leftArmPose = getArmPose(player, player.getPrimaryHand() == EnumHandSide.RIGHT ? player.getHeldItemOffhand() : player.getHeldItemMainhand());
+            this.model.swingProgress = player.swingProgress;
             this.model.setLivingAnimations(player, limbSwing, limbSwingAmount, mc.getRenderPartialTicks());
         }
 
@@ -151,5 +160,16 @@ public class PopChams extends BlockESPModule
         public ModelPlayer getModel() {
             return model;
         }
+
+        private static ModelBiped.ArmPose getArmPose(EntityPlayer player, ItemStack stack) {
+            if (stack.isEmpty()) {
+                return ModelBiped.ArmPose.EMPTY;
+            }
+            if (stack.getItem() instanceof ItemBow && player.getItemInUseCount() > 0) {
+                return ModelBiped.ArmPose.BOW_AND_ARROW;
+            }
+            return ModelBiped.ArmPose.ITEM;
+        }
+
     }
 }

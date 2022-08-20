@@ -26,6 +26,7 @@ final class ListenerRender extends ModuleListener<PopChams, Render3DEvent>
             ModelPlayer model = data.getModel();
             double x = data.getX() - mc.getRenderManager().viewerPosX;
             double y = data.getY() - mc.getRenderManager().viewerPosY;
+            y += module.yAnimations.getValue() * (System.currentTimeMillis() - data.getTime()) / module.fadeTime.getValue().doubleValue();
             double z = data.getZ() - mc.getRenderManager().viewerPosZ;
             float yaw = data.getYaw();
             float headYaw = data.getHeadYaw();
@@ -62,12 +63,12 @@ final class ListenerRender extends ModuleListener<PopChams, Render3DEvent>
 
             RenderUtil.color(box);
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            model.render(player, limbSwing, limbSwingAmount, 0, headYaw, pitch, 0.0625f);
+            model.render(player, limbSwing, limbSwingAmount, player.ticksExisted, headYaw, pitch, 0.0625f);
 
             RenderUtil.color(out);
             GL11.glLineWidth(module.lineWidth.getValue());
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-            model.render(player, limbSwing, limbSwingAmount, 0, headYaw, pitch, 0.0625f);
+            model.render(player, limbSwing, limbSwingAmount, player.ticksExisted, headYaw, pitch, 0.0625f);
 
             RenderUtil.endRender();
             GlStateManager.popMatrix();
