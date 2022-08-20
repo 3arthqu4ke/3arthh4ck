@@ -91,7 +91,7 @@ public class PopChams extends BlockESPModule
         private final double y;
         private final double z;
 
-        public PopData(EntityPlayer player, long time, float yaw, float pitch, double x, double y, double z) {
+        public PopData(EntityPlayer player, long time, float yaw, float pitch, double x, double y, double z, boolean slim) {
             this.player = player;
             this.limbSwing = player.limbSwing;
             this.limbSwingAmount = player.limbSwingAmount;
@@ -102,7 +102,7 @@ public class PopChams extends BlockESPModule
             this.x = x;
             this.y = y - (player.isSneaking() ? 0.125 : 0);
             this.z = z;
-            this.model = new ModelPlayer(0, false);
+            this.model = new ModelPlayer(0, slim);
             this.model.bipedBodyWear.showModel = false;
             this.model.bipedLeftLegwear.showModel = false;
             this.model.bipedRightLegwear.showModel = false;
@@ -162,9 +162,12 @@ public class PopChams extends BlockESPModule
         }
 
         private static ModelBiped.ArmPose getArmPose(EntityPlayer player, ItemStack stack) {
-            if (stack.isEmpty()) return ModelBiped.ArmPose.EMPTY;
-            System.out.println(player.getItemInUseCount());
-            if (stack.getItem() instanceof ItemBow && player.getItemInUseCount() > 0) return ModelBiped.ArmPose.BOW_AND_ARROW;
+            if (stack.isEmpty()) {
+                return ModelBiped.ArmPose.EMPTY;
+            }
+            if (stack.getItem() instanceof ItemBow && player.getItemInUseCount() > 0) {
+                return ModelBiped.ArmPose.BOW_AND_ARROW;
+            }
             return ModelBiped.ArmPose.ITEM;
         }
 
