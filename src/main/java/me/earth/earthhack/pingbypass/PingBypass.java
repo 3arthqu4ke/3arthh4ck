@@ -5,6 +5,7 @@ import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.pbteleport.PbTeleport;
 import me.earth.earthhack.impl.modules.misc.autoreconnect.AutoReconnect;
 import me.earth.earthhack.impl.util.render.SplashScreenHelper;
 import me.earth.earthhack.pingbypass.input.ClientInputService;
@@ -30,6 +31,8 @@ import java.security.KeyPair;
 public class PingBypass implements Globals {
     private static final ModuleCache<AutoReconnect> RECONNECT =
         Caches.getModule(AutoReconnect.class);
+    private static final ModuleCache<PbTeleport> TELEPORT =
+        Caches.getModule(PbTeleport.class);
 
     private static final Logger LOGGER = LogManager.getLogger(PingBypass.class);
     // I KNOW EVERYTHING IS STATIC AND NO DEPENDENCY INJECTION ANYWHERE ETC: WHATEVER IM JUST TRYING TO WRITE THIS TOGETHER REAL QUICk
@@ -126,6 +129,7 @@ public class PingBypass implements Globals {
         } else {
             PingBypass.networkManager = null;
             mc.addScheduledTask(() -> {
+                TELEPORT.disable();
                 PACKET_SERVICE.setPacketFlying(false);
                 PACKET_SERVICE.setActualPos(null);
             });

@@ -5,6 +5,7 @@ import me.earth.earthhack.api.register.exception.AlreadyRegisteredException;
 import me.earth.earthhack.impl.managers.client.ModuleManager;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.modules.client.nospoof.NoSpoof;
+import me.earth.earthhack.impl.modules.client.pbteleport.PbTeleport;
 import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassSubmodule;
 import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
@@ -22,7 +23,9 @@ public class PbModuleManager extends ModuleManager {
             Module pbModule;
             if (module instanceof FakePlayer
                 || module instanceof ClickGui
-                || module instanceof PingBypassSubmodule) {
+                || module instanceof PingBypassSubmodule
+                || module instanceof PbTeleport
+                || module instanceof NoSpoof) {
                 pbModule = module;
             } else if (module instanceof AutoCrystal
                 || module instanceof Suicide) {
@@ -42,8 +45,6 @@ public class PbModuleManager extends ModuleManager {
                 e.printStackTrace();
             }
         }
-
-        this.forceRegister(new NoSpoof());
     }
 
     @Override

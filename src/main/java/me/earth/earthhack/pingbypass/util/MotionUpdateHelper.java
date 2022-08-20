@@ -8,6 +8,7 @@ import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityPlayerSP;
 import me.earth.earthhack.impl.event.events.misc.UpdateEvent;
 import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.management.Management;
 import me.earth.earthhack.impl.modules.client.nospoof.NoSpoof;
@@ -20,10 +21,21 @@ public class MotionUpdateHelper implements Globals {
         <Boolean, BooleanSetting, Management> SET_POS =
         Caches.getSetting(Management.class, BooleanSetting.class, "PB-SetPos", true);
 
+    public static void makeMotionUpdate(boolean spoofRotations) {
+        makeMotionUpdate(
+            Managers.POSITION.getX(),
+            Managers.POSITION.getY(),
+            Managers.POSITION.getZ(),
+            Managers.ROTATION.getServerYaw(),
+            Managers.ROTATION.getServerPitch(),
+            Managers.POSITION.isOnGround(),
+            spoofRotations
+        );
+    }
+
     public static void makeMotionUpdate(double x, double y, double z, float yaw,
                                         float pitch, boolean onGround,
                                         boolean spoofRotations) {
-
         Bus.EVENT_BUS.post(new UpdateEvent(true));
         if (mc.player.isRiding()) {
             MotionUpdateEvent.Riding riding = new MotionUpdateEvent.Riding(
