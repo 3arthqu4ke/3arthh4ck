@@ -1,6 +1,7 @@
 package me.earth.earthhack.pingbypass.nethandler;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
+import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.core.ducks.network.IC00Handshake;
 import me.earth.earthhack.impl.util.network.ServerUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
@@ -191,12 +192,19 @@ public class PbNetHandler extends BaseNetHandler
 
     @SuppressWarnings("unchecked")
     public static void onLogin(NetworkManager networkManager, IC00Handshake handshake) {
-        mc.addScheduledTask(Locks.wrap(Locks.PINGBYPASS_PACKET_LOCK, () ->
-        {
-            if (PingBypass.isConnected())
-            {
+        mc.addScheduledTask(Locks.wrap(Locks.PINGBYPASS_PACKET_LOCK, () -> {
+            if (PingBypass.isConnected()) {
                 TextComponentString reason = new TextComponentString("This PingBypass is currently in use!");
                 networkManager.sendPacket(new SPacketDisconnect(reason), o -> networkManager.closeChannel(reason));
+                return;
+            }
+
+            // I think the NetworkManager could get disconnected between
+            // scheduling this task and it actually running on the mainThread.
+            // With an unlucky timing PingBypass adds a NetworkManager which is
+            // not getting ticked anymore and thus will not call onDisconnect
+            if (!networkManager.isChannelOpen()) {
+                Earthhack.getLogger().warn("Client got disconnected between login threads!");
                 return;
             }
 
