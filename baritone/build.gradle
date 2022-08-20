@@ -72,7 +72,7 @@ dependencies {
         exclude module: 'commons-io'
     }
 
-    jarLibs('com.github.wiiyoy:baritone:20c86e301f') {
+    jarLibs('com.github.3arthqu4ke:baritone:f74e7a3f7e') {
         exclude module: 'mixin'
         exclude module: 'launchwrapper'
     }
