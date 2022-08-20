@@ -1,0 +1,97 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            name = 'forge'
+            url = 'https://files.minecraftforge.net/maven'
+        }
+        maven {
+            name = "jitpack.io"
+            url = "https://jitpack.io"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = '1.0.0'
+group = 'me.earth.lawnmower' 
+archivesBaseName = 'lawnmower' 
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = '1.12.2-14.23.5.2768'
+    runDir = 'run'
+    mappings = 'stable_39'
+    makeObfSourceJar = false
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "jitpack.io"
+        url  = "https://jitpack.io"
+    }
+
+    maven {
+        name = 'spongepowered-repo'
+        url = 'https://repo.spongepowered.org/maven'
+    }
+
+    jcenter()
+}
+
+dependencies {
+    compileOnly('com.github.3arthqu4ke:3arthh4ck:1.7.11-b3') {
+        exclude module: 'mixin'
+    }
+
+    // we need this for runClient
+    implementation('org.spongepowered:mixin:0.7.11-SNAPSHOT') {
+        exclude module: 'launchwrapper'
+        exclude module: 'guava'
+        exclude module: 'gson'
+        exclude module: 'commons-io'
+    }
+}
+
+classes {
+    // always build the jar, so we always have the
+    // latest version in the plugins folder
+    finalizedBy(jar)
+}
+
+task copyJar(type: Copy, dependsOn: jar) {
+    from(jar)
+    into project.file('run/earthhack/plugins')
+}
+
+jar {
+    manifest {
+        attributes(
+            '3arthh4ckConfig': 'LawnmowerPluginConfig.json' 
+        )
+    }
+
+    finalizedBy(copyJar)
+}
+
+genIntellijRuns {
+
+}
+
+task testT {
+    tasks.each {
+        System.out.println(it.name + " : " + it.class)
+    }
+}
+
+
