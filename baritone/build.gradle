@@ -21,7 +21,7 @@ buildscript {
     }
 }
 
-apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'org.spongepowered.mixin'
 
 version = '1.0.0'
@@ -34,11 +34,10 @@ compileJava {
 }
 
 minecraft {
-    version = '1.12.2'
+    version = '1.12.2-14.23.5.2768'
     runDir = 'run'
     makeObfSourceJar = false
     mappings = 'stable_39'
-    tweakClass = 'baritone.launch.BaritoneTweaker'
 }
 
 repositories {
@@ -73,7 +72,7 @@ dependencies {
         exclude module: 'commons-io'
     }
 
-    jarLibs('com.github.cabaletta:baritone:v1.2.15') {
+    jarLibs('com.github.3arthqu4ke:baritone:f74e7a3f7e') {
         exclude module: 'mixin'
         exclude module: 'launchwrapper'
     }
@@ -85,6 +84,7 @@ jar {
     manifest {
         attributes(
             'MixinConfigs': 'mixins.baritone.json',
+            'TweakClass': 'baritone.launch.BaritoneTweaker',
             '3arthh4ckConfig': 'BaritonePluginConfig.json'
         )
     }
