@@ -52,7 +52,7 @@ final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
                         event.getEntity().posX,
                         event.getEntity().posY,
                         event.getEntity().posZ,
-                        ((AbstractClientPlayer)event.getEntity()).getSkinType().equals("slim")
+                        event.getEntity() instanceof AbstractClientPlayer && ((AbstractClientPlayer) event.getEntity()).getSkinType().equals("slim")
         ));
     }
 }
