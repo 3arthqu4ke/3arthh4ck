@@ -12,6 +12,7 @@ import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -110,8 +111,8 @@ public class PopChams extends BlockESPModule
             this.model.bipedHeadwear.showModel = true;
             this.model.bipedHead.showModel = false;
             this.model.isSneak = player.isSneaking();
-            this.model.rightArmPose = getArmPose(player, player.getHeldItemMainhand());
-            this.model.leftArmPose = getArmPose(player, player.getHeldItemOffhand());
+            this.model.rightArmPose = getArmPose(player, player.getPrimaryHand() == EnumHandSide.RIGHT ? player.getHeldItemMainhand() : player.getHeldItemOffhand());
+            this.model.leftArmPose = getArmPose(player, player.getPrimaryHand() == EnumHandSide.RIGHT ? player.getHeldItemOffhand() : player.getHeldItemMainhand());
             this.model.swingProgress = player.swingProgress;
             this.model.setLivingAnimations(player, limbSwing, limbSwingAmount, mc.getRenderPartialTicks());
         }
@@ -162,7 +163,8 @@ public class PopChams extends BlockESPModule
 
         private static ModelBiped.ArmPose getArmPose(EntityPlayer player, ItemStack stack) {
             if (stack.isEmpty()) return ModelBiped.ArmPose.EMPTY;
-            if (stack.getItem() instanceof ItemBow && player.isHandActive()) return ModelBiped.ArmPose.BOW_AND_ARROW;
+            System.out.println(player.getItemInUseCount());
+            if (stack.getItem() instanceof ItemBow && player.getItemInUseCount() > 0) return ModelBiped.ArmPose.BOW_AND_ARROW;
             return ModelBiped.ArmPose.ITEM;
         }
 

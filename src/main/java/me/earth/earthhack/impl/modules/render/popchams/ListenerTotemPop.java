@@ -18,6 +18,7 @@ final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
         if (!module.isValidEntity(event.getEntity()))
             return;
         EntityPlayer player = event.getEntity();
+        int useCount = player.getItemInUseCount();
         EntityPlayer playerCopy = new EntityPlayer(mc.world, new GameProfile(UUID.randomUUID(), player.getName())) {
             @Override public boolean isSpectator() {
                 return false;
@@ -25,6 +26,10 @@ final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
 
             @Override public boolean isCreative() {
                 return false;
+            }
+
+            @Override public int getItemInUseCount() {
+                return useCount;
             }
         };
 
@@ -35,6 +40,7 @@ final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
             playerCopy.limbSwingAmount = player.prevLimbSwingAmount;
             playerCopy.inventory.copyInventory(player.inventory);
         }
+        playerCopy.setPrimaryHand(player.getPrimaryHand());
         playerCopy.ticksExisted = player.ticksExisted;
         playerCopy.setEntityId(player.getEntityId());
         playerCopy.copyLocationAndAnglesFrom(player);
