@@ -27,6 +27,8 @@ public class ClientSpeedService extends EventListener<MotionUpdateEvent>
             && mc.player != null
             && !PingBypass.isServer()) {
             mc.player.connection.sendPacket(new C2SSpeedPacket(
+                mc.player.collidedHorizontally,
+                mc.player.collidedVertically,
                 mc.player.motionX,
                 mc.player.motionY,
                 mc.player.motionZ
