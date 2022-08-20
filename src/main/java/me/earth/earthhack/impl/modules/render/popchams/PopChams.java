@@ -7,8 +7,11 @@ import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.helpers.render.BlockESPModule;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemStack;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -26,6 +29,8 @@ public class PopChams extends BlockESPModule
             register(new ColorSetting("Self-Outline", new Color(80, 80, 255, 255)));
     public final BooleanSetting copyAnimations =
             register(new BooleanSetting("Copy-Animations", true));
+    public final NumberSetting<Double> yAnimations =
+            register(new NumberSetting<>("Y-Animation", 0., -7., 7.));
     protected final Setting<Boolean> friendPop =
             register(new BooleanSetting("Friend-Pop", false));
     public final ColorSetting friendColor =
@@ -105,6 +110,9 @@ public class PopChams extends BlockESPModule
             this.model.bipedHeadwear.showModel = true;
             this.model.bipedHead.showModel = false;
             this.model.isSneak = player.isSneaking();
+            this.model.rightArmPose = getArmPose(player, player.getHeldItemMainhand());
+            this.model.leftArmPose = getArmPose(player, player.getHeldItemOffhand());
+            this.model.swingProgress = player.swingProgress;
             this.model.setLivingAnimations(player, limbSwing, limbSwingAmount, mc.getRenderPartialTicks());
         }
 
@@ -151,5 +159,12 @@ public class PopChams extends BlockESPModule
         public ModelPlayer getModel() {
             return model;
         }
+
+        private static ModelBiped.ArmPose getArmPose(EntityPlayer player, ItemStack stack) {
+            if (stack.isEmpty()) return ModelBiped.ArmPose.EMPTY;
+            if (stack.getItem() instanceof ItemBow && player.isHandActive()) return ModelBiped.ArmPose.BOW_AND_ARROW;
+            return ModelBiped.ArmPose.ITEM;
+        }
+
     }
 }
