@@ -34,11 +34,10 @@ compileJava {
 }
 
 minecraft {
-    version = '1.12.2'
+    version = '1.12.2-14.23.5.2768'
     runDir = 'run'
     makeObfSourceJar = false
     mappings = 'stable_39'
-    tweakClass = 'baritone.launch.BaritoneTweaker'
 }
 
 repositories {
@@ -73,8 +72,7 @@ dependencies {
         exclude module: 'commons-io'
     }
 
-    // TODO: get baritone from jitpack and remove excludes
-    jarLibs('com.github.cabaletta:baritone:v1.2.15') {
+    jarLibs('com.github.wiiyoy:baritone:20c86e301f') {
         exclude module: 'mixin'
         exclude module: 'launchwrapper'
     }
