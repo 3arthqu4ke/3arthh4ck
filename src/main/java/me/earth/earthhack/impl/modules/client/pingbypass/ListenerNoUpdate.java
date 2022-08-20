@@ -4,6 +4,7 @@ import me.earth.earthhack.impl.event.events.network.NoMotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.network.play.client.CPacketPlayer;
 
 // TODO: Test!
@@ -18,6 +19,7 @@ final class ListenerNoUpdate
         if (module.isEnabled()
             && !module.isOld()
             && module.alwaysUpdate.getValue()
+            && !PingBypass.isServer()
             && !event.isCancelled()) {
             event.setCancelled(true);
             // TODO: this could get cancelled, send with noEvent?

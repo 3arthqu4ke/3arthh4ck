@@ -8,7 +8,8 @@ final class SurroundData extends ObbyData<Surround>
     {
         super(module);
         register(module.center, "Moves you into the middle of " +
-                "the block you are standing on.");
+                "the block you are standing on. Not recommended when " +
+                "using this on a PingBypass proxy!");
         register(module.movement, "-None well, nothing happens.\n" +
                 "-Static if you move a block this module" +
                 " will disable itself.\n-Limit If you move" +
