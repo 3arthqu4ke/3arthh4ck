@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.modules.render.viewmodel;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
+import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.core.mixins.render.MixinItemRenderer;
 import net.minecraft.util.EnumHand;
@@ -17,6 +18,8 @@ public class ViewModel extends Module
     public static final float[] DEFAULT_TRANSLATION =
             new float[]{0.0f, 0.0f, 0.0f, 0.0f};
 
+    public final BooleanSetting noSway =
+            register(new BooleanSetting("No-Sway", false));
     protected final Setting<Float> offX  =
             register(new NumberSetting<>("OffHand-X", 0.0f, -10.0f, 10.0f));
     protected final Setting<Float> offY  =
