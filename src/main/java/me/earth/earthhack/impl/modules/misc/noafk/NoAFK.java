@@ -40,6 +40,8 @@ public class NoAFK extends Module
         register(new BooleanSetting("Baritone", false));
     protected final Setting<Integer> baritoneDelay =
         register(new NumberSetting<>("Baritone-Delay", 60, 5, 600));
+    protected final Setting<Integer> baritoneRange =
+        register(new NumberSetting<>("Baritone-Range", 200, 1, 1000));
     protected final Setting<String> baritonePrefix =
         register(new StringSetting("BaritonePrefix", "#"));
 
@@ -51,6 +53,7 @@ public class NoAFK extends Module
     protected boolean sneaking;
 
     protected final StopWatch baritoneTimer = new StopWatch();
+    protected boolean blockingChatMessages = false;
     protected Stage stage = Stage.GO;
     protected BlockPos startPos;
     protected BlockPos target;
@@ -62,11 +65,13 @@ public class NoAFK extends Module
         this.listeners.add(new ListenerChat(this));
         this.listeners.add(new ListenerInput(this));
         this.listeners.add(new ListenerTick(this));
+        this.listeners.add(new ListenerSendChat(this));
         this.setData(new NoAFKData(this));
     }
 
     @Override
     protected void onEnable() {
+        blockingChatMessages = false;
         stage = Stage.BACK;
         baritoneTimer.setTime(0);
         startPos = null;

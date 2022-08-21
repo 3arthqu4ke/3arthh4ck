@@ -40,26 +40,31 @@ final class ListenerTick extends ModuleListener<NoAFK, TickEvent> {
             switch (module.stage) {
                 case GO:
                     toggle = !toggle;
-                    // int x = module.startPos.getX() + random.nextInt(40) - 20;
-                    // int y = module.startPos.getY() + random.nextInt(5) - 5;
-                    // int z = module.startPos.getZ() + random.nextInt(40) - 20;
-                    int x = module.startPos.getX() + (toggle ? 200 : 0);
+                    int x = module.startPos.getX() + (toggle ? module.baritoneRange.getValue() : 0);
                     int y = module.startPos.getY();
-                    int z = module.startPos.getZ() + (!toggle ? 200 : 0);
-
+                    int z = module.startPos.getZ() + (!toggle ? module.baritoneRange.getValue() : 0);
                     module.target = new BlockPos(x, y, z);
-                    mc.player.sendChatMessage(module.baritonePrefix.getValue()
+                    sendMessage(module.baritonePrefix.getValue()
                                             + "goto " + x + " " + y + " " + z);
                     break;
                 case BACK:
                     x = module.startPos.getX();
                     y = module.startPos.getX();
                     z = module.startPos.getX();
-                    mc.player.sendChatMessage(module.baritonePrefix.getValue()
+                    sendMessage(module.baritonePrefix.getValue()
                                             + "goto " + x + " " + y + " " + z);
                     break;
                 default:
             }
+        }
+    }
+
+    private void sendMessage(String message) {
+        try {
+            module.blockingChatMessages = true;
+            mc.player.sendChatMessage(message);
+        } finally {
+            module.blockingChatMessages = false;
         }
     }
 
