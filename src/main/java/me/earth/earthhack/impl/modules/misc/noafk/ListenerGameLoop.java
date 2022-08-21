@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.misc.noafk;
 
 import me.earth.earthhack.impl.event.events.misc.GameLoopEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import me.earth.earthhack.impl.managers.Managers;
 import net.minecraft.util.EnumHand;
 
 final class ListenerGameLoop extends ModuleListener<NoAFK, GameLoopEvent>
@@ -14,7 +15,7 @@ final class ListenerGameLoop extends ModuleListener<NoAFK, GameLoopEvent>
     @Override
     public void invoke(GameLoopEvent event)
     {
-        if (mc.player != null)
+        if (mc.player != null && Managers.NCP.passed(module.lagTime.getValue()))
         {
             if (module.rotate.getValue())
             {

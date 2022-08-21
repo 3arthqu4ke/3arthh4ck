@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.misc.noafk;
 
 import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.util.math.BlockPos;
 
@@ -23,6 +24,10 @@ final class ListenerTick extends ModuleListener<NoAFK, TickEvent> {
             module.stage = NoAFK.Stage.BACK;
             module.startPos = null;
             module.target = null;
+            return;
+        }
+
+        if (!Managers.NCP.passed(module.lagTime.getValue())) {
             return;
         }
 
