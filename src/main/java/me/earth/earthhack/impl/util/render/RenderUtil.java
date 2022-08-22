@@ -728,7 +728,8 @@ public class RenderUtil implements Globals
     public static void drawNametag(String text, AxisAlignedBB interpolated, double scale, int color, boolean rectangle)
     {
         double x = (interpolated.minX + interpolated.maxX) / 2.0;
-        double y = (interpolated.minY + interpolated.maxY) / 2.0;
+        //double y = (interpolated.minY + interpolated.maxY) / 2.0;
+        double y = interpolated.maxY;
         double z = (interpolated.minZ + interpolated.maxZ) / 2.0;
 
         drawNametag(text, x, y, z, scale, color, rectangle);

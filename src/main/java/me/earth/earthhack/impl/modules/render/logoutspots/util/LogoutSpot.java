@@ -1,12 +1,13 @@
 package me.earth.earthhack.impl.modules.render.logoutspots.util;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
+import me.earth.earthhack.impl.modules.combat.autocrystal.util.TimeStamp;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 
-public class LogoutSpot implements Globals
+public class LogoutSpot extends TimeStamp implements Globals
 {
     private final String name;
     private final AxisAlignedBB boundingBox;

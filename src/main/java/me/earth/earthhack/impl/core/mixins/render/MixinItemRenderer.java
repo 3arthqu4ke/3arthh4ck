@@ -226,6 +226,16 @@ public abstract class MixinItemRenderer
         }
     }
 
+    @Inject(
+            method = "rotateArm",
+            at = @At("HEAD"),
+            cancellable = true)
+    public void rotateArmHook(float p_187458_1_, CallbackInfo ci) {
+        if (VIEW_MODEL.isEnabled() && VIEW_MODEL.get().noSway.getValue()) {
+            ci.cancel();
+        }
+    }
+
     private void renderEffect(float p_187456_1_, float p_187456_2_, EnumHandSide p_187456_3_) {
         float f = (float)Minecraft.getMinecraft().player.ticksExisted + Minecraft.getMinecraft().getRenderPartialTicks();
         Minecraft.getMinecraft().getTextureManager().bindTexture(RESOURCE);

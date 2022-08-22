@@ -7,6 +7,7 @@ final class ViewModelData extends DefaultData<ViewModel>
     public ViewModelData(ViewModel module)
     {
         super(module);
+        register(module.noSway, "Removes sway animation while the camera moves.");
         register(module.offX, "Rotates your Offhand around on the X-Axis.");
         register(module.offY, "Set the height of your Offhand.");
         register(module.mainX, "Rotates your mainhand around on the X-Axis.");
