@@ -23,6 +23,7 @@ import me.earth.earthhack.impl.modules.client.media.Media;
 import me.earth.earthhack.impl.modules.client.nospoof.NoSpoof;
 import me.earth.earthhack.impl.modules.client.notifications.Notifications;
 import me.earth.earthhack.impl.modules.client.pbgui.PbGui;
+import me.earth.earthhack.impl.modules.client.pbteleport.PbTeleport;
 import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.modules.client.rotationbypass.Compatibility;
 import me.earth.earthhack.impl.modules.client.safety.Safety;
@@ -191,11 +192,13 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new FontMod());
         this.forceRegister(new HUD());
         this.forceRegister(new Management());
+        this.forceRegister(new NoSpoof());
         this.forceRegister(new Notifications());
         this.forceRegister(new Compatibility());
         this.forceRegister(new Safety());
         this.forceRegister(new ServerModule());
         this.forceRegister(new PbGui());
+        this.forceRegister(new PbTeleport());
         this.forceRegister(new SettingsModule());
         this.forceRegister(new TabModule());
         this.forceRegister(new Media());
@@ -255,10 +258,6 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new TpsSync());
         this.forceRegister(new Tracker());
         this.forceRegister(new TrueDurability());
-
-        if (PingBypass.isServer()) {
-            this.forceRegister(new NoSpoof());
-        }
 
         if (Environment.hasForge()) {
             this.forceRegister(new AutoCraft());

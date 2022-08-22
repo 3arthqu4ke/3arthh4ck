@@ -1,6 +1,7 @@
 package me.earth.earthhack.pingbypass.protocol.c2s;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
+import me.earth.earthhack.impl.modules.client.pbteleport.PbTeleport;
 import me.earth.earthhack.pingbypass.protocol.C2SPacket;
 import me.earth.earthhack.pingbypass.protocol.ProtocolIds;
 import me.earth.earthhack.pingbypass.util.MotionUpdateHelper;
@@ -24,6 +25,15 @@ public class C2SNoMotionUpdateEvent extends C2SPacket implements Globals {
 
     @Override
     public void execute(NetworkManager networkManager) {
+        if (PbTeleport.isBlocking()) {
+            if (PbTeleport.shouldPerformMotionUpdate()) {
+                MotionUpdateHelper.makeMotionUpdate(
+                    PbTeleport.shouldSpoofRotations());
+            }
+
+            return;
+        }
+
         mc.addScheduledTask(() -> {
             if (mc.player != null) {
                 double x = mc.player.posX;

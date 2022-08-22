@@ -39,6 +39,8 @@ public class ProtocolFactoryImpl extends ProtocolFactory {
         this.register(ProtocolIds.S2C_UNLOAD_WORLD, S2CUnloadWorldPacket::new);
         this.register(ProtocolIds.C2S_RIDDEN_ENTITY, C2SRiddenEntityPosition::new);
         this.register(ProtocolIds.S2C_ASYNC_TOTEM, S2CAsyncTotemPacket::new);
+        this.register(ProtocolIds.S2C_LAG_BACK, S2CLagBack::new);
+        this.register(ProtocolIds.C2S_LAG_BACK_CONFIRM, C2SConfirmLagBack::new);
     }
 
 }

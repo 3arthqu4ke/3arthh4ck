@@ -47,6 +47,7 @@ public class PlayerUtil implements Globals {
     {
         EntityOtherPlayerMP fakePlayer = create.apply(mc.world, profile);
 
+        fakePlayer.setPrimaryHand(mc.player.getPrimaryHand());
         fakePlayer.inventory = mc.player.inventory;
         fakePlayer.inventoryContainer = mc.player.inventoryContainer;
         fakePlayer.setPositionAndRotation(mc.player.posX, mc.player.getEntityBoundingBox().minY, mc.player.posZ, mc.player.rotationYaw, mc.player.rotationPitch);

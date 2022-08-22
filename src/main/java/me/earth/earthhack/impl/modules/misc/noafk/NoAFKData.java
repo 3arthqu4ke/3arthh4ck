@@ -16,6 +16,7 @@ final class NoAFKData extends DefaultData<NoAFK>
         register("Reply", "Private response, depends on server.");
         register("Color", "Indicator, depends on server, most servers make " +
                           "private messages LightPurple.");
+        register(module.baritone, "This needs baritone installed.");
     }
 
     @Override

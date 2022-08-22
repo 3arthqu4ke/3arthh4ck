@@ -34,6 +34,8 @@ public class ProtocolIds {
     public static final int C2S_NO_ROTATION         = 30;
     public static final int S2C_UNLOAD_WORLD        = 31;
     public static final int C2S_RIDDEN_ENTITY       = 32;
-    public static final int S2C_ASYNC_TOTEM = 33;
+    public static final int S2C_ASYNC_TOTEM         = 33;
+    public static final int S2C_LAG_BACK            = 34;
+    public static final int C2S_LAG_BACK_CONFIRM    = 35;
 
 }

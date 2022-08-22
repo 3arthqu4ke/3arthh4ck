@@ -3,6 +3,7 @@ package me.earth.earthhack.pingbypass.nethandler;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.core.ducks.network.IC00Handshake;
+import me.earth.earthhack.impl.modules.client.pbteleport.PbTeleport;
 import me.earth.earthhack.impl.util.network.ServerUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
 import me.earth.earthhack.pingbypass.PingBypass;
@@ -130,8 +131,25 @@ public class PbNetHandler extends BaseNetHandler
     }
 
     @Override
+    public void processConfirmTeleport(CPacketConfirmTeleport packetIn) {
+        timer.reset();
+        if (!PbTeleport.isBlocking()) {
+            this.handle(packetIn);
+        }
+    }
+
+    @Override
     public void processPlayer(CPacketPlayer packetIn) {
         timer.reset();
+        if (PbTeleport.isBlocking()) {
+            if (PbTeleport.shouldPerformMotionUpdate()) {
+                MotionUpdateHelper.makeMotionUpdate(
+                    PbTeleport.shouldSpoofRotations());
+            }
+
+            return;
+        }
+
         mc.addScheduledTask(() -> {
             C2SActualPos actual = PingBypass.PACKET_SERVICE.getActualPos();
             if (mc.player != null) {

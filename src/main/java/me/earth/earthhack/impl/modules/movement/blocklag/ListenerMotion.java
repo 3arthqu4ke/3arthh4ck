@@ -15,6 +15,7 @@ import me.earth.earthhack.impl.util.minecraft.blocks.SpecialBlocks;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
@@ -36,8 +37,7 @@ final class ListenerMotion extends ModuleListener<BlockLag, MotionUpdateEvent> {
     @Override
     public void invoke(MotionUpdateEvent event) {
         if (event.getStage() == Stage.PRE
-                && module.isInsideBlock())
-        {
+                && module.isInsideBlock()) {
             if (module.bypass.getValue()) {
                 event.setY(event.getY() - module.bypassOffset.getValue());
                 event.setOnGround(false);
@@ -76,12 +76,14 @@ final class ListenerMotion extends ModuleListener<BlockLag, MotionUpdateEvent> {
 
         BlockPos pos = PositionUtil.getPosition(rEntity);
         if (!mc.world.getBlockState(pos).getMaterial().isReplaceable()) {
-            if (!module.wait.getValue())
+            if (!module.wait.getValue()) {
                 module.disable();
+            }
+
             return;
         }
 
-        BlockPos posHead = PositionUtil.getPosition(rEntity).up().up();
+        BlockPos posHead = PositionUtil.getPosition(rEntity).up(2);
         if (!mc.world.getBlockState(posHead).getMaterial().isReplaceable()
                 && module.wait.getValue()) {
             return;
@@ -113,8 +115,11 @@ final class ListenerMotion extends ModuleListener<BlockLag, MotionUpdateEvent> {
                     crystals = true;
                     continue;
                 }
-                if (!module.wait.getValue())
+
+                if (!module.wait.getValue()) {
                     module.disable();
+                }
+
                 return;
             }
         }
@@ -122,8 +127,10 @@ final class ListenerMotion extends ModuleListener<BlockLag, MotionUpdateEvent> {
         int weaknessSlot = -1;
         if (crystals) {
             if (attacking == null) {
-                if (!module.wait.getValue())
+                if (!module.wait.getValue()) {
                     module.disable();
+                }
+
                 return;
             }
 
@@ -131,8 +138,10 @@ final class ListenerMotion extends ModuleListener<BlockLag, MotionUpdateEvent> {
                 if (!module.antiWeakness.getValue()
                         || module.cooldown.getValue() != 0
                         || (weaknessSlot = DamageUtil.findAntiWeakness()) == -1) {
-                    if (!module.wait.getValue())
+                    if (!module.wait.getValue()) {
                         module.disable();
+                    }
+
                     return;
                 }
             }
@@ -143,8 +152,10 @@ final class ListenerMotion extends ModuleListener<BlockLag, MotionUpdateEvent> {
             IBlockState upState = mc.world.getBlockState(upUp);
             if (upState.getMaterial().blocksMovement()) // Check if full BB?
             {
-                if (!module.wait.getValue())
+                if (!module.wait.getValue()) {
                     module.disable();
+                }
+
                 return;
             }
         }
@@ -237,11 +248,12 @@ final class ListenerMotion extends ModuleListener<BlockLag, MotionUpdateEvent> {
                     finalREntity, finalREntity.posY + 1.01, module.onGround.getValue());
             PacketUtil.doY(
                     finalREntity, finalREntity.posY + 1.16, module.onGround.getValue());
-            if (module.highBlock.getValue())
+
+            /*if (module.highBlock.getValue())
             {
-                /*PacketUtil.doY(
-                        finalREntity, finalREntity.posY + 1.25, module.onGround.getValue());*/
-            }
+                PacketUtil.doY(
+                        finalREntity, finalREntity.posY + 1.25, module.onGround.getValue());
+            }*/
 
             if (!module.attackBefore.getValue() && finalAttacking != null) {
                 module.attack(finalAttacking, finalWeaknessSlot);
@@ -250,7 +262,7 @@ final class ListenerMotion extends ModuleListener<BlockLag, MotionUpdateEvent> {
             InventoryUtil.switchTo(slot);
 
             if (!sneaking) {
-                mc.player.connection.sendPacket(
+                PingBypass.sendToActualServer(
                         new CPacketEntityAction(mc.player,
                                 CPacketEntityAction.Action.START_SNEAKING));
             }
@@ -279,7 +291,7 @@ final class ListenerMotion extends ModuleListener<BlockLag, MotionUpdateEvent> {
         });
 
         if (!sneaking) {
-            mc.player.connection.sendPacket(
+            PingBypass.sendToActualServer(
                     new CPacketEntityAction(mc.player,
                             CPacketEntityAction.Action.STOP_SNEAKING));
         }
