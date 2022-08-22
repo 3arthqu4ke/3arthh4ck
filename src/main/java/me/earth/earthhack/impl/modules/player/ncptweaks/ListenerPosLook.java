@@ -17,15 +17,14 @@ final class ListenerPosLook extends ModuleListener<NCPTweaks, PacketEvent.Receiv
 
     @Override
     public void invoke(PacketEvent.Receive<SPacketPlayerPosLook> event) {
-        if (mc.player == null || mc.world == null) {
-            return;
-        }
-
         if (!module.elytraFix.getValue()) {
             return;
         }
 
         mc.addScheduledTask(() -> {
+            if (mc.player == null || mc.world == null) {
+                return;
+            }
             ItemStack stack = mc.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 
             if (stack.getItem() == Items.ELYTRA && ItemElytra.isUsable(stack) && mc.player.isElytraFlying()) {
