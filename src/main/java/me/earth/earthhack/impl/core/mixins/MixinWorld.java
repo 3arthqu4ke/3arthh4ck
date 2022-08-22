@@ -64,7 +64,7 @@ public abstract class MixinWorld implements IWorld
             method = "checkLightFor",
             at = @At(value = "HEAD"),
             cancellable = true)
-    private void checkLightForHook(EnumSkyBlock skyBlock,
+    public void checkLightForHook(EnumSkyBlock skyBlock,
                                    BlockPos pos,
                                    CallbackInfoReturnable<Boolean> info)
     {
@@ -79,7 +79,7 @@ public abstract class MixinWorld implements IWorld
             method = "getRainStrength",
             at = @At(value = "HEAD"),
             cancellable = true)
-    private void getRainStrengthHook(
+    public void getRainStrengthHook(
             CallbackInfoReturnable<Float> callbackInfoReturnable)
     {
         if (NO_RENDER.returnIfPresent(NoRender::noWeather, false))
@@ -92,7 +92,7 @@ public abstract class MixinWorld implements IWorld
             method = "spawnParticle(Lnet/minecraft/util/EnumParticleTypes;DDDDDD[I)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void spawnParticleHook(EnumParticleTypes particleType,
+    public void spawnParticleHook(EnumParticleTypes particleType,
                                    double xCoord,
                                    double yCoord,
                                    double zCoord,
@@ -152,7 +152,7 @@ public abstract class MixinWorld implements IWorld
                     ordinal = 2
             )
     )
-    private void updateEntitiesHook(CallbackInfo ci)
+    public void updateEntitiesHook(CallbackInfo ci)
     {
         if (isRemote)
         {
@@ -163,7 +163,7 @@ public abstract class MixinWorld implements IWorld
 
     // We could inject this in the chunks as well, but that would affect render
     @Inject(method = "getBlockState", at = @At("HEAD"), cancellable = true)
-    private void getBlockStateHook(BlockPos pos,
+    public void getBlockStateHook(BlockPos pos,
                                    CallbackInfoReturnable<IBlockState> cir)
     {
         if (PACKETS.isEnabled())

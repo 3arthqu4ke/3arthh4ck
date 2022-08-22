@@ -15,7 +15,7 @@ public abstract class MixinCommandContext {
     @Dynamic
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "execute", at = @At("HEAD"), cancellable = true, remap = false)
-    private void executeHook(String message, CallbackInfo ci) {
+    public void executeHook(String message, CallbackInfo ci) {
         if (message.startsWith(Commands.getPrefix())) {
             Managers.COMMANDS.applyCommand(message);
             ci.cancel();

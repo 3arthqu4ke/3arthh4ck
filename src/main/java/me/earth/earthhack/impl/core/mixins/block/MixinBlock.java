@@ -90,7 +90,7 @@ public abstract class MixinBlock implements IBlock
     @Inject(
         method = "<init>(Lnet/minecraft/block/material/Material;Lnet/minecraft/block/material/MapColor;)V",
         at = @At("RETURN"))
-    private void ctrHook(Material blockMaterialIn,
+    public void ctrHook(Material blockMaterialIn,
                          MapColor blockMapColorIn,
                          CallbackInfo ci)
     {
@@ -114,7 +114,7 @@ public abstract class MixinBlock implements IBlock
         at = @At("HEAD"),
         cancellable = true)
     @SuppressWarnings("DuplicatedCode")
-    private void addCollisionBoxToListHook_Pre(IBlockState state,
+    public void addCollisionBoxToListHook_Pre(IBlockState state,
                                                World world,
                                                BlockPos pos,
                                                AxisAlignedBB entityBox,
@@ -211,7 +211,7 @@ public abstract class MixinBlock implements IBlock
         method = "getAmbientOcclusionLightValue",
         at = @At("HEAD"),
         cancellable = true)
-    private void ambientValueHook(CallbackInfoReturnable<Float> info)
+    public void ambientValueHook(CallbackInfoReturnable<Float> info)
     {
         if (XRAY.isEnabled() && XRAY.get().getMode() == XrayMode.Opacity)
         {

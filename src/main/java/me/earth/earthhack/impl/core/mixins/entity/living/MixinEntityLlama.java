@@ -15,7 +15,7 @@ public abstract class MixinEntityLlama extends MixinAbstractHorse
         method = "canBeSteered",
         at = @At("HEAD"),
         cancellable = true)
-    private void canBeSteeredHook(CallbackInfoReturnable<Boolean> info)
+    public void canBeSteeredHook(CallbackInfoReturnable<Boolean> info)
     {
         ControlEvent event = new ControlEvent();
         Bus.EVENT_BUS.post(event);

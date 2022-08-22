@@ -24,7 +24,7 @@ public abstract class MixinCPacketCustomPayload {
     }
 
     @Inject(method = "processPacket(Lnet/minecraft/network/play/INetHandlerPlayServer;)V", at = @At("HEAD"), cancellable = true)
-    private void processPacketHook(INetHandlerPlayServer handler, CallbackInfo ci) {
+    public void processPacketHook(INetHandlerPlayServer handler, CallbackInfo ci) {
         // TODO: WHATS WITH SPACKETCUSTOMPAYLOAD???
         if (handler instanceof PbNetHandler || handler instanceof PasswordHandler) {
             handler.processCustomPayload(CPacketCustomPayload.class.cast(this));

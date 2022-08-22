@@ -73,7 +73,7 @@ public abstract class MixinItemRenderer
                     "FFLnet/minecraft/util/EnumHand;" +
                     "FLnet/minecraft/item/ItemStack;" +
                     "F)V"))
-    private void renderItemInFirstPersonHook(ItemRenderer itemRenderer,
+    public void renderItemInFirstPersonHook(ItemRenderer itemRenderer,
                                              AbstractClientPlayer player,
                                              float drinkOffset,
                                              float mapAngle,
@@ -110,7 +110,7 @@ public abstract class MixinItemRenderer
             target = "Lnet/minecraft/client/renderer/GlStateManager;" +
                      "pushMatrix()V",
             shift = At.Shift.AFTER))
-    private void pushMatrixHook(CallbackInfo info)
+    public void pushMatrixHook(CallbackInfo info)
     {
         if (VIEW_MODEL.isEnabled())
         {

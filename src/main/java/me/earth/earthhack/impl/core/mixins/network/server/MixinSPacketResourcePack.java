@@ -17,7 +17,7 @@ public abstract class MixinSPacketResourcePack
             Caches.getModule(Packets.class);
 
     @Inject(method = "readPacketData", at = @At("HEAD"), cancellable = true)
-    private void readPacketDataHook(PacketBuffer buf, CallbackInfo ci)
+    public void readPacketDataHook(PacketBuffer buf, CallbackInfo ci)
     {
         if (PACKETS.returnIfPresent(Packets::areCCResourcesActive, false))
         {

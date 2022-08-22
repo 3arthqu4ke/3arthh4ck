@@ -15,7 +15,7 @@ public abstract class MixinEntityEnderCrystal extends MixinEntity
     @Inject(
         method = "<init>(Lnet/minecraft/world/World;DDD)V",
         at = @At("RETURN"))
-    private void initHook(World worldIn,
+    public void initHook(World worldIn,
                           double x,
                           double y,
                           double z,

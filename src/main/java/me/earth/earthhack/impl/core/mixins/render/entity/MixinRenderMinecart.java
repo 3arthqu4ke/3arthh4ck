@@ -14,7 +14,7 @@ public abstract class MixinRenderMinecart
         method = "renderCartContents",
         at = @At("HEAD"),
         cancellable = true)
-    private void renderCartContentsHook(CallbackInfo info)
+    public void renderCartContentsHook(CallbackInfo info)
     {
         if (ESP.isRendering)
         {

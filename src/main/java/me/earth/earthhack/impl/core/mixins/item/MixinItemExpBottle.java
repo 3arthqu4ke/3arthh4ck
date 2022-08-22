@@ -21,7 +21,7 @@ public abstract class MixinItemExpBottle
     @Redirect(
         method = "onItemRightClick",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;shrink(I)V"))
-    private void onItemRightClickHook(ItemStack stack, int quantity)
+    public void onItemRightClickHook(ItemStack stack, int quantity)
     {
         if (!EXP_TWEAKS.returnIfPresent(ExpTweaks::cancelShrink, false)
                 && !AUTO_ARMOR.returnIfPresent(AutoArmor::isBlockingMending, false))

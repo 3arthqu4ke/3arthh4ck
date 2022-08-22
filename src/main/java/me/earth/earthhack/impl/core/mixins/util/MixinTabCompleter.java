@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinTabCompleter
 {
     @Inject(method = "requestCompletions", at = @At("HEAD"), cancellable = true)
-    private void requestCompletionsHook(String prefix, CallbackInfo ci)
+    public void requestCompletionsHook(String prefix, CallbackInfo ci)
     {
         if (Minecraft.getMinecraft().player == null)
         {

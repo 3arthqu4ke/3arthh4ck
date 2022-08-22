@@ -22,7 +22,7 @@ public abstract class MixinRenderLiving
         method = "renderLeash",
         at = @At("HEAD"),
         cancellable = true)
-    private void renderLeashHook(CallbackInfo info)
+    public void renderLeashHook(CallbackInfo info)
     {
         if (ESP.isRendering)
         {

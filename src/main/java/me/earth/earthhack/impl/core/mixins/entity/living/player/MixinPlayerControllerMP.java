@@ -94,7 +94,7 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
         method = "clickBlock",
         at = @At(value = "HEAD"),
         cancellable = true)
-    private void clickBlockHook(BlockPos pos,
+    public void clickBlockHook(BlockPos pos,
                                 EnumFacing facing,
                                 CallbackInfoReturnable<Boolean> info)
     {
@@ -123,7 +123,7 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
     }
 
     @Inject(method = "processRightClick", at = @At("HEAD"), cancellable = true)
-    private void processClickHook(EntityPlayer player,
+    public void processClickHook(EntityPlayer player,
                                   World worldIn,
                                   EnumHand hand,
                                   CallbackInfoReturnable<EnumActionResult> cir)
@@ -142,7 +142,7 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
             method = "processRightClickBlock",
             at = @At(value = "HEAD"),
             cancellable = true)
-    private void clickBlockHook(EntityPlayerSP player,
+    public void clickBlockHook(EntityPlayerSP player,
                                 WorldClient worldIn,
                                 BlockPos pos,
                                 EnumFacing direction,
@@ -234,13 +234,13 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;syncCurrentPlayItem()V"))
-    private void syncCurrentPlayItemHook(PlayerControllerMP playerControllerMP)
+    public void syncCurrentPlayItemHook(PlayerControllerMP playerControllerMP)
     {
         Locks.acquire(Locks.PLACE_SWITCH_LOCK, this::syncCurrentPlayItem);
     }
 
     @Inject(method = "windowClick", at = @At("HEAD"), cancellable = true)
-    private void windowClickHook(int windowId, int slotId, int mouseButton,
+    public void windowClickHook(int windowId, int slotId, int mouseButton,
                                  ClickType type, EntityPlayer player,
                                  CallbackInfoReturnable<ItemStack> cir)
     {

@@ -25,7 +25,7 @@ public abstract class MixinNettyPacketDecoder
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/network/Packet;readPacketData(Lnet/minecraft/network/PacketBuffer;)V"))
-    private void readPacketDataHook(Packet<?> packet, PacketBuffer buf) throws IOException
+    public void readPacketDataHook(Packet<?> packet, PacketBuffer buf) throws IOException
     {
         packet.readPacketData(buf);
 

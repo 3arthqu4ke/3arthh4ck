@@ -22,7 +22,7 @@ public abstract class MixinWorldClient
             Caches.getModule(NoRender.class);
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
-    private void constructorHook(CallbackInfo callbackInfo)
+    public void constructorHook(CallbackInfo callbackInfo)
     {
         Bus.EVENT_BUS.post(new WorldClientEvent.Load(
                 WorldClient.class.cast(this)));

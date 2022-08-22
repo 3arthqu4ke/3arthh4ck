@@ -24,7 +24,7 @@ public abstract class MixinEntityPig extends EntityAnimal
         method = "canBeSteered",
         at = @At("HEAD"),
         cancellable = true)
-    private void canBeSteeredHook(CallbackInfoReturnable<Boolean> info)
+    public void canBeSteeredHook(CallbackInfoReturnable<Boolean> info)
     {
         ControlEvent event = new ControlEvent();
         Bus.EVENT_BUS.post(event);
@@ -40,7 +40,7 @@ public abstract class MixinEntityPig extends EntityAnimal
         at = @At(
             value = "INVOKE",
             target = "net/minecraft/entity/passive/EntityAnimal.travel(FFF)V"))
-    private void travelHook(EntityAnimal var1,
+    public void travelHook(EntityAnimal var1,
                             float strafe,
                             float vertical,
                             float forward)

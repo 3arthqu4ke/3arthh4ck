@@ -111,7 +111,7 @@ public abstract class MixinGuiScreen extends Gui implements GuiYesNoCallback
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/renderer/texture/TextureManager;bindTexture(Lnet/minecraft/util/ResourceLocation;)V"))
-    private void bindTextureHook(TextureManager textureManager, ResourceLocation resource)
+    public void bindTextureHook(TextureManager textureManager, ResourceLocation resource)
     {
         if (NO_RENDER.get().isEnabled()
                 && NO_RENDER.get().defaultBackGround.getValue())
@@ -271,7 +271,7 @@ public abstract class MixinGuiScreen extends Gui implements GuiYesNoCallback
         method = "handleComponentHover",
         at = @At(value = "HEAD"),
         cancellable = true)
-    private void handleComponentHoverHook(ITextComponent component,
+    public void handleComponentHoverHook(ITextComponent component,
                                           int x,
                                           int y,
                                           CallbackInfo info)

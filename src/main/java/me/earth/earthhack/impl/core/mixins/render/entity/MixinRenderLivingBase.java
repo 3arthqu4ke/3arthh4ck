@@ -39,7 +39,7 @@ public abstract class MixinRenderLivingBase {
     private float rotationPitch;
 
     @Inject(method = "doRender", at = @At("HEAD"))
-    private void doRenderHookHead(EntityLivingBase entity, double x, double y,
+    public void doRenderHookHead(EntityLivingBase entity, double x, double y,
                                   double z, float entityYaw, float partialTicks,
                                   CallbackInfo info) {
         if (entity instanceof EntityPlayerSP ||
@@ -61,7 +61,7 @@ public abstract class MixinRenderLivingBase {
     }
 
     @Inject(method = "doRender", at = @At("RETURN"))
-    private void doRenderHookReturn(EntityLivingBase entity, double x, double y,
+    public void doRenderHookReturn(EntityLivingBase entity, double x, double y,
                                     double z, float entityYaw,
                                     float partialTicks,
                                     CallbackInfo info) {
@@ -80,7 +80,7 @@ public abstract class MixinRenderLivingBase {
         method = "renderLayers",
         at = @At("HEAD"),
         cancellable = true)
-    private void renderLayersHook(CallbackInfo info) {
+    public void renderLayersHook(CallbackInfo info) {
         if (ESP.isRendering) {
             info.cancel();
         }
@@ -90,7 +90,7 @@ public abstract class MixinRenderLivingBase {
         method = "renderName",
         at = @At("HEAD"),
         cancellable = true)
-    private void renderNameHook(EntityLivingBase entity,
+    public void renderNameHook(EntityLivingBase entity,
                                 double x,
                                 double y,
                                 double z,

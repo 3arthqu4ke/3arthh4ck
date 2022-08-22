@@ -153,7 +153,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
             value = "INVOKE",
             target = "Lnet/minecraft/entity/player/InventoryPlayer;" +
                      "setItemStack(Lnet/minecraft/item/ItemStack;)V"))
-    private void setItemStackHook(InventoryPlayer inventory, ItemStack stack)
+    public void setItemStackHook(InventoryPlayer inventory, ItemStack stack)
     {
         if (!XCARRY.isEnabled() || !(mc.currentScreen instanceof GuiInventory))
         {
@@ -195,7 +195,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;rotationYaw:F",
             shift = At.Shift.BEFORE),
         cancellable = true)
-    private void ridingHook_1(CallbackInfo info)
+    public void ridingHook_1(CallbackInfo info)
     {
         this.riding = new MotionUpdateEvent.Riding(
             Stage.PRE,
@@ -299,7 +299,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
             ordinal = 2,
             shift = At.Shift.BY,
             by = 2)) // Inject after the If-Statement
-    private void ridingHook_9(CallbackInfo info)
+    public void ridingHook_9(CallbackInfo info)
     {
         if (!PingBypass.isConnected())
         {
@@ -317,7 +317,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
             target = "Lnet/minecraft/client/entity/AbstractClientPlayer;" +
                      "onUpdate()V",
             shift = At.Shift.BEFORE))
-    private void onUpdateHook(CallbackInfo info)
+    public void onUpdateHook(CallbackInfo info)
     {
         Bus.EVENT_BUS.post(new UpdateEvent());
     }
@@ -502,7 +502,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         method = "pushOutOfBlocks",
         at = @At(value = "HEAD"),
         cancellable = true)
-    private void pushOutOfBlocksHook(CallbackInfoReturnable<Boolean> cir)
+    public void pushOutOfBlocksHook(CallbackInfoReturnable<Boolean> cir)
     {
         BlockPushEvent event = new BlockPushEvent();
         Bus.EVENT_BUS.post(event);
@@ -533,7 +533,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         method = "isCurrentViewEntity",
         at = @At("HEAD"),
         cancellable = true)
-    private void isCurrentViewEntityHook(CallbackInfoReturnable<Boolean> cir)
+    public void isCurrentViewEntityHook(CallbackInfoReturnable<Boolean> cir)
     {
         if (!isSpectator() && SPECTATE.isEnabled())
         {

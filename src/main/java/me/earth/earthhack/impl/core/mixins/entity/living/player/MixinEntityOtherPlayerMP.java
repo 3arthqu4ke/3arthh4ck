@@ -34,7 +34,7 @@ public abstract class MixinEntityOtherPlayerMP extends MixinAbstractClientPlayer
     }
 
     @Inject(method = "attackEntityFrom", at = @At("HEAD"), cancellable = true)
-    private void attackEntityFromHook(DamageSource source,
+    public void attackEntityFromHook(DamageSource source,
                                       float amount,
                                       CallbackInfoReturnable<Boolean> cir)
     {
@@ -47,7 +47,7 @@ public abstract class MixinEntityOtherPlayerMP extends MixinAbstractClientPlayer
     @Inject(
         method = "setPositionAndRotationDirect",
         at = @At("RETURN"))
-    private void setPositionAndRotationDirectHook(double x,
+    public void setPositionAndRotationDirectHook(double x,
                                                   double y,
                                                   double z,
                                                   float yaw,
@@ -81,7 +81,7 @@ public abstract class MixinEntityOtherPlayerMP extends MixinAbstractClientPlayer
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/entity/EntityOtherPlayerMP;setRotation(FF)V"))
-    private void setRotationHook(EntityOtherPlayerMP entityOtherPlayerMP,
+    public void setRotationHook(EntityOtherPlayerMP entityOtherPlayerMP,
                                  float yaw,
                                  float pitch)
     {

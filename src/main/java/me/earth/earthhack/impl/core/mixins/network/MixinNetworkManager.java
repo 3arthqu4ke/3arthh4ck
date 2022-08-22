@@ -241,7 +241,7 @@ public abstract class MixinNetworkManager implements INetworkManager
             value = "INVOKE",
             target = "Lio/netty/channel/Channel;isOpen()Z",
             remap = false))
-    private void onDisconnectHook(ITextComponent component, CallbackInfo info)
+    public void onDisconnectHook(ITextComponent component, CallbackInfo info)
     {
         if (this.isChannelOpen())
         {

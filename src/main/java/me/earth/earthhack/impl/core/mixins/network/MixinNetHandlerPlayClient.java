@@ -63,7 +63,7 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
             target = "Lnet/minecraft/entity/Entity;" +
                     "setPositionAndRotationDirect(DDDFFIZ)V",
             ordinal = 0))
-    private void setPositionAndRotationDirectHook(Entity entity,
+    public void setPositionAndRotationDirectHook(Entity entity,
                                                   double x,
                                                   double y,
                                                   double z,
@@ -94,7 +94,7 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/scoreboard/Scoreboard;removeTeam(Lnet/minecraft/scoreboard/ScorePlayerTeam;)V"))
-    private void getScoreboardHook(Scoreboard scoreboard, ScorePlayerTeam playerTeam)
+    public void getScoreboardHook(Scoreboard scoreboard, ScorePlayerTeam playerTeam)
     {
         if (scoreboard != null && playerTeam != null)
         {
@@ -106,7 +106,7 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
         method = "handleResourcePack",
         at = @At("HEAD"),
         cancellable = true)
-    private void validateResourcePackHook(SPacketResourcePackSend packetIn,
+    public void validateResourcePackHook(SPacketResourcePackSend packetIn,
                                           CallbackInfo ci)
     {
         //noinspection ConstantConditions
@@ -126,7 +126,7 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
             target = "Lnet/minecraft/network/NetworkManager;sendPacket(Lnet/minecraft/network/Packet;)V",
             ordinal = 1,
             shift = At.Shift.BEFORE))
-    private void handlePlayerPosLookHook(SPacketPlayerPosLook packetIn, CallbackInfo ci)
+    public void handlePlayerPosLookHook(SPacketPlayerPosLook packetIn, CallbackInfo ci)
     {
         Managers.ROTATION.setBlocking(true);
     }
@@ -138,7 +138,7 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
             target = "Lnet/minecraft/network/NetworkManager;sendPacket(Lnet/minecraft/network/Packet;)V",
             ordinal = 1,
             shift = At.Shift.AFTER))
-    private void handlePlayerPosLookHookPost(SPacketPlayerPosLook packetIn, CallbackInfo ci)
+    public void handlePlayerPosLookHookPost(SPacketPlayerPosLook packetIn, CallbackInfo ci)
     {
         Managers.ROTATION.setBlocking(false);
     }
@@ -148,7 +148,7 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/entity/player/InventoryPlayer;currentItem:I"))
-    private void handleHeldItemChangeHook(InventoryPlayer inventoryPlayer, int value)
+    public void handleHeldItemChangeHook(InventoryPlayer inventoryPlayer, int value)
     {
         Locks.acquire(Locks.PLACE_SWITCH_LOCK,
                       () -> inventoryPlayer.currentItem = value);
@@ -162,7 +162,7 @@ public abstract class MixinNetHandlerPlayClient implements INetHandlerPlayClient
             shift = At.Shift.BEFORE),
         locals = LocalCapture.CAPTURE_FAILHARD,
         cancellable = true)
-    private void setVelocityHook(SPacketEntityVelocity packetIn,
+    public void setVelocityHook(SPacketEntityVelocity packetIn,
                                  CallbackInfo ci,
                                  Entity entity0)
     {

@@ -14,7 +14,7 @@ public abstract class MixinRender
         method = "doRenderShadowAndFire",
         at = @At("HEAD"),
         cancellable = true)
-    private void doRenderShadowAndFireHook(CallbackInfo info)
+    public void doRenderShadowAndFireHook(CallbackInfo info)
     {
         if (ESP.isRendering)
         {
@@ -26,7 +26,7 @@ public abstract class MixinRender
         method = "renderLivingLabel",
         at = @At("HEAD"),
         cancellable = true)
-    private void renderLivingLabelHook(CallbackInfo info)
+    public void renderLivingLabelHook(CallbackInfo info)
     {
         if (ESP.isRendering)
         {

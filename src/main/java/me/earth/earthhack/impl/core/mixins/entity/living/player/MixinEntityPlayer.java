@@ -112,7 +112,7 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
         EnumHand hand);
 
     @Inject(method = "onUpdate", at = @At("RETURN"))
-    private void onUpdateHook(CallbackInfo ci)
+    public void onUpdateHook(CallbackInfo ci)
     {
         if (this.shouldCache())
         {
@@ -132,7 +132,7 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
         method = "isEntityInsideOpaqueBlock",
         at = @At(value="HEAD"),
         cancellable = true)
-    private void isEntityInsideOpaqueBlockHook(
+    public void isEntityInsideOpaqueBlockHook(
                                         CallbackInfoReturnable<Boolean> info)
     {
         SuffocationEvent event = new SuffocationEvent();
@@ -153,7 +153,7 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
                     value = "INVOKE",
                     target = "net/minecraft/entity/player/EntityPlayer" +
                             ".setSprinting(Z)V"))
-    private void attackTargetEntityWithCurrentItemHook(EntityPlayer entity,
+    public void attackTargetEntityWithCurrentItemHook(EntityPlayer entity,
                                                        boolean sprinting)
     {
         SprintEvent event = new SprintEvent(sprinting);
@@ -174,7 +174,7 @@ public abstract class MixinEntityPlayer extends MixinEntityLivingBase implements
         method = "getCooldownPeriod",
         at = @At("HEAD"),
         cancellable = true)
-    private void getCooldownPeriodHook(CallbackInfoReturnable<Float> info)
+    public void getCooldownPeriodHook(CallbackInfoReturnable<Float> info)
     {
         if (TPS_SYNC.isEnabled() && ATTACK.getValue())
         {

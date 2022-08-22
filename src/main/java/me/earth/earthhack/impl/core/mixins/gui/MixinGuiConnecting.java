@@ -16,14 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiConnecting.class)
 public abstract class MixinGuiConnecting {
     @Inject(method = "<init>(Lnet/minecraft/client/gui/GuiScreen;Lnet/minecraft/client/Minecraft;Ljava/lang/String;I)V", at = @At("RETURN"))
-    private void initHook(GuiScreen parent, Minecraft mcIn, String hostName, int port, CallbackInfo ci) {
+    public void initHook(GuiScreen parent, Minecraft mcIn, String hostName, int port, CallbackInfo ci) {
         if (PingBypass.isServer()) {
             mcIn.setServerData(new ServerData(hostName, hostName, false));
         }
     }
 
     @Inject(method = "connect", at = @At("HEAD"))
-    private void connectHook(String ip, int port, CallbackInfo ci) {
+    public void connectHook(String ip, int port, CallbackInfo ci) {
         NetworkManager manager;
         if (PingBypass.isServer()
             && PingBypass.isConnected()

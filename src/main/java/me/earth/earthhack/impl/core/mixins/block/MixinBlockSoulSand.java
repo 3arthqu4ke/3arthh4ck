@@ -24,7 +24,7 @@ public abstract class MixinBlockSoulSand
         method = "onEntityCollision",
         at = @At("HEAD"),
         cancellable = true)
-    private void onEntityCollisionHook(CallbackInfo info)
+    public void onEntityCollisionHook(CallbackInfo info)
     {
         if (NO_SLOW_DOWN.isEnabled() && SOUL_SAND.getValue())
         {

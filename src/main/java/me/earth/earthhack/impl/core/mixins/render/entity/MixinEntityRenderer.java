@@ -204,7 +204,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
                             ".clear(I)V",
                     ordinal = 1,
                     shift = At.Shift.AFTER))
-    private void renderWorldPassHook(int pass,
+    public void renderWorldPassHook(int pass,
                                      float partialTicks,
                                      long finishTimeNano,
                                      CallbackInfo info) {
@@ -221,7 +221,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
                     shift = At.Shift.AFTER
             )
     )
-    private void renderEntitiesHook(int pass,
+    public void renderEntitiesHook(int pass,
                                     float partialTicks,
                                     long finishTimeNano,
                                     CallbackInfo info)
@@ -505,7 +505,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/entity/EntityPlayerSP;turn(FF)V"))
-    private void turnHook(EntityPlayerSP entityPlayerSP, float yaw, float pitch) {
+    public void turnHook(EntityPlayerSP entityPlayerSP, float yaw, float pitch) {
         if (SPECTATE.isEnabled()) {
             if (SPECTATE.get().shouldTurn()) {
                 EntityPlayer spectate = SPECTATE.get().getRender();
@@ -539,7 +539,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
                     target = "Lnet/minecraft/client/renderer/ItemRenderer;renderItemInFirstPerson(F)V"
             )
     )
-    private void drHook(ItemRenderer itemRenderer, float partialTicks)
+    public void drHook(ItemRenderer itemRenderer, float partialTicks)
     {
         BeginRenderHandEvent event = new BeginRenderHandEvent();
         Bus.EVENT_BUS.post(event);
@@ -554,7 +554,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
                     ordinal = 0
             )
     )
-    private void nurseHook(float partialTicks, long nanoTime, CallbackInfo ci)
+    public void nurseHook(float partialTicks, long nanoTime, CallbackInfo ci)
     {
         final PreRenderHudEvent event = new PreRenderHudEvent();
         Bus.EVENT_BUS.post(event);
@@ -566,14 +566,14 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
                     value = "HEAD"
             )
     )
-    private void preRenderHandHook(float partialTicks, int pass, CallbackInfo info)
+    public void preRenderHandHook(float partialTicks, int pass, CallbackInfo info)
     {
         final PreRenderHandEvent event = new PreRenderHandEvent();
         Bus.EVENT_BUS.post(event);
     }
 
     @Inject(method = "renderWorld", at = @At("RETURN"))
-    private void renderWorldHook(CallbackInfo info)
+    public void renderWorldHook(CallbackInfo info)
     {
         final int guiScale = mc.gameSettings.guiScale;
         mc.gameSettings.guiScale = 1;
@@ -588,7 +588,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
                     target = "Lnet/minecraft/client/renderer/RenderItem;renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemCameraTransforms$TransformType;)V"
             )
     )
-    private void renderItemHook(RenderItem item, ItemStack stack, ItemCameraTransforms.TransformType type)
+    public void renderItemHook(RenderItem item, ItemStack stack, ItemCameraTransforms.TransformType type)
     {
         RenderItemActivationEvent event = new RenderItemActivationEvent(item, stack, type);
         Bus.EVENT_BUS.post(event);
@@ -604,7 +604,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
                     shift = At.Shift.BEFORE
             )
     )
-    private void updateTextureHook(float partialTicks, CallbackInfo ci)
+    public void updateTextureHook(float partialTicks, CallbackInfo ci)
     {
         if (AMBIENCE.isEnabled())
         {

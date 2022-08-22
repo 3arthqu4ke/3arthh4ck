@@ -31,7 +31,7 @@ public abstract class MixinModelEnderCrystal
 			),
 			cancellable = true
 	)
-	private void renderHook(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo ci)
+	public void renderHook(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale, CallbackInfo ci)
 	{
 		/*ci.cancel();
 		GlStateManager.pushMatrix();
@@ -102,7 +102,7 @@ public abstract class MixinModelEnderCrystal
 					ordinal = 0
 			)
 	)
-	private void renderBaseHook(ModelRenderer model, float scale)
+	public void renderBaseHook(ModelRenderer model, float scale)
 	{
 		final RenderCrystalCubeEvent preBaseEvent = new RenderCrystalCubeEvent(scale, model, RenderCrystalCubeEvent.Model.BASE, Stage.PRE);
 		Bus.EVENT_BUS.post(preBaseEvent);
@@ -119,7 +119,7 @@ public abstract class MixinModelEnderCrystal
 					ordinal = 1
 			)
 	)
-	private void renderGlassHook(ModelRenderer model, float scale)
+	public void renderGlassHook(ModelRenderer model, float scale)
 	{
 		final RenderCrystalCubeEvent preBaseEvent = new RenderCrystalCubeEvent(scale, model, RenderCrystalCubeEvent.Model.GLASS_1, Stage.PRE);
 		Bus.EVENT_BUS.post(preBaseEvent);
@@ -136,7 +136,7 @@ public abstract class MixinModelEnderCrystal
 					ordinal = 2
 			)
 	)
-	private void renderGlassHook2(ModelRenderer model, float scale)
+	public void renderGlassHook2(ModelRenderer model, float scale)
 	{
 		final RenderCrystalCubeEvent preBaseEvent = new RenderCrystalCubeEvent(scale, model, RenderCrystalCubeEvent.Model.GLASS_2, Stage.PRE);
 		Bus.EVENT_BUS.post(preBaseEvent);
@@ -153,7 +153,7 @@ public abstract class MixinModelEnderCrystal
 					ordinal = 3
 			)
 	)
-	private void renderCubeHook(ModelRenderer model, float scale)
+	public void renderCubeHook(ModelRenderer model, float scale)
 	{
 		final RenderCrystalCubeEvent preBaseEvent = new RenderCrystalCubeEvent(scale, model, RenderCrystalCubeEvent.Model.CUBE, Stage.PRE);
 		Bus.EVENT_BUS.post(preBaseEvent);

@@ -41,7 +41,7 @@ public abstract class MixinBlockLiquid extends MixinBlock
         method = "shouldSideBeRendered",
         at = @At("HEAD"),
         cancellable = true)
-    private void shouldSideBeRenderedHook(IBlockState state,
+    public void shouldSideBeRenderedHook(IBlockState state,
                                           IBlockAccess access,
                                           BlockPos pos,
                                           EnumFacing facing,

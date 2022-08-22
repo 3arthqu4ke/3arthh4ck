@@ -18,7 +18,7 @@ public abstract class MixinItemFood
     @Inject(
         method = "onItemUseFinish",
         at = @At("HEAD"))
-    private void onItemUseFinishHook(ItemStack stack,
+    public void onItemUseFinishHook(ItemStack stack,
                                      World world,
                                      EntityLivingBase entity,
                                      CallbackInfoReturnable<ItemStack> info)
