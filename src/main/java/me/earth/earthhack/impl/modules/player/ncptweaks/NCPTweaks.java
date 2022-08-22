@@ -22,6 +22,8 @@ public class NCPTweaks extends Module
             register(new BooleanSetting("Sneak-Eat", false));
     protected final Setting<Boolean> stopSpeed =
             register(new BooleanSetting("Stop-Speed", false));
+    protected final BooleanSetting elytraFix =
+            register(new BooleanSetting("Elytra-Fix", false));
 
     protected boolean speedStopped;
     
@@ -30,6 +32,7 @@ public class NCPTweaks extends Module
         super("NCPTweaks", Category.Player);
         this.listeners.add(new ListenerWindowClick(this));
         this.listeners.add(new ListenerInput(this));
+        this.listeners.add(new ListenerPosLook(this));
     }
 
     @Override
