@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.render.logoutspots;
 
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -23,7 +24,14 @@ public class LogoutSpots extends Module
     protected final Setting<Boolean> friends     =
             register(new BooleanSetting("Friends", true));
     protected final Setting<Float> scale         =
-            register(new NumberSetting<>("Scale", 0.003f, 0.001f, 0.01f));
+            register(new NumberSetting<>("Scale", 0.003f, 0.001f, 0.01f))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> remove         =
+            register(new NumberSetting<>("Remove", 0, 0, 300))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> time     =
+            register(new BooleanSetting("Time", false))
+                .setComplexity(Complexity.Medium);
 
     protected final Map<UUID, LogoutSpot> spots = new ConcurrentHashMap<>();
 
@@ -34,6 +42,8 @@ public class LogoutSpots extends Module
         this.listeners.add(new ListenerJoin(this));
         this.listeners.add(new ListenerLeave(this));
         this.listeners.add(new ListenerRender(this));
+        this.listeners.add(new ListenerTick(this));
+        this.setData(new LogoutSpotsData(this));
     }
 
     @Override

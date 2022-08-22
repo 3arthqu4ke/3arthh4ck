@@ -32,6 +32,7 @@ final class ListenerRender extends ModuleListener<LogoutSpots, Render3DEvent>
 
                 String text = TextColor.RED
                         + spot.getName()
+                        + (module.time.getValue() ? " (" + MathUtil.round((System.currentTimeMillis() - spot.getTimeStamp()) / 1000.0, 1) + "s)" : "")
                         + " XYZ : "
                         + MathUtil.round(spot.getX(), 1)
                         + ", "
