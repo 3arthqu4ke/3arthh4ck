@@ -8,9 +8,11 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.client.SimpleData;
 import me.earth.earthhack.impl.util.helpers.render.BlockESPModule;
 import me.earth.earthhack.impl.util.math.StopWatch;
+import me.earth.earthhack.impl.util.math.geocache.Sphere;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 
 import java.awt.*;
 import java.util.List;
@@ -66,33 +68,25 @@ public class VoidESP extends BlockESPModule
             Managers.THREAD.submit(() ->
             {
                 BlockPos playerPos = PositionUtil.getPosition();
+                int cx = playerPos.getX(),
+                    cz = playerPos.getZ();
                 int r = this.radius.getValue();
+                int max = Sphere.getRadius(r);
                 List<BlockPos> voidHolesIn = voidHoles.size() != 0
                                             ? new ArrayList<>(voidHoles.size())
                                             : new LinkedList<>();
-                int cx = playerPos.getX();
-                int cz = playerPos.getZ();
-
                 int holeAmount = 0;
-                // TODO: cache this like the Sphere!
-                for (int x = cx - r; x <= cx + r; x++)
-                {
-                    for (int z = cz - r; z <= cz + r; z++)
-                    {
-                        double dist = (cx - x) * (cx - x) + (cz - z) * (cz - z);
-                        if (dist < r * r)
-                        {
-                            BlockPos pos = new BlockPos(x, 0, z);
-                            if (mc.world.getBlockState(pos)
-                                        .getBlock() != Blocks.BEDROCK)
-                            {
-                                voidHolesIn.add(pos);
-                                if (liveHoles.getValue()
-                                        && ++holeAmount >= holes.getValue())
-                                {
-                                    break;
-                                }
-                            }
+
+                for (int j = 0; j < max; j++) {
+                    Vec3i vec = Sphere.get(j);
+                    if (vec.getY() != 0) {
+                        continue;
+                    }
+                    BlockPos bp = new BlockPos(cx + vec.getX(), 0, cz + vec.getZ());
+                    if (mc.world.getBlockState(bp).getBlock() != Blocks.BEDROCK) {
+                        voidHolesIn.add(bp);
+                        if (liveHoles.getValue() && ++holeAmount >= holes.getValue()) {
+                            break;
                         }
                     }
                 }
