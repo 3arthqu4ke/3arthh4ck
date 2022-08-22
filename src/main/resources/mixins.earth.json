@@ -26,6 +26,7 @@
     "entity.MixinEntityBoat",
     "entity.MixinEntityEnderCrystal",
     "entity.MixinEntityTracker",
+    "entity.living.IEntityFireworkRocket",
     "entity.living.IEntityWolf",
     "entity.living.MixinAbstractHorse",
     "entity.living.MixinEntityLivingBase",
