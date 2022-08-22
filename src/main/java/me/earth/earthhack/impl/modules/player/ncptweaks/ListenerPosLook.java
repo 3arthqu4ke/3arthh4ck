@@ -12,22 +12,28 @@ import net.minecraft.network.play.server.SPacketPlayerPosLook;
 
 final class ListenerPosLook extends ModuleListener<NCPTweaks, PacketEvent.Receive<SPacketPlayerPosLook>> {
     public ListenerPosLook(NCPTweaks module) {
-        super(module, PacketEvent.Receive.class);
+        super(module, PacketEvent.Receive.class, SPacketPlayerPosLook.class);
     }
 
     @Override
     public void invoke(PacketEvent.Receive<SPacketPlayerPosLook> event) {
+        if (mc.player == null || mc.world == null) {
+            return;
+        }
+
         if (!module.elytraFix.getValue()) {
             return;
         }
 
-        ItemStack stack = mc.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+        mc.addScheduledTask(() -> {
+            ItemStack stack = mc.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 
-        if (stack.getItem() == Items.ELYTRA && ItemElytra.isUsable(stack) && mc.player.isElytraFlying()) {
-            for (EntityFireworkRocket e : mc.world.getEntities(EntityFireworkRocket.class, e -> ((IEntityFireworkRocket)e).getBoostedEntity() == mc.player)) {
-                mc.world.removeEntity(e);
+            if (stack.getItem() == Items.ELYTRA && ItemElytra.isUsable(stack) && mc.player.isElytraFlying()) {
+                for (EntityFireworkRocket e : mc.world.getEntities(EntityFireworkRocket.class, e -> ((IEntityFireworkRocket)e).getBoostedEntity() == mc.player)) {
+                    mc.world.removeEntity(e);
+                }
             }
-        }
+        });
     }
 
 }
