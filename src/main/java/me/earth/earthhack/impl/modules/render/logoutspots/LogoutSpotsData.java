@@ -12,6 +12,9 @@ final class LogoutSpotsData extends DefaultData<LogoutSpots>
         register(module.render, "Renders the logout spots.");
         register(module.friends, "Takes friends into account.");
         register(module.scale, "Scale of the Nametag above the LogoutSpot.");
+        register(module.remove,
+                 "Delay in seconds after which a LogoutSpot will get removed." +
+            " Set to 0 to not remove LogoutSpots.");
     }
 
     @Override
