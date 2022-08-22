@@ -20,7 +20,7 @@ public abstract class MixinRenderChunk
         method = "needsImmediateUpdate",
         at = @At(value = "HEAD"),
         cancellable = true)
-    private void needsImmediateUpdateHook(CallbackInfoReturnable<Boolean> cir)
+    public void needsImmediateUpdateHook(CallbackInfoReturnable<Boolean> cir)
     {
         if (SLOW.getValue())
         {

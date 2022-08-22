@@ -18,7 +18,7 @@ public abstract class MixinBlockRendererDispatcher
     @Inject(
         method = "renderBlock",
         at = @At("HEAD"))
-    private void renderBlockHook(IBlockState state,
+    public void renderBlockHook(IBlockState state,
                                  BlockPos pos,
                                  IBlockAccess blockAccess,
                                  BufferBuilder bufferBuilderIn,

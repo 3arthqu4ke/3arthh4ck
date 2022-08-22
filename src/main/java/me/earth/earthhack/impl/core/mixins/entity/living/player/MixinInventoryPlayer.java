@@ -24,7 +24,7 @@ public abstract class MixinInventoryPlayer
             value = "FIELD",
             target = "Lnet/minecraft/entity/player/InventoryPlayer;currentItem:I",
             opcode = Opcodes.PUTFIELD))
-    private void setPickedItemStackHook(InventoryPlayer inventoryPlayer,
+    public void setPickedItemStackHook(InventoryPlayer inventoryPlayer,
                                         int value)
     {
         Locks.acquire(Locks.PLACE_SWITCH_LOCK,
@@ -37,7 +37,7 @@ public abstract class MixinInventoryPlayer
             value = "FIELD",
             target = "Lnet/minecraft/entity/player/InventoryPlayer;currentItem:I",
             opcode = Opcodes.PUTFIELD))
-    private void pickItemHook(InventoryPlayer inventoryPlayer,
+    public void pickItemHook(InventoryPlayer inventoryPlayer,
                               int value)
     {
         Locks.acquire(Locks.PLACE_SWITCH_LOCK,
@@ -45,7 +45,7 @@ public abstract class MixinInventoryPlayer
     }
 
     @Inject(method = "changeCurrentItem", at = @At("HEAD"), cancellable = true)
-    private void changeCurrentItemHook(int direction, CallbackInfo ci)
+    public void changeCurrentItemHook(int direction, CallbackInfo ci)
     {
         if (SORTER.returnIfPresent(s -> s.scroll(direction), false))
         {

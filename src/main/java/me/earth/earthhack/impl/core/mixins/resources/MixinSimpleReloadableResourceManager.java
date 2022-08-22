@@ -49,7 +49,7 @@ public abstract class MixinSimpleReloadableResourceManager
     }
 
     @Inject(method = "getResource", at = @At("HEAD"), cancellable = true)
-    private void getResourceHook(ResourceLocation location,
+    public void getResourceHook(ResourceLocation location,
                                  CallbackInfoReturnable<IResource> cir)
     {
         ResourceSupplier supplier;
@@ -99,7 +99,7 @@ public abstract class MixinSimpleReloadableResourceManager
     }
 
     @Inject(method = "getResourceDomains", at = @At("HEAD"), cancellable = true)
-    private void getResourceDomainsHook(CallbackInfoReturnable<Set<String>> cir)
+    public void getResourceDomainsHook(CallbackInfoReturnable<Set<String>> cir)
     {
         Set<String> domains = this.setResourceDomains;
         domains.add("earthhack");

@@ -242,7 +242,7 @@ public abstract class MixinEntity implements IEntity, Globals
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void ctrHook(CallbackInfo info)
+    public void ctrHook(CallbackInfo info)
     {
         this.type = EntityType.getEntityType(Entity.class.cast(this));
         this.stamp = System.currentTimeMillis();
@@ -252,7 +252,7 @@ public abstract class MixinEntity implements IEntity, Globals
         method = "createRunningParticles",
         at = @At("HEAD"),
         cancellable = true)
-    private void createRunningParticlesHook(CallbackInfo ci)
+    public void createRunningParticlesHook(CallbackInfo ci)
     {
         //noinspection ConstantConditions
         if (EntityPlayerSP.class.isInstance(this)
@@ -331,7 +331,7 @@ public abstract class MixinEntity implements IEntity, Globals
                 value = "FIELD",
                 target = "net/minecraft/entity/Entity.onGround:Z",
                 ordinal = 1))
-    private void onGroundHook(MoverType type,
+    public void onGroundHook(MoverType type,
                               double x,
                               double y,
                               double z,
@@ -355,7 +355,7 @@ public abstract class MixinEntity implements IEntity, Globals
             target = "net/minecraft/entity/Entity.stepHeight:F",
             ordinal = 3,
             shift = At.Shift.BEFORE))
-    private void onGroundHookComp(MoverType type,
+    public void onGroundHookComp(MoverType type,
                                   double x,
                                   double y,
                                   double z,
@@ -378,7 +378,7 @@ public abstract class MixinEntity implements IEntity, Globals
             target = "net/minecraft/entity/Entity.onGround:Z",
             ordinal = 2,
             shift = At.Shift.AFTER))
-    private void onGroundHook2(MoverType type,
+    public void onGroundHook2(MoverType type,
                                double x,
                                double y,
                                double z,
@@ -404,7 +404,7 @@ public abstract class MixinEntity implements IEntity, Globals
                      + "(Lnet/minecraft/util/math/AxisAlignedBB;)V",
             ordinal = 7,
             shift = At.Shift.AFTER))
-    private void setEntityBoundingBoxHook(MoverType type,
+    public void setEntityBoundingBoxHook(MoverType type,
                                           double x,
                                           double y,
                                           double z,
@@ -427,7 +427,7 @@ public abstract class MixinEntity implements IEntity, Globals
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/profiler/Profiler;endSection()V"))
-    private void stepCompHook(MoverType type, double x, double y, double z, CallbackInfo ci)
+    public void stepCompHook(MoverType type, double x, double y, double z, CallbackInfo ci)
     {
         //noinspection ConstantConditions
         if (EntityPlayerSP.class.isInstance(this) && STEP_COMP.getValue())
@@ -442,7 +442,7 @@ public abstract class MixinEntity implements IEntity, Globals
     }
 
     @Inject(method = "setPositionAndRotation", at = @At("RETURN"))
-    private void setPositionAndRotationHook(double x,
+    public void setPositionAndRotationHook(double x,
                                             double y,
                                             double z,
                                             float yaw,
@@ -463,7 +463,7 @@ public abstract class MixinEntity implements IEntity, Globals
             value = "INVOKE",
             target = "net/minecraft/entity/Entity.resetPositionToBB()V",
             ordinal = 1))
-    private void resetPositionToBBHook(MoverType type,
+    public void resetPositionToBBHook(MoverType type,
                                        double x,
                                        double y,
                                        double z,
@@ -493,7 +493,7 @@ public abstract class MixinEntity implements IEntity, Globals
         method = "getCollisionBorderSize",
         at = @At("RETURN"),
         cancellable = true)
-    private void getCollisionBorderSizeHook(CallbackInfoReturnable<Float> info)
+    public void getCollisionBorderSizeHook(CallbackInfoReturnable<Float> info)
     {
         ReachEvent event = new ReachEvent(0.0f, info.getReturnValue());
         Bus.EVENT_BUS.post(event);
@@ -520,7 +520,7 @@ public abstract class MixinEntity implements IEntity, Globals
     }
 
     @Inject(method = "setDead", at = @At("RETURN"))
-    private void setDeadHook(CallbackInfo ci)
+    public void setDeadHook(CallbackInfo ci)
     {
         if (NOINTERP.isPresent() && NOINTERP.get().shouldFixDeathJitter())
         {

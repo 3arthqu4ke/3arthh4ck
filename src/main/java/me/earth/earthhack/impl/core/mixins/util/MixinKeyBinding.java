@@ -23,7 +23,7 @@ public abstract class MixinKeyBinding implements IKeyBinding
         method = "isKeyDown",
         at = @At("RETURN"),
         cancellable = true)
-    private void isKeyDownHook(CallbackInfoReturnable<Boolean> info)
+    public void isKeyDownHook(CallbackInfoReturnable<Boolean> info)
     {
         if (!info.getReturnValue())
         {

@@ -34,7 +34,7 @@ public abstract class MixinNettyPacketEncoder
             value = "INVOKE",
             target = "Lnet/minecraft/network/Packet;writePacketData(Lnet/minecraft/network/PacketBuffer;)V",
             shift = At.Shift.AFTER))
-    private void encodeHook(ChannelHandlerContext p_encode_1_,
+    public void encodeHook(ChannelHandlerContext p_encode_1_,
                             Packet<?> p_encode_2_,
                             ByteBuf p_encode_3_,
                             CallbackInfo ci)

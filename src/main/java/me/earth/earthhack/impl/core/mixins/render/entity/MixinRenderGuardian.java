@@ -21,7 +21,7 @@ public abstract class MixinRenderGuardian
             target = "net/minecraft/entity/monster/EntityGuardian" +
                      ".getAttackAnimationScale(F)F"),
         cancellable = true)
-    private void doRenderHook(EntityGuardian entity,
+    public void doRenderHook(EntityGuardian entity,
                               double x,
                               double y,
                               double z,

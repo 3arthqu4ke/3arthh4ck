@@ -176,7 +176,7 @@ public abstract class MixinMinecraft implements IMinecraft
                     target = "Lnet/minecraft/client/resources/IReloadableResourceManager;registerReloadListener(Lnet/minecraft/client/resources/IResourceManagerReloadListener;)V",
                     ordinal = 0,
                     shift = At.Shift.AFTER))
-    private void preInitHook(CallbackInfo ci)
+    public void preInitHook(CallbackInfo ci)
     {
         Earthhack.preInit();
     }
@@ -237,7 +237,7 @@ public abstract class MixinMinecraft implements IMinecraft
             value = "INVOKE",
             target = "Lorg/lwjgl/input/Mouse;getEventButton()I",
             remap = false))
-    private void runTickMouseHook(CallbackInfo ci) {
+    public void runTickMouseHook(CallbackInfo ci) {
         Bus.EVENT_BUS.post(new MouseEvent(Mouse.getEventButton(),
                                           Mouse.getEventButtonState()));
     }
@@ -248,7 +248,7 @@ public abstract class MixinMinecraft implements IMinecraft
             value = "INVOKE_ASSIGN",
             target = "org/lwjgl/input/Keyboard.getEventKeyState()Z",
             remap = false))
-    private void runTickKeyboardHook(CallbackInfo callbackInfo)
+    public void runTickKeyboardHook(CallbackInfo callbackInfo)
     {
         Bus.EVENT_BUS.post(new KeyboardEvent(Keyboard.getEventKeyState(),
                                              Keyboard.getEventKey(),
@@ -290,7 +290,7 @@ public abstract class MixinMinecraft implements IMinecraft
         method = "middleClickMouse",
         at = @At(value = "HEAD"),
         cancellable = true)
-    private void middleClickMouseHook(CallbackInfo callbackInfo)
+    public void middleClickMouseHook(CallbackInfo callbackInfo)
     {
         ClickMiddleEvent event = new ClickMiddleEvent();
         Bus.EVENT_BUS.post(event);
@@ -305,7 +305,7 @@ public abstract class MixinMinecraft implements IMinecraft
         method = "rightClickMouse",
         at = @At(value = "HEAD"),
         cancellable = true)
-    private void rightClickMouseHook(CallbackInfo callbackInfo)
+    public void rightClickMouseHook(CallbackInfo callbackInfo)
     {
         ClickRightEvent event = new ClickRightEvent(this.rightClickDelayTimer);
         Bus.EVENT_BUS.post(event);
@@ -410,7 +410,7 @@ public abstract class MixinMinecraft implements IMinecraft
         method = "clickMouse",
         at = @At(value = "HEAD"),
         cancellable = true)
-    private void clickMouseHook(CallbackInfo callbackInfo)
+    public void clickMouseHook(CallbackInfo callbackInfo)
     {
         ClickLeftEvent event = new ClickLeftEvent(this.leftClickCounter);
         Bus.EVENT_BUS.post(event);
@@ -427,7 +427,7 @@ public abstract class MixinMinecraft implements IMinecraft
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;attackEntity(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/entity/Entity;)V"))
-    private void attackEntityHook(PlayerControllerMP playerControllerMP,
+    public void attackEntityHook(PlayerControllerMP playerControllerMP,
                                   EntityPlayer playerIn,
                                   Entity targetEntity)
     {
@@ -460,7 +460,7 @@ public abstract class MixinMinecraft implements IMinecraft
     @Inject(
         method = "shutdownMinecraftApplet",
         at = @At(value = "HEAD"))
-    private void shutdownMinecraftAppletHook(CallbackInfo info)
+    public void shutdownMinecraftAppletHook(CallbackInfo info)
     {
         Earthhack.getLogger().info("Shutting down 3arthh4ck.");
         Bus.EVENT_BUS.post(new ShutDownEvent());
@@ -505,7 +505,7 @@ public abstract class MixinMinecraft implements IMinecraft
         method = "loadWorld(Lnet/minecraft/client/multiplayer/WorldClient;"
                  + "Ljava/lang/String;)V",
         at = @At("HEAD"))
-    private void loadWorldHook(WorldClient worldClient,
+    public void loadWorldHook(WorldClient worldClient,
                                String loadingMessage,
                                CallbackInfo info)
     {
@@ -519,7 +519,7 @@ public abstract class MixinMinecraft implements IMinecraft
         method = "getRenderViewEntity",
         at = @At("HEAD"),
         cancellable = true)
-    private void getRenderViewEntityHook(CallbackInfoReturnable<Entity> cir)
+    public void getRenderViewEntityHook(CallbackInfoReturnable<Entity> cir)
     {
         if (SPECTATE.isEnabled())
         {
@@ -528,7 +528,7 @@ public abstract class MixinMinecraft implements IMinecraft
     }
 
     @Inject(method = "launchIntegratedServer", at = @At("HEAD"))
-    private void launchIntegratedServerHook(String folderName,
+    public void launchIntegratedServerHook(String folderName,
                                             String worldName,
                                             WorldSettings worldSettingsIn,
                                             CallbackInfo ci)
@@ -544,7 +544,7 @@ public abstract class MixinMinecraft implements IMinecraft
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/entity/player/InventoryPlayer;currentItem:I"))
-    private void processKeyBindsHook(InventoryPlayer inventoryPlayer, int value)
+    public void processKeyBindsHook(InventoryPlayer inventoryPlayer, int value)
     {
         Locks.acquire(Locks.PLACE_SWITCH_LOCK, () -> inventoryPlayer.currentItem
             = SORTER.returnIfPresent(s -> s.getHotbarMapping(value), value)
@@ -556,7 +556,7 @@ public abstract class MixinMinecraft implements IMinecraft
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;onStoppedUsingItem(Lnet/minecraft/entity/player/EntityPlayer;)V"))
-    private void onStoppedUsingItemHook(PlayerControllerMP playerControllerMP,
+    public void onStoppedUsingItemHook(PlayerControllerMP playerControllerMP,
                                         EntityPlayer playerIn)
     {
         Bus.EVENT_BUS.post(new AbortEatingEvent());
@@ -571,7 +571,7 @@ public abstract class MixinMinecraft implements IMinecraft
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/entity/player/InventoryPlayer;changeCurrentItem(I)V"))
-    private void changeCurrentItemHook(InventoryPlayer inventoryPlayer,
+    public void changeCurrentItemHook(InventoryPlayer inventoryPlayer,
                                        int direction)
     {
         Locks.acquire(Locks.PLACE_SWITCH_LOCK,

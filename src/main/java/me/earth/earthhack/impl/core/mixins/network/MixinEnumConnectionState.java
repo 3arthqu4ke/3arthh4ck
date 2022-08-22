@@ -29,7 +29,7 @@ public abstract class MixinEnumConnectionState
         method = "getPacketId",
         at = @At("HEAD"),
         cancellable = true)
-    private void getPacketIdHook(EnumPacketDirection dir,
+    public void getPacketIdHook(EnumPacketDirection dir,
                                  Packet<?> packet,
                                  CallbackInfoReturnable<Integer> cir)
             throws Exception

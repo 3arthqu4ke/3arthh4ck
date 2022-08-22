@@ -16,7 +16,7 @@ public abstract class MixinAbstractHorse extends MixinEntityLivingBase
         method = "getHorseJumpStrength",
         at = @At("HEAD"),
         cancellable = true)
-    private void getHorseJumpStrengthHook(CallbackInfoReturnable<Double> info)
+    public void getHorseJumpStrengthHook(CallbackInfoReturnable<Double> info)
     {
         HorseEvent event = new HorseEvent();
         Bus.EVENT_BUS.post(event);
@@ -31,7 +31,7 @@ public abstract class MixinAbstractHorse extends MixinEntityLivingBase
         method = "canBeSteered",
         at = @At("HEAD"),
         cancellable = true)
-    private void canBeSteeredHook(CallbackInfoReturnable<Boolean> info)
+    public void canBeSteeredHook(CallbackInfoReturnable<Boolean> info)
     {
         ControlEvent event = new ControlEvent();
         Bus.EVENT_BUS.post(event);
@@ -46,7 +46,7 @@ public abstract class MixinAbstractHorse extends MixinEntityLivingBase
         method = "isHorseSaddled",
         at = @At("HEAD"),
         cancellable = true)
-    private void isHorseSaddledHook(CallbackInfoReturnable<Boolean> info)
+    public void isHorseSaddledHook(CallbackInfoReturnable<Boolean> info)
     {
         ControlEvent event = new ControlEvent();
         Bus.EVENT_BUS.post(event);

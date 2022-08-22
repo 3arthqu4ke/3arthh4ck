@@ -49,7 +49,7 @@ public abstract class MixinRenderEnderCrystal
             target = "Lnet/minecraft/entity/item/EntityEnderCrystal;shouldShowBottom()Z",
             shift = At.Shift.BEFORE),
         cancellable = true)
-    private void preRenderHook(EntityEnderCrystal entity,
+    public void preRenderHook(EntityEnderCrystal entity,
                                double x, double y, double z,
                                float entityYaw,
                                float partialTicks,
@@ -111,7 +111,7 @@ public abstract class MixinRenderEnderCrystal
             ordinal = 1,
             shift = At.Shift.BEFORE),
         locals = LocalCapture.CAPTURE_FAILHARD)
-    private void postRenderHook(
+    public void postRenderHook(
         EntityEnderCrystal entity, double x, double y, double z,
         float entityYaw, float partialTicks, CallbackInfo ci,
         float f, float f1) {

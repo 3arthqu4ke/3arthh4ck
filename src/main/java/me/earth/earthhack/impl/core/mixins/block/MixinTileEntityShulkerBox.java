@@ -32,7 +32,7 @@ public abstract class MixinTileEntityShulkerBox implements ITileEntityShulkerBox
         method = "moveCollidedEntities",
         at = @At("HEAD"),
         cancellable = true)
-    private void moveCollidedEntitiesHook(CallbackInfo info)
+    public void moveCollidedEntitiesHook(CallbackInfo info)
     {
         if (VELOCITY.isEnabled() && SHULKERS.getValue())
         {

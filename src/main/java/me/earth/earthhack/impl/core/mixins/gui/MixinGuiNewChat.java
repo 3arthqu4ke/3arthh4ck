@@ -300,7 +300,7 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
             value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiNewChat;drawRect(IIIII)V",
             ordinal = 0))
-    private void drawRectHook(int left, int top, int right, int bottom, int c)
+    public void drawRectHook(int left, int top, int right, int bottom, int c)
     {
         if (CHAT.isEnabled() && CLEAN.getValue())
         {
@@ -329,7 +329,7 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
     }
 
     @Inject(method = "getChatHeight", at = @At("HEAD"), cancellable = true)
-    private void getChatHeightHook(CallbackInfoReturnable<Integer> info)
+    public void getChatHeightHook(CallbackInfoReturnable<Integer> info)
     {
         if (mc.currentScreen instanceof CommandGui)
         {
@@ -356,7 +356,7 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
             target = "Lnet/minecraft/client/gui/GuiNewChat;setChatLine(Lnet/minecraft/util/text/ITextComponent;IIZ)V",
             shift = At.Shift.AFTER),
         cancellable = true)
-    private void loggerHook(ITextComponent chatComponent,
+    public void loggerHook(ITextComponent chatComponent,
                             int chatLineId,
                             CallbackInfo ci)
     {
@@ -570,7 +570,7 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
     // Not sure where exactly but it was a NullPointerException
     // at net.minecraft.client.gui.GuiNewChat.func_146242_c(SourceFile:258)
     @Inject(method = "deleteChatLine", at = @At("HEAD"))
-    private void deleteChatLineHook(int id, CallbackInfo info)
+    public void deleteChatLineHook(int id, CallbackInfo info)
     {
         deleteChatLineID = id;
     }

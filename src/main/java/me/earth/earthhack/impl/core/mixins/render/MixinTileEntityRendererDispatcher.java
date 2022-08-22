@@ -12,7 +12,7 @@ public abstract class MixinTileEntityRendererDispatcher
             method = "render(Lnet/minecraft/tileentity/TileEntity;DDDFIF)V",
             at = @At("HEAD")
     )
-    private void renderHook(TileEntity tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage, float p_192854_10_, CallbackInfo ci)
+    public void renderHook(TileEntity tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage, float p_192854_10_, CallbackInfo ci)
     {
 
         // GlStateManager.color();

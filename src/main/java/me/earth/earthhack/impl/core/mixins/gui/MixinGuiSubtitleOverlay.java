@@ -16,7 +16,7 @@ public abstract class MixinGuiSubtitleOverlay
     @Inject(
         method = "renderSubtitles",
         at = @At(value = "HEAD"))
-    private void renderSubtitlesHook(CallbackInfo info)
+    public void renderSubtitlesHook(CallbackInfo info)
     {
         Bus.EVENT_BUS.post(new Render2DEvent());
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);

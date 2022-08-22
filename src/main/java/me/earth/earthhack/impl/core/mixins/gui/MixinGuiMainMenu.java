@@ -24,7 +24,7 @@ public abstract class MixinGuiMainMenu extends GuiScreen
             ordinal = 2,
             shift = At.Shift.AFTER,
             remap = false))
-    private void buttonHook(CallbackInfo info)
+    public void buttonHook(CallbackInfo info)
     {
         int x = 2; int y = 0; int w = 2;
         for (GuiButton button : this.buttonList)
@@ -43,7 +43,7 @@ public abstract class MixinGuiMainMenu extends GuiScreen
     }
 
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
-    private void actionPerformedHook(GuiButton button, CallbackInfo info)
+    public void actionPerformedHook(GuiButton button, CallbackInfo info)
     {
         if (button.id == earthhackButton.id)
         {

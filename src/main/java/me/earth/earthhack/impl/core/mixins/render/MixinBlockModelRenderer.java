@@ -40,7 +40,7 @@ public abstract class MixinBlockModelRenderer
                 "Lnet/minecraft/client/renderer/BufferBuilder;ZJ)Z",
         at = @At("HEAD"),
         cancellable = true)
-    private void renderModelHook(IBlockAccess access,
+    public void renderModelHook(IBlockAccess access,
                                  IBakedModel model,
                                  IBlockState state,
                                  BlockPos pos,

@@ -62,7 +62,7 @@ public abstract class MixinRenderGlobal implements IRenderGlobal
             ),
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
-    private void renderEntitiesHook(Entity i, ICamera flag1, float flag, CallbackInfo ci, int pass, double d0, double d1, double d2, Entity entity, double d3, double d4, double d5, List<Entity> list, Entity entity1, List<Entity> list1, List<Entity> list2, BlockPos.PooledMutableBlockPos blockPos, Object info, Chunk chunk)
+    public void renderEntitiesHook(Entity i, ICamera flag1, float flag, CallbackInfo ci, int pass, double d0, double d1, double d2, Entity entity, double d3, double d4, double d5, List<Entity> list, Entity entity1, List<Entity> list1, List<Entity> list2, BlockPos.PooledMutableBlockPos blockPos, Object info, Chunk chunk)
     {
 
     }*/
@@ -75,7 +75,7 @@ public abstract class MixinRenderGlobal implements IRenderGlobal
                     ordinal = 1
             )
     )
-    private void renderEntityHook(RenderManager instance, Entity entityIn, float partialTicks, boolean p_188388_3_)
+    public void renderEntityHook(RenderManager instance, Entity entityIn, float partialTicks, boolean p_188388_3_)
     {
         RenderEntityInWorldEvent.Pre pre = new RenderEntityInWorldEvent.Pre(entityIn, partialTicks);
         Bus.EVENT_BUS.post(pre);
@@ -99,7 +99,7 @@ public abstract class MixinRenderGlobal implements IRenderGlobal
                     shift = At.Shift.AFTER
             )
     )
-    private void renderSkyHook(float f4, int f5, CallbackInfo ci)
+    public void renderSkyHook(float f4, int f5, CallbackInfo ci)
     {
         Bus.EVENT_BUS.post(new RenderSkyEvent());
     }

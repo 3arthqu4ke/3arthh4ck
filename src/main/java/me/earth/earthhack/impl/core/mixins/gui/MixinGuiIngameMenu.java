@@ -18,7 +18,7 @@ public class MixinGuiIngameMenu extends GuiScreen {
         Caches.getModule(PingBypassModule.class);
 
     @Inject(method = "initGui", at = @At("RETURN"))
-    private void initGuiHook(CallbackInfo ci) {
+    public void initGuiHook(CallbackInfo ci) {
         if (PING_BYPASS.isEnabled() && !PING_BYPASS.get().isOld()) {
             // TODO: i think other mods might add another button here too. Add that button dynamically?
             this.buttonList.add(new GuiButton(BUTTON_ID, this.width / 2 - 100, this.height / 4 + 152, "Disconnect from PingBypass"));
@@ -26,7 +26,7 @@ public class MixinGuiIngameMenu extends GuiScreen {
     }
 
     @Inject(method = "actionPerformed", at = @At("HEAD"), cancellable = true)
-    private void actionPerformedHook(GuiButton button, CallbackInfo ci) {
+    public void actionPerformedHook(GuiButton button, CallbackInfo ci) {
         if (button.id == BUTTON_ID) {
             if (mc.player != null
                 && PING_BYPASS.isEnabled()

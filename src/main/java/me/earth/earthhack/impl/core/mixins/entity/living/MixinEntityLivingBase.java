@@ -311,7 +311,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
     }
 
     @Inject(method = "isElytraFlying", at = @At("HEAD"), cancellable = true)
-    private void isElytraFlyingHook(CallbackInfoReturnable<Boolean> info)
+    public void isElytraFlyingHook(CallbackInfoReturnable<Boolean> info)
     {
         //noinspection ConstantConditions
         if (EntityPlayerSP.class.isInstance(this)
@@ -342,7 +342,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
         method = "handleJumpWater",
         at = @At("HEAD"),
         cancellable = true)
-    private void handleJumpWaterHook(CallbackInfo info)
+    public void handleJumpWaterHook(CallbackInfo info)
     {
         LiquidJumpEvent event =
                 new LiquidJumpEvent(EntityLivingBase.class.cast(this));
@@ -358,7 +358,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
         method = "handleJumpLava",
         at = @At("HEAD"),
         cancellable = true)
-    private void handleJumpLavaHook(CallbackInfo info)
+    public void handleJumpLavaHook(CallbackInfo info)
     {
         LiquidJumpEvent event =
                 new LiquidJumpEvent(EntityLivingBase.class.cast(this));
@@ -375,7 +375,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/entity/EntityLivingBase;resetActiveHand()V"))
-    private void resetActiveHandHook(EntityLivingBase base)
+    public void resetActiveHandHook(EntityLivingBase base)
     {
         if (world.isRemote
                 && FAST_EAT.isEnabled()
@@ -396,7 +396,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
     }
 
     @Inject(method = "swingArm", at = @At("HEAD"))
-    private void swingArmHook(EnumHand hand, CallbackInfo ci)
+    public void swingArmHook(EnumHand hand, CallbackInfo ci)
     {
         //noinspection ConstantConditions
         if (EntityPlayerSP.class.isInstance(this) && SPECTATE.isEnabled())
@@ -412,7 +412,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
     @Inject(
         method = "setPositionAndRotationDirect",
         at = @At("RETURN"))
-    private void setPositionAndRotationDirectHook(double x,
+    public void setPositionAndRotationDirectHook(double x,
                                                   double y,
                                                   double z,
                                                   float yaw,

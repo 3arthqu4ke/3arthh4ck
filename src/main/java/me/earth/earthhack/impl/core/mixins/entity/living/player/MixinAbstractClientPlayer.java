@@ -20,7 +20,7 @@ public abstract class MixinAbstractClientPlayer extends MixinEntityPlayer
         NO_RENDER = Caches.getModule(NoRender.class);
 
     @Inject(method = "getFovModifier", at = @At("HEAD"), cancellable = true)
-    private void getFovModifierHook(CallbackInfoReturnable<Float> info)
+    public void getFovModifierHook(CallbackInfoReturnable<Float> info)
     {
         if (NO_RENDER.returnIfPresent(NoRender::dynamicFov, false))
         {

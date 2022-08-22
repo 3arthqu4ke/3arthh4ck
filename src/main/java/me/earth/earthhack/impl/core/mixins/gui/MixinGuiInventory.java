@@ -20,7 +20,7 @@ public abstract class MixinGuiInventory
         method = "onGuiClosed",
         at = @At("HEAD"),
         cancellable = true)
-    private void onGuiClosedHook(CallbackInfo info)
+    public void onGuiClosedHook(CallbackInfo info)
     {
         if (XCARRY.isEnabled())
         {

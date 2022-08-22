@@ -82,7 +82,7 @@ public abstract class MixinRenderItem implements IRenderItem
                     target = "Lnet/minecraft/client/renderer/GlStateManager;scale(FFF)V"
             )
     )
-    private void scaleHook(float x, float y, float z) {
+    public void scaleHook(float x, float y, float z) {
         if (ITEM_CHAMS.isEnabled()
                 && ITEM_CHAMS.get().isModifyingGlint())
         {
@@ -102,7 +102,7 @@ public abstract class MixinRenderItem implements IRenderItem
                     target = "Lnet/minecraft/client/renderer/GlStateManager;scale(FFF)V"
             )
     )
-    private void scaleArgsHook(Args args)
+    public void scaleArgsHook(Args args)
     {
         if (ITEM_CHAMS.isEnabled()
                 && ITEM_CHAMS.get().isModifyingGlint())
@@ -121,7 +121,7 @@ public abstract class MixinRenderItem implements IRenderItem
                     target = "Lnet/minecraft/client/renderer/GlStateManager;translate(FFF)V"
             )
     )
-    private void translateHook(Args args)
+    public void translateHook(Args args)
     {
         if (ITEM_CHAMS.isEnabled()
                 && ITEM_CHAMS.get().isModifyingGlint())
@@ -137,7 +137,7 @@ public abstract class MixinRenderItem implements IRenderItem
                     target = "Lnet/minecraft/client/renderer/GlStateManager;rotate(FFFF)V"
             )
     )
-    private void rotateHook(Args args)
+    public void rotateHook(Args args)
     {
         if (ITEM_CHAMS.isEnabled()
                 && ITEM_CHAMS.get().isModifyingGlint())

@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SoundManager.class)
-public class MixinSoundManager
+public abstract class MixinSoundManager
 {
     @Shadow private boolean loaded;
 
     @Inject(method = "playSound", at = @At("HEAD"), cancellable = true)
-    private void playSoundHook(ISound p_sound, CallbackInfo ci)
+    public void playSoundHook(ISound p_sound, CallbackInfo ci)
     {
         if (this.loaded)
         {
