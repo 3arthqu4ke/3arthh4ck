@@ -425,6 +425,8 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
             "few blocks. This can speed up and lighten the load the " +
             "calculation has on the CPU, but might make you miss out on " +
             "AntiTotem etc.");
+        register(module.preCalcExtra,
+             "The type of extrapolation to use for Pre-Calc if it is on.");
         register(module.preCalcDamage, "If a Pre-Calced position deals this" +
             " or more damage it will instantly be accepted.");
 

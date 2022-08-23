@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.modules.player.fakeplayer;
 
 import me.earth.earthhack.api.event.events.Stage;
+import me.earth.earthhack.impl.core.ducks.entity.IEntityPlayer;
 import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.player.fakeplayer.util.Position;
@@ -77,16 +78,27 @@ final class ListenerMotion extends
                     module.fakePlayer.setPositionAndRotationDirect(
                         p.getX(), p.getY(), p.getZ(), p.getYaw(), p.getPitch(),
                         3, false);
+                    module.fakePlayer.motionX = p.getMotionX();
+                    module.fakePlayer.motionY = p.getMotionY();
+                    module.fakePlayer.motionZ = p.getMotionZ();
+                    ((IEntityPlayer) module.fakePlayer)
+                        .setTicksWithoutMotionUpdate(0);
                 }
             }
             else
             {
                 module.index = 0;
+                module.fakePlayer.motionX = 0.0;
+                module.fakePlayer.motionY = 0.0;
+                module.fakePlayer.motionZ = 0.0;
             }
         }
         else if (event.getStage() == Stage.POST && record)
         {
             module.playRecording.setValue(false);
+            module.fakePlayer.motionX = 0.0;
+            module.fakePlayer.motionY = 0.0;
+            module.fakePlayer.motionZ = 0.0;
 
             if (!wasRecording)
             {

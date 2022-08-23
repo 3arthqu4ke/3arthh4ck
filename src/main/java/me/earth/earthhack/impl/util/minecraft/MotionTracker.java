@@ -27,7 +27,7 @@ public class MotionTracker extends EntityPlayerNoInterp
     public EntityPlayer tracked;
     public MovementInput movementInput; // represents the inputs of the player controlling the tracked entity
     public boolean safe; // set to true when enough information has been collected about the tracked player that we can safely assume stuff such as whether the player is flying
-    public boolean active;
+    public volatile boolean active;
     public boolean wasPhasing;
     public boolean shrinkPush;
 
@@ -80,7 +80,6 @@ public class MotionTracker extends EntityPlayerNoInterp
         this.motionX = tracked.motionX;
         this.motionY = tracked.motionY;
         this.motionZ = tracked.motionZ;
-
         this.posX += Math.abs(this.motionX) >= 0.1 ? this.motionX : 0.0;
         this.posY += Math.abs(this.motionY) >= 0.1 ? this.motionY : 0.0;
         this.posZ += Math.abs(this.motionZ) >= 0.1 ? this.motionZ : 0.0;

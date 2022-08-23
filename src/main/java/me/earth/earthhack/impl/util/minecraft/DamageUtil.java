@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.util.minecraft;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityLivingBase;
 import me.earth.earthhack.impl.core.mixins.item.IItemTool;
+import me.earth.earthhack.impl.util.math.DistanceUtil;
 import me.earth.earthhack.impl.util.math.raytrace.RayTracer;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import net.minecraft.block.BlockAnvil;
@@ -316,7 +317,10 @@ public class DamageUtil implements Globals
                                   boolean anvils,
                                   float power)
     {
-        double distance = base.getDistance(x, y, z) / 12.0;
+        double bX = bb.minX + (bb.maxX - bb.minX) * 0.5;
+        double bZ = bb.minZ + (bb.maxZ - bb.minZ) * 0.5;
+        double distance =
+            Math.sqrt(DistanceUtil.distanceSq(x, y, z, bX, bb.minY, bZ)) / 12.0;
         if (distance > 1.0)
         {
             return 0.0F;

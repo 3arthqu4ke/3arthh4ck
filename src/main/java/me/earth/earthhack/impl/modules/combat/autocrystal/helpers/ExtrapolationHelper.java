@@ -8,6 +8,7 @@ import me.earth.earthhack.impl.event.listeners.LambdaListener;
 import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.MotionTracker;
+import me.earth.earthhack.impl.util.minecraft.PushMode;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -69,7 +70,13 @@ public class ExtrapolationHelper extends SubscriberImpl implements Globals {
         }
 
         tracker.active = false;
-        tracker.shouldPushOutOfBlocks = module.pushOutOfBlocks.getValue();
+        tracker.shouldPushOutOfBlocks =
+            (!module.noPushOnNoMove.getValue()
+                || tracker.tracked.motionX != 0.0
+                || tracker.tracked.motionY != 0.0
+                || tracker.tracked.motionZ != 0.0)
+                    ? module.pushOutOfBlocks.getValue()
+                    : PushMode.None;
         tracker.shrinkPush = module.shrinkPush.getValue();
         tracker.copyLocationAndAnglesFrom(tracker.tracked);
         tracker.detectWasPhasing();
@@ -86,6 +93,10 @@ public class ExtrapolationHelper extends SubscriberImpl implements Globals {
 
     public MotionTracker getBreakTrackerFromEntity(Entity player) {
         return ((IEntityPlayer) player).getBreakMotionTracker();
+    }
+
+    public MotionTracker getBlockTracker(Entity player) {
+        return ((IEntityPlayer) player).getBlockMotionTracker();
     }
 
 }

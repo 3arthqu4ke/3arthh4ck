@@ -5,6 +5,7 @@ import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityOtherPlayerMP;
 import me.earth.earthhack.impl.core.ducks.entity.IEntityRemoteAttack;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -46,6 +47,14 @@ public class EntityPlayerAttack extends EntityOtherPlayerMP
     public boolean shouldRemoteAttack()
     {
         return remoteSupplier.getAsBoolean();
+    }
+
+    @Override
+    @SuppressWarnings("NullableProblems")
+    public void knockBack(Entity entityIn, float strength,
+                          double xRatio, double zRatio)
+    {
+        // NOOP
     }
 
     @Override

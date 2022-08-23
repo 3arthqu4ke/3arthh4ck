@@ -23,6 +23,7 @@ import me.earth.earthhack.impl.util.math.raytrace.Ray;
 import me.earth.earthhack.impl.util.math.raytrace.RayTraceFactory;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
+import me.earth.earthhack.impl.util.minecraft.MotionTracker;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.ncp.Visible;
@@ -141,7 +142,33 @@ public class HelperPlace implements Globals
                          List<EntityPlayer> friends,
                          Set<BlockPos> blackList)
     {
-        BlockPos pos = PositionUtil.getPosition(player).down();
+        MotionTracker extrapolationEntity;
+        switch (module.preCalcExtra.getValue()) {
+            case Place:
+                extrapolationEntity = module.extrapol.getValue() == 0
+                    ? null
+                    : module.extrapolationHelper.getTrackerFromEntity(player);
+                break;
+            case Break:
+                extrapolationEntity = module.bExtrapol.getValue() == 0
+                    ? null
+                    : module.extrapolationHelper.getBreakTrackerFromEntity(player);
+                break;
+            case Block:
+                extrapolationEntity = module.blockExtrapol.getValue() == 0
+                    ? null
+                    : module.extrapolationHelper.getBlockTracker(player);
+                break;
+            default:
+                extrapolationEntity = null;
+                break;
+        }
+
+        BlockPos pos =
+            extrapolationEntity == null || !extrapolationEntity.active
+                ? PositionUtil.getPosition(player).down()
+                : PositionUtil.getPosition(extrapolationEntity).down();
+
         for (EnumFacing facing : EnumFacing.HORIZONTALS)
         {
             PositionData pData = selfCalc(data, pos.offset(facing),
