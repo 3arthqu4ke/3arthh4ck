@@ -69,7 +69,7 @@ This is just what the docker container already automates.
     ```properties
     pb.server=true
     pb.password=<password for your pingbypass proxy>
-    pb.ip=<the aforementioned ip (definitely not 127.0.0.1>
+    pb.ip=<the aforementioned ip (definitely not 127.0.0.1)>
     pb.port=<the aforementioned port>
     ```
 
