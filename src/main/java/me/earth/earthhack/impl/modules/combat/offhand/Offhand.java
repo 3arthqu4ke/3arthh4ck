@@ -193,7 +193,9 @@ public class Offhand extends Module
                     || mc.player.getHeldItemOffhand().getItem() ==
                                                         Items.TOTEM_OF_UNDYING))
             {
-                if (Mouse.isButtonDown(1) && OffhandMode.TOTEM.equals(mode))
+                if (Mouse.isButtonDown(1)
+                        && OffhandMode.TOTEM.equals(mode)
+                        && mc.currentScreen == null)
                 {
                     this.mode = OffhandMode.GAPPLE;
                     swordGapped = true;
