@@ -161,6 +161,7 @@ public class HelperPlace implements Globals
                 break;
             default:
                 extrapolationEntity = null;
+                break;
         }
 
         BlockPos pos =
