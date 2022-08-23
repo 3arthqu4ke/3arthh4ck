@@ -27,32 +27,31 @@ have an Ip and port which are reachable from the outside. The game will run on t
 which account you use on your client, the Minecraft account on the server will always be used when you play.
 
 ### Setup with docker
-1.  Install [docker](https://docs.docker.com/engine/install/) on your server.
+1. Install [docker](https://docs.docker.com/engine/install/) on your server.
 
-2.  Run `docker pull 3arthqu4ke/pingbypass`.
+2. Run `docker pull 3arthqu4ke/pingbypass`.
 
-3.  Run `docker run -i -t -p <ip>:<port>:25565 3arthqu4ke/pingbypass`.
+3. Run `docker run -i -t -p <ip>:<port>:25565 3arthqu4ke/pingbypass`.
 
-4.  You should now be in the shell of the docker container.
+4. You should now be in the shell of the docker container.
 
-5.  Login to your Minecraft account via `hmc login <email>`, then enter your account password.
+5. Login to your Minecraft account via `hmc login <email>`, then enter your account password.
 
-6.  Launch the PingBypass server with `hmc launch 1 -id --jvm -Dpb.password=<some password>`.
+6. Launch the PingBypass server with `hmc launch 1 -id --jvm -Dpb.password=<some password>`.
 
-7.  You are now done with the server. Use the commands from the
+7. You are now done with the server. Use the commands from the
     [HMC-Specifics](https://github.com/3arthqu4ke/HMC-Specifics) to stop the game. Or just stop the container.
 
-8.  On your own PC just install 3arthh4ck by using its Installer or dropping it inside your mods folder.
+8. On your own PC just install 3arthh4ck by using its Installer or dropping it inside your mods folder.
 
-9.  In the MultiPlayer Menus top right corner you will see a book and a PingBypass button. Use PingBypass button to
+9. In the MultiPlayer Menus top right corner you will see a book and a PingBypass button. Use PingBypass button to
      toggle it on and off and the book to enter the server's connection details, also the password you used in step 6.
 
-10.  You can add the PingBypass server like a normal Minecraft server, this will make it look like in the picture above.
+10. You can add the PingBypass server like a normal Minecraft server, this will make it look like in the picture above.
      When the PingBypass button is toggled on you will join any server you click through the PingBypass proxy.
 
-11.  There is two sets of modules, one accessible through the PB-Gui module. These modules have separate configs and 
+11. There is two sets of modules, one accessible through the PB-Gui module. These modules have separate configs and 
      represent the ones on the proxy server.
-
 
 ### Manual Setup with HeadlessMc
 This is just what the docker container already automates.
