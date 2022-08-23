@@ -18,6 +18,10 @@ public class PingBypassConfig {
         return getProperty("pb.ip", "127.0.0.1");
     }
 
+    public boolean noPassword() {
+        return Boolean.parseBoolean(getProperty("pb.no.password", "false"));
+    }
+
     public String getPassword() {
         return getProperty("pb.password", null);
     }
