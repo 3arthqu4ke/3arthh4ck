@@ -133,12 +133,11 @@ public class LoginHandler extends BaseNetHandler
         this.networkManager.sendPacket(new SPacketCustomPayload(
             "PingBypass|Enable", new PacketBuffer(Unpooled.buffer())));
 
-        String password = PingBypass.CONFIG.getPassword();
-        if (password != null && !password.isEmpty()) {
+        if (PingBypass.CONFIG.noPassword()) {
+            PbNetHandler.onLogin(networkManager, handshake);
+        } else {
             networkManager.setNetHandler(new PasswordHandler(networkManager, handshake));
             networkManager.sendPacket(new S2CPasswordPacket());
-        } else {
-            PbNetHandler.onLogin(networkManager, handshake);
         }
     }
 

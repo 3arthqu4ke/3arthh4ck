@@ -60,6 +60,11 @@ public class PingBypass implements Globals {
         SplashScreenHelper.setSubStep("Loading PingBypass");
         Bus.EVENT_BUS.register(new PbAntiTrollListener());
         if (isServer()) {
+            String password = CONFIG.getPassword();
+            if (!CONFIG.noPassword() && (password == null || password.isEmpty())) {
+                throw new IllegalStateException("Please set a password for your PingBypass!");
+            }
+
             LOGGER.info("Initializing PingBypass-Server!");
             // preload these LazyLoadBase because they are not really made for
             // concurrency (value is not volatile, not synchronized)

@@ -13,6 +13,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextComponentString;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PasswordHandler extends BaseNetHandler
@@ -37,40 +38,35 @@ public class PasswordHandler extends BaseNetHandler
 
     @Override
     public void processCustomPayload(CPacketCustomPayload packetIn) {
-        if ("PingBypass".equalsIgnoreCase(packetIn.getChannelName())
-            && !connected.get()) {
-            try {
-                PbPacket<?> packet = factory.convert(packetIn.getBufferData());
-                String password = PingBypass.CONFIG.getPassword();
-                if (password == null || password.isEmpty()) {
-                    synchronized (connected) {
-                        if (!connected.getAndSet(true)) {
+        synchronized (connected) {
+            if ("PingBypass".equalsIgnoreCase(packetIn.getChannelName()) && !connected.getAndSet(true)) {
+                try {
+                    PbPacket<?> packet = factory.convert(packetIn.getBufferData());
+                    String password = PingBypass.CONFIG.getPassword();
+                    if (password == null || password.isEmpty()) {
+                        throw new IllegalStateException("PingBypass requires a password!");
+                    }
+
+                    if (packet instanceof C2SPasswordPacket) {
+                        if (password.equals(((C2SPasswordPacket) packet).getString())) {
                             PbNetHandler.onLogin(networkManager, handshake);
-                        }
-                    }
-
-                    return;
-                }
-
-                if (packet instanceof C2SPasswordPacket) {
-                    if (password.equals(((C2SPasswordPacket) packet).getString())) {
-                        synchronized (connected) {
-                            if (!connected.getAndSet(true)) {
-                                PbNetHandler.onLogin(networkManager, handshake);
-                            }
+                            return;
                         }
 
-                        return;
+                        Thread.sleep(1 + new Random().nextInt(10)); // timing attacks idk
+                        this.disconnect(new TextComponentString("Wrong password!"));
+                    } else {
+                        this.disconnect(new TextComponentString("Unexpected PingBypass packet: " + packet.getClass()));
                     }
-
-                    this.disconnect(new TextComponentString("Wrong password!"));
-                } else {
-                    this.disconnect(new TextComponentString("Unexpected PingBypass packet: " + packet.getClass()));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                    this.disconnect(new TextComponentString(e.getMessage()));
+                } catch (IOException e) {
+                    this.disconnect(new TextComponentString(e.getMessage()));
+                } finally {
+                    packetIn.getBufferData().release();
                 }
-            } catch (IOException e) {
-                this.disconnect(new TextComponentString(e.getMessage()));
-            } finally {
-                packetIn.getBufferData().release();
             }
         }
     }
