@@ -47,10 +47,10 @@ which account you use on your client, the Minecraft account on the server will a
 9.  In the MultiPlayer Menus top right corner you will see a book and a PingBypass button. Use PingBypass button to
      toggle it on and off and the book to enter the server's connection details, also the password you used in step 6.
 
-10.  You can add the PingBypass server like a normal Minecraft server, this will make it look like in the picture above.
+10. You can add the PingBypass server like a normal Minecraft server, this will make it look like in the picture above.
      When the PingBypass button is toggled on you will join any server you click through the PingBypass proxy.
 
-11.  There is two sets of modules, one accessible through the PB-Gui module. These modules have separate configs and 
+11. There is two sets of modules, one accessible through the PB-Gui module. These modules have separate configs and 
      represent the ones on the proxy server.
 
 ### Manual Setup with HeadlessMc
