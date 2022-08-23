@@ -705,6 +705,9 @@ public class AutoCrystal extends Module
     public final Setting<Boolean> shrinkPush =
             register(new BooleanSetting("ShrinkPush", false))
                 .setComplexity(Complexity.Expert);
+    public final Setting<Boolean> noPushOnNoMove =
+            register(new BooleanSetting("NoPushOnNoMove", false))
+                .setComplexity(Complexity.Expert);
     public final Setting<Boolean> selfExtrapolation =
             register(new BooleanSetting("SelfExtrapolation", false))
                 .setComplexity(Complexity.Medium);
@@ -738,6 +741,9 @@ public class AutoCrystal extends Module
     /* ---------------- Efficiency -------------- */
     protected final Setting<PreCalc> preCalc =
             register(new EnumSetting<>("Pre-Calc", PreCalc.None))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<ExtrapolationType> preCalcExtra =
+            register(new EnumSetting<>("PreCalcExtra", ExtrapolationType.Place))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Float> preCalcDamage =
             register(new NumberSetting<>("Pre-CalcDamage", 15.0f, 0.0f, 36.0f))

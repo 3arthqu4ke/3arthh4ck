@@ -6,6 +6,7 @@ import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.impl.commands.util.CommandUtil;
 import me.earth.earthhack.impl.managers.Managers;
+import me.earth.earthhack.impl.managers.client.ModuleManager;
 import me.earth.earthhack.impl.util.text.TextColor;
 
 // TODO: support for multiple modules? take varargs for indices
@@ -59,7 +60,12 @@ public abstract class AbstractModuleCommand extends Command
 
         return CommandUtil.getNameableStartingWith(
                                             args[index],
-                                            Managers.MODULES.getRegistered());
+                                            getModuleManager().getRegistered());
+    }
+
+    protected ModuleManager getModuleManager()
+    {
+        return Managers.MODULES;
     }
 
     private static String[][] concatArray(String name, String[][] args)
