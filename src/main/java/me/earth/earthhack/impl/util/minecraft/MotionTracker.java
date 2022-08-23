@@ -113,7 +113,6 @@ public class MotionTracker extends EntityPlayerNoInterp
         this.lastExtraPosX = extraPosX;
         this.lastExtraPosY = extraPosY;
         this.lastExtraPosZ = extraPosZ;
-        this.setPosition(this.posX, this.posY, this.posZ);
     }
 
     @Override
