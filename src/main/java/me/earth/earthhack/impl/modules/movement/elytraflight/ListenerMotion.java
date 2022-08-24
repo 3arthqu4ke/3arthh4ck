@@ -42,6 +42,10 @@ final class ListenerMotion extends
             return;
         }
 
+        if (module.customPitch.getValue() && mc.player.isElytraFlying()) {
+            event.setPitch(module.pitch.getValue().floatValue());
+        }
+
         if (module.mode.getValue() == ElytraMode.Packet) {
             boolean falling = false;
             if (module.infDura.getValue() || !mc.player.isElytraFlying()) {

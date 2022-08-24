@@ -39,6 +39,10 @@ public class ElytraFlight extends Module
             register(new BooleanSetting("Accelerate", true));
     protected final Setting<Boolean> instant =
             register(new BooleanSetting("Instant", true));
+    protected final Setting<Boolean> customPitch =
+            register(new BooleanSetting("CustomPitch", true));
+    protected final Setting<Double> pitch =
+            register(new NumberSetting<>("Pitch", 0.0, -90.0, 90.0));
 
     /** A timer to handle AutoStart etc. with. */
     protected final StopWatch timer = new StopWatch();
@@ -82,5 +86,4 @@ public class ElytraFlight extends Module
         mc.player.connection.sendPacket(new CPacketEntityAction(
                 mc.player, CPacketEntityAction.Action.START_FALL_FLYING));
     }
-
 }
