@@ -11,7 +11,10 @@ import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.render.TextRenderer;
 import me.earth.earthhack.impl.modules.client.hud.arraylist.ArrayEntry;
-import me.earth.earthhack.impl.modules.client.hud.modes.*;
+import me.earth.earthhack.impl.modules.client.hud.modes.HudRainbow;
+import me.earth.earthhack.impl.modules.client.hud.modes.Modules;
+import me.earth.earthhack.impl.modules.client.hud.modes.PotionColor;
+import me.earth.earthhack.impl.modules.client.hud.modes.Potions;
 import me.earth.earthhack.impl.modules.client.hud.util.HUDData;
 import me.earth.earthhack.impl.util.client.ModuleUtil;
 import me.earth.earthhack.impl.util.math.MathUtil;
@@ -43,10 +46,6 @@ import java.util.stream.Collectors;
 public class HUD extends Module {
     public static final TextRenderer RENDERER = Managers.TEXT;
 
-    //protected final Setting<RenderMode> renderMode    =
-    //register(new EnumSetting<>("RenderMode", RenderMode.NORMAL));
-    protected final Setting<RenderMode> renderMode =
-            register(new EnumSetting<>("RenderMode", RenderMode.Normal));
     protected final Setting<HudRainbow> colorMode =
             register(new EnumSetting<>("Rainbow", HudRainbow.None));
     protected final Setting<Color> color =

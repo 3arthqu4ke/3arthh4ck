@@ -172,7 +172,6 @@ import me.earth.earthhack.impl.modules.render.voidesp.VoidESP;
 import me.earth.earthhack.impl.modules.render.waypoints.WayPoints;
 import me.earth.earthhack.impl.modules.render.weather.Weather;
 import me.earth.earthhack.impl.modules.render.xray.XRay;
-import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.vanilla.Environment;
 
 import java.util.ArrayList;
@@ -202,7 +201,6 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new SettingsModule());
         this.forceRegister(new TabModule());
         this.forceRegister(new Media());
-        //this.forceRegister(new HudEditor());
 
         this.forceRegister(new AntiSurround());
         this.forceRegister(new AntiTrap());

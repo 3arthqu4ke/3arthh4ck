@@ -9,7 +9,10 @@ import me.earth.earthhack.impl.event.events.client.InitEvent;
 import me.earth.earthhack.impl.managers.chat.ChatManager;
 import me.earth.earthhack.impl.managers.chat.CommandManager;
 import me.earth.earthhack.impl.managers.chat.WrapManager;
-import me.earth.earthhack.impl.managers.client.*;
+import me.earth.earthhack.impl.managers.client.FileManager;
+import me.earth.earthhack.impl.managers.client.ModuleManager;
+import me.earth.earthhack.impl.managers.client.PlayerManager;
+import me.earth.earthhack.impl.managers.client.PluginManager;
 import me.earth.earthhack.impl.managers.client.macro.MacroManager;
 import me.earth.earthhack.impl.managers.config.ConfigManager;
 import me.earth.earthhack.impl.managers.config.helpers.BindConfigHelper;
@@ -37,7 +40,6 @@ import java.io.IOException;
 public class Managers
 {
     public static final ThreadManager THREAD       = new ThreadManager();
-    public static final HudElementManager ELEMENTS = new HudElementManager();
     public static final MacroManager MACRO         = new MacroManager();
     public static final ChatManager CHAT           = new ChatManager();
     public static final PlayerManager FRIENDS      = new PlayerManager();
@@ -91,7 +93,6 @@ public class Managers
         SplashScreenHelper.setSubStep("Loading Commands");
         COMMANDS.init();
         subscribe(COMMANDS);
-        ELEMENTS.init();
         SplashScreenHelper.setSubStep("Loading Modules");
         MODULES.init();
         if (!PingBypass.isServer()) {
@@ -122,7 +123,6 @@ public class Managers
         }
 
         SplashScreenHelper.setSubStep("Initializing Modules");
-        ELEMENTS.load();
         MODULES.load();
         MACRO.validateAll();
 
