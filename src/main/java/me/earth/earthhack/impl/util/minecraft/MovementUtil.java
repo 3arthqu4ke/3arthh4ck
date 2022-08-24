@@ -269,9 +269,4 @@ public class MovementUtil implements Globals
         return true;
     }
 
-    public static void constantiamDamage()
-    {
-
-    }
-
 }
