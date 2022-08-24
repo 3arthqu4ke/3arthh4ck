@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinKeyBinding
 {
     @Inject(method = "unpressKey", at = @At("HEAD"))
-    private void onUnpress(CallbackInfo info)
+    public void onUnpress(CallbackInfo info)
     {
         // Managers.KEYBOARD.onUnpress(KeyBinding.class.cast(this));
     }

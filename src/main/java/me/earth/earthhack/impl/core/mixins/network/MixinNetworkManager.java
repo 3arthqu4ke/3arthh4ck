@@ -126,7 +126,7 @@ public abstract class MixinNetworkManager implements INetworkManager
         method = "sendPacket(Lnet/minecraft/network/Packet;)V",
         at = @At("HEAD"),
         cancellable = true)
-    private void onSendPacketPre(Packet<?> packet, CallbackInfo info)
+    public void onSendPacketPre(Packet<?> packet, CallbackInfo info)
     {
         onSendPacket(packet, info);
     }
@@ -135,7 +135,7 @@ public abstract class MixinNetworkManager implements INetworkManager
         method = "sendPacket(Lnet/minecraft/network/Packet;Lio/netty/util/concurrent/GenericFutureListener;[Lio/netty/util/concurrent/GenericFutureListener;)V",
         at = @At("HEAD"),
         cancellable = true)
-    private void onSendPacketPre2(Packet<?> packetIn,
+    public void onSendPacketPre2(Packet<?> packetIn,
                                   GenericFutureListener<? extends Future<? super Void>> listener,
                                   GenericFutureListener<? extends Future<? super Void>>[] listeners,
                                   CallbackInfo ci)
@@ -143,7 +143,7 @@ public abstract class MixinNetworkManager implements INetworkManager
         onSendPacket(packetIn, ci);
     }
 
-    private void onSendPacket(Packet<?> packet, CallbackInfo ci) {
+    public void onSendPacket(Packet<?> packet, CallbackInfo ci) {
         if (PACKET_DELAY.isEnabled()
             && !PACKET_DELAY.get().packets.contains(packet)
             && PACKET_DELAY.get().isPacketValid(
@@ -171,7 +171,7 @@ public abstract class MixinNetworkManager implements INetworkManager
     @Inject(
         method = "dispatchPacket",
         at = @At("RETURN"))
-    private void onSendPacketPost(
+    public void onSendPacketPost(
           final Packet<?> packetIn,
           @Nullable final GenericFutureListener
                   <? extends Future <? super Void >>[] futureListeners,
@@ -193,7 +193,7 @@ public abstract class MixinNetworkManager implements INetworkManager
             shift = At.Shift.BEFORE),
         cancellable = true)
     @SuppressWarnings("unchecked")
-    private void onChannelRead(ChannelHandlerContext context,
+    public void onChannelRead(ChannelHandlerContext context,
                                Packet<?> packet,
                                CallbackInfo info)
     {
@@ -292,7 +292,7 @@ public abstract class MixinNetworkManager implements INetworkManager
     }
 
     @Inject(method = "exceptionCaught", at = @At("RETURN"))
-    private void onExceptionCaught(ChannelHandlerContext p_exceptionCaught_1_, Throwable p_exceptionCaught_2_, CallbackInfo ci)
+    public void onExceptionCaught(ChannelHandlerContext p_exceptionCaught_1_, Throwable p_exceptionCaught_2_, CallbackInfo ci)
     {
         p_exceptionCaught_2_.printStackTrace();
         System.out.println("----------------------------------------------");

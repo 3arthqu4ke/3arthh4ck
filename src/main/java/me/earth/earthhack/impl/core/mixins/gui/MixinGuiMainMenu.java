@@ -63,7 +63,7 @@ public abstract class MixinGuiMainMenu extends GuiScreen
     }
 
     @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiScreen;drawScreen(IIF)V", ordinal = 0, shift = At.Shift.BEFORE))
-    private void onDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
+    public void onDrawScreen(int mouseX, int mouseY, float partialTicks, CallbackInfo ci) {
         if (PingBypass.isServer()) {
             this.drawString(fontRenderer, "PingBypass-Server-" + Earthhack.VERSION, 2, 2, 0xffffffff);
         }

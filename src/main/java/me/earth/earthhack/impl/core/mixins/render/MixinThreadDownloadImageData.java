@@ -23,7 +23,7 @@ public abstract class MixinThreadDownloadImageData implements GlobalExecutor
         at = @At(
             value = "INVOKE",
             target = "Ljava/lang/Thread;start()V"))
-    private void onStart(Thread thread)
+    public void onStart(Thread thread)
     {
         if (DOWNLOAD_THREADS.getValue())
         {

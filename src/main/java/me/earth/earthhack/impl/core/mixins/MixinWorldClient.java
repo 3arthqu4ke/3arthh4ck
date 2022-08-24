@@ -41,14 +41,14 @@ public abstract class MixinWorldClient
 
 
     @Inject(method = "onEntityAdded", at = @At("HEAD"))
-    private void onEntityAdded(Entity entity, CallbackInfo info) {
+    public void onEntityAdded(Entity entity, CallbackInfo info) {
         Bus.EVENT_BUS.post(new EntityChunkEvent(
                 Stage.PRE,
                 entity));
     }
 
     @Inject(method = "onEntityRemoved", at = @At("HEAD"))
-    private void onEntityRemoved(Entity entity, CallbackInfo info) {
+    public void onEntityRemoved(Entity entity, CallbackInfo info) {
         Bus.EVENT_BUS.post(new EntityChunkEvent(
                 Stage.POST,
                 entity));

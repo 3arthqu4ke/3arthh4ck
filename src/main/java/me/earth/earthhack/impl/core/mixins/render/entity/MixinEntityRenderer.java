@@ -141,7 +141,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
             value = "INVOKE",
             target = "Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V",
             remap = false))
-    private void onSetupCameraTransform(final float fovy, final float aspect, final float zNear, final float zFar) {
+    public void onSetupCameraTransform(final float fovy, final float aspect, final float zNear, final float zFar) {
         final AspectRatioEvent event = new AspectRatioEvent(mc.displayWidth / (float) mc.displayHeight);
         Bus.EVENT_BUS.post(event);
         Project.gluPerspective(fovy, event.getAspectRatio(), zNear, zFar);
@@ -153,7 +153,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
             value = "INVOKE",
             target = "Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V",
             remap = false))
-    private void onRenderWorldPass(final float fovy, final float aspect, final float zNear, final float zFar) {
+    public void onRenderWorldPass(final float fovy, final float aspect, final float zNear, final float zFar) {
         final AspectRatioEvent event = new AspectRatioEvent(mc.displayWidth / (float) mc.displayHeight);
         Bus.EVENT_BUS.post(event);
         Project.gluPerspective(fovy, event.getAspectRatio(), zNear, zFar);
@@ -175,7 +175,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
         at = @At(
             value = "INVOKE",
             target = "Lorg/lwjgl/util/glu/Project;gluPerspective(FFFF)V", remap = false))
-    private void onRenderCloudsCheck(final float fovy, final float aspect, final float zNear, final float zFar) {
+    public void onRenderCloudsCheck(final float fovy, final float aspect, final float zNear, final float zFar) {
         final AspectRatioEvent event = new AspectRatioEvent(mc.displayWidth / (float) mc.displayHeight);
         Bus.EVENT_BUS.post(event);
         Project.gluPerspective(fovy, event.getAspectRatio(), zNear, zFar);

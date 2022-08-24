@@ -70,7 +70,7 @@ public abstract class MixinEntityOtherPlayerMP extends MixinAbstractClientPlayer
     }
 
     @Inject(method = "onLivingUpdate", at = @At("HEAD"))
-    private void onLivingUpdateHead(CallbackInfo ci)
+    public void onLivingUpdateHead(CallbackInfo ci)
     {
         theYaw   = this.rotationYaw;
         thePitch = this.rotationPitch;
