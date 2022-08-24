@@ -23,9 +23,9 @@ public abstract class MixinTileEntityEndGateway extends TileEntityEndPortal
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/tileentity/TileEntityEndGateway;getBlockType()Lnet/minecraft/block/Block;"))
-    private Block shouldRenderFaceHook(TileEntityEndGateway tileEntityEndGateway)
+    public Block shouldRenderFaceHook(TileEntityEndGateway tileEntityEndGateway)
     {
-        Block block = this.getBlockType();
+        Block block = tileEntityEndGateway.getBlockType();
         //noinspection ConstantConditions
         if (block == null)
         {

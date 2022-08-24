@@ -267,7 +267,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/world/World;isRemote:Z"))
-    private boolean isRemoteHook(World world)
+    public boolean isRemoteHook(World world)
     {
         if (world.isRemote)
         {
@@ -282,7 +282,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/entity/EntityLivingBase;posX:D"))
-    private double posXHookOnUpdate(EntityLivingBase base)
+    public double posXHookOnUpdate(EntityLivingBase base)
     {
         if (NoInterp.update(NOINTERP.get(), base))
         {
@@ -297,7 +297,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/entity/EntityLivingBase;posZ:D"))
-    private double posZHookOnUpdate(EntityLivingBase base)
+    public double posZHookOnUpdate(EntityLivingBase base)
     {
         if (NOINTERP.isEnabled()
                 && base instanceof IEntityNoInterp

@@ -433,7 +433,7 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiNewChat;getChatWidth()I"))
-    private int getChatComponentChatWidthHook(GuiNewChat gnc)
+    public int getChatComponentChatWidthHook(GuiNewChat gnc)
     {
         return CHAT.isEnabled() && TIME_STAMPS.getValue()
                 ? gnc.getChatWidth() + 40
@@ -596,7 +596,7 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/gui/ChatLine;getChatLineID()I"))
-    private int getChatLineIDHook(ChatLine chatLine)
+    public int getChatLineIDHook(ChatLine chatLine)
     {
         if (chatLine == null)
         {
@@ -612,7 +612,7 @@ public abstract class MixinGuiNewChat implements IGuiNewChat
             value = "INVOKE",
             target = "Ljava/util/Iterator;hasNext()Z",
             remap = false))
-    private boolean hasNextHook(Iterator<ChatLine> iterator)
+    public boolean hasNextHook(Iterator<ChatLine> iterator)
     {
         if (iterator == null)
         {

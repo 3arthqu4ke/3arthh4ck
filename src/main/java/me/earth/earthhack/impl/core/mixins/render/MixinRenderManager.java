@@ -51,7 +51,7 @@ public abstract class MixinRenderManager implements IRenderManager
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posX:D",
             ordinal = 1))
-    private double posXHook0(Entity entity)
+    public double posXHook0(Entity entity)
     {
         return NoInterp.noInterpX(NOINTERP.get(), entity);
     }
@@ -62,7 +62,7 @@ public abstract class MixinRenderManager implements IRenderManager
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posY:D",
             ordinal = 1))
-    private double posYHook0(Entity entity)
+    public double posYHook0(Entity entity)
     {
         return NoInterp.noInterpY(NOINTERP.get(), entity);
     }
@@ -73,7 +73,7 @@ public abstract class MixinRenderManager implements IRenderManager
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posZ:D",
             ordinal = 1))
-    private double posZHook0(Entity entity)
+    public double posZHook0(Entity entity)
     {
         return NoInterp.noInterpZ(NOINTERP.get(), entity);
     }
@@ -84,7 +84,7 @@ public abstract class MixinRenderManager implements IRenderManager
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posX:D",
             ordinal = 1))
-    private double posXHook1(Entity entity)
+    public double posXHook1(Entity entity)
     {
         return NoInterp.noInterpX(NOINTERP.get(), entity);
     }
@@ -95,7 +95,7 @@ public abstract class MixinRenderManager implements IRenderManager
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posY:D",
             ordinal = 1))
-    private double posYHook1(Entity entity)
+    public double posYHook1(Entity entity)
     {
         return NoInterp.noInterpY(NOINTERP.get(), entity);
     }
@@ -106,7 +106,7 @@ public abstract class MixinRenderManager implements IRenderManager
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posZ:D",
             ordinal = 1))
-    private double posZHook1(Entity entity)
+    public double posZHook1(Entity entity)
     {
         return NoInterp.noInterpZ(NOINTERP.get(), entity);
     }
@@ -117,7 +117,7 @@ public abstract class MixinRenderManager implements IRenderManager
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posX:D",
             ordinal = 1))
-    private double posXHook2(Entity entity)
+    public double posXHook2(Entity entity)
     {
         return NoInterp.noInterpX(NOINTERP.get(), entity);
     }
@@ -128,7 +128,7 @@ public abstract class MixinRenderManager implements IRenderManager
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posY:D",
             ordinal = 1))
-    private double posYHook2(Entity entity)
+    public double posYHook2(Entity entity)
     {
         return NoInterp.noInterpY(NOINTERP.get(), entity);
     }
@@ -139,7 +139,7 @@ public abstract class MixinRenderManager implements IRenderManager
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posZ:D",
             ordinal = 1))
-    private double posZHook2(Entity entity)
+    public double posZHook2(Entity entity)
     {
         return NoInterp.noInterpZ(NOINTERP.get(), entity);
     }

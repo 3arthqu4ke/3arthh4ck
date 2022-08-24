@@ -33,7 +33,7 @@ public abstract class MixinWorldClient
                  "ZLnet/minecraft/util/math/BlockPos" +
                  "$MutableBlockPos;)V",
         at = @At(value = "HEAD"))
-    private boolean showBarrierParticlesHook(boolean holdingBarrier)
+    public boolean showBarrierParticlesHook(boolean holdingBarrier)
     {
         return NO_RENDER.returnIfPresent(NoRender::showBarriers, false)
                 || holdingBarrier;

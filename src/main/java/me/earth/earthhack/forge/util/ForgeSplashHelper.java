@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Wraps Forges ProgressManager since it's not available on Vanilla.
  */
-public class ForgeSplash {
+public class ForgeSplashHelper {
     private static ProgressManager.ProgressBar bar;
 
     public static void push(String message, int steps) {
@@ -33,19 +33,19 @@ public class ForgeSplash {
     }
 
     public static void setSubStep(String step) {
-        ProgressManager.ProgressBar bar = ForgeSplash.bar;
+        ProgressManager.ProgressBar bar = ForgeSplashHelper.bar;
         if (bar != null) {
             bar.step(step);
         }
     }
 
     public static void clear() {
-        ProgressManager.ProgressBar bar = ForgeSplash.bar;
+        ProgressManager.ProgressBar bar = ForgeSplashHelper.bar;
         if (bar != null) {
             ProgressManager.pop(bar);
         }
 
-        ForgeSplash.bar = null;
+        ForgeSplashHelper.bar = null;
     }
 
 }

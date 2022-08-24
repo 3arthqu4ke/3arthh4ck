@@ -482,7 +482,7 @@ public abstract class MixinMinecraft implements IMinecraft
         method = "sendClickBlockToController",
         at = @At(value = "INVOKE",
         target = "Lnet/minecraft/client/entity/EntityPlayerSP;isHandActive()Z"))
-    private boolean isHandActiveHook(EntityPlayerSP playerSP)
+    public boolean isHandActiveHook(EntityPlayerSP playerSP)
     {
         return !MULTI_TASK.isEnabled() && playerSP.isHandActive();
     }
@@ -495,7 +495,7 @@ public abstract class MixinMinecraft implements IMinecraft
                      "getIsHittingBlock()Z",
             ordinal = 0),
         require = 1)
-    private boolean isHittingBlockHook(PlayerControllerMP playerControllerMP)
+    public boolean isHittingBlockHook(PlayerControllerMP playerControllerMP)
     {
         return !MULTI_TASK.isEnabled()
                     && playerControllerMP.getIsHittingBlock();
@@ -583,7 +583,7 @@ public abstract class MixinMinecraft implements IMinecraft
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;onPlayerDamageBlock(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)Z"))
-    private boolean onPlayerDamageBlockHook(PlayerControllerMP pCMP,
+    public boolean onPlayerDamageBlockHook(PlayerControllerMP pCMP,
                                             BlockPos posBlock,
                                             EnumFacing directionFacing)
     {

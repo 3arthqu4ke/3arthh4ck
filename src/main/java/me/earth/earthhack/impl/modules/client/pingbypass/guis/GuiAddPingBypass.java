@@ -61,12 +61,6 @@ public class GuiAddPingBypass extends GuiScreen
 
         this.serverPortField.setMaxStringLength(128);
         this.serverPortField.setText(PORT.getValue());
-        this.buttonList.get(0).enabled =
-                !this.serverPortField.getText().isEmpty()
-                    && this.serverPortField.getText().split(":").length > 0
-                    && !this.serverIPField.getText().isEmpty();
-
-
         this.passwordField = new GuiPasswordField(2, this.fontRenderer, this.width / 2 - 100, 146, 200, 20);
         this.passwordField.setText(PASSWORD.getValue());
     }
@@ -123,11 +117,6 @@ public class GuiAddPingBypass extends GuiScreen
         {
             mc.displayGuiScreen(parentScreen);
         }
-
-        (this.buttonList.get(0)).enabled =
-                !this.serverPortField.getText().isEmpty()
-                        && this.serverPortField.getText().split(":").length > 0
-                        && !this.serverIPField.getText().isEmpty();
     }
 
     @Override

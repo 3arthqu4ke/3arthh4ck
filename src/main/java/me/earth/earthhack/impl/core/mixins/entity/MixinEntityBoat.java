@@ -19,9 +19,9 @@ public abstract class MixinEntityBoat extends MixinEntity
         at = @At(
             value = "INVOKE",
             target = "net/minecraft/entity/item/EntityBoat.hasNoGravity()Z"))
-    private boolean updateMotionHook(EntityBoat boat)
+    public boolean updateMotionHook(EntityBoat boat)
     {
-        return this.hasNoGravity()
+        return boat.hasNoGravity()
                 || BOAT_FLY.isEnabled()
                     && BOAT_FLY.returnIfPresent(BoatFly::getGlideSpeed, 0.0001f)
                                .floatValue() == 0.0f;

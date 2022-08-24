@@ -72,7 +72,7 @@ public abstract class MixinBlockModelRenderer
                      "Lnet/minecraft/block/state/IBlockState;" +
                      "Lnet/minecraft/util/math/BlockPos;" +
                      "Lnet/minecraft/client/renderer/BufferBuilder;ZJ)Z"))
-    private boolean renderModelFlatHook(boolean result)
+    public boolean renderModelFlatHook(boolean result)
     {
         if (XRAY.isEnabled() && XRAY.get().getMode() == XrayMode.Simple)
         {
@@ -103,7 +103,7 @@ public abstract class MixinBlockModelRenderer
                     "Lnet/minecraft/block/state/IBlockState;" +
                     "Lnet/minecraft/util/math/BlockPos;" +
                     "Lnet/minecraft/client/renderer/BufferBuilder;ZJ)Z"))
-    private boolean renderModelSmoothHook(boolean result)
+    public boolean renderModelSmoothHook(boolean result)
     {
         if (XRAY.isEnabled() && XRAY.get().getMode() == XrayMode.Simple)
         {
