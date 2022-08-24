@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.gui.click.component;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.gui.click.Click;
-import me.earth.earthhack.impl.gui.hud.rewrite.HudEditorGui;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 
@@ -48,7 +47,6 @@ public class Component {
         if (RenderUtil.mouseWithinBounds(mouseX, mouseY, getFinishedX() + 5, getFinishedY() + 1, getWidth() - 10, getHeight() - 2))
         {
             Click.descriptionFrame.setDescription(this.getDescription());
-            HudEditorGui.descriptionFrame.setDescription(this.getDescription()); // poor abstraction ):
         }
     }
 
