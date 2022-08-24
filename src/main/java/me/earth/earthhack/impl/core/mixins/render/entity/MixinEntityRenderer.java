@@ -315,7 +315,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
                     value = "INVOKE",
                     target = "net/minecraft/client/multiplayer/PlayerControllerMP" +
                             ".getBlockReachDistance()F"))
-    private float getBlockReachDistanceHook(PlayerControllerMP controller) {
+    public float getBlockReachDistanceHook(PlayerControllerMP controller) {
         ReachEvent event = new ReachEvent(controller.getBlockReachDistance(),
                 0.0f);
 
@@ -339,7 +339,7 @@ public abstract class MixinEntityRenderer implements IEntityRenderer {
                     value = "INVOKE",
                     target = "net/minecraft/util/math/Vec3d" +
                             ".distanceTo(Lnet/minecraft/util/math/Vec3d;)D"))
-    private double distanceToHook(Vec3d vec3d, Vec3d vec3d1) {
+    public double distanceToHook(Vec3d vec3d, Vec3d vec3d1) {
         return vec3d.distanceTo(vec3d1) - this.lastReach;
     }
 

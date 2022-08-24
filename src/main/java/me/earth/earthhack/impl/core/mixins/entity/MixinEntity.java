@@ -318,7 +318,7 @@ public abstract class MixinEntity implements IEntity, Globals
             value = "INVOKE",
             target = "net/minecraft/entity/Entity.isSneaking()Z",
             ordinal = 0))
-    private boolean isSneakingHook(Entity entity)
+    public boolean isSneakingHook(Entity entity)
     {
         return this.moveEvent != null
                     ? this.moveEvent.isSneaking()

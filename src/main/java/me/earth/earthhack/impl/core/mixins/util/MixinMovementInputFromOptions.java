@@ -17,7 +17,7 @@ public abstract class MixinMovementInputFromOptions
             value = "FIELD",
             target = "Lnet/minecraft/util/MovementInputFromOptions;sneak:Z",
             ordinal = 1))
-    private boolean sneakHook(MovementInputFromOptions input)
+    public boolean sneakHook(MovementInputFromOptions input)
     {
         boolean sneak = input.sneak;
         Event event = new MovementInputEvent(input);

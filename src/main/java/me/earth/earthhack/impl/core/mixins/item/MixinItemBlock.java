@@ -33,7 +33,7 @@ public abstract class MixinItemBlock
                             "Lnet/minecraft/util/math/BlockPos;" +
                             "ZLnet/minecraft/util/EnumFacing;" +
                             "Lnet/minecraft/entity/Entity;)Z"))
-    private boolean mayPlaceHook1(World world,
+    public boolean mayPlaceHook1(World world,
                                  Block blockIn,
                                  BlockPos pos,
                                  boolean skip,
@@ -57,7 +57,7 @@ public abstract class MixinItemBlock
                     "Lnet/minecraft/util/math/BlockPos;" +
                     "ZLnet/minecraft/util/EnumFacing;" +
                     "Lnet/minecraft/entity/Entity;)Z"))
-    private boolean mayPlaceHook2(World world,
+    public boolean mayPlaceHook2(World world,
                                   Block blockIn,
                                   BlockPos pos,
                                   boolean skip,

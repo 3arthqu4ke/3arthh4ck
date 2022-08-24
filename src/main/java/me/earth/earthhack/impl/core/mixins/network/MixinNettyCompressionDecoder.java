@@ -17,7 +17,7 @@ public abstract class MixinNettyCompressionDecoder
     @ModifyConstant(
         method = "decode",
         constant = @Constant(intValue = 0x200000))
-    private int decodeHook(int threshold)
+    public int decodeHook(int threshold)
     {
         return PACKETS.returnIfPresent(Packets::isNoBookBanActive, false)
                     ? Integer.MAX_VALUE

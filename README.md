@@ -1,9 +1,9 @@
 # 3arthh4ck
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0da8ea6f04d74edd8a2af1e71e5ea64a)](https://www.codacy.com/gh/3arthqu4ke/3arthh4ck/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=3arthqu4ke/3arthh4ck&amp;utm_campaign=Badge_Grade)
+[![CodeFactor](https://www.codefactor.io/repository/github/3arthqu4ke/3arthh4ck/badge/main)](https://www.codefactor.io/repository/github/3arthqu4ke/3arthh4ck/overview/main)
 ![GitHub All Releases](https://img.shields.io/github/downloads/3arthqu4ke/3arthh4ck/total.svg)
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/3arthqu4ke/pingbypass?logo=docker)
-![Code size](https://img.shields.io/github/languages/code-size/3arthqu4ke/3arthh4ck.svg)
+![Lines of code, cached, because tokei takes forever (https://tokei.rs/b1/github/3arthqu4ke/3arthh4ck?category=code)](docs/loc.svg)
 ![Repo size](https://img.shields.io/github/repo-size/3arthqu4ke/3arthh4ck.svg)
 ![](https://github.com/3arthqu4ke/3arthh4ck/actions/workflows/gradle-publish.yml/badge.svg)
 

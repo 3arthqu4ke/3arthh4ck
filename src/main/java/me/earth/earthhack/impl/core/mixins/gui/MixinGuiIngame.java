@@ -99,7 +99,7 @@ public abstract class MixinGuiIngame
             value = "FIELD",
             target = "Lnet/minecraft/entity/player/InventoryPlayer;currentItem:I",
             opcode = Opcodes.GETFIELD))
-    private int renderHotbarHook(InventoryPlayer inventoryPlayer)
+    public int renderHotbarHook(InventoryPlayer inventoryPlayer)
     {
         int slot = inventoryPlayer.currentItem;
         return SORTER.returnIfPresent(s -> s.getReverseMapping(slot), slot);

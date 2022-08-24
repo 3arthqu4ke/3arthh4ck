@@ -63,7 +63,7 @@ public abstract class MixinRenderItem implements IRenderItem
             method = "renderEffect",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderItem;renderModel(Lnet/minecraft/client/renderer/block/model/IBakedModel;I)V")
     )
-    private int renderEffectHook(final int glintColor)
+    public int renderEffectHook(final int glintColor)
     {
         if (ITEM_CHAMS.isEnabled()
                 && ITEM_CHAMS.get().isModifyingGlint())

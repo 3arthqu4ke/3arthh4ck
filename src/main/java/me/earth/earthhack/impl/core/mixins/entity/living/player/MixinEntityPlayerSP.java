@@ -166,7 +166,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "INVOKE",
             target = "net/minecraft/client/entity/EntityPlayerSP.isElytraFlying()Z"))
-    private boolean onLivingUpdateHook(EntityPlayerSP player)
+    public boolean onLivingUpdateHook(EntityPlayerSP player)
     {
         return ELYTRA_FLIGHT.isEnabled()
                 && ELYTRA_FLIGHT.get().getMode() == ElytraMode.Packet
@@ -178,7 +178,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/entity/AbstractClientPlayer;setSprinting(Z)V"))
-    private boolean setSprintingHook(boolean sprinting)
+    public boolean setSprintingHook(boolean sprinting)
     {
         if (SPRINT.isEnabled() && AutoSprint.canSprintBetter() && (SPRINT.get().getMode() == SprintMode.Rage && MovementUtil.isMoving()))
         {
@@ -226,7 +226,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;rotationYaw:F"))
-    private float ridingHook_2(EntityPlayerSP player)
+    public float ridingHook_2(EntityPlayerSP player)
     {
         return this.riding.getYaw();
     }
@@ -236,7 +236,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;rotationPitch:F"))
-    private float ridingHook_3(EntityPlayerSP player)
+    public float ridingHook_3(EntityPlayerSP player)
     {
         return this.riding.getPitch();
     }
@@ -246,7 +246,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;onGround:Z"))
-    private boolean ridingHook_4(EntityPlayerSP player)
+    public boolean ridingHook_4(EntityPlayerSP player)
     {
         return this.riding.isOnGround();
     }
@@ -256,7 +256,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;moveStrafing:F"))
-    private float ridingHook_5(EntityPlayerSP player)
+    public float ridingHook_5(EntityPlayerSP player)
     {
         return this.riding.getMoveStrafing();
     }
@@ -266,7 +266,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;moveForward:F"))
-    private float ridingHook_6(EntityPlayerSP player)
+    public float ridingHook_6(EntityPlayerSP player)
     {
         return this.riding.getMoveForward();
     }
@@ -276,7 +276,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/util/MovementInput;jump:Z"))
-    private boolean ridingHook_7(MovementInput input)
+    public boolean ridingHook_7(MovementInput input)
     {
         return this.riding.isOnGround();
     }
@@ -286,7 +286,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/util/MovementInput;sneak:Z"))
-    private boolean ridingHook_8(MovementInput input)
+    public boolean ridingHook_8(MovementInput input)
     {
         return this.riding.getSneak();
     }
@@ -430,7 +430,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "net/minecraft/client/entity/EntityPlayerSP.posX:D"))
-    private double posXHook(EntityPlayerSP entityPlayerSP)
+    public double posXHook(EntityPlayerSP entityPlayerSP)
     {
         return motionEvent.getX();
     }
@@ -440,7 +440,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "net/minecraft/util/math/AxisAlignedBB.minY:D"))
-    private double minYHook(AxisAlignedBB axisAlignedBB)
+    public double minYHook(AxisAlignedBB axisAlignedBB)
     {
         return motionEvent.getY();
     }
@@ -450,7 +450,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "net/minecraft/client/entity/EntityPlayerSP.posZ:D"))
-    private double posZHook(EntityPlayerSP entityPlayerSP)
+    public double posZHook(EntityPlayerSP entityPlayerSP)
     {
         return motionEvent.getZ();
     }
@@ -460,7 +460,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "net/minecraft/client/entity/EntityPlayerSP.rotationYaw:F"))
-    private float rotationYawHook(EntityPlayerSP entityPlayerSP)
+    public float rotationYawHook(EntityPlayerSP entityPlayerSP)
     {
         return motionEvent.getYaw();
     }
@@ -470,7 +470,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "net/minecraft/client/entity/EntityPlayerSP.rotationPitch:F"))
-    private float rotationPitchHook(EntityPlayerSP entityPlayerSP)
+    public float rotationPitchHook(EntityPlayerSP entityPlayerSP)
     {
         return motionEvent.getPitch();
     }
@@ -480,7 +480,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         at = @At(
             value = "FIELD",
             target = "net/minecraft/client/entity/EntityPlayerSP.onGround:Z"))
-    private boolean onGroundHook(EntityPlayerSP entityPlayerSP)
+    public boolean onGroundHook(EntityPlayerSP entityPlayerSP)
     {
         return motionEvent.isOnGround();
     }

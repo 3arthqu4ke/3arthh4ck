@@ -181,7 +181,7 @@ public abstract class MixinWorld implements IWorld
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/World;checkNoEntityCollision(Lnet/minecraft/util/math/AxisAlignedBB;Lnet/minecraft/entity/Entity;)Z"))
-    private boolean checkNoEntityCollisionHook(World world,
+    public boolean checkNoEntityCollisionHook(World world,
                                                AxisAlignedBB bb,
                                                Entity entityIn)
     {

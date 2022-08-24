@@ -36,7 +36,7 @@ public abstract class MixinRenderGlobal implements IRenderGlobal
     @ModifyVariable(
         method = "setupTerrain",
         at = @At("HEAD"))
-    private boolean setupTerrainHook(boolean playerSpectator)
+    public boolean setupTerrainHook(boolean playerSpectator)
     {
         if (XRAY.isEnabled() && XRAY.get().getMode() == XrayMode.Opacity)
         {

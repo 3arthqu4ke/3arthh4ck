@@ -35,7 +35,7 @@ public abstract class MixinRenderLiving
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posX:D"))
-    private double posXHook(Entity entity)
+    public double posXHook(Entity entity)
     {
         return NoInterp.noInterpX(NOINTERP.get(), entity);
     }
@@ -45,7 +45,7 @@ public abstract class MixinRenderLiving
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posY:D"))
-    private double posYHook(Entity entity)
+    public double posYHook(Entity entity)
     {
         return NoInterp.noInterpY(NOINTERP.get(), entity);
     }
@@ -55,7 +55,7 @@ public abstract class MixinRenderLiving
         at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/entity/Entity;posZ:D"))
-    private double posZHook(Entity entity)
+    public double posZHook(Entity entity)
     {
         return NoInterp.noInterpZ(NOINTERP.get(), entity);
     }
