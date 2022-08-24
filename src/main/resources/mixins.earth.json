@@ -105,7 +105,6 @@
     "render.MixinRenderGlobal",
     "render.MixinRenderLivingBase",
     "render.MixinRenderManager",
-    "render.MixinScaledResolution",
     "render.MixinShaderGroup",
     "render.MixinThreadDownloadImageData",
     "render.chunk.MixinRenderChunk",

@@ -1,10 +1,7 @@
 package me.earth.earthhack.impl.modules.client.hud;
 
-import me.earth.earthhack.api.hud.HudElement;
 import me.earth.earthhack.impl.event.events.render.Render2DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
-import me.earth.earthhack.impl.managers.Managers;
-import me.earth.earthhack.impl.modules.client.hud.modes.RenderMode;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
@@ -43,31 +40,9 @@ final class ListenerRender extends ModuleListener<HUD, Render2DEvent> {
                 module.animationY = 0;
             }
         }
-        if (module.renderMode.getValue() == RenderMode.Normal) {
-            module.renderLogo();
-            module.renderModules();
-        } else if (module.renderMode.getValue() == RenderMode.Editor) {
-            for (HudElement element : Managers.ELEMENTS.getRegistered()) {
-                if (mc.currentScreen == null) {
-                    element.hudUpdate(mc.getRenderPartialTicks());
-                    if (element.isEnabled()) {
-                        element.hudDraw(mc.getRenderPartialTicks());
-                    }
-                }
-            }
-        } else {
-            module.renderLogo();
-            module.renderModules();
 
-            for (HudElement element : Managers.ELEMENTS.getRegistered()) {
-                if (mc.currentScreen == null) {
-                    element.hudUpdate(mc.getRenderPartialTicks());
-                    if (element.isEnabled()) {
-                        element.hudDraw(mc.getRenderPartialTicks());
-                    }
-                }
-            }
-        }
+        module.renderLogo();
+        module.renderModules();
         GL11.glPopMatrix();
     }
 
