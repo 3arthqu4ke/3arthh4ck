@@ -6,10 +6,14 @@ import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.movement.elytraflight.mode.ElytraMode;
+import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
+import me.earth.earthhack.impl.util.thread.Locks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
+import net.minecraft.util.EnumHand;
 
 import java.util.Random;
 
@@ -42,8 +46,31 @@ final class ListenerMotion extends
             return;
         }
 
-        if (module.customPitch.getValue() && mc.player.isElytraFlying()) {
-            event.setPitch(module.pitch.getValue().floatValue());
+        if (mc.player.isElytraFlying()) {
+            if (module.customPitch.getValue()) {
+                event.setPitch(module.pitch.getValue().floatValue());
+            }
+            if (module.rockets.getValue() && module.mode.getValue() != ElytraMode.Packet) {
+                if (module.rocketTimer.passed(module.rocketDelay.getValue() * 1000)) {
+                    int slot = InventoryUtil.findHotbarItem(Items.FIREWORKS);
+                    if (slot != -1) {
+                        Locks.acquire(Locks.PLACE_SWITCH_LOCK, () -> {
+                            int last = mc.player.inventory.currentItem;
+                            EnumHand hand = InventoryUtil.getHand(slot);
+
+                            InventoryUtil.switchTo(slot);
+
+                            mc.player.connection.sendPacket(new CPacketPlayerTryUseItem(hand));
+                            mc.player.swingArm(hand);
+
+                            if (module.rocketSwitchBack.getValue()) {
+                                InventoryUtil.switchTo(last);
+                            }
+                        });
+                    }
+                    module.rocketTimer.reset();
+                }
+            }
         }
 
         if (module.mode.getValue() == ElytraMode.Packet) {

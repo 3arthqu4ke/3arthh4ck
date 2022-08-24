@@ -43,9 +43,16 @@ public class ElytraFlight extends Module
             register(new BooleanSetting("CustomPitch", true));
     protected final Setting<Double> pitch =
             register(new NumberSetting<>("Pitch", 0.0, -90.0, 90.0));
+    protected final Setting<Boolean> rockets =
+            register(new BooleanSetting("Firework", false));
+    protected final Setting<Double> rocketDelay =
+            register(new NumberSetting<>("FireworkDelay", 8.0, 0.1, 15.0));
+    protected final Setting<Boolean> rocketSwitchBack =
+            register(new BooleanSetting("SwitchBack", false));
 
     /** A timer to handle AutoStart etc. with. */
     protected final StopWatch timer = new StopWatch();
+    protected final StopWatch rocketTimer = new StopWatch();
     protected boolean lag;
     protected double speed;
     protected int kick;
