@@ -6,7 +6,9 @@ import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.movement.elytraflight.mode.ElytraMode;
+import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
+import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -14,6 +16,7 @@ import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.Random;
 
@@ -47,6 +50,12 @@ final class ListenerMotion extends
         }
 
         if (mc.player.isElytraFlying()) {
+            if (module.mode.getValue() != ElytraMode.Boost && MovementUtil.anyMovementKeys()) {
+                float moveStrafe = mc.player.movementInput.moveStrafe,
+                        moveForward = mc.player.movementInput.moveForward;
+                float strafe = moveStrafe * 90 * (moveForward != 0 ? 0.5f : 1);
+                event.setYaw(MathHelper.wrapDegrees(mc.player.rotationYaw - strafe - (moveForward < 0 ? 180 : 0)));
+            }
             if (module.customPitch.getValue()) {
                 event.setPitch(module.pitch.getValue().floatValue());
             }
