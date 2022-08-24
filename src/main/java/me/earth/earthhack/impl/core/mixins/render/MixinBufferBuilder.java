@@ -17,15 +17,13 @@ public abstract class MixinBufferBuilder
 {
     private static final ModuleCache<XRay> XRAY = Caches.getModule(XRay.class);
 
-    private static final ModuleCache<Ambience> AMBIENCE = Caches.getModule(Ambience.class);
-
     @Redirect(
         method = "putColorMultiplier",
         at = @At(
             value = "INVOKE",
             remap = false,
             target = "java/nio/IntBuffer.put(II)Ljava/nio/IntBuffer;"))
-    private IntBuffer putColorMultiplierHook(IntBuffer buffer, int index, int i)
+    public IntBuffer putColorMultiplierHook(IntBuffer buffer, int index, int iIn)
     {
         // TODO: remove if needed
         /*if (AMBIENCE.isEnabled())
@@ -49,6 +47,7 @@ public abstract class MixinBufferBuilder
             i = MathUtil.toRGBAReversed(red, green, blue);
         }*/
 
+        int i = iIn;
         if (XRAY.isEnabled() && XRAY.get().getMode() == XrayMode.Opacity)
         {
             i = XRAY.get().getOpacity() << 24 | i & 16777215;
