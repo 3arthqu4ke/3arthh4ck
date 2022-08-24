@@ -164,7 +164,7 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
         method = "onPlayerDamageBlock",
         at = @At("HEAD"),
         cancellable = true)
-    private void onPlayerDamageBlock(BlockPos pos,
+    public void onPlayerDamageBlock(BlockPos pos,
                                      EnumFacing facing,
                                      CallbackInfoReturnable<Boolean> cir)
     {

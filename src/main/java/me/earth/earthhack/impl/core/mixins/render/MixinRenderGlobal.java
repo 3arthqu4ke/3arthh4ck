@@ -47,7 +47,7 @@ public abstract class MixinRenderGlobal implements IRenderGlobal
     }
 
     @Inject(method = "renderWorldBorder", at = @At("HEAD"), cancellable = true)
-    private void onRenderWorldBorder(Entity entityIn, float partialTicks, CallbackInfo ci) {
+    public void onRenderWorldBorder(Entity entityIn, float partialTicks, CallbackInfo ci) {
         if (NO_RENDER.isEnabled() && NO_RENDER.get().worldBorder.getValue()) {
             ci.cancel();
         }

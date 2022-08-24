@@ -328,7 +328,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
             value = "INVOKE",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;onUpdateWalkingPlayer()V",
             shift = At.Shift.BEFORE))
-    private void onUpdateWalkingPlayerPre(CallbackInfo ci)
+    public void onUpdateWalkingPlayerPre(CallbackInfo ci)
     {
         Bus.EVENT_BUS.post(new PreMotionUpdateEvent());
         if (ROTATION_BYPASS.isEnabled())
@@ -357,7 +357,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
         method = "onUpdateWalkingPlayer",
         at = @At(value = "HEAD"),
         cancellable = true)
-    private void onUpdateWalkingPlayer_Head(CallbackInfo callbackInfo)
+    public void onUpdateWalkingPlayer_Head(CallbackInfo callbackInfo)
     {
         if (!ROTATION_BYPASS.isEnabled())
         {
@@ -386,7 +386,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
             value = "INVOKE",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;onUpdateWalkingPlayer()V",
             shift = At.Shift.AFTER))
-    private void onUpdateWalkingPlayerPost(CallbackInfo ci)
+    public void onUpdateWalkingPlayerPost(CallbackInfo ci)
     {
         if (ROTATION_BYPASS.isEnabled() && !ROTATION_BYPASS.returnIfPresent(
             Compatibility::isShowingRotations, false)
@@ -488,7 +488,7 @@ public abstract class MixinEntityPlayerSP extends MixinAbstractClientPlayer
     @Inject(
         method = "onUpdateWalkingPlayer",
         at = @At(value = "RETURN"))
-    private void onUpdateWalkingPlayer_Return(CallbackInfo callbackInfo)
+    public void onUpdateWalkingPlayer_Return(CallbackInfo callbackInfo)
     {
         if (!PingBypass.isConnected())
         {

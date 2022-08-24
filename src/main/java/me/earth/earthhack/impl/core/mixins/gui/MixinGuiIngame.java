@@ -86,7 +86,7 @@ public abstract class MixinGuiIngame
     }
 
     @Inject(method = "renderHotbar", at = @At("HEAD"))
-    private void onRenderHotbar(ScaledResolution sr,
+    public void onRenderHotbar(ScaledResolution sr,
                                 float partialTicks,
                                 CallbackInfo ci)
     {

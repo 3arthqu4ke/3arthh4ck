@@ -15,11 +15,12 @@ final class ListenerTick
     @Override
     public void invoke(TickEvent event)
     {
-        if (module.mode.getValue() == PhaseMode.ConstantiamNew
+        // NOOP
+        /*if (module.mode.getValue() == PhaseMode.ConstantiamNew
                 && mc.player.collidedHorizontally) {
-            /*PacketUtil.doPosition(mc.player.posX, mc.player.posY, mc.player.posZ, true);
+            PacketUtil.doPosition(mc.player.posX, mc.player.posY, mc.player.posZ, true);
             PacketUtil.doPosition(mc.player.posX, mc.player.posY - 0.05, mc.player.posZ, true);
-            PacketUtil.doPosition(mc.player.posX, mc.player.posY, mc.player.posZ, true);*/
-        }
+            PacketUtil.doPosition(mc.player.posX, mc.player.posY, mc.player.posZ, true);
+        }*/
     }
 }
