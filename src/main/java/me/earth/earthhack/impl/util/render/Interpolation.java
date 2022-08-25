@@ -7,6 +7,7 @@ import me.earth.earthhack.impl.core.ducks.entity.IEntityNoInterp;
 import me.earth.earthhack.impl.core.ducks.render.IRenderManager;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.misc.nointerp.NoInterp;
+import me.earth.earthhack.impl.util.render.mutables.MutableBB;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -123,6 +124,16 @@ public class Interpolation implements Globals
                 bb.maxX - mc.getRenderManager().viewerPosX,
                 bb.maxY - mc.getRenderManager().viewerPosY,
                 bb.maxZ - mc.getRenderManager().viewerPosZ);
+    }
+
+    public static void interpolateMutable(MutableBB bb)
+    {
+        bb.minX = bb.minX - mc.getRenderManager().viewerPosX;
+        bb.minY = bb.minY - mc.getRenderManager().viewerPosY;
+        bb.minZ = bb.minZ - mc.getRenderManager().viewerPosZ;
+        bb.maxX = bb.maxX - mc.getRenderManager().viewerPosX;
+        bb.maxY = bb.maxY - mc.getRenderManager().viewerPosY;
+        bb.maxZ = bb.maxZ - mc.getRenderManager().viewerPosZ;
     }
 
     public static AxisAlignedBB offsetRenderPos(AxisAlignedBB bb)
