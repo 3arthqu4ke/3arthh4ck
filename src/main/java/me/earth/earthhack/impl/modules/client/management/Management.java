@@ -13,6 +13,7 @@ import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
 
 import java.awt.*;
+import java.util.UUID;
 
 /**
  * {@link me.earth.earthhack.impl.core.mixins.util.MixinScreenShotHelper}
@@ -62,6 +63,8 @@ public class Management extends Module
             register(new BooleanSetting("AccountSpoof", false));
     protected final Setting<String> accountName =
             register(new StringSetting("AccountName", "asdjgaksdghkas"));
+    protected final Setting<String> uuid =
+            register(new StringSetting("AccountUUID", UUID.randomUUID().toString()));
 
     protected GameProfile lastProfile;
     protected EntityPlayerSP player;
