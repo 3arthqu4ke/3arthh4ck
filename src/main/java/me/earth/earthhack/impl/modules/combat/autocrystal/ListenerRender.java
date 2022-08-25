@@ -15,6 +15,7 @@ import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.impl.util.render.mutables.BBRender;
 import me.earth.earthhack.impl.util.render.mutables.MutableBB;
+import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -71,7 +72,7 @@ final class ListenerRender extends ModuleListener<AutoCrystal, Render3DEvent> {
 
         BlockPos pos;
         if (module.render.getValue() && !module.isPingBypass() && (pos = module.getRenderPos()) != null) {
-            if (!module.fade.getValue() && module.box.getValue()) {
+            if ((module.fadeComp.getValue() || !module.fade.getValue()) && module.box.getValue()) {
                 BlockPos slide;
                 if (module.slide.getValue() && (slide = module.slidePos) != null) {
                     double factor = module.slideTimer.getTime() / Math.max(1.0, module.slideTime.getValue());
@@ -85,17 +86,17 @@ final class ListenerRender extends ModuleListener<AutoCrystal, Render3DEvent> {
                         double y = slide.getY() + (pos.getY() - slide.getY()) * factor;
                         double z = slide.getZ() + (pos.getZ() - slide.getZ()) * factor;
                         bb.setBB(
-                            x - 0.5,
+                            x,
                             y,
-                            z - 0.5,
-                            x + 0.5,
+                            z,
+                            x + 1,
                             y + 1,
-                            z + 0.5
+                            z + 1
                         );
                         Interpolation.interpolateMutable(bb);
                         BBRender.renderBox(bb, module.boxColor.getValue(), module.outLine.getValue(), 1.5f);
                         if (mode != RenderDamagePos.None) {
-                            renderDamage(x, y, z);
+                            renderDamage(x + 0.5, y, z + 0.5);
                         }
                     }
                 } else {

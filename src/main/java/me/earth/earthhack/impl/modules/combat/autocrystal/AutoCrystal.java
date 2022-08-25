@@ -456,6 +456,9 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> fade =
             register(new BooleanSetting("Fade", true))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> fadeComp =
+            register(new BooleanSetting("Fade-Compatibility", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> fadeTime =
             register(new NumberSetting<>("Fade-Time", 1000, 0, 5000))
                 .setComplexity(Complexity.Medium);
