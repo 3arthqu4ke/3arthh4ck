@@ -7,6 +7,7 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.killaura.KillAura;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
+import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import me.earth.earthhack.pingbypass.PingBypass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,7 +45,8 @@ final class ListenerUseEntity extends
                 && mc.player.onGround
                 && !mc.gameSettings.keyBindJump.isKeyDown()
                 && !(mc.player.isInWater() || mc.player.isInLava())
-                && module.timer.passed(module.delay.getValue()))
+                && module.timer.passed(module.delay.getValue())
+                && !(module.movePause.getValue() || MovementUtil.isMoving()))
         {
             CPacketUseEntity packet = event.getPacket();
             Entity entity = ((ICPacketUseEntity) packet).getAttackedEntity();
