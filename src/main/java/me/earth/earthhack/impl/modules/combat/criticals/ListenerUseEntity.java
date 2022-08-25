@@ -41,12 +41,13 @@ final class ListenerUseEntity extends
     @Override
     public void invoke(PacketEvent.Send<CPacketUseEntity> event)
     {
+
         if (event.getPacket().getAction() == CPacketUseEntity.Action.ATTACK
                 && mc.player.onGround
                 && !mc.gameSettings.keyBindJump.isKeyDown()
                 && !(mc.player.isInWater() || mc.player.isInLava())
                 && module.timer.passed(module.delay.getValue())
-                && !(module.movePause.getValue() || MovementUtil.isMoving()))
+                && !(module.movePause.getValue() && MovementUtil.isMoving()))
         {
             CPacketUseEntity packet = event.getPacket();
             Entity entity = ((ICPacketUseEntity) packet).getAttackedEntity();
