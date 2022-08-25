@@ -26,6 +26,8 @@ public class ExtraTab extends Module
     {
         super("ExtraTab", Category.Misc);
         register(new BooleanSetting("Download-Threads", false));
+        register(new BooleanSetting("Ping", false));
+        register(new BooleanSetting("Bars", true));
     }
 
     /**
