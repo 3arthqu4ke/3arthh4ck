@@ -15,7 +15,6 @@ import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.impl.util.render.mutables.BBRender;
 import me.earth.earthhack.impl.util.render.mutables.MutableBB;
-import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
