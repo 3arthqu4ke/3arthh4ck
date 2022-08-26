@@ -7,7 +7,6 @@ import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.impl.util.render.entity.StaticModelPlayer;
-import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
