@@ -25,14 +25,6 @@ final class ListenerMotion extends ModuleListener<AntiAim, MotionUpdateEvent>
             return;
         }
 
-        if (module.sneak.getValue()
-                && !mc.gameSettings.keyBindSneak.isKeyDown()
-                && module.timer.passed(module.sneakDelay.getValue()))
-        {
-            mc.player.setSneaking(!mc.player.isSneaking());
-            module.timer.reset();
-        }
-
         if (module.skip.getValue() != 1 && skip++ % module.skip.getValue() == 0)
         {
             event.setYaw(module.lastYaw);

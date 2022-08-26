@@ -43,6 +43,7 @@ public class AntiAim extends Module
     {
         super("AntiAim", Category.Misc);
         this.listeners.add(new ListenerMotion(this));
+        this.listeners.add(new ListenerInput(this));
         this.setData(new AntiAimData(this));
     }
 
