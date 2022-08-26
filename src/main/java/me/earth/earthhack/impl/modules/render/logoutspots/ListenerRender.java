@@ -7,7 +7,6 @@ import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.impl.util.render.entity.StaticModelPlayer;
-import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
@@ -29,7 +28,7 @@ final class ListenerRender extends ModuleListener<LogoutSpots, Render3DEvent>
                 AxisAlignedBB bb = Interpolation.interpolateAxis(spot.getBoundingBox());
                 RenderUtil.startRender();
 
-                if(module.chams.getValue()) {
+                if (module.chams.getValue()) {
                     GL11.glPushMatrix();
                     StaticModelPlayer model = spot.getModel();
                     double x = spot.getX() - mc.getRenderManager().viewerPosX;
@@ -66,8 +65,7 @@ final class ListenerRender extends ModuleListener<LogoutSpots, Render3DEvent>
                 RenderUtil.endRender();
 
                 if (module.nametags.getValue()) {
-                    String text = TextColor.RED
-                            + spot.getName()
+                    String text = spot.getName()
                             + (module.time.getValue() ? " (" + MathUtil.round((System.currentTimeMillis() - spot.getTimeStamp()) / 1000.0, 1) + "s)" : "")
                             + " XYZ : "
                             + MathUtil.round(spot.getX(), 1)
