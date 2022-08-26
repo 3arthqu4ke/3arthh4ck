@@ -31,7 +31,7 @@ public class ModuleComponent extends Component {
     public void init() {
         getComponents().clear();
         float offY = getHeight();
-        ModuleData data = getModule().getData();
+        ModuleData<?> data = getModule().getData();
         if (data != null) {
             this.setDescription(data::getDescription);
         }
