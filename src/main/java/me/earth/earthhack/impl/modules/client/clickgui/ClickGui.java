@@ -40,6 +40,8 @@ public class ClickGui extends Module
             register(new BooleanSetting("Category-Size", true));
     public final Setting<Integer> descriptionWidth =
         register(new NumberSetting<>("Description-Width", 240, 100, 1000));
+    public final Setting<Boolean> descNameValue =
+        register(new BooleanSetting("Desc-NameValue", true));
 
     protected boolean fromEvent;
     protected GuiScreen screen;

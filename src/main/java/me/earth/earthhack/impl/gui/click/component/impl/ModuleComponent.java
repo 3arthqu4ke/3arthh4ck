@@ -4,6 +4,8 @@ import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.data.ModuleData;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.*;
+import me.earth.earthhack.impl.gui.chat.factory.ComponentFactory;
+import me.earth.earthhack.impl.gui.click.Click;
 import me.earth.earthhack.impl.gui.click.component.Component;
 import me.earth.earthhack.impl.gui.visibility.Visibilities;
 import me.earth.earthhack.impl.managers.Managers;
@@ -14,6 +16,7 @@ import me.earth.earthhack.impl.util.text.TextColor;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 public class ModuleComponent extends Component {
     private final Module module;
@@ -30,7 +33,7 @@ public class ModuleComponent extends Component {
         float offY = getHeight();
         ModuleData data = getModule().getData();
         if (data != null) {
-            this.setDescription(data.getDescription());
+            this.setDescription(data::getDescription);
         }
 
         if (!getModule().getSettings().isEmpty()) {
@@ -67,11 +70,20 @@ public class ModuleComponent extends Component {
 
                 // -_- lazy
                 if (data != null && before != offY) {
-                    String desc = (String) data.settingDescriptions().get(setting);
-                    if (desc == null) {
-                        desc = "A Setting (" + setting.getInitial().getClass().getSimpleName() + ").";
-                    }
-                    getComponents().get(getComponents().size() - 1).setDescription(desc);
+                    Supplier<String> supplier = () -> {
+                        String desc = (String) data.settingDescriptions().get(setting);
+                        if (desc == null) {
+                            desc = "A Setting (" + setting.getInitial().getClass().getSimpleName() + ").";
+                        }
+
+                        if (Click.CLICK_GUI.get().descNameValue.getValue()) {           // added spaces for now because the format string to
+                            desc = ComponentFactory.create(setting).getFormattedText() + "\n\n" + TextColor.WHITE + desc;
+                        }
+
+                        return desc;
+                    };
+
+                    getComponents().get(getComponents().size() - 1).setDescription(supplier);
                 }
             }
         }

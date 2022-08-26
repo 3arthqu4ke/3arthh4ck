@@ -590,17 +590,28 @@ public class CustomFontRenderer extends CustomFont
     {
         List<String> result = new ArrayList<>();
 
-        if (getStringWidth(text) > width)
+        if (getStringWidth(text) > width || text.contains("\n"))
         {
             String[] words = text.split(" ");
             StringBuilder current = new StringBuilder();
             char lastColorCode = 65535;
             for (String word : words)
             {
-                String[] lineBreak = word.split("\n");
+                String[] lineBreak = splitWithEmptyWords(word);
                 if (lineBreak.length > 1)
                 {
-                    current.append(lineBreak[0]);
+                    if (getStringWidth(current + lineBreak[0] + " ") >= width)
+                    {
+                        result.add(current.toString());
+                        current = new StringBuilder("\u00a7")
+                            .append(lastColorCode)
+                            .append(lineBreak[0]);
+                    }
+                    else
+                    {
+                        current.append(lineBreak[0]);
+                    }
+
                     char checkColorCode = getLastColorCode(lineBreak[0]);
                     if (checkColorCode != ' ')
                     {
@@ -744,6 +755,23 @@ public class CustomFontRenderer extends CustomFont
 
             colorCode[i] = ((r & 0xFF) << 16 | (g & 0xFF) << 8 | b & 0xFF);
         }
+    }
+
+    private static String[] splitWithEmptyWords(String word) {
+        List<String> result = new ArrayList<>(1);
+        StringBuilder current = new StringBuilder();
+        for (int i = 0; i < word.length(); i++) {
+            char ch = word.charAt(i);
+            if (ch == '\n') {
+                result.add(current.toString());
+                current = new StringBuilder();
+            } else {
+                current.append(ch);
+            }
+        }
+
+        result.add(current.toString());
+        return result.toArray(new String[0]);
     }
 
 }
