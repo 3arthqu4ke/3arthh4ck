@@ -66,8 +66,7 @@ final class ListenerRender extends ModuleListener<LogoutSpots, Render3DEvent>
                 RenderUtil.endRender();
 
                 if (module.nametags.getValue()) {
-                    String text = TextColor.RED
-                            + spot.getName()
+                    String text = spot.getName()
                             + (module.time.getValue() ? " (" + MathUtil.round((System.currentTimeMillis() - spot.getTimeStamp()) / 1000.0, 1) + "s)" : "")
                             + " XYZ : "
                             + MathUtil.round(spot.getX(), 1)
