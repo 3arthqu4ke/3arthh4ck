@@ -28,7 +28,7 @@ final class ListenerRender extends ModuleListener<LogoutSpots, Render3DEvent>
                 AxisAlignedBB bb = Interpolation.interpolateAxis(spot.getBoundingBox());
                 RenderUtil.startRender();
 
-                if(module.chams.getValue()) {
+                if (module.chams.getValue()) {
                     GL11.glPushMatrix();
                     StaticModelPlayer model = spot.getModel();
                     double x = spot.getX() - mc.getRenderManager().viewerPosX;
