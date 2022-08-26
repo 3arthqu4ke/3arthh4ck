@@ -27,7 +27,7 @@ final class ListenerRender extends ModuleListener<LogoutSpots, Render3DEvent>
             {
                 AxisAlignedBB bb = Interpolation.interpolateAxis(spot.getBoundingBox());
                 RenderUtil.startRender();
-                RenderUtil.drawOutline(bb, 1.5f, Color.RED);
+                RenderUtil.drawOutline(bb, 1.5f, module.outline.getValue());
                 RenderUtil.endRender();
 
                 String text = TextColor.RED
@@ -43,7 +43,7 @@ final class ListenerRender extends ModuleListener<LogoutSpots, Render3DEvent>
                         + MathUtil.round(spot.getDistance(), 1)
                         + ")";
 
-                RenderUtil.drawNametag(text, bb, module.scale.getValue(), 0xffff0000);
+                RenderUtil.drawNametag(text, bb, module.scale.getValue(), module.color.getValue().hashCode());
             }
         }
     }

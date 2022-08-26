@@ -9,13 +9,15 @@ import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.modules.render.logoutspots.mode.MessageMode;
 import me.earth.earthhack.impl.modules.render.logoutspots.util.LogoutSpot;
+import me.earth.earthhack.impl.util.helpers.render.BlockESPModule;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 //TODO: rename into waypoints and add waypoints!
-public class LogoutSpots extends Module
+public class LogoutSpots extends BlockESPModule
 {
     protected final Setting<MessageMode> message =
             register(new EnumSetting<>("Message", MessageMode.Render));
@@ -43,6 +45,9 @@ public class LogoutSpots extends Module
         this.listeners.add(new ListenerLeave(this));
         this.listeners.add(new ListenerRender(this));
         this.listeners.add(new ListenerTick(this));
+        this.color.setValue(new Color(255, 0, 0, 155));
+        this.outline.setValue(new Color(255, 0, 0, 255));
+        this.unregister(this.height);
         this.setData(new LogoutSpotsData(this));
     }
 
