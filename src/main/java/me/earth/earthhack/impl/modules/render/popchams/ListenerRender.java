@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.modules.render.popchams;
 import me.earth.earthhack.impl.event.events.render.Render3DEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.util.render.RenderUtil;
+import me.earth.earthhack.impl.util.render.entity.StaticModelPlayer;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,22 +24,17 @@ final class ListenerRender extends ModuleListener<PopChams, Render3DEvent>
     public void invoke(Render3DEvent event) {
         for (PopChams.PopData data : module.getPopDataList()) {
             EntityPlayer player = data.getPlayer();
-            ModelPlayer model = data.getModel();
+            StaticModelPlayer model = data.getModel();
             double x = data.getX() - mc.getRenderManager().viewerPosX;
             double y = data.getY() - mc.getRenderManager().viewerPosY;
             y += module.yAnimations.getValue() * (System.currentTimeMillis() - data.getTime()) / module.fadeTime.getValue().doubleValue();
             double z = data.getZ() - mc.getRenderManager().viewerPosZ;
-            float yaw = data.getYaw();
-            float headYaw = data.getHeadYaw();
-            float pitch = data.getPitch();
-            float limbSwing = data.getLimbSwing();
-            float limbSwingAmount = data.getLimbSwingAmount();
 
             GlStateManager.pushMatrix();
             RenderUtil.startRender();
 
             GlStateManager.translate(x, y, z);
-            GlStateManager.rotate(180 - yaw, 0, 1, 0);
+            GlStateManager.rotate(180 - model.getYaw(), 0, 1, 0);
 
             final Color boxColor = module.getColor(data.getPlayer());
             final Color outlineColor = module.getOutlineColor(data.getPlayer());
@@ -63,12 +59,12 @@ final class ListenerRender extends ModuleListener<PopChams, Render3DEvent>
 
             RenderUtil.color(box);
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-            model.render(player, limbSwing, limbSwingAmount, player.ticksExisted, headYaw, pitch, 0.0625f);
+            model.render(0.0625f);
 
             RenderUtil.color(out);
             GL11.glLineWidth(module.lineWidth.getValue());
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-            model.render(player, limbSwing, limbSwingAmount, player.ticksExisted, headYaw, pitch, 0.0625f);
+            model.render(0.0625f);
 
             RenderUtil.endRender();
             GlStateManager.popMatrix();
