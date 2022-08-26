@@ -15,6 +15,8 @@ public class Criticals extends Module
             register(new EnumSetting<>("Mode", CritMode.Packet));
     protected final Setting<Boolean> noDesync =
             register(new BooleanSetting("NoDesync", true));
+    protected final Setting<Boolean> movePause =
+            register(new BooleanSetting("PauseOnMove", false));
     protected final Setting<Integer> delay    =
             register(new NumberSetting<>("Delay", 250, 0, 1000));
 
