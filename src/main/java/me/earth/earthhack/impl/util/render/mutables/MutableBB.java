@@ -658,6 +658,16 @@ public class MutableBB extends AxisAlignedBB implements BB
         return new Vec3d(this.minX + (this.maxX - this.minX) * 0.5D, this.minY + (this.maxY - this.minY) * 0.5D, this.minZ + (this.maxZ - this.minZ) * 0.5D);
     }
 
+    public void setFromBlockPos(BlockPos pos)
+    {
+        this.minX = pos.getX();
+        this.minY = pos.getY();
+        this.minZ = pos.getZ();
+        this.maxX = pos.getX() + 1;
+        this.maxY = pos.getY() + 1;
+        this.maxZ = pos.getZ() + 1;
+    }
+
     public void setBB(double x1, double y1, double z1, double x2, double y2, double z2)
     {
         this.minX = Math.min(x1, x2);
@@ -666,6 +676,16 @@ public class MutableBB extends AxisAlignedBB implements BB
         this.maxX = Math.max(x1, x2);
         this.maxY = Math.max(y1, y2);
         this.maxZ = Math.max(z1, z2);
+    }
+
+    public void growMutable(double x, double y, double z)
+    {
+        minX = this.minX - x;
+        minY = this.minY - y;
+        minZ = this.minZ - z;
+        maxX = this.maxX + x;
+        maxY = this.maxY + y;
+        maxZ = this.maxZ + z;
     }
 
     @Override

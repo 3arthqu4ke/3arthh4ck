@@ -456,12 +456,36 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> fade =
             register(new BooleanSetting("Fade", true))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> fadeComp =
+            register(new BooleanSetting("Fade-Compatibility", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> fadeTime =
             register(new NumberSetting<>("Fade-Time", 1000, 0, 5000))
                 .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> realtime =
             register(new BooleanSetting("Realtime", false))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> slide =
+            register(new BooleanSetting("Slide", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> smoothSlide =
+            register(new BooleanSetting("SmoothenSlide", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Double> slideTime =
+            register(new NumberSetting<>("Slide-Time", 250.0, 1.0, 1000.0))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> zoom =
+            register(new BooleanSetting("Zoom", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Double> zoomTime =
+            register(new NumberSetting<>("Zoom-Time", 100.0, 1.0, 1000.0))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Double> zoomOffset =
+            register(new NumberSetting<>("Zoom-Offset", -0.5, -1.0, 1.0))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> multiZoom =
+            register(new BooleanSetting("Multi-Zoom", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> renderExtrapolation =
             register(new BooleanSetting("RenderExtrapolation", false))
                 .setComplexity(Complexity.Expert);
@@ -881,6 +905,8 @@ public class AutoCrystal extends Module
     protected final StopWatch forceTimer = new StopWatch();
     protected final StopWatch liquidTimer = new StopWatch();
     protected final StopWatch shieldTimer = new StopWatch();
+    protected final StopWatch slideTimer = new StopWatch();
+    protected final StopWatch zoomTimer = new StopWatch();
 
     /* ---------------- States -------------- */
     protected final Queue<Runnable> post = new ConcurrentLinkedQueue<>();
@@ -890,6 +916,7 @@ public class AutoCrystal extends Module
     protected Entity crystal;
     protected Entity focus;
     protected BlockPos renderPos;
+    protected BlockPos slidePos;
     public boolean switching;
     protected boolean isSpoofing;
     protected boolean noGod;
@@ -1083,6 +1110,17 @@ public class AutoCrystal extends Module
 
     public void setRenderPos(BlockPos pos, String text) {
         renderTimer.reset();
+        if (pos != null && !pos.equals(slidePos)
+            && (!smoothSlide.getValue()
+                || slideTimer.passed(slideTime.getValue()))) {
+            slidePos = renderPos;
+            slideTimer.reset();
+        }
+
+        if (pos != null && (multiZoom.getValue() || !pos.equals(renderPos))) {
+            zoomTimer.reset();
+        }
+
         this.renderPos = pos;
         this.damage = text;
         this.bypassPos = null;
@@ -1091,6 +1129,7 @@ public class AutoCrystal extends Module
     public BlockPos getRenderPos() {
         if (renderTimer.passed(renderTime.getValue())) {
             renderPos = null;
+            slidePos = null;
         }
 
         return renderPos;
@@ -1188,6 +1227,7 @@ public class AutoCrystal extends Module
         target = null;
         crystal = null;
         renderPos = null;
+        slidePos = null;
         rotation = null;
         switching = false;
         bypassPos = null;

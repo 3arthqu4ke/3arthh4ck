@@ -13,6 +13,8 @@ import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.render.Interpolation;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
+import me.earth.earthhack.impl.util.render.mutables.BBRender;
+import me.earth.earthhack.impl.util.render.mutables.MutableBB;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,6 +33,7 @@ import java.util.Map;
 final class ListenerRender extends ModuleListener<AutoCrystal, Render3DEvent> {
     private final Map<BlockPos, Long> fadeList = new HashMap<>();
     private static final ResourceLocation CRYSTAL_LOCATION = new ResourceLocation("earthhack:textures/client/crystal.png");
+    private final MutableBB bb = new MutableBB();
 
     public ListenerRender(AutoCrystal module) {
         super(module, Render3DEvent.class);
@@ -58,37 +61,67 @@ final class ListenerRender extends ModuleListener<AutoCrystal, Render3DEvent> {
                 final int fadeBoxAlpha = MathHelper.clamp((int) (alphaBoxAmount * (set.getValue() + module.fadeTime.getValue() - System.currentTimeMillis())), 0, (int) maxBoxAlpha);
                 final int fadeOutlineAlpha = MathHelper.clamp((int) (alphaOutlineAmount * (set.getValue() + module.fadeTime.getValue() - System.currentTimeMillis())), 0, (int) maxOutlineAlpha);
 
-                if (module.box.getValue())
-                    RenderUtil.renderBox(
-                            Interpolation.interpolatePos(set.getKey(), 1.0f),
-                            new Color(boxColor.getRed(), boxColor.getGreen(), boxColor.getBlue(), fadeBoxAlpha),
-                            new Color(outlineColor.getRed(), outlineColor.getGreen(), outlineColor.getBlue(), fadeOutlineAlpha),
-                            1.5f);
-
+                RenderUtil.renderBox(
+                    Interpolation.interpolatePos(set.getKey(), 1.0f),
+                    new Color(boxColor.getRed(), boxColor.getGreen(), boxColor.getBlue(), fadeBoxAlpha),
+                    new Color(outlineColor.getRed(), outlineColor.getGreen(), outlineColor.getBlue(), fadeOutlineAlpha),
+                    1.5f);
             }
         }
 
         BlockPos pos;
-        if (module.render.getValue()
-                && !module.isPingBypass()
-                && (pos = module.getRenderPos()) != null) {
+        if (module.render.getValue() && !module.isPingBypass() && (pos = module.getRenderPos()) != null) {
+            if ((module.fadeComp.getValue() || !module.fade.getValue()) && module.box.getValue()) {
+                BlockPos slide;
+                if (module.slide.getValue() && (slide = module.slidePos) != null) {
+                    double factor = module.slideTimer.getTime() / Math.max(1.0, module.slideTime.getValue());
+                    if (factor >= 1.0) {
+                        renderBoxMutable(pos);
+                        if (mode != RenderDamagePos.None) {
+                            renderDamage(pos);
+                        }
+                    } else {
+                        double x = slide.getX() + (pos.getX() - slide.getX()) * factor;
+                        double y = slide.getY() + (pos.getY() - slide.getY()) * factor;
+                        double z = slide.getZ() + (pos.getZ() - slide.getZ()) * factor;
+                        bb.setBB(
+                            x,
+                            y,
+                            z,
+                            x + 1,
+                            y + 1,
+                            z + 1
+                        );
+                        Interpolation.interpolateMutable(bb);
+                        BBRender.renderBox(bb, module.boxColor.getValue(), module.outLine.getValue(), 1.5f);
+                        if (mode != RenderDamagePos.None) {
+                            renderDamage(x + 0.5, y, z + 0.5);
+                        }
+                    }
+                } else {
+                    if (module.zoom.getValue()) {
+                        double grow = (module.zoomOffset.getValue() - Math.signum(module.zoomOffset.getValue()) * module.zoomTimer.getTime() / Math.max(1.0, module.zoomTime.getValue())) / 2.0;
+                        if (module.zoomOffset.getValue() <= 0.0 && grow >= 0.0 || module.zoomOffset.getValue() > 0.0 && grow <= 0.0) {
+                            renderBoxMutable(pos);
+                        } else {
+                            bb.setFromBlockPos(pos);
+                            bb.growMutable(grow, grow, grow);
+                            Interpolation.interpolateMutable(bb);
+                            BBRender.renderBox(bb, module.boxColor.getValue(), module.outLine.getValue(), 1.5f);
+                        }
+                    } else {
+                        renderBoxMutable(pos);
+                    }
 
-
-            if (!module.fade.getValue()) {
-
-                if (module.box.getValue())
-                    RenderUtil.renderBox(
-                            Interpolation.interpolatePos(pos, 1.0f),
-                            module.boxColor.getValue(),
-                            module.outLine.getValue(),
-                            1.5f);
+                    if (mode != RenderDamagePos.None) {
+                        renderDamage(pos);
+                    }
+                }
             }
 
-            if (mode != RenderDamagePos.None)
-                renderDamage(pos);
-
-            if (module.fade.getValue())
+            if (module.fade.getValue()) {
                 fadeList.put(pos, System.currentTimeMillis());
+            }
         }
 
         fadeList.entrySet().removeIf(e ->
@@ -156,7 +189,25 @@ final class ListenerRender extends ModuleListener<AutoCrystal, Render3DEvent> {
         }
     }
 
+    private void renderBoxMutable(BlockPos pos) {
+        bb.setFromBlockPos(pos);
+        Interpolation.interpolateMutable(bb);
+        BBRender.renderBox(
+            bb,
+            module.boxColor.getValue(),
+            module.outLine.getValue(),
+            1.5f);
+    }
+
     private void renderDamage(BlockPos pos) {
+        double x = pos.getX() + 0.5;
+        double y = pos.getY();
+        double z = pos.getZ() + 0.5;
+        renderDamage(x, y, z);
+    }
+
+    private void renderDamage(double x, double yIn, double z) {
+        double y = yIn + (module.renderDamage.getValue() == RenderDamagePos.OnTop ? 1.35 : 0.5);
         String text = module.damage;
         GlStateManager.pushMatrix();
         RenderHelper.enableStandardItemLighting();
@@ -165,12 +216,7 @@ final class ListenerRender extends ModuleListener<AutoCrystal, Render3DEvent> {
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
 
-        double x = pos.getX() + 0.5;
-        double y = pos.getY() + (module.renderDamage.getValue() == RenderDamagePos.OnTop ? 1.35 : 0.5);
-        double z = pos.getZ() + 0.5;
-
         float scale = 0.016666668f * (module.renderMode.getValue() == RenderDamage.Indicator ? 0.95f : 1.3f);
-
         GlStateManager.translate(x - Interpolation.getRenderPosX(),
                 y - Interpolation.getRenderPosY(),
                 z - Interpolation.getRenderPosZ());
