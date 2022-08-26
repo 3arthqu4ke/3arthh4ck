@@ -6,6 +6,7 @@ import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +19,7 @@ import net.minecraft.world.World;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiFunction;
 
@@ -63,6 +65,37 @@ public class PlayerUtil implements Globals {
         }
 
         return fakePlayer;
+    }
+
+    public static EntityPlayer copyPlayer(EntityPlayer playerIn) {
+        return copyPlayer(playerIn, true);
+    }
+
+    public static EntityPlayer copyPlayer(EntityPlayer playerIn, boolean animations) {
+        int count = playerIn.getItemInUseCount();
+        EntityPlayer copy = new EntityPlayer(mc.world, new GameProfile(UUID.randomUUID(), playerIn.getName())) {
+            @Override public boolean isSpectator() {
+                return false;
+            }
+
+            @Override public boolean isCreative() {
+                return false;
+            }
+
+            @Override public int getItemInUseCount() { return count; }
+        };
+        if (animations) {
+            copy.setSneaking(playerIn.isSneaking());
+            copy.swingProgress = playerIn.swingProgress;
+            copy.limbSwing = playerIn.limbSwing;
+            copy.limbSwingAmount = playerIn.prevLimbSwingAmount;
+            copy.inventory.copyInventory(playerIn.inventory);
+        }
+        copy.setPrimaryHand(playerIn.getPrimaryHand());
+        copy.ticksExisted = playerIn.ticksExisted;
+        copy.setEntityId(playerIn.getEntityId());
+        copy.copyLocationAndAnglesFrom(playerIn);
+        return copy;
     }
 
     /**
