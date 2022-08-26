@@ -5,6 +5,8 @@ import me.earth.earthhack.impl.gui.click.Click;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 
+import java.util.function.Supplier;
+
 public class Component {
     private final String label;
     private float posX;
@@ -18,7 +20,7 @@ public class Component {
     private float width;
     private float height;
     private boolean extended, dragging;
-    private String description;
+    private Supplier<String> description = () -> null;
 
     public Component(String label, float posX, float posY, float offsetX, float offsetY, float width, float height) {
         this.label = label;
@@ -165,10 +167,10 @@ public class Component {
 
     public String getDescription()
     {
-        return description;
+        return description.get();
     }
 
-    public void setDescription(String description)
+    public void setDescription(Supplier<String> description)
     {
         this.description = description;
     }

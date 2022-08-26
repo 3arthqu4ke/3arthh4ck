@@ -5,6 +5,7 @@ import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.client.customfont.FontMod;
+import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import org.lwjgl.opengl.GL11;
@@ -167,7 +168,7 @@ public class CustomFontRenderer extends CustomFont
         {
             char character = text.charAt(i);
 
-            if (character == '\u00a7' && i + 1 < text.length())
+            if (character == TextColor.SECTIONSIGN && i + 1 < text.length())
             {
                 int colorIndex = COLOR_CODES.indexOf(text.charAt(i + 1));
 
@@ -457,7 +458,7 @@ public class CustomFontRenderer extends CustomFont
         for (int i = 0; i < text.length(); i++)
         {
             char character = text.charAt(i);
-            if (character == '\u00a7' && i + 1 < text.length())
+            if (character == TextColor.SECTIONSIGN && i + 1 < text.length())
             {
                 int colorIndex = COLOR_CODES.indexOf(text.charAt(i + 1));
 
@@ -590,17 +591,29 @@ public class CustomFontRenderer extends CustomFont
     {
         List<String> result = new ArrayList<>();
 
-        if (getStringWidth(text) > width)
+        if (getStringWidth(text) > width || text.contains("\n"))
         {
             String[] words = text.split(" ");
             StringBuilder current = new StringBuilder();
             char lastColorCode = 65535;
             for (String word : words)
             {
-                String[] lineBreak = word.split("\n");
+                String[] lineBreak = splitWithEmptyWords(word);
                 if (lineBreak.length > 1)
                 {
-                    current.append(lineBreak[0]);
+                    if (getStringWidth(current + lineBreak[0] + " ") >= width)
+                    {
+                        result.add(current.toString());
+                        current = new StringBuilder()
+                            .append(TextColor.SECTIONSIGN)
+                            .append(lastColorCode)
+                            .append(lineBreak[0]);
+                    }
+                    else
+                    {
+                        current.append(lineBreak[0]);
+                    }
+
                     char checkColorCode = getLastColorCode(lineBreak[0]);
                     if (checkColorCode != ' ')
                     {
@@ -610,7 +623,8 @@ public class CustomFontRenderer extends CustomFont
                     for (int i = 1; i < lineBreak.length; i++)
                     {
                         result.add(current.toString());
-                        current = new StringBuilder("\u00a7")
+                        current = new StringBuilder()
+                            .append(TextColor.SECTIONSIGN)
                             .append(lastColorCode)
                             .append(lineBreak[i]);
 
@@ -641,7 +655,8 @@ public class CustomFontRenderer extends CustomFont
                 else
                 {
                     result.add(current.toString());
-                    current = new StringBuilder("\u00a7")
+                    current = new StringBuilder()
+                                    .append(TextColor.SECTIONSIGN)
                                     .append(lastColorCode)
                                     .append(word)
                                     .append(" ");
@@ -652,7 +667,8 @@ public class CustomFontRenderer extends CustomFont
             {
                 if (getStringWidth(current.toString()) < width)
                 {
-                    result.add("\u00a7"
+                    result.add(TextColor.SECTIONSIGN
+                                    + ""
                                     + lastColorCode
                                     + current
                                     + " ");
@@ -677,7 +693,7 @@ public class CustomFontRenderer extends CustomFont
         for (int i = 0; i < word.length(); i++)
         {
             char c = word.charAt(i);
-            if (c == '\u00a7' && i + 1 < word.length())
+            if (c == TextColor.SECTIONSIGN && i + 1 < word.length())
             {
                 lastColorCode = word.charAt(i + 1);
             }
@@ -695,7 +711,7 @@ public class CustomFontRenderer extends CustomFont
         for (int i = 0; i < string.length(); i++)
         {
             char c = string.charAt(i);
-            if ((c == '\u00a7') && (i < string.length() - 1))
+            if ((c == TextColor.SECTIONSIGN) && (i < string.length() - 1))
             {
                 lastColorCode = string.charAt(i + 1);
             }
@@ -707,7 +723,8 @@ public class CustomFontRenderer extends CustomFont
             else
             {
                 result.add(current.toString());
-                current = new StringBuilder("\u00a7")
+                current = new StringBuilder()
+                                .append(TextColor.SECTIONSIGN)
                                 .append(lastColorCode)
                                 .append(c);
             }
@@ -744,6 +761,23 @@ public class CustomFontRenderer extends CustomFont
 
             colorCode[i] = ((r & 0xFF) << 16 | (g & 0xFF) << 8 | b & 0xFF);
         }
+    }
+
+    private static String[] splitWithEmptyWords(String word) {
+        List<String> result = new ArrayList<>(1);
+        StringBuilder current = new StringBuilder();
+        for (int i = 0; i < word.length(); i++) {
+            char ch = word.charAt(i);
+            if (ch == '\n') {
+                result.add(current.toString());
+                current = new StringBuilder();
+            } else {
+                current.append(ch);
+            }
+        }
+
+        result.add(current.toString());
+        return result.toArray(new String[0]);
     }
 
 }

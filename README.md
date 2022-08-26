@@ -1,11 +1,11 @@
 # 3arthh4ck
 
 [![CodeFactor](https://www.codefactor.io/repository/github/3arthqu4ke/3arthh4ck/badge/main)](https://www.codefactor.io/repository/github/3arthqu4ke/3arthh4ck/overview/main)
-![GitHub All Releases](https://img.shields.io/github/downloads/3arthqu4ke/3arthh4ck/total.svg)
-![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/3arthqu4ke/pingbypass?logo=docker)
-![Lines of code, cached, because tokei takes forever (https://tokei.rs/b1/github/3arthqu4ke/3arthh4ck?category=code)](docs/loc.svg)
+[![GitHub All Releases](https://img.shields.io/github/downloads/3arthqu4ke/3arthh4ck/total.svg)](https://github.com/3arthqu4ke/3arthh4ck/releases)
+[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/3arthqu4ke/pingbypass?logo=docker)](https://hub.docker.com/r/3arthqu4ke/pingbypass)
+[![Lines of code](docs/loc.svg)](https://tokei.rs/b1/github/3arthqu4ke/3arthh4ck?category=code)
 ![Repo size](https://img.shields.io/github/repo-size/3arthqu4ke/3arthh4ck.svg)
-![](https://github.com/3arthqu4ke/3arthh4ck/actions/workflows/gradle-publish.yml/badge.svg)
+[![Build](https://github.com/3arthqu4ke/3arthh4ck/actions/workflows/gradle-publish.yml/badge.svg)](https://github.com/3arthqu4ke/3arthh4ck/actions)
 
 3arthh4ck is Minecraft 1.12.2 utility mod for anarchy PvP. With the 1.7.0 release it also takes over the role
 of the now outdated PingBypass [Server](https://github.com/3arthqu4ke/PingBypass) and 
