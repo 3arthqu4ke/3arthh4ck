@@ -19,7 +19,7 @@ public class WeaknessHelper
 
     /**
      * Updates if we are weaknessed. We poll this since
-     * we multithread and dont want problems with the
+     * we multithread and don't want problems with the
      * PotionMap.
      */
     public void updateWeakness()

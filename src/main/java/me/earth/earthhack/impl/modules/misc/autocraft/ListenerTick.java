@@ -88,9 +88,5 @@ final class ListenerTick
                 }
             }
         }
-        else
-        {
-
-        }
     }
 }

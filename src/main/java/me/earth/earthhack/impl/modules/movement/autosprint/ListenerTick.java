@@ -14,7 +14,10 @@ final class ListenerTick extends ModuleListener<AutoSprint, TickEvent>
     @Override
     public void invoke(TickEvent event)
     {
-        if ((AutoSprint.canSprint() && (module.mode.getValue() == SprintMode.Legit)) || (AutoSprint.canSprintBetter() && (module.mode.getValue() == SprintMode.Rage)))
+        if ((AutoSprint.canSprint()
+                && (module.mode.getValue() == SprintMode.Legit))
+                || (AutoSprint.canSprintBetter()
+                && (module.mode.getValue() == SprintMode.Rage)))
         {
             module.mode.getValue().sprint();
         }

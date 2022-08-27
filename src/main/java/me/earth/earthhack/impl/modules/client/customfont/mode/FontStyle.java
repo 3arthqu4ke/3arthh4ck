@@ -9,7 +9,7 @@ public enum FontStyle
     Italic(Font.ITALIC),
     All(Font.BOLD | Font.ITALIC);
 
-    int style;
+    private final int style;
 
     FontStyle(int style)
     {

@@ -4,7 +4,7 @@ import me.earth.earthhack.api.module.data.DefaultData;
 
 final class VelocityData extends DefaultData<Velocity>
 {
-    protected VelocityData(Velocity velocity)
+    public VelocityData(Velocity velocity)
     {
         super(velocity);
         this.descriptions.put(module.knockBack,

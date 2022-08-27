@@ -42,21 +42,18 @@ final class ListenerTick extends ModuleListener<ToolTips, TickEvent>
             {
                 for (EntityPlayer player : mc.world.playerEntities)
                 {
-                    if (player != null)
+                    if (player != null && player.getHeldItemMainhand().getItem()
+                            instanceof ItemShulkerBox)
                     {
-                        if (player.getHeldItemMainhand().getItem()
-                                instanceof ItemShulkerBox)
+                        if (!PlayerUtil.isFakePlayer(player)
+                                && (module.own.getValue()
+                                || !mc.player.equals(player)))
                         {
-                            if (!PlayerUtil.isFakePlayer(player)
-                                    && (module.own.getValue()
-                                            || !mc.player.equals(player)))
-                            {
-                                ItemStack stack = player.getHeldItemMainhand();
-                                module.spiedPlayers
-                                        .put(player.getName().toLowerCase(),
+                            ItemStack stack = player.getHeldItemMainhand();
+                            module.spiedPlayers
+                                    .put(player.getName().toLowerCase(),
                                             new TimeStack(stack,
-                                                          System.nanoTime()));
-                            }
+                                                    System.nanoTime()));
                         }
                     }
                 }

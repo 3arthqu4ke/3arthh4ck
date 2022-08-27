@@ -22,12 +22,7 @@ public class Portals extends Module
     @Override
     public String getDisplayInfo()
     {
-        if (godMode.getValue())
-        {
-            return TextColor.RED + "GodMode";
-        }
-
-        return null;
+        return godMode.getValue() ? TextColor.RED + "GodMode" : null;
     }
 
 }

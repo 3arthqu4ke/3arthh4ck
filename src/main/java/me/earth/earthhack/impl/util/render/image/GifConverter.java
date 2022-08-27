@@ -36,7 +36,7 @@ public class GifConverter
 
         Color backgroundColor = null;
 
-        if(metadata != null) {
+        if (metadata != null) {
             IIOMetadataNode globalRoot = (IIOMetadataNode) metadata.getAsTree(metadata.getNativeMetadataFormatName());
 
             NodeList globalColorTable = globalRoot.getElementsByTagName("GlobalColorTable");
@@ -79,9 +79,9 @@ public class GifConverter
 
         for (int frameIndex = 0;; frameIndex++) {
             BufferedImage image;
-            try{
+            try {
                 image = reader.read(frameIndex);
-            }catch (IndexOutOfBoundsException io){
+            } catch (IndexOutOfBoundsException io){
                 break;
             }
 
@@ -106,7 +106,7 @@ public class GifConverter
                 hasBackround = image.getWidth() == width && image.getHeight() == height;
 
                 master.createGraphics().drawImage(image, 0, 0, null);
-            }else{
+            } else {
                 int x = 0;
                 int y = 0;
 
@@ -221,7 +221,7 @@ public class GifConverter
 
         Color backgroundColor = null;
 
-        if(metadata != null) {
+        if (metadata != null) {
             IIOMetadataNode globalRoot = (IIOMetadataNode) metadata.getAsTree(metadata.getNativeMetadataFormatName());
 
             NodeList globalColorTable = globalRoot.getElementsByTagName("GlobalColorTable");

@@ -93,7 +93,7 @@ public class Arrows extends RegisteringModule<Boolean, SimpleRemovingSetting>
         this.listeners.add(new ListenerMotion(this));
         this.listeners.add(new ListenerUseItem(this));
         this.listeners.add(new ListenerKeyboard(this));
-        ModuleData data = new SimpleData(this,
+        ModuleData<?> data = new SimpleData(this,
                 "Cycles through your arrows. Not compatible with AntiPotion.");
         this.setData(data);
     }

@@ -56,11 +56,11 @@ public interface EventBus
      * Posts an object on the bus. Invokes
      * {@link Invoker#invoke(Object)} for every
      * Listener that targets the objects class.
-     *
+     * <p>
      * When normally Listeners with the highest
      * priority would be called first, here the
      * opposite is the case.
-     *
+     * <p>
      * (I was too lazy to split MotionUpdateEvent
      *  in a post and pre event so I just post it
      *  with this...)
@@ -114,11 +114,11 @@ public interface EventBus
 
     /**
      * Checks if Listeners for Objects of the given class exist.
-     *
+     * <p>
      * Returns <tt>true</tt> if a Listeners exist for
      * which {@link Listener#getTarget()}
      * equals the given class.
-     *
+     * <p>
      * Only checks listeners with {@link Listener#getType()} == null.
      *
      * @param clazz the class to check.
@@ -128,11 +128,11 @@ public interface EventBus
 
     /**
      * Checks if Listeners for the given Type of Object exist.
-     *
+     * <p>
      * Returns <tt>true</tt> if a Listeners exist for
      * which {@link Listener#getTarget()}
      * equals the given class.
-     *
+     * <p>
      * Checks listeners with
      * {@link Listener#getType()} == null or == the given type.
      *

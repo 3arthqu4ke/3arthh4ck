@@ -36,10 +36,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Dont remove debugPlace!
+ * Don't remove debugPlace!
  * and debugBreak
  * and the SlowUpdates thing
- *
+ * <p>
  * I wasn't going to :P
  */
 public class Debug extends Module

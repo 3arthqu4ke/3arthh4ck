@@ -4,7 +4,7 @@ import me.earth.earthhack.api.module.data.DefaultData;
 
 final class CommandData extends DefaultData<Commands>
 {
-    protected CommandData(Commands module)
+    public CommandData(Commands module)
     {
         super(module);
         register("Prefix", "The clients prefix. Send a chat message that" +

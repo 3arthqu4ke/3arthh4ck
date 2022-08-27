@@ -12,9 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.LinkedList;
-import java.util.List;
-
 // TODO: Best AimBot ever, use an EntityArrow
 //  to check if the arrow would hit any blocks
 public class AimBot extends EntityTypeModule
@@ -49,7 +46,6 @@ public class AimBot extends EntityTypeModule
 
     public Entity getTarget()
     {
-        List<Entity> entites = new LinkedList<>();
         Entity closest = null;
         double closestAngle  = 360.0;
         double x = RotationUtil.getRotationPlayer().posX;
@@ -85,13 +81,6 @@ public class AimBot extends EntityTypeModule
             {
                 continue;
             }
-
-
-
-
-
-
-
 
             if (angle < closestAngle
                 && (!fov.getValue()

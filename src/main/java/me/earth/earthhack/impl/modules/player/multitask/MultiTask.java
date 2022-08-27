@@ -7,7 +7,7 @@ import me.earth.earthhack.impl.util.client.SimpleData;
 
 /**
  * Allows you to place while breaking.
- *
+ * <p>
  * {@link MixinMinecraft}.
  */
 public class MultiTask extends Module

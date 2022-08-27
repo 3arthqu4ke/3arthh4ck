@@ -51,12 +51,7 @@ public class Commands extends Module
 
     public static String getPrefix()
     {
-        if (!PREFIX.isPresent())
-        {
-            return "+";
-        }
-
-        return PREFIX.getValue();
+        return !PREFIX.isPresent() ? "+" : PREFIX.getValue();
     }
 
 }

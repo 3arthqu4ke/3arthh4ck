@@ -10,7 +10,7 @@ public class Bus
 {
     /**
      * An EventBus instance.
-     *
+     * <p>
      * Note that the implementation used currently
      * is {@link SimpleBus}, which doesn't support
      * posting Anonymous classes.

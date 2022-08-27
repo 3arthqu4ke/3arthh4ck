@@ -48,12 +48,7 @@ public enum Target implements Globals
                                       double maxRange)
         {
             EntityPlayer enemy = getByAngle(enemies, maxRange);
-            if (enemy == null)
-            {
-                return getByAngle(players, maxRange);
-            }
-
-            return enemy;
+            return enemy == null ? getByAngle(players, maxRange) : enemy;
         }
     },
     Damage

@@ -153,7 +153,7 @@ public class Auto32k extends Module {
     private DispenserData finalDispenserData;
     private int actionsThisTick = 0;
     private boolean checkedThisTick = false;
-    private StopWatch disableTimer = new StopWatch();
+    private final StopWatch disableTimer = new StopWatch();
     private boolean shouldDisable;
 
     public Auto32k() {
@@ -271,7 +271,7 @@ public class Auto32k extends Module {
         }
     }
 
-    protected void onSettingChange(SettingEvent event) {
+    protected void onSettingChange(SettingEvent<?> event) {
         if (event.getSetting().getContainer() == this) {
             resetFields();
         }
@@ -611,7 +611,7 @@ public class Auto32k extends Module {
         Vec3d hitVec = new Vec3d(neighbour).add(0.5, 0.5, 0.5).add(new Vec3d(opposite.getDirectionVec()).scale(0.5));
         Block neighbourBlock = mc.world.getBlockState(neighbour).getBlock();
 
-        //if(!mc.player.isSneaking() && (BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock))) {
+        //if (!mc.player.isSneaking() && (BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock))) {
         PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
         //mc.player.setSneaking(true);
         //}
@@ -658,7 +658,7 @@ public class Auto32k extends Module {
             case MOUSE:
                 if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
                     BlockPos mousePos = mc.objectMouseOver.getBlockPos();
-                    if (mousePos != null && !canPlace(mousePos)) {
+                    if (!canPlace(mousePos)) {
                         BlockPos mousePosUp = mousePos.up();
                         if (canPlace(mousePosUp)) {
                             pos = mousePosUp;
@@ -881,7 +881,7 @@ public class Auto32k extends Module {
         if (!this.isEnabled() || pos == null) {
             return;
         }
-        //if(mc.player.isSneaking()) {
+        //if (mc.player.isSneaking()) {
         PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
         //mc.player.setSneaking(false);
         //}
@@ -946,7 +946,7 @@ public class Auto32k extends Module {
             Vec3d hitVec = new Vec3d(neighbour).add(0.5, 0.5, 0.5).add(new Vec3d(opposite.getDirectionVec()).scale(0.5));
             Block neighbourBlock = mc.world.getBlockState(neighbour).getBlock();
 
-            //if(!mc.player.isSneaking() && (BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock))) {
+            //if (!mc.player.isSneaking() && (BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock))) {
             PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
             //mc.player.setSneaking(true);
             //}
@@ -994,7 +994,7 @@ public class Auto32k extends Module {
         EnumFacing opposite = facing.getOpposite();
         Vec3d hitVec = new Vec3d(helpingPos).add(0.5, 0.5, 0.5).add(new Vec3d(opposite.getDirectionVec()).scale(0.5));
         Block neighbourBlock = mc.world.getBlockState(helpingPos).getBlock();
-        //if(BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock)) {
+        //if (BlockUtil.blackList.contains(neighbourBlock) || BlockUtil.shulkerList.contains(neighbourBlock)) {
         PingBypass.sendToActualServer(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
         //mc.player.setSneaking(true);
         //}
@@ -1140,11 +1140,9 @@ public class Auto32k extends Module {
             case MOUSE:
                 if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
                     BlockPos mousePos = mc.objectMouseOver.getBlockPos();
-                    if (mousePos != null) {
-                        data = analyzePos(mousePos);
-                        if (!data.isPlaceable()) {
-                            data = analyzePos(mousePos.up());
-                        }
+                    data = analyzePos(mousePos);
+                    if (!data.isPlaceable()) {
+                        data = analyzePos(mousePos.up());
                     }
                 }
 
@@ -1526,7 +1524,7 @@ public class Auto32k extends Module {
     }
 
     public static void rightClickBlock(BlockPos pos, Vec3d vec, EnumHand hand, EnumFacing direction, boolean packet, boolean swing) {
-        if(packet) {
+        if (packet) {
             float f = (float)(vec.x - (double)pos.getX());
             float f1 = (float)(vec.y - (double)pos.getY());
             float f2 = (float)(vec.z - (double)pos.getZ());
@@ -1580,7 +1578,7 @@ public class Auto32k extends Module {
     }
 
     public static float[] simpleFacing(EnumFacing facing) {
-        switch(facing) {
+        switch (facing) {
             case DOWN:
                 return new float[]{mc.player.rotationYaw, 90.0f};
             case UP:
@@ -1601,7 +1599,7 @@ public class Auto32k extends Module {
     }
 
     public static boolean is32k(ItemStack stack) {
-        if(stack == null) {
+        if (stack == null) {
             return false;
         }
 
@@ -1609,13 +1607,10 @@ public class Auto32k extends Module {
             return false;
         }
         NBTTagList enchants = (NBTTagList) stack.getTagCompound().getTag("ench");
-        if (enchants == null) {
-            return false;
-        }
 
         for (int i = 0; i < enchants.tagCount(); i++) {
             NBTTagCompound enchant = enchants.getCompoundTagAt(i);
-            if(enchant.getInteger("id") == 16) {
+            if (enchant.getInteger("id") == 16) {
                 int lvl = enchant.getInteger("lvl");
                 if (lvl >= 42) {
                     return true;

@@ -138,12 +138,6 @@ public class AnvilAura extends ObbyListenerModule<ListenerAnvilAura>
     }
 
     @Override
-    protected void onDisable()
-    {
-        super.onDisable();
-    }
-
-    @Override
     public String getDisplayInfo()
     {
         if (renderTimer.passed(600))

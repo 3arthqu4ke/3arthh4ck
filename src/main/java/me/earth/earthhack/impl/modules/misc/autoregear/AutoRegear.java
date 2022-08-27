@@ -179,8 +179,7 @@ public class AutoRegear extends BlockPlacingModule
             }
             return false;
         }));
-        BlockPos position = positions.stream().sorted(Comparator.comparingInt(pos -> safety(pos) * -1)).collect(Collectors.toList()).get(0);
-        return position;
+        return positions.stream().sorted(Comparator.comparingInt(pos -> safety(pos) * -1)).collect(Collectors.toList()).get(0);
     }
 
     public boolean hasKit()

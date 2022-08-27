@@ -15,8 +15,8 @@ public enum Attack
     /** Similar to Crystal but always run the calc */
     Calc(() -> true, () -> InventoryUtil.isHolding(Items.END_CRYSTAL));
 
-    Supplier<Boolean> shouldCalc;
-    Supplier<Boolean> shouldAttack;
+    final Supplier<Boolean> shouldCalc;
+    final Supplier<Boolean> shouldAttack;
 
     Attack(Supplier<Boolean> shouldCalc, Supplier<Boolean> shouldAttack)
     {

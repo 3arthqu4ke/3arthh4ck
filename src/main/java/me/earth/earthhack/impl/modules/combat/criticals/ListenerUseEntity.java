@@ -17,7 +17,7 @@ import net.minecraft.util.math.Vec3d;
 
 /**
  *  Optional offsets:
- *  
+ * <p>
  *  me.earth.earthhack.pingbypass.PingBypass.sendToActualServer();(new CPacketPlayer.Position(
  *      pos.x, pos.y + 0.05, pos.z, false));
  *  me.earth.earthhack.pingbypass.PingBypass.sendToActualServer();(new CPacketPlayer.Position(

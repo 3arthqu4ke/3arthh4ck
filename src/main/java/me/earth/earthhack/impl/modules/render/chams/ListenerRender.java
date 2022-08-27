@@ -29,7 +29,7 @@ public class ListenerRender
     @Override
     public void invoke(Render3DEvent event)
     {
-        // TODO: readd stenciling for army and people who can't use shaders
+        // TODO: read stenciling for army and people who can't use shaders
         if (false
                 && !ESP.isRendering
                 && !Nametag.isRendering)

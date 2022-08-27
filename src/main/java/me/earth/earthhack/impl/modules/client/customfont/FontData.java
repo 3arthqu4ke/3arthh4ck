@@ -4,7 +4,7 @@ import me.earth.earthhack.api.module.data.DefaultData;
 
 final class FontData extends DefaultData<FontMod>
 {
-    protected FontData(FontMod module)
+    public FontData(FontMod module)
     {
         super(module);
         register("Font", "The Font.");

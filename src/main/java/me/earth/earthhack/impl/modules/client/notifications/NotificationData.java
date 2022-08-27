@@ -4,7 +4,7 @@ import me.earth.earthhack.api.module.data.DefaultData;
 
 final class NotificationData extends DefaultData<Notifications>
 {
-    protected NotificationData(Notifications module)
+    public NotificationData(Notifications module)
     {
         super(module);
         this.descriptions.put(module.modules,

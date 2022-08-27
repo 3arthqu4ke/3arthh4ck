@@ -419,13 +419,13 @@ public class CrystalBomber extends Module {
         RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(pos.getX() + .5, pos.getY() - .5d, pos.getZ() + .5));
         EnumFacing facing = (result == null || result.sideHit == null) ? EnumFacing.UP : result.sideHit;
         mc.player.connection.sendPacket(new CPacketPlayerTryUseItemOnBlock(pos, facing, hand, 0, 0, 0));
-        if(swing) {
+        if (swing) {
             mc.player.connection.sendPacket(new CPacketAnimation(exactHand ? hand : EnumHand.MAIN_HAND));
         }
     }
 
     public static void attackEntity(Entity entity, boolean packet, boolean swingArm) {
-        if(packet) {
+        if (packet) {
             mc.player.connection.sendPacket(new CPacketUseEntity(entity));
         } else {
             mc.playerController.attackEntity(mc.player, entity);

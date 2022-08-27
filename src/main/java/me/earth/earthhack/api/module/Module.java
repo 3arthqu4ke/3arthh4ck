@@ -51,7 +51,7 @@ public abstract class Module extends SettingContainer
             .setComplexity(Complexity.Medium);
 
     private final Category category;
-    private ModuleData data;
+    private ModuleData<?> data;
 
     /**
      * Creates a new Module. It's important that the given name
@@ -166,12 +166,12 @@ public abstract class Module extends SettingContainer
         return category;
     }
 
-    public ModuleData getData()
+    public ModuleData<?> getData()
     {
         return data;
     }
 
-    public void setData(ModuleData data)
+    public void setData(ModuleData<?> data)
     {
         if (data != null)
         {

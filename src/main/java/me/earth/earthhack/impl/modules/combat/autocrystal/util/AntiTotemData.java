@@ -36,21 +36,11 @@ public class AntiTotemData extends PositionData
 
             if (other == null)
             {
-                if (player == null)
-                {
-                    return super.compareTo(o);
-                }
-
-                return -1; // this ones better
+                return player == null ? super.compareTo(o) : -1;
             }
             else
             {
-                if (player == null)
-                {
-                    return 1; // other is better
-                }
-
-                return Double.compare(player.getDistanceSq(this.getPos()),
+                return player == null ? 1 : Double.compare(player.getDistanceSq(this.getPos()),
                                       other.getDistanceSq(o.getPos()));
             }
         }

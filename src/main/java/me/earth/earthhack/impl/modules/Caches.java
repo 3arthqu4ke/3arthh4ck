@@ -80,7 +80,7 @@ public class Caches
      * Sets the moduleManager for all existing ModuleCaches and future
      * ModuleCaches and tries to make their value present. The SettingCaches
      * use the  ModuleCaches so their value will be made present as well.
-     *
+     * <p>
      * If a caches value is not present afterwards the Cache will be
      * frozen via {@link Cache#setFrozen(boolean)}.
      *
