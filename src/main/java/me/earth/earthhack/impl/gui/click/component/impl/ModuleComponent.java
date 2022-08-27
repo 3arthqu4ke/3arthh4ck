@@ -71,12 +71,12 @@ public class ModuleComponent extends Component {
                 // -_- lazy
                 if (data != null && before != offY) {
                     Supplier<String> supplier = () -> {
-                        String desc = (String) data.settingDescriptions().get(setting);
+                        String desc = data.settingDescriptions().get(setting);
                         if (desc == null) {
                             desc = "A Setting (" + setting.getInitial().getClass().getSimpleName() + ").";
                         }
 
-                        if (Click.CLICK_GUI.get().descNameValue.getValue()) {           // added spaces for now because the format string to
+                        if (Click.CLICK_GUI.get().descNameValue.getValue()) {
                             desc = ComponentFactory.create(setting).getFormattedText() + "\n\n" + TextColor.WHITE + desc;
                         }
 
