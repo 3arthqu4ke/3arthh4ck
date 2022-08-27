@@ -18,6 +18,7 @@ import me.earth.earthhack.impl.modules.player.spectate.Spectate;
 import me.earth.earthhack.impl.util.minecraft.ICachedDamage;
 import me.earth.earthhack.impl.util.minecraft.MotionTracker;
 import me.earth.earthhack.impl.util.thread.EnchantmentUtil;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -94,9 +95,6 @@ public abstract class MixinEntityLivingBase extends MixinEntity
 
     @Shadow
     public abstract boolean isServerWorld();
-
-    @Shadow public abstract void travel(float strafe, float vertical,
-                                        float forward);
 
     @Override
     @Invoker(value = "getArmSwingAnimationEnd")
@@ -275,6 +273,17 @@ public abstract class MixinEntityLivingBase extends MixinEntity
         }
 
         return false;
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Inject(method = "knockBack", at = @At("HEAD"), cancellable = true)
+    private void knockBackHook(Entity entityIn, float strength, double xRatio,
+                               double zRatio, CallbackInfo ci)
+    {
+        if (EntityOtherPlayerMP.class.isInstance(this))
+        {
+            ci.cancel();
+        }
     }
 
     @Redirect(

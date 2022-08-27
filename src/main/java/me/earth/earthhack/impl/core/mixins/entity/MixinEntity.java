@@ -27,6 +27,8 @@ import me.earth.earthhack.impl.util.minecraft.entity.EntityType;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -41,6 +43,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 @Mixin(Entity.class)
@@ -150,6 +153,9 @@ public abstract class MixinEntity implements IEntity, Globals
                                       double z);
     @Shadow
     public abstract String getName();
+
+    @Shadow @Nullable public abstract EntityItem entityDropItem(
+        ItemStack stack, float offsetY);
 
     @Override
     @Accessor(value = "isInWeb")
