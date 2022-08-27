@@ -3,10 +3,9 @@ package me.earth.earthhack.impl.modules.client.hud;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
-import me.earth.earthhack.api.setting.settings.BooleanSetting;
-import me.earth.earthhack.api.setting.settings.ColorSetting;
-import me.earth.earthhack.api.setting.settings.EnumSetting;
+import me.earth.earthhack.api.setting.settings.*;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.render.TextRenderer;
@@ -15,7 +14,6 @@ import me.earth.earthhack.impl.modules.client.hud.modes.HudRainbow;
 import me.earth.earthhack.impl.modules.client.hud.modes.Modules;
 import me.earth.earthhack.impl.modules.client.hud.modes.PotionColor;
 import me.earth.earthhack.impl.modules.client.hud.modes.Potions;
-import me.earth.earthhack.impl.modules.client.hud.util.HUDData;
 import me.earth.earthhack.impl.util.client.ModuleUtil;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
@@ -23,9 +21,11 @@ import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.network.ServerUtil;
 import me.earth.earthhack.impl.util.render.ColorHelper;
 import me.earth.earthhack.impl.util.render.ColorUtil;
+import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -38,6 +38,9 @@ import net.minecraft.potion.PotionEffect;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,12 +79,24 @@ public class HUD extends Module {
             register(new BooleanSetting("CurrentTps", true));
     protected final Setting<Boolean> animations =
             register(new BooleanSetting("Animations", true));
+    protected final Setting<Boolean> serverBrand =
+            register(new BooleanSetting("ServerBrand", false));
+
+    protected final Setting<Boolean> time =
+        register(new BooleanSetting("Time", false));
+    protected final Setting<String> timeFormat =
+        register(new StringSetting("TimeFormat", "hh:mm:ss"));
+
+    protected final Setting<Integer> textOffset =
+            register(new NumberSetting<>("Offset", 2, 0, 10))
+                .setComplexity(Complexity.Expert);
 
     protected final List<Map.Entry<String, Module>> modules = new ArrayList<>();
 
     protected final Map<Module, ArrayEntry> arrayEntries = new HashMap<>();
     protected final Map<Module, ArrayEntry> removeEntries = new HashMap<>();
 
+    protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm:ss");
     protected ScaledResolution resolution = new ScaledResolution(mc);
     protected int width;
     protected int height;
@@ -120,6 +135,16 @@ public class HUD extends Module {
         potionColorMap.put(MobEffects.LEVITATION, new Color(206, 255, 255));
         potionColorMap.put(MobEffects.LUCK, new Color(51, 153, 0));
         potionColorMap.put(MobEffects.UNLUCK, new Color(192, 164, 77));
+        timeFormat.addObserver(e -> {
+            if (!e.isCancelled()) {
+                try {
+                    formatter = DateTimeFormatter.ofPattern(e.getValue());
+                } catch (IllegalArgumentException iae) {
+                    ChatUtil.sendMessageScheduled(TextColor.RED + "Invalid DateTimeFormat: " + TextColor.WHITE + e.getValue());
+                    formatter = DateTimeFormatter.ofPattern("hh:mm:ss");
+                }
+            }
+        });
     }
 
     protected void renderLogo() {
@@ -130,6 +155,13 @@ public class HUD extends Module {
 
     protected void renderModules() {
         int offset = 0;
+        EntityPlayerSP player;
+        if (serverBrand.getValue() && (player = mc.player) != null) {
+            String serverBrand = "ServerBrand " + TextColor.GRAY + player.getServerBrand();
+            renderText(serverBrand, width - 2 - RENDERER.getStringWidth(serverBrand), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
+            offset += RENDERER.getStringHeightI() + textOffset.getValue();
+        }
+
         if (potions.getValue() == Potions.Text) {
             final ArrayList<Potion> sorted = new ArrayList<>();
             for (final Potion potion : Potion.REGISTRY) {
@@ -147,15 +179,17 @@ public class HUD extends Module {
                     GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
                     final int x = width - 2 - RENDERER.getStringWidth(label);
                     renderPotionText(label, x, height - 2 - RENDERER.getStringHeightI() - offset - animationY, effect.getPotion());
-                    offset += RENDERER.getStringHeightI() + 3;
+                    offset += RENDERER.getStringHeightI() + textOffset.getValue();
                 }
             }
         }
+
         if (speed.getValue()) {
             String text = "Speed " + TextColor.GRAY + MathUtil.round(Managers.SPEED.getSpeed(), 2) + " km/h";
             renderText(text, width - 2 - RENDERER.getStringWidth(text), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
-            offset += RENDERER.getStringHeightI() + 3;
+            offset += RENDERER.getStringHeightI() + textOffset.getValue();
         }
+
         if (tps.getValue()) {
             String tps = "TPS " + TextColor.GRAY + MathUtil.round(Managers.TPS.getTps(), 2);
             if (currentTps.getValue())
@@ -164,13 +198,29 @@ public class HUD extends Module {
             }
 
             renderText(tps, width - 2 - RENDERER.getStringWidth(tps), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
-            offset += RENDERER.getStringHeightI() + 3;
+            offset += RENDERER.getStringHeightI() + textOffset.getValue();
         }
+
+        if (time.getValue()) {
+            LocalDateTime time = LocalDateTime.now();
+            String text;
+            try {
+                text = "Time " + TextColor.GRAY + formatter.format(time);
+            } catch (DateTimeException e) {
+                ModuleUtil.sendMessageWithAquaModule(this, TextColor.RED + "Can not render time: " + e.getMessage(), "time");
+                text = "Time " + TextColor.GRAY + TextColor.RED + "Invalid";
+            }
+
+            renderText(text, width - 2 - RENDERER.getStringWidth(text), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
+            offset += RENDERER.getStringHeightI() + textOffset.getValue();
+        }
+
         if (fps.getValue()) {
             String fps = "FPS " + TextColor.GRAY + Minecraft.getDebugFPS();
             renderText(fps, width - 2 - RENDERER.getStringWidth(fps), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
-            offset += RENDERER.getStringHeightI() + 3;
+            offset += RENDERER.getStringHeightI() + textOffset.getValue();
         }
+
         if (ping.getValue()) {
             String ping = "Ping " + TextColor.GRAY + ServerUtil.getPing();
             renderText(ping, width - 2 - RENDERER.getStringWidth(ping), height - 2 - RENDERER.getStringHeightI() - offset - animationY);
@@ -196,6 +246,7 @@ public class HUD extends Module {
             boolean move = potions.getValue() == Potions.Move && !mc.player.getActivePotionEffects().isEmpty();
             int j = move ? 2 : 0;
             int o = move ? 5 : 2;
+            int moduleOffset = Managers.TEXT.getStringHeightI() + textOffset.getValue();
             if (animations.getValue()) {
                 for (Map.Entry<String, Module> module : modules) {
                     if (isArrayMember(module.getValue()))
@@ -217,14 +268,14 @@ public class HUD extends Module {
                             LinkedHashMap::new));
                 }
                 for (ArrayEntry arrayEntry : arrayEntriesSorted.values()) {
-                    arrayEntry.drawArrayEntry(width - 2, o + j * 10);
+                    arrayEntry.drawArrayEntry(width - 2, o + j * moduleOffset);
                     j++;
                 }
                 getRemoveEntries().forEach((key, value) -> getArrayEntries().remove(key));
                 getRemoveEntries().clear();
             } else {
                 for (Map.Entry<String, Module> module : modules) {
-                    renderText(module.getKey(), width - 2 - RENDERER.getStringWidth(module.getKey()), o + j * 10);
+                    renderText(module.getKey(), width - 2 - RENDERER.getStringWidth(module.getKey()), o + j * moduleOffset);
                     j++;
                 }
             }
