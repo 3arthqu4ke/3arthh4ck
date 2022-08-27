@@ -280,6 +280,7 @@ public abstract class BlockPlacingModule extends DisablingModule
                             ? mc.player.inventory.currentItem
                             : this.lastSlot;
 
+            // TODO: dont switch if we dont have to?
             cooldownBypass.getValue().switchTo(slot);
 
             if (!sneaking)

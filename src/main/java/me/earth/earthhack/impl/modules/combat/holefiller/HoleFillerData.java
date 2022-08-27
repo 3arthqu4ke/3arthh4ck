@@ -28,6 +28,9 @@ final class HoleFillerData extends BlockPlacingData<HoleFiller>
                 "Takes Safety into account when using MaxSelf.");
         register(module.waitForHoleLeave,
                 "Waits until the closest target leaves its hole.");
+        register(module.offhand, "Uses the offhand for obsidian.");
+        register(module.requireOffhand, "When offhand is on and you are not" +
+            " holding obsidian the module will not do anything.");
     }
 
     @Override
