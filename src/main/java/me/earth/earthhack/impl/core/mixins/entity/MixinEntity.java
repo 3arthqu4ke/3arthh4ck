@@ -134,8 +134,6 @@ public abstract class MixinEntity implements IEntity, Globals
     @Shadow
     protected abstract boolean getFlag(int flag);
     @Shadow
-    public abstract boolean hasNoGravity();
-    @Shadow
     public abstract boolean equals(Object p_equals_1_);
     @Shadow
     protected abstract void setRotation(float yaw, float pitch);
