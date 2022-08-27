@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 /**
  * Cache/Proxy for a {@link Module}.
- *
+ * <p>
  * The main idea behind this Cache is to call
  * {@link Register#getByClass(Class)} the least
  * amount of times possible.
@@ -147,7 +147,7 @@ public class ModuleCache<T extends Module> extends Cache<T>
     /**
      * @return {@link Module#getData()}, if present.
      */
-    public ModuleData getData()
+    public ModuleData<?> getData()
     {
         if (isPresent())
         {
@@ -162,7 +162,7 @@ public class ModuleCache<T extends Module> extends Cache<T>
      *
      * @return <tt>true</tt>, if present.
      */
-    public boolean setData(ModuleData data)
+    public boolean setData(ModuleData<?> data)
     {
         if (isPresent())
         {

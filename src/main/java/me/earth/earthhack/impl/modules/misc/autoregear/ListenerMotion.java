@@ -40,6 +40,7 @@ final class ListenerMotion
         {
 
         }
+
         if (module.steal.getValue()
                 && mc.currentScreen == null
                 && !module.shouldRegear)

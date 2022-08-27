@@ -7,7 +7,7 @@ import me.earth.earthhack.impl.util.thread.Locks;
 
 final class ListenerUpdate extends ModuleListener<AutoTool, UpdateEvent>
 {
-    protected ListenerUpdate(AutoTool module)
+    public ListenerUpdate(AutoTool module)
     {
         super(module, UpdateEvent.class);
     }

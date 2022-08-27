@@ -23,7 +23,6 @@ final class ListenerMove extends ModuleListener<BowSpam, MoveEvent> {
         }
     }
 
-
     private ItemStack getStack() {
         ItemStack mainHand = mc.player.getHeldItemMainhand();
 

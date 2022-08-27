@@ -4,7 +4,7 @@ import me.earth.earthhack.api.module.data.DefaultData;
 
 final class MediaData extends DefaultData<Media>
 {
-    protected MediaData(Media module)
+    public MediaData(Media module)
     {
         super(module);
         register("Replacement", "The name you want to appear with.");

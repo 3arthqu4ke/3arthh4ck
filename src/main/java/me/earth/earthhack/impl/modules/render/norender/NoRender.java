@@ -148,9 +148,7 @@ public class NoRender extends Module
         if (slot == EntityEquipmentSlot.HEAD && helmet.getValue()) return false;
         if (slot == EntityEquipmentSlot.CHEST && chestplate.getValue()) return false;
         if (slot == EntityEquipmentSlot.LEGS && leggings.getValue()) return false;
-        if (slot == EntityEquipmentSlot.FEET && boots.getValue()) return false;
-        return true;
+        return slot != EntityEquipmentSlot.FEET || !boots.getValue();
     }
-
 
 }

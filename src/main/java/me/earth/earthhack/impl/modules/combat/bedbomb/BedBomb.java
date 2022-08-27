@@ -181,7 +181,7 @@ public class BedBomb extends Module
     }
 
     public static void rightClickBlock(BlockPos pos, Vec3d vec, EnumHand hand, EnumFacing direction, boolean packet) {
-        if(packet) {
+        if (packet) {
             float f = (float)(vec.x - (double)pos.getX());
             float f1 = (float)(vec.y - (double)pos.getY());
             float f2 = (float)(vec.z - (double)pos.getZ());
@@ -198,7 +198,7 @@ public class BedBomb extends Module
             return;
         }
 
-        if(event.getStage() == Stage.PRE)
+        if (event.getStage() == Stage.PRE)
         {
             doBedBomb();
 
@@ -413,7 +413,7 @@ public class BedBomb extends Module
     }
 
     private void breakBeds() {
-        if(explode.getValue() && breakTimer.passed(breakDelay.getValue())) {
+        if (explode.getValue() && breakTimer.passed(breakDelay.getValue())) {
             if (breakMode.getValue() == BreakLogic.CALC) {
                 if (maxPos != null) {
                     //mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.STOP_SNEAKING));
@@ -421,13 +421,13 @@ public class BedBomb extends Module
                     Vec3d hitVec = new Vec3d(maxPos).add(0.5, 0.5, 0.5);
                     float[] rotations = getLegitRotations(hitVec);
                     yaw.set(rotations[0]);
-                    if(rotate.getValue()) {
+                    if (rotate.getValue()) {
                         shouldRotate.set(true);
                         pitch.set(rotations[1]);
                     }
                     RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(maxPos.getX() + .5, maxPos.getY() - .5d, maxPos.getZ() + .5));
                     EnumFacing facing = (result == null || result.sideHit == null) ? EnumFacing.UP : result.sideHit;
-                    //if(mc.player.isSneaking()) {
+                    //if (mc.player.isSneaking()) {
                     rightClickBlock(maxPos, hitVec, EnumHand.MAIN_HAND, facing, true);
                     //mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
                     //}
@@ -442,12 +442,12 @@ public class BedBomb extends Module
                     //BlockUtil.rightClickBlockLegit(maxPos, range.getValue(), rotate.getValue() && !place.getValue(), EnumHand.MAIN_HAND, yaw, pitch, shouldRotate, true);
                     float[] rotations = getLegitRotations(hitVec);
                     yaw.set(rotations[0]);
-                    if(rotate.getValue()) {
+                    if (rotate.getValue()) {
                         shouldRotate.set(true);
                         pitch.set(rotations[1]);
                     }
                     RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(entityBed.getPos().getX() + .5, entityBed.getPos().getY() - .5d, entityBed.getPos().getZ() + .5));
-                    //if(mc.player.isSneaking()) {
+                    //if (mc.player.isSneaking()) {
                     EnumFacing facing = (result == null || result.sideHit == null) ? EnumFacing.UP : result.sideHit;
                     rightClickBlock(entityBed.getPos(), hitVec, EnumHand.MAIN_HAND, facing, true);
                     //mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
@@ -466,7 +466,7 @@ public class BedBomb extends Module
         maxPos = null;
         float maxDamage = 0.5f;
 
-        if(removeTiles.getValue()) {
+        if (removeTiles.getValue()) {
             List<BedData> removedBlocks = new ArrayList<>();
             for (TileEntity tile : mc.world.loadedTileEntityList) {
                 if (tile instanceof TileEntityBed) {
@@ -538,10 +538,10 @@ public class BedBomb extends Module
     }
 
     private void placeBeds() {
-        if(place.getValue() && placeTimer.passed(placeDelay.getValue()) && maxPos == null) {
+        if (place.getValue() && placeTimer.passed(placeDelay.getValue()) && maxPos == null) {
             bedSlot = findBedSlot();
-            if(bedSlot == -1) {
-                if(mc.player.getHeldItemOffhand().getItem() == Items.BED) {
+            if (bedSlot == -1) {
+                if (mc.player.getHeldItemOffhand().getItem() == Items.BED) {
                     bedSlot = -2;
                 } else {
                     if (craft.getValue() && !shouldCraft && EntityUtil.getClosestEnemy(mc.world.playerEntities) != null) {
@@ -552,7 +552,7 @@ public class BedBomb extends Module
             }
 
             target = EntityUtil.getClosestEnemy(mc.world.playerEntities);
-            if(target != null && target.getDistanceSq(mc.player) < 49) {
+            if (target != null && target.getDistanceSq(mc.player) < 49) {
                 BlockPos targetPos = new BlockPos(target.getPositionVector());
                 placeBed(targetPos, true);
                 if (craft.getValue()) {
@@ -563,12 +563,12 @@ public class BedBomb extends Module
     }
 
     private void placeBed(BlockPos pos, boolean firstCheck) {
-        if(mc.world.getBlockState(pos).getBlock() == Blocks.BED) {
+        if (mc.world.getBlockState(pos).getBlock() == Blocks.BED) {
             return;
         }
 
         float damage = DamageUtil.calculate(pos, mc.player);
-        if(damage > EntityUtil.getHealth(mc.player) + 0.5) {
+        if (damage > EntityUtil.getHealth(mc.player) + 0.5) {
             if (firstCheck && oneDot15.getValue()) {
                 placeBed(pos.up(), false);
             }
@@ -646,7 +646,7 @@ public class BedBomb extends Module
 
     @Override
     public String getDisplayInfo() {
-        if(target != null) {
+        if (target != null) {
             return target.getName();
         }
         return null;
@@ -671,7 +671,7 @@ public class BedBomb extends Module
         return circleblocks;
     }
 
-    public static List<BlockPos> getBlockSphere(float breakRange, Class clazz) {
+    public static List<BlockPos> getBlockSphere(float breakRange, Class<?> clazz) {
         NonNullList<BlockPos> positions = NonNullList.create();
         positions.addAll(getSphere(mc.player.getPosition(), breakRange, (int)breakRange, false, true, 0).stream().filter(pos -> clazz.isInstance(mc.world.getBlockState(pos).getBlock())).collect(Collectors.toList()));
         return positions;
@@ -687,15 +687,15 @@ public class BedBomb extends Module
 
     public static List<EnumFacing> getPossibleSides(BlockPos pos) {
         List<EnumFacing> facings = new ArrayList<>();
-        if(mc.world == null || pos == null) {
+        if (mc.world == null || pos == null) {
             return facings;
         }
 
         for (EnumFacing side : EnumFacing.values()) {
             BlockPos neighbour = pos.offset(side);
             IBlockState blockState = mc.world.getBlockState(neighbour);
-            if(blockState != null && blockState.getBlock().canCollideCheck(blockState, false)) {
-                if(!blockState.getMaterial().isReplaceable()) {
+            if (blockState != null && blockState.getBlock().canCollideCheck(blockState, false)) {
+                if (!blockState.getMaterial().isReplaceable()) {
                     facings.add(side);
                 }
             }
@@ -718,15 +718,15 @@ public class BedBomb extends Module
 
     public static int isPositionPlaceable(BlockPos pos, boolean rayTrace, boolean entityCheck) {
         Block block = mc.world.getBlockState(pos).getBlock();
-        if(!(block instanceof BlockAir) && !(block instanceof BlockLiquid) && !(block instanceof BlockTallGrass) && !(block instanceof BlockFire) && !(block instanceof BlockDeadBush) && !(block instanceof BlockSnow)) {
+        if (!(block instanceof BlockAir) && !(block instanceof BlockLiquid) && !(block instanceof BlockTallGrass) && !(block instanceof BlockFire) && !(block instanceof BlockDeadBush) && !(block instanceof BlockSnow)) {
             return 0;
         }
 
-        if(!rayTracePlaceCheck(pos, rayTrace, 0.0f)) {
+        if (!rayTracePlaceCheck(pos, rayTrace, 0.0f)) {
             return -1;
         }
 
-        if(entityCheck) {
+        if (entityCheck) {
             for (Entity entity : mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos))) {
                 if (!(entity instanceof EntityItem) && !(entity instanceof EntityXPOrb)) {
                     return 1;
@@ -735,7 +735,7 @@ public class BedBomb extends Module
         }
 
         for(EnumFacing side : getPossibleSides(pos)) {
-            if(canBeClicked(pos.offset(side))) {
+            if (canBeClicked(pos.offset(side))) {
                 return 3;
             }
         }
@@ -763,13 +763,13 @@ public class BedBomb extends Module
         Vec3d hitVec = new Vec3d(neighbour).add(0.5, 0.5, 0.5).add(new Vec3d(opposite.getDirectionVec()).scale(0.5));
         Block neighbourBlock = mc.world.getBlockState(neighbour).getBlock();
 
-        if(!mc.player.isSneaking() && (SpecialBlocks.BAD_BLOCKS.contains(neighbourBlock) || SpecialBlocks.SHULKERS.contains(neighbourBlock))) {
+        if (!mc.player.isSneaking() && (SpecialBlocks.BAD_BLOCKS.contains(neighbourBlock) || SpecialBlocks.SHULKERS.contains(neighbourBlock))) {
             mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
             mc.player.setSneaking(true);
             sneaking = true;
         }
 
-        if(rotate) {
+        if (rotate) {
             faceVector(hitVec, true);
         }
 
@@ -806,7 +806,7 @@ public class BedBomb extends Module
                     mc.player.inventory.currentItem = tableSlot;
                     /*float[] rotations = RotationUtil.getLegitRotations(new Vec3d(target));
                     yaw.set(rotations[0]);
-                    if(rotate.getValue()) {
+                    if (rotate.getValue()) {
                         shouldRotate.set(true);
                         pitch.set(rotations[1]);
                     }*/
@@ -822,7 +822,7 @@ public class BedBomb extends Module
                     }
                     /*float[] rotations = RotationUtil.getLegitRotations(new Vec3d(target));
                     yaw.set(rotations[0]);
-                    if(rotate.getValue()) {
+                    if (rotate.getValue()) {
                         shouldRotate.set(true);
                         pitch.set(rotations[1]);
                     }*/
@@ -842,26 +842,22 @@ public class BedBomb extends Module
                 //BlockUtil.rightClickBlockLegit(maxPos, range.getValue(), rotate.getValue() && !place.getValue(), EnumHand.MAIN_HAND, yaw, pitch, shouldRotate, true);
                 float[] rotations = getLegitRotations(hitVec);
                 yaw.set(rotations[0]);
-                if(rotate.getValue()) {
+                if (rotate.getValue()) {
                     shouldRotate.set(true);
                     pitch.set(rotations[1]);
                 }
                 RayTraceResult result = mc.world.rayTraceBlocks(new Vec3d(mc.player.posX, mc.player.posY + mc.player.getEyeHeight(), mc.player.posZ), new Vec3d(target.getX() + .5, target.getY() - .5d, target.getZ() + .5));
-                //if(mc.player.isSneaking()) {
+                //if (mc.player.isSneaking()) {
                 EnumFacing facing = (result == null || result.sideHit == null) ? EnumFacing.UP : result.sideHit;
                 rightClickBlock(target, hitVec, EnumHand.MAIN_HAND, facing, true);
                 //mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
                 //}
                 breakTimer.reset();
-                if(mc.player.isSneaking()) {
+                if (mc.player.isSneaking()) {
                     mc.player.connection.sendPacket(new CPacketEntityAction(mc.player, CPacketEntityAction.Action.START_SNEAKING));
                 }
             }
-            if (mc.currentScreen instanceof GuiCrafting) {
-                shouldCraft = true;
-            } else {
-                shouldCraft = false;
-            }
+            shouldCraft = mc.currentScreen instanceof GuiCrafting;
             craftStage = 0;
             craftTimer.reset();
             /*if (mc.currentScreen instanceof GuiCrafting) {
@@ -938,7 +934,7 @@ public class BedBomb extends Module
     private int safety(BlockPos pos) {
         int safety = 0;
         for(EnumFacing facing : EnumFacing.values()) {
-            if(!mc.world.getBlockState(pos.offset(facing)).getMaterial().isReplaceable()) {
+            if (!mc.world.getBlockState(pos.offset(facing)).getMaterial().isReplaceable()) {
                 safety++;
             }
         }

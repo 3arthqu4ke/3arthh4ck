@@ -203,8 +203,7 @@ public class Media extends RegisteringModule<String, RemovingString>
                 for (Map.Entry<Setting<String>, Pattern> entry
                         : custom.entrySet())
                 {
-                    if (getSetting(entry.getKey().getName()) != null)
-                    if (getSettings().contains(entry.getKey()))
+                    if (getSetting(entry.getKey().getName()) != null && getSettings().contains(entry.getKey()))
                     {
                         toAdd = entry.getValue()
                                      .matcher(toAdd)

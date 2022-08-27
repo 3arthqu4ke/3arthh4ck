@@ -6,7 +6,7 @@ package me.earth.earthhack.api.plugin;
  * are located in the earthhack/plugins folder. A Plugin should
  * be a jar file. Dependencies like Mixin don't need to be included
  * as they are already included in the 3arthh4ck jar.
- *
+ * <p>
  * TODO: CorePlugin implementing IClassTransformer for ASM if requested?
  * TODO: unload plugins
  */

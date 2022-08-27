@@ -86,7 +86,7 @@ final class ListenerTick extends ModuleListener<AutoEat, TickEvent>
         Locks.acquire(Locks.PLACE_SWITCH_LOCK,
                       () -> InventoryUtil.switchTo(slot));
         // SPacketEntityMetadata
-        // TODO: mode packetos???
+        // TODO: mode packets???
         //  need to rebuild Minecraft eating behaviour for that
         //  start with CPacketPlayerTryUseItem and send it again
         //  when server ends our eating With SPacketDataManagerThing?

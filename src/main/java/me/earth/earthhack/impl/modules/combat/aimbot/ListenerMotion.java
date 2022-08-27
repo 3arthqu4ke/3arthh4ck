@@ -32,21 +32,6 @@ final class ListenerMotion extends ModuleListener<AimBot, MotionUpdateEvent>
             return;
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
 }

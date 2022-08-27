@@ -1,6 +1,5 @@
 package me.earth.earthhack.impl.modules.render.logoutspots;
 
-import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;

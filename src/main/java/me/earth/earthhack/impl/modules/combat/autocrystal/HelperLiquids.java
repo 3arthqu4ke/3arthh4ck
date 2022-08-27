@@ -29,7 +29,6 @@ public class HelperLiquids implements Globals
         this.module = module;
     }
 
-
     public PlaceData calculate(HelperPlace placeHelper,
                                PlaceData placeData,
                                List<EntityPlayer> friends,
@@ -87,12 +86,10 @@ public class HelperLiquids implements Globals
                     }
                 }
 
-                if (found)
+                if (!found)
                 {
-                    continue;
+                    return facing;
                 }
-
-                return facing;
             }
         }
 

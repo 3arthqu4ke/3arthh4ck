@@ -11,7 +11,7 @@ final class ListenerPlayerPackets extends CPacketPlayerListener
 {
     public final NoFall module;
 
-    protected ListenerPlayerPackets(NoFall module)
+    public ListenerPlayerPackets(NoFall module)
     {
         this.module = module;
     }

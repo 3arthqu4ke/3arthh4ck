@@ -1,13 +1,10 @@
 package me.earth.earthhack.impl.modules.render.popchams;
 
-import com.mojang.authlib.GameProfile;
 import me.earth.earthhack.impl.event.events.misc.TotemPopEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.util.minecraft.PlayerUtil;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
-
-import java.util.UUID;
 
 final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
     public ListenerTotemPop(PopChams module) {

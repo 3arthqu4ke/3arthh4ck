@@ -211,7 +211,7 @@ public class IntIntMapImpl implements IntIntMap
 
         for ( int i = 0; i < oldCapacity; i += 2 ) {
             final int oldKey = oldData[ i ];
-            if( oldKey != FREE_KEY )
+            if ( oldKey != FREE_KEY )
                 put( oldKey, oldData[ i + 1 ]);
         }
     }

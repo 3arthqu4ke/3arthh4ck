@@ -16,8 +16,7 @@ final class ListenerUseItem extends
     @Override
     public void invoke(PacketEvent.Post<CPacketPlayerTryUseItem> event)
     {
-        CPacketPlayerTryUseItem p = event.getPacket();
-        if (mc.player.getHeldItem(p.getHand())
+        if (mc.player.getHeldItem(event.getPacket().getHand())
                      .getItem() == Items.EXPERIENCE_BOTTLE)
         {
             module.awaitingExp.incrementAndGet();

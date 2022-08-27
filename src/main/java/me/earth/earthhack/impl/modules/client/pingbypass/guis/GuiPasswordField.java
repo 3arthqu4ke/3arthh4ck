@@ -46,7 +46,7 @@ public class GuiPasswordField extends Gui
     private boolean visible = true;
     private GuiPageButtonList.GuiResponder guiResponder;
     /** Called to check if the text is valid */
-    private Predicate<String> validator = Predicates.<String>alwaysTrue();
+    private Predicate<String> validator = Predicates.alwaysTrue();
 
     public GuiPasswordField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height)
     {

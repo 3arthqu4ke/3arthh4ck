@@ -36,6 +36,7 @@ public class Crosshair extends Module
             register(new NumberSetting<>("Gap-Size", 2.0f, 0.5f, 20.f));
     protected final Setting<Float> width =
             register(new NumberSetting<>("Width", 0.5f, 0.1f, 10.f));
+
     public Crosshair()
     {
         super("Crosshair", Category.Render);

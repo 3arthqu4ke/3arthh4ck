@@ -115,7 +115,7 @@ public enum AnnouncementType
         }
     },
     Miss()
-            {
+    {
         @Override
         public String getDefaultMessage() {
             return "Nice shot <NAME>, try hitting next time!";
