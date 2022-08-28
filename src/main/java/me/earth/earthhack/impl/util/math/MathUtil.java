@@ -220,7 +220,6 @@ public class MathUtil {
         return min + new Random().nextInt(max - min);
     }
 
-
     public static double getRandomInRange(double min, double max) {
         Random random = new Random();
         double range = max - min;
@@ -258,14 +257,13 @@ public class MathUtil {
         int leftMiddleBytes;
         int rightMiddleBytes;
         int rightmostBytes;
-        leftmostBytes = (value & 0x000000FF) >> 0;
+        leftmostBytes = (value & 0x000000FF);
         leftMiddleBytes = (value & 0x0000FF00) >> 8;
         rightMiddleBytes = (value & 0x00FF0000) >> 16;
         rightmostBytes = (value & 0xFF000000) >> 24;
         leftmostBytes <<= 24;
         leftMiddleBytes <<= 16;
         rightMiddleBytes <<= 8;
-        rightmostBytes <<= 0;
         return (leftmostBytes | leftMiddleBytes | rightMiddleBytes | rightmostBytes);
     }
 
@@ -274,7 +272,7 @@ public class MathUtil {
         int leftmostBytes;
         int middleBytes;
         int rightmostBytes;
-        leftmostBytes = (value & 0x0000FF) >> 0;
+        leftmostBytes = (value & 0x0000FF);
         middleBytes = (value & 0x00FF00) >> 8;
         rightmostBytes = (value & 0xFF0000) >> 16;
         leftmostBytes <<= 24;
@@ -284,15 +282,15 @@ public class MathUtil {
     }
 
     public static int toRGBA(int r, int g, int b, int a) {
-        return (r << 16) + (g << 8) + (b << 0) + (a << 24);
+        return (r << 16) + (g << 8) + b + (a << 24);
     }
 
     public static int toRGB(int r, int g, int b) {
-        return (r << 16) + (g << 8) + (b << 0);
+        return (r << 16) + (g << 8) + b;
     }
 
     public static int toRGBAReversed(int r, int g, int b) {
-        return (b << 16) + (g << 8) + (r << 0);
+        return (b << 16) + (g << 8) + r;
     }
 
     public static int[] toRGBAArray(int colorBuffer) {

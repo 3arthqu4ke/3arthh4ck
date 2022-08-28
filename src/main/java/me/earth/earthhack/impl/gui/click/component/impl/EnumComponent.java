@@ -3,18 +3,17 @@ package me.earth.earthhack.impl.gui.click.component.impl;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.util.EnumHelper;
-import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 
-public class EnumComponent<E extends Enum<E>> extends Component {
+public class EnumComponent<E extends Enum<E>> extends SettingComponent<E, EnumSetting<E>> {
     private final EnumSetting<E> enumSetting;
 
     public EnumComponent(EnumSetting<E> enumSetting, float posX, float posY, float offsetX, float offsetY, float width, float height) {
-        super(enumSetting.getName(), posX, posY, offsetX, offsetY, width, height);
+        super(enumSetting.getName(), posX, posY, offsetX, offsetY, width, height, enumSetting);
         this.enumSetting = enumSetting;
     }
-
 
     @Override
     public void moved(float posX, float posY) {
@@ -28,6 +27,7 @@ public class EnumComponent<E extends Enum<E>> extends Component {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         final boolean hovered = RenderUtil.mouseWithinBounds(mouseX, mouseY, getFinishedX() + 5, getFinishedY() + 1, getWidth() - 10, getHeight() - 2);

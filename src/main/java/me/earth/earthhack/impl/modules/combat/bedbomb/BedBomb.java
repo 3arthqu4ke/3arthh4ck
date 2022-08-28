@@ -458,8 +458,8 @@ public class BedBomb extends Module
         }
     }
 
-    public static boolean canTakeDamage(boolean suicide) {
-        return !mc.player.capabilities.isCreativeMode && !suicide;
+    public static boolean cantTakeDamage(boolean suicide) {
+        return mc.player.capabilities.isCreativeMode || suicide;
     }
 
     private void mapBeds() {
@@ -486,11 +486,11 @@ public class BedBomb extends Module
                     BlockPos pos = data.getPos();
                     if (mc.player.getDistanceSq(pos) <= MathUtil.square(breakRange.getValue())) {
                         float selfDamage = DamageUtil.calculate(pos, mc.player);
-                        if (selfDamage + 1.0 < EntityUtil.getHealth(mc.player) || !canTakeDamage(suicide.getValue())) {
+                        if (selfDamage + 1.0 < EntityUtil.getHealth(mc.player) || cantTakeDamage(suicide.getValue())) {
                             for (EntityPlayer player : mc.world.playerEntities) {
                                 if (player.getDistanceSq(pos) < MathUtil.square((range.getValue())) && EntityUtil.isValid(player, (range.getValue() + breakRange.getValue()))) {
                                     float damage = DamageUtil.calculate(pos, player);
-                                    if (damage > selfDamage || (damage > minDamage.getValue() && !canTakeDamage(suicide.getValue())) || damage > EntityUtil.getHealth(player)) {
+                                    if (damage > selfDamage || (damage > minDamage.getValue() && cantTakeDamage(suicide.getValue())) || damage > EntityUtil.getHealth(player)) {
                                         if (damage > maxDamage) {
                                             maxDamage = damage;
                                             maxPos = pos;
@@ -517,11 +517,11 @@ public class BedBomb extends Module
                         if (mc.player.getDistanceSq(pos) <= MathUtil.square(breakRange.getValue())) {
                             float selfDamage = DamageUtil.calculate(pos, mc.player);
                             //added 1.0 for some more safety
-                            if (selfDamage + 1.0 < EntityUtil.getHealth(mc.player) || !canTakeDamage(suicide.getValue())) {
+                            if (selfDamage + 1.0 < EntityUtil.getHealth(mc.player) || cantTakeDamage(suicide.getValue())) {
                                 for (EntityPlayer player : mc.world.playerEntities) {
                                     if (player.getDistanceSq(pos) < MathUtil.square((range.getValue())) && EntityUtil.isValid(player, (range.getValue() + breakRange.getValue()))) {
                                         float damage = DamageUtil.calculate(pos, player);
-                                        if (damage > selfDamage || (damage > minDamage.getValue() && !canTakeDamage(suicide.getValue())) || damage > EntityUtil.getHealth(player)) {
+                                        if (damage > selfDamage || (damage > minDamage.getValue() && cantTakeDamage(suicide.getValue())) || damage > EntityUtil.getHealth(player)) {
                                             if (damage > maxDamage) {
                                                 maxDamage = damage;
                                                 maxPos = pos;

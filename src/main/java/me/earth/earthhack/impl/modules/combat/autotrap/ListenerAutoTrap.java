@@ -8,7 +8,7 @@ import me.earth.earthhack.impl.util.helpers.blocks.util.TargetResult;
 
 final class ListenerAutoTrap extends ObbyListener<AutoTrap>
 {
-    protected static final ModuleCache<Freecam> FREECAM =
+    private static final ModuleCache<Freecam> FREECAM =
             Caches.getModule(Freecam.class);
 
     public ListenerAutoTrap(AutoTrap module)

@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.managers.config.util;
 
 import com.google.gson.annotations.SerializedName;
 
-@SuppressWarnings("FieldMayBeFinal")
 public class BindWrapper
 {
     @SerializedName("name")

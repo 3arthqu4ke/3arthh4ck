@@ -741,7 +741,6 @@ public class RenderUtil implements Globals
     }
 
     // TODO: Alpha is disabled
-    @SuppressWarnings("DuplicatedCode")
     public static void drawNametag(String text, double x, double y, double z, double scale, int color, boolean rectangle)
     {
         //double dist = MathHelper.sqrt(x * x + y * y + z * z);

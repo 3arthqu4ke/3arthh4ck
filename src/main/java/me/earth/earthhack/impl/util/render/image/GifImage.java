@@ -67,27 +67,26 @@ public class GifImage implements Globals, Nameable
 
     public BufferedImage getBufferedImage()
     {
-        if (frames.size() == 0) return null;
-        long now = getTime();
-        long delta = now - lastUpdate;
-        if (firstUpdate) {
-            delta = 0;
-            firstUpdate = false;
+        if (updateOffset()) {
+            return null;
         }
-        lastUpdate = now;
-        timeLeft -= delta;
-        if (timeLeft <= 0)
-        {
-            offset++;
-            timeLeft = delay;
-        }
-        if (offset >= frames.size()) offset = 0;
         return frames.get(offset);
     }
 
     public EfficientTexture getDynamicTexture()
     {
-        if (frames.size() == 0) return null;
+        if (updateOffset()) {
+            return null;
+        }
+        return textures.get(offset);
+    }
+
+    /**
+     * @return true if {@code frames.size() == 0}
+     */
+    private boolean updateOffset()
+    {
+        if (frames.size() == 0) return true;
         long now = getTime();
         long delta = now - lastUpdate;
         if (firstUpdate) {
@@ -102,7 +101,7 @@ public class GifImage implements Globals, Nameable
             timeLeft = delay;
         }
         if (offset >= frames.size()) offset = 0;
-        return textures.get(offset);
+        return false;
     }
 
     private long getTime() {

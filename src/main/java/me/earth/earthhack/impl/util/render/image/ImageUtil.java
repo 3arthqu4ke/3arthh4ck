@@ -113,11 +113,11 @@ public class ImageUtil implements Globals
     public static String getImageFormat(BufferedImage image) throws IOException {
         ImageInputStream stream = ImageIO.createImageInputStream(image);
 
-        Iterator iter = ImageIO.getImageReaders(stream);
+        Iterator<ImageReader> iter = ImageIO.getImageReaders(stream);
         if (!iter.hasNext()) {
             return null;
         }
-        ImageReader reader = (ImageReader) iter.next();
+        ImageReader reader = iter.next();
         ImageReadParam param = reader.getDefaultReadParam();
         reader.setInput(stream, true, true);
         BufferedImage bi;

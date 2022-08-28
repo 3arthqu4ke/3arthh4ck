@@ -25,7 +25,7 @@ public class ListSetting<M extends Nameable> extends Setting<M> {
         String name = element.getAsString();
         for (M nameable : values) {
             if (nameable.getName().equalsIgnoreCase(name))
-                setValue((M) nameable);
+                setValue(nameable);
         }
     }
 

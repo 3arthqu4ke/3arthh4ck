@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.gui.click.component;
 
 import me.earth.earthhack.api.setting.Setting;
 
-// TODO: implement!!!
 public class SettingComponent<V, T extends Setting<V>> extends Component {
     protected final T setting;
 

@@ -21,7 +21,7 @@ public abstract class AbstractEntityArgument<T extends Entity>
     }
 
     @Override
-    @SuppressWarnings({"DuplicatedCode", "unchecked", "ConstantConditions"})
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     public T fromString(String argument) throws ArgParseException
     {
         if (mc.world == null)

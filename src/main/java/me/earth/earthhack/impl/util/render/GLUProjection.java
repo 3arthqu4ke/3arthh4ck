@@ -18,7 +18,7 @@ public final class GLUProjection {
     private IntBuffer viewport;
     private FloatBuffer modelview;
     private FloatBuffer projection;
-    private FloatBuffer coords = BufferUtils.createFloatBuffer(3);
+    private final FloatBuffer coords = BufferUtils.createFloatBuffer(3);
     private Vector3D frustumPos;
     private Vector3D[] frustum;
     private Vector3D[] invFrustum;
@@ -152,7 +152,7 @@ public final class GLUProjection {
         }
 
         public Vector3D normalized() {
-            double len = (double) Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+            double len = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
             return new Vector3D(this.x / len, this.y / len, this.z / len);
         }
 
@@ -205,7 +205,7 @@ public final class GLUProjection {
         }
 
         public Vector3D snormalize() {
-            double len = (double) Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+            double len = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
             this.x /= len;
             this.y /= len;
             this.z /= len;
@@ -240,7 +240,7 @@ public final class GLUProjection {
     }
 
     public static class Projection {
-        public static enum Type {
+        public enum Type {
             INSIDE, OUTSIDE, INVERTED, FAIL
         }
 
@@ -271,7 +271,7 @@ public final class GLUProjection {
         }
     }
 
-    public static enum ClampMode {ORTHOGONAL, DIRECT, NONE}
+    public enum ClampMode {ORTHOGONAL, DIRECT, NONE}
 
     private GLUProjection() {
     }
@@ -366,14 +366,14 @@ public final class GLUProjection {
     public Projection project(double x, double y, double z, ClampMode clampModeOutside, boolean extrudeInverted) {
         if (this.viewport != null && this.modelview != null && this.projection != null) {
             Vector3D posVec = new Vector3D(x, y, z);
-            boolean frustum[] = this.doFrustumCheck(this.frustum, this.frustumPos, x, y, z);
+            boolean[] frustum = this.doFrustumCheck(this.frustum, this.frustumPos, x, y, z);
             boolean outsideFrustum = frustum[0] || frustum[1] || frustum[2] || frustum[3];
             //Check if point is inside frustum
             if (outsideFrustum) {
                 //Check if point is on opposite side of the near clip plane
                 boolean opposite = posVec.sub(this.frustumPos).dot(this.viewVec) <= 0.0D;
                 //Get inverted frustum check
-                boolean invFrustum[] = this.doFrustumCheck(this.invFrustum, this.frustumPos, x, y, z);
+                boolean[] invFrustum = this.doFrustumCheck(this.invFrustum, this.frustumPos, x, y, z);
                 boolean outsideInvertedFrustum = invFrustum[0] || invFrustum[1] || invFrustum[2] || invFrustum[3];
                 if ((extrudeInverted && !outsideInvertedFrustum) || (outsideInvertedFrustum && clampModeOutside != ClampMode.NONE)) {
                     if ((extrudeInverted && !outsideInvertedFrustum) ||
@@ -386,10 +386,10 @@ public final class GLUProjection {
                             if (opposite) {
                                 //Invert coordinates
                                 vecX = this.displayWidth * this.widthScale - (double) this.coords.get(0) * this.widthScale - this.displayWidth * this.widthScale / 2.0F;
-                                vecY = this.displayHeight * this.heightScale - ((double) displayHeight - (double) this.coords.get(1)) * (double) this.heightScale - this.displayHeight * this.heightScale / 2.0F;
+                                vecY = this.displayHeight * this.heightScale - (displayHeight - (double) this.coords.get(1)) * this.heightScale - this.displayHeight * this.heightScale / 2.0F;
                             } else {
                                 vecX = (double) this.coords.get(0) * this.widthScale - this.displayWidth * this.widthScale / 2.0F;
-                                vecY = ((double) this.displayHeight - (double) this.coords.get(1)) * (double) this.heightScale - this.displayHeight * this.heightScale / 2.0F;
+                                vecY = (this.displayHeight - (double) this.coords.get(1)) * this.heightScale - this.displayHeight * this.heightScale / 2.0F;
                             }
                         } else {
                             return new Projection(0, 0, Projection.Type.FAIL);
@@ -426,7 +426,7 @@ public final class GLUProjection {
                         if (GLU.gluProject((float) x, (float) y, (float) z, this.modelview, this.projection, this.viewport, this.coords)) {
                             //Get projected coordinates
                             double guiX = (double) this.coords.get(0) * this.widthScale;
-                            double guiY = ((double) this.displayHeight - (double) this.coords.get(1)) * (double) this.heightScale;
+                            double guiY = (this.displayHeight - (double) this.coords.get(1)) * this.heightScale;
                             if (opposite) {
                                 //Invert coordinates
                                 guiX = this.displayWidth * this.widthScale - guiX;
@@ -452,7 +452,7 @@ public final class GLUProjection {
                     if (GLU.gluProject((float) x, (float) y, (float) z, this.modelview, this.projection, this.viewport, this.coords)) {
                         //Get projected coordinates
                         double guiX = (double) this.coords.get(0) * this.widthScale;
-                        double guiY = ((double) this.displayHeight - (double) this.coords.get(1)) * (double) this.heightScale;
+                        double guiY = (this.displayHeight - (double) this.coords.get(1)) * this.heightScale;
                         if (opposite) {
                             //Invert coordinates
                             guiX = this.displayWidth * this.widthScale - guiX;
@@ -468,7 +468,7 @@ public final class GLUProjection {
                 if (GLU.gluProject((float) x, (float) y, (float) z, this.modelview, this.projection, this.viewport, this.coords)) {
                     //Get projected coordinates
                     double guiX = (double) this.coords.get(0) * this.widthScale;
-                    double guiY = ((double) this.displayHeight - (double) this.coords.get(1)) * (double) this.heightScale;
+                    double guiY = (this.displayHeight - (double) this.coords.get(1)) * this.heightScale;
                     return new Projection(guiX, guiY, Projection.Type.INSIDE);
                 } else {
                     return new Projection(0, 0, Projection.Type.FAIL);
@@ -608,7 +608,7 @@ public final class GLUProjection {
         double s = Math.sin(-rotYaw * 0.017453292F - Math.PI);
         double nc = -Math.cos(-rotPitch * 0.017453292F);
         double ns = Math.sin(-rotPitch * 0.017453292F);
-        return new Vector3D((double) (s * nc), (double) ns, (double) (c * nc));
+        return new Vector3D(s * nc, ns, c * nc);
     }
 
 }

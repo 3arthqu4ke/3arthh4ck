@@ -3,18 +3,18 @@ package me.earth.earthhack.impl.gui.click.component.impl;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import me.earth.earthhack.api.setting.settings.BindSetting;
 import me.earth.earthhack.api.util.bind.Bind;
-import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.pingbypass.input.Keyboard;
 
-public class KeybindComponent extends Component {
+public class KeybindComponent extends SettingComponent<Bind, BindSetting> {
     private final BindSetting bindSetting;
     private boolean binding;
 
     public KeybindComponent(BindSetting bindSetting, float posX, float posY, float offsetX, float offsetY, float width, float height) {
-        super(bindSetting.getName(), posX, posY, offsetX, offsetY, width, height);
+        super(bindSetting.getName(), posX, posY, offsetX, offsetY, width, height, bindSetting);
         this.bindSetting = bindSetting;
     }
 

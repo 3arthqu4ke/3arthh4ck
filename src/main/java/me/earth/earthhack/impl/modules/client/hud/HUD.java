@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 // TODO: REWRITE?
 public class HUD extends Module {
     public static final TextRenderer RENDERER = Managers.TEXT;

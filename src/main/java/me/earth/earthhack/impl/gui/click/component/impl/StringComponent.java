@@ -1,7 +1,7 @@
 package me.earth.earthhack.impl.gui.click.component.impl;
 
 import me.earth.earthhack.api.setting.settings.StringSetting;
-import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
@@ -12,7 +12,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 
-public class StringComponent extends Component {
+public class StringComponent extends SettingComponent<String, StringSetting> {
     private final StringSetting stringSetting;
     public boolean isListening;
     private CurrentString currentString = new CurrentString("");
@@ -20,7 +20,7 @@ public class StringComponent extends Component {
     private final StopWatch idleTimer = new StopWatch();
 
     public StringComponent(StringSetting stringSetting, float posX, float posY, float offsetX, float offsetY, float width, float height) {
-        super(stringSetting.getName(), posX, posY, offsetX, offsetY, width, height);
+        super(stringSetting.getName(), posX, posY, offsetX, offsetY, width, height, stringSetting);
         this.stringSetting = stringSetting;
     }
 

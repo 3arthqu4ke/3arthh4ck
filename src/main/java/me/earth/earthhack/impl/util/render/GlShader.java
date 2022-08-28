@@ -122,7 +122,7 @@ public class GlShader implements Nameable {
         glUseProgram(0);
     }
 
-    public void finalize() {
+    protected void finalize() {
         unbind();
         glDeleteProgram(programId);
     }

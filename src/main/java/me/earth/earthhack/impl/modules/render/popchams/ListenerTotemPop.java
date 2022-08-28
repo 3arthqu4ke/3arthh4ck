@@ -12,7 +12,6 @@ final class ListenerTotemPop extends ModuleListener<PopChams, TotemPopEvent> {
     }
 
     @Override
-    @SuppressWarnings("DuplicatedCode")
     public void invoke(TotemPopEvent event) {
         if (!module.isValidEntity(event.getEntity()))
             return;

@@ -21,7 +21,7 @@ public class GifConverter
 {
     public static GifImage readGifImage(InputStream stream, String name) throws IOException
     {
-        ArrayList<ImageFrame> frames = new ArrayList<ImageFrame>(2);
+        ArrayList<ImageFrame> frames = new ArrayList<>(2);
 
         ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
         reader.setInput(ImageIO.createImageInputStream(stream));
@@ -42,7 +42,7 @@ public class GifConverter
             NodeList globalColorTable = globalRoot.getElementsByTagName("GlobalColorTable");
             NodeList globalScreeDescriptor = globalRoot.getElementsByTagName("LogicalScreenDescriptor");
 
-            if (globalScreeDescriptor != null && globalScreeDescriptor.getLength() > 0){
+            if (globalScreeDescriptor.getLength() > 0){
                 IIOMetadataNode screenDescriptor = (IIOMetadataNode) globalScreeDescriptor.item(0);
 
                 if (screenDescriptor != null){
@@ -51,7 +51,7 @@ public class GifConverter
                 }
             }
 
-            if (globalColorTable != null && globalColorTable.getLength() > 0){
+            if (globalColorTable.getLength() > 0){
                 IIOMetadataNode colorTable = (IIOMetadataNode) globalColorTable.item(0);
 
                 if (colorTable != null) {
@@ -94,7 +94,7 @@ public class GifConverter
             IIOMetadataNode gce = (IIOMetadataNode) root.getElementsByTagName("GraphicControlExtension").item(0);
             NodeList children = root.getChildNodes();
 
-            int delay = Integer.valueOf(gce.getAttribute("delayTime"));
+            int delay = Integer.parseInt(gce.getAttribute("delayTime"));
 
             String disposal = gce.getAttribute("disposalMethod");
 
@@ -116,8 +116,8 @@ public class GifConverter
                     if (nodeItem.getNodeName().equals("ImageDescriptor")){
                         NamedNodeMap map = nodeItem.getAttributes();
 
-                        x = Integer.valueOf(map.getNamedItem("imageLeftPosition").getNodeValue());
-                        y = Integer.valueOf(map.getNamedItem("imageTopPosition").getNodeValue());
+                        x = Integer.parseInt(map.getNamedItem("imageLeftPosition").getNodeValue());
+                        y = Integer.parseInt(map.getNamedItem("imageTopPosition").getNodeValue());
                     }
                 }
 
@@ -136,7 +136,7 @@ public class GifConverter
                         WritableRaster raster = from.copyData(null);
                         master = new BufferedImage(model, raster, alpha, null);
                     }
-                }else if (disposal.equals("restoreToBackgroundColor") && backgroundColor != null){
+                } else if (disposal.equals("restoreToBackgroundColor") && backgroundColor != null){
                     if (!hasBackround || frameIndex > 1){
                         master.createGraphics().fillRect(lastx, lasty, frames.get(frameIndex - 1).getWidth(), frames.get(frameIndex - 1).getHeight());
                     }
@@ -163,10 +163,10 @@ public class GifConverter
         }
         reader.dispose();
 
-        ImageFrame[] framez = frames.toArray(new ImageFrame[frames.size()]);
+        ImageFrame[] framesArray = frames.toArray(new ImageFrame[0]);
         int totalWidth = 0;
-        int maxHeight = framez[0].getHeight();
-        for (ImageFrame frame : framez) {
+        int maxHeight = framesArray[0].getHeight();
+        for (ImageFrame frame : framesArray) {
             totalWidth += frame.getWidth();
             if (frame.getHeight() > maxHeight) {
                 maxHeight = frame.getHeight();
@@ -177,13 +177,13 @@ public class GifConverter
         int offset = 0;
         int delay = 0;
         List<BufferedImage> images = new ArrayList<>();
-        for (ImageFrame frame : framez) {
+        for (ImageFrame frame : framesArray) {
             /*graphics.drawImage(frame.getImage(), offset, 0, null);
             offset += frame.getWidth();*/
             delay += frame.getDelay() * 10;
             images.add(frame.getImage());
         }
-        delay /= framez.length;
+        delay /= framesArray.length;
         graphics.dispose();
 
         // ByteArrayOutputStream baos = new ByteArrayOutputStream();
