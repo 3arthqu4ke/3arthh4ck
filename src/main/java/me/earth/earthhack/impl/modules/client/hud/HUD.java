@@ -29,8 +29,10 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -59,6 +61,8 @@ public class HUD extends Module {
             register(new BooleanSetting("Coordinates", true));
     protected final Setting<Boolean> armor =
             register(new BooleanSetting("Armor", true));
+    protected final Setting<Boolean> totems =
+            register(new BooleanSetting("Totems", false));
     protected final Setting<Modules> renderModules =
             register(new EnumSetting<>("Modules", Modules.Length));
     protected final Setting<Potions> potions =
@@ -239,6 +243,30 @@ public class HUD extends Module {
             renderText(coords, 2, height - 2 - RENDERER.getStringHeightI() - animationY);
             final String dir = RotationUtil.getDirection4D(false);
             renderText(dir, 2, height - 3 - RENDERER.getStringHeightI() * 2 - animationY);
+        }
+
+        if (totems.getValue()) {
+            ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+            RenderItem itemRender = mc.getRenderItem();
+            int width = sr.getScaledWidth();
+            int height = sr.getScaledHeight();
+            int totems = mc.player.inventory.mainInventory.stream().filter(itemStack -> itemStack.getItem() == Items.TOTEM_OF_UNDYING).mapToInt(ItemStack::getCount).sum();
+
+            if (mc.player.getHeldItemOffhand().getItem() == Items.TOTEM_OF_UNDYING) {
+                totems += mc.player.getHeldItemOffhand().getCount();
+            }
+
+            if (totems > 0) {
+                int x = width / 2 - 7;
+                int y = height - 40 - (mc.playerController.gameIsSurvivalOrAdventure() ? 15 : 0);
+                itemRender.zLevel = 200.0f;
+                GlStateManager.enableDepth();
+                itemRender.renderItemAndEffectIntoGUI(mc.player, new ItemStack(Items.TOTEM_OF_UNDYING), x, y);
+                itemRender.zLevel = 0.0f;
+                GlStateManager.disableDepth();
+                String text = String.valueOf(totems);
+                renderText(text, x + 17 - RENDERER.getStringWidth(text), y + 9);
+            }
         }
         renderArmor();
 
