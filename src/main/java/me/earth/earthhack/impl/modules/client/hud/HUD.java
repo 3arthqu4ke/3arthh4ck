@@ -65,8 +65,8 @@ public class HUD extends Module {
             register(new BooleanSetting("Armor", true));
     protected final Setting<Boolean> totems =
             register(new BooleanSetting("Totems", false));
-    protected final Setting<Integer> totemOffset =
-            register(new NumberSetting<>("Totem Offset", 0, -10, 10));
+    protected final Setting<Integer> totemsOffset =
+            register(new NumberSetting<>("Totems Offset", 0, -10, 10));
     protected final Setting<Modules> renderModules =
             register(new EnumSetting<>("Modules", Modules.Length));
     protected final Setting<Potions> potions =
@@ -285,7 +285,7 @@ public class HUD extends Module {
 
             if (totems > 0) {
                 int x = width / 2 - 7;
-                int y = height - (totemOffset.getValue()) - getArmorY();
+                int y = height - (totemsOffset.getValue()) - getArmorY();
                 itemRender.zLevel = 200.0f;
                 GlStateManager.enableDepth();
                 itemRender.renderItemAndEffectIntoGUI(mc.player, new ItemStack(Items.TOTEM_OF_UNDYING), x, y);
