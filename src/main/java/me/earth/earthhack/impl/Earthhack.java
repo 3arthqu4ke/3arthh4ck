@@ -15,7 +15,7 @@ public class Earthhack implements Globals
 {
     private static final Logger LOGGER = LogManager.getLogger("3arthh4ck");
     public static final String NAME = "3arthh4ck";
-    public static final String VERSION = "1.8.1";
+    public static final String VERSION = "1.8.2";
 
     public static void preInit()
     {
