@@ -47,8 +47,6 @@ public class Step extends BlockESPModule
     protected double y;
     protected double z;
 
-    protected boolean usingTimer;
-
     public Step()
     {
         super("Step", Category.Movement);
