@@ -1,0 +1,5 @@
+{
+    "name": "PhobosMainMenu",
+    "mainClass": "me.earth.phobosmainmenu.PhobosMainMenu",
+    "mixinConfig": "mixins.phobosmainmenu.json"
+}
