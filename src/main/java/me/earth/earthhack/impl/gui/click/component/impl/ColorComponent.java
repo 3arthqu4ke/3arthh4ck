@@ -4,7 +4,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import me.earth.earthhack.api.setting.event.SettingResult;
 import me.earth.earthhack.api.setting.settings.ColorSetting;
 import me.earth.earthhack.api.util.TextUtil;
-import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
@@ -19,14 +19,14 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
-public class ColorComponent extends Component {
+public class ColorComponent extends SettingComponent {
     private final ColorSetting colorSetting;
     private boolean colorExtended, colorSelectorDragging, alphaSelectorDragging, hueSelectorDragging;
     private float hue, saturation, brightness, alpha;
     private boolean slidingSpeed, slidingSaturation, slidingBrightness;
 
     public ColorComponent(ColorSetting colorSetting, float posX, float posY, float offsetX, float offsetY, float width, float height) {
-        super(colorSetting.getName(), posX, posY, offsetX, offsetY, width, height);
+        super(colorSetting.getName(), posX, posY, offsetX, offsetY, width, height, colorSetting);
         this.colorSetting = colorSetting;
         float[] hsb = Color.RGBtoHSB(getColorSetting().getRed(), getColorSetting().getGreen(), getColorSetting().getBlue(), null);
         hue = hsb[0];

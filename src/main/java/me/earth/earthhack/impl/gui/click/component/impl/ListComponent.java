@@ -3,18 +3,18 @@ package me.earth.earthhack.impl.gui.click.component.impl;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import me.earth.earthhack.api.setting.settings.ListSetting;
 import me.earth.earthhack.api.util.interfaces.Nameable;
-import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 
-public class ListComponent<M extends Nameable> extends Component
+public class ListComponent<M extends Nameable> extends SettingComponent
 {
 
     private final ListSetting<M> setting;
 
     public ListComponent(ListSetting<M> setting, float posX, float posY, float offsetX, float offsetY, float width, float height)
     {
-        super(setting.getName(), posX, posY, offsetX, offsetY, width, height);
+        super(setting.getName(), posX, posY, offsetX, offsetY, width, height, setting);
         this.setting = setting;
     }
 

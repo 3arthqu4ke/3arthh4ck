@@ -7,6 +7,7 @@ import me.earth.earthhack.api.setting.settings.*;
 import me.earth.earthhack.impl.gui.chat.factory.ComponentFactory;
 import me.earth.earthhack.impl.gui.click.Click;
 import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.gui.visibility.Visibilities;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.client.configs.ConfigHelperModule;
@@ -130,40 +131,9 @@ public class ModuleComponent extends Component {
         }
         if (isExtended()) {
             for (Component component : getComponents()) {
-                if (component instanceof BooleanComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((BooleanComponent) component).getBooleanSetting())) {
-                        component.drawScreen(mouseX, mouseY, partialTicks);
-                    }
-                }
-                if (component instanceof KeybindComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component).getBindSetting())) {
-                        component.drawScreen(mouseX, mouseY, partialTicks);
-                    }
-                }
-                if (component instanceof NumberComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component).getNumberSetting())) {
-                        component.drawScreen(mouseX, mouseY, partialTicks);
-                    }
-                }
-                if (component instanceof EnumComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
-                        component.drawScreen(mouseX, mouseY, partialTicks);
-                    }
-                }
-                if (component instanceof ColorComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ColorComponent) component).getColorSetting())) {
-                        component.drawScreen(mouseX, mouseY, partialTicks);
-                    }
-                }
-                if (component instanceof StringComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((StringComponent) component).getStringSetting())) {
-                        component.drawScreen(mouseX, mouseY, partialTicks);
-                    }
-                }
-                if (component instanceof ListComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
-                        component.drawScreen(mouseX, mouseY, partialTicks);
-                    }
+                if (component instanceof SettingComponent
+                    && Visibilities.VISIBILITY_MANAGER.isVisible(((SettingComponent<?, ?>) component).getSetting())) {
+                    component.drawScreen(mouseX, mouseY, partialTicks);
                 }
             }
             if (getModule().isEnabled()) {
@@ -184,40 +154,9 @@ public class ModuleComponent extends Component {
         super.keyTyped(character, keyCode);
         if (isExtended()) {
             for (Component component : getComponents()) {
-                if (component instanceof BooleanComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((BooleanComponent) component).getBooleanSetting())) {
-                        component.keyTyped(character, keyCode);
-                    }
-                }
-                if (component instanceof KeybindComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component).getBindSetting())) {
-                        component.keyTyped(character, keyCode);
-                    }
-                }
-                if (component instanceof NumberComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component).getNumberSetting())) {
-                        component.keyTyped(character, keyCode);
-                    }
-                }
-                if (component instanceof EnumComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
-                        component.keyTyped(character, keyCode);
-                    }
-                }
-                if (component instanceof ColorComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ColorComponent) component).getColorSetting())) {
-                        component.keyTyped(character, keyCode);
-                    }
-                }
-                if (component instanceof StringComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((StringComponent) component).getStringSetting())) {
-                        component.keyTyped(character, keyCode);
-                    }
-                }
-                if (component instanceof ListComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
-                        component.keyTyped(character, keyCode);
-                    }
+                if (component instanceof SettingComponent
+                    && Visibilities.VISIBILITY_MANAGER.isVisible(((SettingComponent<?, ?>) component).getSetting())) {
+                    component.keyTyped(character, keyCode);
                 }
             }
         }
@@ -242,40 +181,9 @@ public class ModuleComponent extends Component {
         }
         if (isExtended()) {
             for (Component component : getComponents()) {
-                if (component instanceof BooleanComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((BooleanComponent) component).getBooleanSetting())) {
-                        component.mouseClicked(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof KeybindComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component).getBindSetting())) {
-                        component.mouseClicked(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof NumberComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component).getNumberSetting())) {
-                        component.mouseClicked(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof EnumComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
-                        component.mouseClicked(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof ColorComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ColorComponent) component).getColorSetting())) {
-                        component.mouseClicked(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof StringComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((StringComponent) component).getStringSetting())) {
-                        component.mouseClicked(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof ListComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
-                        component.mouseClicked(mouseX, mouseY, mouseButton);
-                    }
+                if (component instanceof SettingComponent
+                        && Visibilities.VISIBILITY_MANAGER.isVisible(((SettingComponent<?, ?>) component).getSetting())) {
+                    component.mouseClicked(mouseX, mouseY, mouseButton);
                 }
             }
         }
@@ -286,40 +194,9 @@ public class ModuleComponent extends Component {
         super.mouseReleased(mouseX, mouseY, mouseButton);
         if (isExtended()) {
             for (Component component : getComponents()) {
-                if (component instanceof BooleanComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((BooleanComponent) component).getBooleanSetting())) {
-                        component.mouseReleased(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof KeybindComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component).getBindSetting())) {
-                        component.mouseReleased(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof NumberComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component).getNumberSetting())) {
-                        component.mouseReleased(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof EnumComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
-                        component.mouseReleased(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof ColorComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ColorComponent) component).getColorSetting())) {
-                        component.mouseReleased(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof StringComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((StringComponent) component).getStringSetting())) {
-                        component.mouseReleased(mouseX, mouseY, mouseButton);
-                    }
-                }
-                if (component instanceof ListComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
-                        component.mouseReleased(mouseX, mouseY, mouseButton);
-                    }
+                if (component instanceof SettingComponent
+                        && Visibilities.VISIBILITY_MANAGER.isVisible(((SettingComponent<?, ?>) component).getSetting())) {
+                    component.mouseReleased(mouseX, mouseY, mouseButton);
                 }
             }
         }
@@ -328,40 +205,9 @@ public class ModuleComponent extends Component {
     private float getComponentsSize() {
         float size = 0;
         for (Component component : getComponents()) {
-            if (component instanceof BooleanComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((BooleanComponent) component).getBooleanSetting())) {
-                    size += component.getHeight();
-                }
-            }
-            if (component instanceof KeybindComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component).getBindSetting())) {
-                    size += component.getHeight();
-                }
-            }
-            if (component instanceof NumberComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component).getNumberSetting())) {
-                    size += component.getHeight();
-                }
-            }
-            if (component instanceof EnumComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
-                    size += component.getHeight();
-                }
-            }
-            if (component instanceof ColorComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((ColorComponent) component).getColorSetting())) {
-                    size += component.getHeight();
-                }
-            }
-            if (component instanceof StringComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((StringComponent) component).getStringSetting())) {
-                    size += component.getHeight();
-                }
-            }
-            if (component instanceof ListComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
-                    size += component.getHeight();
-                }
+            if (component instanceof SettingComponent
+                    && Visibilities.VISIBILITY_MANAGER.isVisible(((SettingComponent<?, ?>) component).getSetting())) {
+                size += component.getHeight();
             }
         }
         return size;
@@ -370,54 +216,11 @@ public class ModuleComponent extends Component {
     private void updatePositions() {
         float offsetY = getHeight();
         for (Component component : getComponents()) {
-            if (component instanceof BooleanComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((BooleanComponent) component).getBooleanSetting())) {
-                    component.setOffsetY(offsetY);
-                    component.moved(getPosX(), getPosY());
-                    offsetY += component.getHeight();
-                }
-            }
-            if (component instanceof KeybindComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component).getBindSetting())) {
-                    component.setOffsetY(offsetY);
-                    component.moved(getPosX(), getPosY());
-                    offsetY += component.getHeight();
-                }
-            }
-            if (component instanceof NumberComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component).getNumberSetting())) {
-                    component.setOffsetY(offsetY);
-                    component.moved(getPosX(), getPosY());
-                    offsetY += component.getHeight();
-                }
-            }
-            if (component instanceof EnumComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
-                    component.setOffsetY(offsetY);
-                    component.moved(getPosX(), getPosY());
-                    offsetY += component.getHeight();
-                }
-            }
-            if (component instanceof ColorComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((ColorComponent) component).getColorSetting())) {
-                    component.setOffsetY(offsetY);
-                    component.moved(getPosX(), getPosY());
-                    offsetY += component.getHeight();
-                }
-            }
-            if (component instanceof StringComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((StringComponent) component).getStringSetting())) {
-                    component.setOffsetY(offsetY);
-                    component.moved(getPosX(), getPosY());
-                    offsetY += component.getHeight();
-                }
-            }
-            if (component instanceof ListComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
-                    component.setOffsetY(offsetY);
-                    component.moved(getPosX(), getPosY());
-                    offsetY += component.getHeight();
-                }
+            if (component instanceof SettingComponent
+                    && Visibilities.VISIBILITY_MANAGER.isVisible(((SettingComponent<?, ?>) component).getSetting())) {
+                component.setOffsetY(offsetY);
+                component.moved(getPosX(), getPosY());
+                offsetY += component.getHeight();
             }
         }
     }

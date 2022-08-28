@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.gui.click.frame.impl;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.gui.click.component.Component;
+import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.gui.click.component.impl.*;
 import me.earth.earthhack.impl.gui.click.frame.Frame;
 import me.earth.earthhack.impl.gui.visibility.Visibilities;
@@ -111,40 +112,9 @@ public class ModulesFrame extends Frame {
             if (component instanceof ModuleComponent) {
                 if (component.isExtended()) {
                     for (me.earth.earthhack.impl.gui.click.component.Component component1 : ((ModuleComponent) component).getComponents()) {
-                        if (component1 instanceof BooleanComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((BooleanComponent) component1).getBooleanSetting())) {
-                                offsetY += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof KeybindComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component1).getBindSetting())) {
-                                offsetY += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof NumberComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component1).getNumberSetting())) {
-                                offsetY += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof EnumComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component1).getEnumSetting())) {
-                                offsetY += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof ColorComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((ColorComponent) component1).getColorSetting())) {
-                                offsetY += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof StringComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((StringComponent) component1).getStringSetting())) {
-                                offsetY += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof ListComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component1).getListSetting())) {
-                                offsetY += component1.getHeight();
-                            }
+                        if (component1 instanceof SettingComponent
+                                && Visibilities.VISIBILITY_MANAGER.isVisible(((SettingComponent<?, ?>) component1).getSetting())) {
+                            offsetY += component1.getHeight();
                         }
                     }
                     offsetY += 3.f;
@@ -164,40 +134,9 @@ public class ModulesFrame extends Frame {
             if (component instanceof ModuleComponent) {
                 if (component.isExtended()) {
                     for (Component component1 : ((ModuleComponent) component).getComponents()) {
-                        if (component1 instanceof BooleanComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((BooleanComponent) component1).getBooleanSetting())) {
-                                cHeight += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof KeybindComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component1).getBindSetting())) {
-                                cHeight += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof NumberComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component1).getNumberSetting())) {
-                                cHeight += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof EnumComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component1).getEnumSetting())) {
-                                cHeight += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof ColorComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((ColorComponent) component1).getColorSetting())) {
-                                cHeight += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof StringComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((StringComponent) component1).getStringSetting())) {
-                                cHeight += component1.getHeight();
-                            }
-                        }
-                        if (component1 instanceof ListComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component1).getListSetting())) {
-                                cHeight += component1.getHeight();
-                            }
+                        if (component1 instanceof SettingComponent
+                            && Visibilities.VISIBILITY_MANAGER.isVisible(((SettingComponent<?, ?>) component1).getSetting())) {
+                            cHeight += component1.getHeight();
                         }
                     }
                     cHeight += 3.f;
