@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "me.earth.phobosmainmenu.mixins",
+  "refmap": "mixins.phobosmainmenu.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "MixinMinecraft"
+  ]
+}
