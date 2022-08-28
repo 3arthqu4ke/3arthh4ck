@@ -19,7 +19,6 @@ final class ListenerRender extends ModuleListener<PopChams, Render3DEvent>
     }
 
     @Override
-    @SuppressWarnings("DuplicatedCode")
     public void invoke(Render3DEvent event) {
         for (PopChams.PopData data : module.getPopDataList()) {
             EntityPlayer player = data.getPlayer();

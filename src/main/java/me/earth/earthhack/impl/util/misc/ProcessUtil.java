@@ -8,7 +8,7 @@ import java.util.List;
 public class ProcessUtil
 {
 
-	public static int exec(Class klass) throws IOException, InterruptedException
+	public static int exec(Class<?> klass) throws IOException, InterruptedException
 	{
 		String javaHome = System.getProperty("java.home");
 		String javaBin = javaHome +
@@ -17,7 +17,7 @@ public class ProcessUtil
 		String classpath = System.getProperty("java.class.path");
 		String className = klass.getName();
 
-		List<String> command = new LinkedList<String>();
+		List<String> command = new LinkedList<>();
 		command.add(javaBin);
 		command.add("-cp");
 		command.add(classpath);

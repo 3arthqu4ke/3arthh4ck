@@ -28,6 +28,7 @@ public class ModuleComponent extends Component {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void init() {
         getComponents().clear();
         float offY = getHeight();
@@ -52,7 +53,7 @@ public class ModuleComponent extends Component {
                     offY += 14;
                 }
                 if (setting instanceof EnumSetting) {
-                    getComponents().add(new EnumComponent((EnumSetting) setting, getFinishedX(), getFinishedY(), 0, offY, getWidth(), 14));
+                    getComponents().add(new EnumComponent<>((EnumSetting<?>) setting, getFinishedX(), getFinishedY(), 0, offY, getWidth(), 14));
                     offY += 14;
                 }
                 if (setting instanceof ColorSetting) {
@@ -64,7 +65,7 @@ public class ModuleComponent extends Component {
                     offY += 14;
                 }
                 if (setting instanceof ListSetting) {
-                    getComponents().add(new ListComponent((ListSetting) setting, getFinishedX(), getFinishedY(), 0, offY, getWidth(), 14));
+                    getComponents().add(new ListComponent<>((ListSetting<?>) setting, getFinishedX(), getFinishedY(), 0, offY, getWidth(), 14));
                     offY += 14;
                 }
 
@@ -145,7 +146,7 @@ public class ModuleComponent extends Component {
                     }
                 }
                 if (component instanceof EnumComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent) component).getEnumSetting())) {
+                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
                         component.drawScreen(mouseX, mouseY, partialTicks);
                     }
                 }
@@ -160,7 +161,7 @@ public class ModuleComponent extends Component {
                     }
                 }
                 if (component instanceof ListComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent) component).getListSetting())) {
+                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
                         component.drawScreen(mouseX, mouseY, partialTicks);
                     }
                 }
@@ -199,7 +200,7 @@ public class ModuleComponent extends Component {
                     }
                 }
                 if (component instanceof EnumComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent) component).getEnumSetting())) {
+                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
                         component.keyTyped(character, keyCode);
                     }
                 }
@@ -214,7 +215,7 @@ public class ModuleComponent extends Component {
                     }
                 }
                 if (component instanceof ListComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent) component).getListSetting())) {
+                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
                         component.keyTyped(character, keyCode);
                     }
                 }
@@ -257,7 +258,7 @@ public class ModuleComponent extends Component {
                     }
                 }
                 if (component instanceof EnumComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent) component).getEnumSetting())) {
+                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
                         component.mouseClicked(mouseX, mouseY, mouseButton);
                     }
                 }
@@ -272,7 +273,7 @@ public class ModuleComponent extends Component {
                     }
                 }
                 if (component instanceof ListComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent) component).getListSetting())) {
+                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
                         component.mouseClicked(mouseX, mouseY, mouseButton);
                     }
                 }
@@ -301,7 +302,7 @@ public class ModuleComponent extends Component {
                     }
                 }
                 if (component instanceof EnumComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent) component).getEnumSetting())) {
+                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
                         component.mouseReleased(mouseX, mouseY, mouseButton);
                     }
                 }
@@ -316,7 +317,7 @@ public class ModuleComponent extends Component {
                     }
                 }
                 if (component instanceof ListComponent) {
-                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent) component).getListSetting())) {
+                    if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
                         component.mouseReleased(mouseX, mouseY, mouseButton);
                     }
                 }
@@ -343,7 +344,7 @@ public class ModuleComponent extends Component {
                 }
             }
             if (component instanceof EnumComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent) component).getEnumSetting())) {
+                if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
                     size += component.getHeight();
                 }
             }
@@ -358,7 +359,7 @@ public class ModuleComponent extends Component {
                 }
             }
             if (component instanceof ListComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent) component).getListSetting())) {
+                if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
                     size += component.getHeight();
                 }
             }
@@ -391,7 +392,7 @@ public class ModuleComponent extends Component {
                 }
             }
             if (component instanceof EnumComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent) component).getEnumSetting())) {
+                if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component).getEnumSetting())) {
                     component.setOffsetY(offsetY);
                     component.moved(getPosX(), getPosY());
                     offsetY += component.getHeight();
@@ -412,7 +413,7 @@ public class ModuleComponent extends Component {
                 }
             }
             if (component instanceof ListComponent) {
-                if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent) component).getListSetting())) {
+                if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component).getListSetting())) {
                     component.setOffsetY(offsetY);
                     component.moved(getPosX(), getPosY());
                     offsetY += component.getHeight();

@@ -95,8 +95,8 @@ public class PresetCommand extends AbstractModuleCommand implements Globals
         }
         else
         {
-            ModulePreset result = null;
-            for (ModulePreset preset : data.getPresets())
+            ModulePreset<?> result = null;
+            for (ModulePreset<?> preset : data.getPresets())
             {
                 if (preset.getName().equalsIgnoreCase(args[2]))
                 {
@@ -120,7 +120,7 @@ public class PresetCommand extends AbstractModuleCommand implements Globals
                 return;
             }
 
-            ModulePreset finalResult = result;
+            ModulePreset<?> finalResult = result;
             GuiScreen before = mc.currentScreen;
             Scheduler.getInstance().schedule(() ->
                 mc.displayGuiScreen(new YesNoNonPausing((r, id) ->

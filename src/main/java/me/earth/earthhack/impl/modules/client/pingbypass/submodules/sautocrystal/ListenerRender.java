@@ -22,7 +22,6 @@ final class ListenerRender extends ModuleListener<ServerAutoCrystal, Render3DEve
     }
 
     @Override
-    @SuppressWarnings("Duplicates")
     public void invoke(Render3DEvent event)
     {
         BlockPos pos;

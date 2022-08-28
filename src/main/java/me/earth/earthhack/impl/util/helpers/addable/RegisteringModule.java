@@ -55,7 +55,7 @@ public class RegisteringModule<I, E extends Setting<I> & Removable>
             Setting<?> generated = addSetting(name);
             if (generated != null)
             {
-                ModuleData data = this.getData();
+                ModuleData<?> data = this.getData();
                 if (data != null)
                 {
                     data.settingDescriptions().put(generated,
@@ -85,7 +85,7 @@ public class RegisteringModule<I, E extends Setting<I> & Removable>
         E newSetting = create.apply(string);
         if (added.add(newSetting))
         {
-            ModuleData data = this.getData();
+            ModuleData<?> data = this.getData();
             if (data != null)
             {
                 data.settingDescriptions().put(newSetting,

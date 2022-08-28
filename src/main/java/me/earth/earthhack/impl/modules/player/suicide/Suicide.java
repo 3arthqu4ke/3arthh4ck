@@ -34,7 +34,6 @@ public class Suicide extends DisablingModule {
         register(new BooleanSetting("ThrowAwayTotem", true));
     protected final Setting<Integer> throwDelay =
         register(new NumberSetting<>("Throw-Delay", 500, 0, 1000));
-    @SuppressWarnings("FieldCanBeLocal")
     private final Setting<Boolean> syncWithAc =
         register(new BooleanSetting("SynchronizeWithAC", false));
     protected final SuicideAutoCrystal autoCrystal =

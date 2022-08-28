@@ -78,9 +78,7 @@ public class ModulesFrame extends Frame {
             GL11.glPushMatrix();
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
             RenderUtil.scissor(getPosX(), getPosY() + getHeight() + 1, getPosX() + getWidth(), getPosY() + getHeight() + scrollMaxHeight + 1);
-            getComponents().forEach(component -> {
-                component.drawScreen(mouseX, mouseY, partialTicks);
-            });
+            getComponents().forEach(component -> component.drawScreen(mouseX, mouseY, partialTicks));
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
             GL11.glPopMatrix();
         }
@@ -121,19 +119,16 @@ public class ModulesFrame extends Frame {
                         if (component1 instanceof KeybindComponent) {
                             if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component1).getBindSetting())) {
                                 offsetY += component1.getHeight();
-
                             }
                         }
                         if (component1 instanceof NumberComponent) {
                             if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component1).getNumberSetting())) {
                                 offsetY += component1.getHeight();
-
                             }
                         }
                         if (component1 instanceof EnumComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent) component1).getEnumSetting())) {
+                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component1).getEnumSetting())) {
                                 offsetY += component1.getHeight();
-
                             }
                         }
                         if (component1 instanceof ColorComponent) {
@@ -147,7 +142,7 @@ public class ModulesFrame extends Frame {
                             }
                         }
                         if (component1 instanceof ListComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent) component1).getListSetting())) {
+                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component1).getListSetting())) {
                                 offsetY += component1.getHeight();
                             }
                         }
@@ -177,19 +172,16 @@ public class ModulesFrame extends Frame {
                         if (component1 instanceof KeybindComponent) {
                             if (Visibilities.VISIBILITY_MANAGER.isVisible(((KeybindComponent) component1).getBindSetting())) {
                                 cHeight += component1.getHeight();
-
                             }
                         }
                         if (component1 instanceof NumberComponent) {
                             if (Visibilities.VISIBILITY_MANAGER.isVisible(((NumberComponent) component1).getNumberSetting())) {
                                 cHeight += component1.getHeight();
-
                             }
                         }
                         if (component1 instanceof EnumComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent) component1).getEnumSetting())) {
+                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((EnumComponent<?>) component1).getEnumSetting())) {
                                 cHeight += component1.getHeight();
-
                             }
                         }
                         if (component1 instanceof ColorComponent) {
@@ -203,7 +195,7 @@ public class ModulesFrame extends Frame {
                             }
                         }
                         if (component1 instanceof ListComponent) {
-                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent) component1).getListSetting())) {
+                            if (Visibilities.VISIBILITY_MANAGER.isVisible(((ListComponent<?>) component1).getListSetting())) {
                                 cHeight += component1.getHeight();
                             }
                         }

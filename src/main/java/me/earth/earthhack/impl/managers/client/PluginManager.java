@@ -157,64 +157,60 @@ public class PluginManager
                              Map<String, File> remap)
             throws Exception
     {
-        JarFile jarFile = new JarFile(file);
+        try (JarFile jarFile = new JarFile(file)) {
 
-        Manifest manifest = jarFile.getManifest();
-        Attributes attributes = manifest.getMainAttributes();
-        String configName = attributes.getValue("3arthh4ckConfig");
+            Manifest manifest = jarFile.getManifest();
+            Attributes attributes = manifest.getMainAttributes();
+            String configName = attributes.getValue("3arthh4ckConfig");
 
-        if (configName == null)
-        {
-            throw new BadPluginException(jarFile.getName()
-                    + ": Manifest doesn't provide a 3arthh4ckConfig!");
+            if (configName == null) {
+                throw new BadPluginException(jarFile.getName()
+                        + ": Manifest doesn't provide a 3arthh4ckConfig!");
+            }
+
+            String vanilla = attributes.getValue("3arthh4ckVanilla");
+            switch (Environment.getEnvironment()) {
+                case VANILLA:
+                    if (vanilla == null || vanilla.equals("false")) {
+                        Core.LOGGER.info("Found Plugin to remap!");
+                        remap.put(configName, file);
+                        return;
+                    }
+
+                    break;
+                case SEARGE:
+                case MCP:
+                    if (vanilla != null && vanilla.equals("true")) {
+                        return;
+                    }
+
+                    break;
+                default:
+            }
+
+            // ._.
+            ReflectionUtil.addToClassPath((URLClassLoader) pluginClassLoader, file);
+
+            PluginConfig config = Jsonable.GSON.fromJson(
+                    new InputStreamReader(
+                            Objects.requireNonNull(
+                                    pluginClassLoader.getResourceAsStream(configName))),
+                    PluginConfig.class);
+
+            if (config == null) {
+                throw new BadPluginException(jarFile.getName()
+                        + ": Found a PluginConfig, but couldn't instantiate it.");
+            }
+
+            Core.LOGGER.info("Found PluginConfig: "
+                    + config.getName()
+                    + ", MainClass: "
+                    + config.getMainClass()
+                    + ", Mixins: "
+                    + config.getMixinConfig());
+
+            configs.put(configName, config);
         }
-
-        String vanilla = attributes.getValue("3arthh4ckVanilla");
-        switch (Environment.getEnvironment())
-        {
-            case VANILLA:
-                if (vanilla == null || vanilla.equals("false"))
-                {
-                    Core.LOGGER.info("Found Plugin to remap!");
-                    remap.put(configName, file);
-                    return;
-                }
-
-                break;
-            case SEARGE:
-            case MCP:
-                if (vanilla != null && vanilla.equals("true"))
-                {
-                    return;
-                }
-
-                break;
-            default:
-        }
-
-        // ._.
-        ReflectionUtil.addToClassPath((URLClassLoader) pluginClassLoader, file);
-
-        PluginConfig config = Jsonable.GSON.fromJson(
-            new InputStreamReader(
-                Objects.requireNonNull(
-                    pluginClassLoader.getResourceAsStream(configName))),
-            PluginConfig.class);
-
-        if (config == null)
-        {
-            throw new BadPluginException(jarFile.getName()
-                + ": Found a PluginConfig, but couldn't instantiate it.");
-        }
-
-        Core.LOGGER.info("Found PluginConfig: "
-                                + config.getName()
-                                + ", MainClass: "
-                                + config.getMainClass()
-                                + ", Mixins: "
-                                + config.getMixinConfig());
-
-        configs.put(configName, config);
     }
 
     /**

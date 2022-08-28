@@ -18,7 +18,7 @@ public class VersionFinder
         if (versionFolders == null) {
             throw new IllegalStateException("Version folder was empty!");
         }
-        final List<Version> result = new ArrayList<Version>();
+        final List<Version> result = new ArrayList<>();
         for (final File file : versionFolders) {
             if (file.getName().startsWith("1.12.2")) {
                 if (file.isDirectory()) {
@@ -38,7 +38,7 @@ public class VersionFinder
     }
     
     private Version readJson(final String name, final File jsonFile) throws IOException {
-        final JsonObject object = Jsonable.PARSER.parse((Reader)new InputStreamReader(jsonFile.toURI().toURL().openStream())).getAsJsonObject();
+        final JsonObject object = Jsonable.PARSER.parse(new InputStreamReader(jsonFile.toURI().toURL().openStream())).getAsJsonObject();
         return new Version(name, jsonFile, object);
     }
 }

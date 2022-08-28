@@ -18,7 +18,7 @@ final class ListenerRender2D extends ModuleListener<ToolTips, Render2DEvent>
     public void invoke(Render2DEvent event)
     {
         int x = 1;
-        int y = (int) (Managers.TEXT.getStringHeightI() + 4);
+        int y = Managers.TEXT.getStringHeightI() + 4;
 
         for (EntityPlayer player : mc.world.playerEntities)
         {

@@ -84,17 +84,16 @@ final class ListenerRender extends ModuleListener<Trajectories, Render3DEvent> {
             }
             AxisAlignedBB arrowBox = new AxisAlignedBB(posX - size, posY - size, posZ - size, posX + size, posY + size, posZ + size);
             List<Entity> entities = module.getEntitiesWithinAABB(arrowBox.offset(motionX, motionY, motionZ).expand(1.0, 1.0, 1.0));
-            for (Object entity : entities) {
-                Entity boundingBox = (Entity) entity;
-                if (boundingBox.canBeCollidedWith() && boundingBox != mc.player) {
+            for (Entity entity : entities) {
+                if (entity.canBeCollidedWith() && entity != mc.player) {
                     float var7 = 0.3f;
-                    AxisAlignedBB var8 = boundingBox.getEntityBoundingBox().expand(var7, var7, var7);
+                    AxisAlignedBB var8 = entity.getEntityBoundingBox().expand(var7, var7, var7);
                     RayTraceResult possibleEntityLanding = var8.calculateIntercept(present, future);
                     if (possibleEntityLanding == null) {
                         continue;
                     }
                     hasLanded = true;
-                    landingOnEntity = boundingBox;
+                    landingOnEntity = entity;
                     landingPosition = possibleEntityLanding;
                 }
             }

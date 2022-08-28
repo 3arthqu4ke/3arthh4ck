@@ -43,9 +43,8 @@ public abstract class Shader implements Nameable
     {
         this.name = name;
         String source;
-        try
+        try (InputStream stream = Shader.class.getResourceAsStream("/shaders/" + path))
         {
-            InputStream stream = Shader.class.getResourceAsStream("/shaders/" + path);
             final ByteArrayOutputStream out = new ByteArrayOutputStream();
             final byte[] buffer = new byte[512];
             int read;

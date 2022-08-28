@@ -398,13 +398,9 @@ public class MutableBB extends AxisAlignedBB implements BB
                     offsetX = d0;
                 }
             }
+        }
 
-            return offsetX;
-        }
-        else
-        {
-            return offsetX;
-        }
+        return offsetX;
     }
 
     /**
@@ -434,13 +430,9 @@ public class MutableBB extends AxisAlignedBB implements BB
                     offsetY = d0;
                 }
             }
+        }
 
-            return offsetY;
-        }
-        else
-        {
-            return offsetY;
-        }
+        return offsetY;
     }
 
     /**
@@ -470,13 +462,9 @@ public class MutableBB extends AxisAlignedBB implements BB
                     offsetZ = d0;
                 }
             }
+        }
 
-            return offsetZ;
-        }
-        else
-        {
-            return offsetZ;
-        }
+        return offsetZ;
     }
 
     /**

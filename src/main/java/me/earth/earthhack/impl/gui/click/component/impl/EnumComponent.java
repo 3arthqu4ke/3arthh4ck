@@ -28,6 +28,7 @@ public class EnumComponent<E extends Enum<E>> extends Component {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         final boolean hovered = RenderUtil.mouseWithinBounds(mouseX, mouseY, getFinishedX() + 5, getFinishedY() + 1, getWidth() - 10, getHeight() - 2);

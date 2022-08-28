@@ -715,7 +715,7 @@ public class Auto32k extends Module {
 
         BlockPos boost = pos.up();
 
-        if (!isGoodMaterial(mc.world.getBlockState(pos).getBlock(), onOtherHoppers.getValue()) || !isGoodMaterial(mc.world.getBlockState(boost).getBlock(), false)) {
+        if (isBadMaterial(mc.world.getBlockState(pos).getBlock(), onOtherHoppers.getValue()) || isBadMaterial(mc.world.getBlockState(boost).getBlock(), false)) {
             return false;
         }
 
@@ -749,7 +749,7 @@ public class Auto32k extends Module {
             return;
         }
 
-        if (hopperPos == null || !isGoodMaterial(mc.world.getBlockState(hopperPos).getBlock(), true) || (!isGoodMaterial(mc.world.getBlockState(hopperPos.up()).getBlock(), false) && !(mc.world.getBlockState(hopperPos.up()).getBlock() instanceof BlockShulkerBox)) || badEntities(hopperPos) || badEntities(hopperPos.up())) {
+        if (hopperPos == null || isBadMaterial(mc.world.getBlockState(hopperPos).getBlock(), true) || (isBadMaterial(mc.world.getBlockState(hopperPos.up()).getBlock(), false) && !(mc.world.getBlockState(hopperPos.up()).getBlock() instanceof BlockShulkerBox)) || badEntities(hopperPos) || badEntities(hopperPos.up())) {
             if (autoSwitch.getValue() && mode.getValue() == Mode.NORMAL) {
                 if (switching) {
                     resetFields();
@@ -1198,7 +1198,7 @@ public class Auto32k extends Module {
             return data;
         }
 
-        if (!isGoodMaterial(mc.world.getBlockState(pos).getBlock(), onOtherHoppers.getValue()) || !isGoodMaterial(mc.world.getBlockState(pos.up()).getBlock(), false)) {
+        if (isBadMaterial(mc.world.getBlockState(pos).getBlock(), onOtherHoppers.getValue()) || isBadMaterial(mc.world.getBlockState(pos.up()).getBlock(), false)) {
             return data;
         }
 
@@ -1272,7 +1272,7 @@ public class Auto32k extends Module {
 
             BlockPos posToCheck = possiblePositions.get(0); //TODO: in some cases(diagonally for example) we can accept more positions
 
-            if (!isGoodMaterial(mc.world.getBlockState(posToCheck).getBlock(), false)) {
+            if (isBadMaterial(mc.world.getBlockState(posToCheck).getBlock(), false)) {
                 return pos;
             }
 
@@ -1304,7 +1304,7 @@ public class Auto32k extends Module {
             }
         } else {
             possiblePositions.removeIf(position -> mc.player.getDistanceSq(position) > MathUtil.square(range.getValue()));
-            possiblePositions.removeIf(position -> !isGoodMaterial(mc.world.getBlockState(position).getBlock(), false));
+            possiblePositions.removeIf(position -> isBadMaterial(mc.world.getBlockState(position).getBlock(), false));
             possiblePositions.removeIf(position -> raytrace.getValue() && (!rayTracePlaceCheck(position, raytrace.getValue())));
             possiblePositions.removeIf(this::badEntities);
             possiblePositions.removeIf(this::hasAdjancedRedstone);
@@ -1334,7 +1334,7 @@ public class Auto32k extends Module {
 
         toCheck.removeIf(position -> position.equals(hopperPos.up()));
         toCheck.removeIf(position -> mc.player.getDistanceSq(position) > MathUtil.square(range.getValue()));
-        toCheck.removeIf(position -> !isGoodMaterial(mc.world.getBlockState(position).getBlock(), false));
+        toCheck.removeIf(position -> isBadMaterial(mc.world.getBlockState(position).getBlock(), false));
         toCheck.removeIf(position -> raytrace.getValue() && (!rayTracePlaceCheck(position, raytrace.getValue())));
         toCheck.removeIf(this::badEntities);
         toCheck.sort(Comparator.comparingDouble(pos2 -> mc.player.getDistanceSq(pos2)));
@@ -1445,8 +1445,8 @@ public class Auto32k extends Module {
         return new float[]{(float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0f), (float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
     }
 
-    private boolean isGoodMaterial(Block block, boolean allowHopper) {
-        return block instanceof BlockAir || block instanceof BlockLiquid || block instanceof BlockTallGrass || block instanceof BlockFire || block instanceof BlockDeadBush || block instanceof BlockSnow || (allowHopper && block instanceof BlockHopper);
+    private boolean isBadMaterial(Block block, boolean allowHopper) {
+        return !(block instanceof BlockAir) && !(block instanceof BlockLiquid) && !(block instanceof BlockTallGrass) && !(block instanceof BlockFire) && !(block instanceof BlockDeadBush) && !(block instanceof BlockSnow) && (!allowHopper || !(block instanceof BlockHopper));
     }
 
     private void resetFields() {
