@@ -56,10 +56,10 @@ final class ListenerTick extends ModuleListener<NoSlowDown, TickEvent>
             {
                 Managers.TIMER.setTimer(
                     module.timerSpeed.getValue().floatValue());
-            }
-            else
-            {
+                module.usingTimer = true;
+            } else if (module.usingTimer) {
                 Managers.TIMER.reset();
+                module.usingTimer = false;
             }
         }
     }

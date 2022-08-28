@@ -44,6 +44,9 @@ final class ListenerStep extends ModuleListener<Step, StepEvent> {
 
                 //noinspection AssignmentUsedAsCondition
                 if (module.stepping = module.canStep()) {
+                    if (module.useTimer.getValue()) {
+                        Managers.TIMER.setTimer(module.timer.getValue().floatValue());
+                    }
                     event.setHeight(module.height.getValue());
                 } else {
                     module.reset();
