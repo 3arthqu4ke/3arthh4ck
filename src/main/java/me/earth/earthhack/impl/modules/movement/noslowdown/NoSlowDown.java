@@ -94,6 +94,7 @@ public class NoSlowDown extends Module
     protected void onDisable()
     {
         Managers.NCP.setStrict(false);
+        this.usingTimer = false;
     }
 
     protected void updateKeyBinds()
