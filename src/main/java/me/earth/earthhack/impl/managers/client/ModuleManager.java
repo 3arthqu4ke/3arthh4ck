@@ -9,6 +9,7 @@ import me.earth.earthhack.api.register.exception.CantUnregisterException;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.event.events.client.PostInitEvent;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.accountspoof.AccountSpoof;
 import me.earth.earthhack.impl.modules.client.anticheat.AntiCheat;
 import me.earth.earthhack.impl.modules.client.autoconfig.AutoConfig;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
@@ -181,6 +182,7 @@ public class ModuleManager extends IterationRegister<Module>
     public void init()
     {
         Earthhack.getLogger().info("Initializing Modules.");
+        this.forceRegister(new AccountSpoof());
         this.forceRegister(new AntiCheat());
         this.forceRegister(new AutoConfig());
         this.forceRegister(new ClickGui());

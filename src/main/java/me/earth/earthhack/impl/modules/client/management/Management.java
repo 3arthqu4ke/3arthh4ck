@@ -6,14 +6,16 @@ import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
-import me.earth.earthhack.api.setting.settings.*;
+import me.earth.earthhack.api.setting.settings.BooleanSetting;
+import me.earth.earthhack.api.setting.settings.ColorSetting;
+import me.earth.earthhack.api.setting.settings.EnumSetting;
+import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.minecraft.CooldownBypass;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
 
 import java.awt.*;
-import java.util.UUID;
 
 /**
  * {@link me.earth.earthhack.impl.core.mixins.util.MixinScreenShotHelper}
@@ -59,13 +61,6 @@ public class Management extends Module
             register(new EnumSetting<>("Manual-CD-Bypass",
                                         CooldownBypass.None));
 
-    protected final Setting<Boolean> accountSpoof =
-            register(new BooleanSetting("AccountSpoof", false));
-    protected final Setting<String> accountName =
-            register(new StringSetting("AccountName", "asdjgaksdghkas"));
-    protected final Setting<String> uuid =
-            register(new StringSetting("AccountUUID", UUID.randomUUID().toString()));
-
     protected GameProfile lastProfile;
     protected EntityPlayerSP player;
 
@@ -77,7 +72,6 @@ public class Management extends Module
         Bus.EVENT_BUS.register(new ListenerAspectRatio(this));
         Bus.EVENT_BUS.register(new ListenerTick(this));
         Bus.EVENT_BUS.register(new ListenerSwitch(this));
-        Bus.EVENT_BUS.register(new ListenerLoginStart(this));
         register(new NumberSetting<>("PB-Position-Range", 5.0, 0.0, 10_000.0));
         register(new BooleanSetting("MotionService", true))
             .setComplexity(Complexity.Expert);
