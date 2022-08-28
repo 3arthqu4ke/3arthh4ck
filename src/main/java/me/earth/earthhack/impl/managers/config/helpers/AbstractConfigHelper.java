@@ -18,11 +18,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 // TODO: this config system is the worst thing I've ever seen
 public abstract class AbstractConfigHelper<C extends Config>
         implements ConfigHelper<C>
 {
+    private static final Pattern ILLEGAL_FILENAME = Pattern.compile("^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$|[\\\\|/<>*:\"?\\x00-\\x1F]", Pattern.CASE_INSENSITIVE);
     protected final Map<String, C> configs = new ConcurrentHashMap<>();
     protected final String name;
     protected final String path;
@@ -30,7 +32,7 @@ public abstract class AbstractConfigHelper<C extends Config>
     public AbstractConfigHelper(String name,
                                 String path)
     {
-        this.name = name;
+        this.name = name.trim();
         this.path = "earthhack" + File.separator + path;
     }
 
@@ -126,6 +128,9 @@ public abstract class AbstractConfigHelper<C extends Config>
     public void save(String name) throws IOException
     {
         name = name.toLowerCase();
+        if (ILLEGAL_FILENAME.matcher(name).find()) {
+            throw new IOException("Illegal filename " + name);
+        }
         ensureDir(path);
 
         C config = configs.get(name);
