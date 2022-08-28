@@ -65,6 +65,8 @@ public class HUD extends Module {
             register(new BooleanSetting("Armor", true));
     protected final Setting<Boolean> totems =
             register(new BooleanSetting("Totems", false));
+    protected final Setting<Integer> totemOffset =
+            register(new NumberSetting<>("Totem Offset", 0, -10, 10));
     protected final Setting<Modules> renderModules =
             register(new EnumSetting<>("Modules", Modules.Length));
     protected final Setting<Potions> potions =
@@ -151,6 +153,34 @@ public class HUD extends Module {
                 }
             }
         });
+    }
+
+    public int getArmorY() {
+        int y;
+        if (mc.player.isInsideOfMaterial(Material.WATER)
+                && mc.player.getAir() > 0
+                && !mc.player.capabilities.isCreativeMode) {
+            y = 65;
+        } else if (mc.player.getRidingEntity() != null
+                && !mc.player.capabilities.isCreativeMode) {
+            if (mc.player.getRidingEntity()
+                    instanceof EntityLivingBase) {
+                EntityLivingBase entity =
+                        (EntityLivingBase) mc.player.getRidingEntity();
+                y = (int) (45
+                        + Math.ceil((entity.getMaxHealth()
+                        - 1.0F)
+                        / 20.0F)
+                        * 10);
+            } else {
+                y = 45;
+            }
+        } else if (mc.player.capabilities.isCreativeMode) {
+            y = mc.player.isRidingHorse() ? 45 : 38;
+        } else {
+            y = 55;
+        }
+        return y;
     }
 
     protected void renderLogo() {
@@ -255,7 +285,7 @@ public class HUD extends Module {
 
             if (totems > 0) {
                 int x = width / 2 - 7;
-                int y = height - 40 - (mc.playerController.gameIsSurvivalOrAdventure() ? 15 : 0);
+                int y = height - (totemOffset.getValue()) - getArmorY();
                 itemRender.zLevel = 200.0f;
                 GlStateManager.enableDepth();
                 itemRender.renderItemAndEffectIntoGUI(mc.player, new ItemStack(Items.TOTEM_OF_UNDYING), x, y);
@@ -315,30 +345,7 @@ public class HUD extends Module {
             for (int i = 3; i >= 0; i--) {
                 ItemStack stack = mc.player.inventory.armorInventory.get(i);
                 if (!stack.isEmpty()) {
-                    int y;
-                    if (mc.player.isInsideOfMaterial(Material.WATER)
-                            && mc.player.getAir() > 0
-                            && !mc.player.capabilities.isCreativeMode) {
-                        y = 65;
-                    } else if (mc.player.getRidingEntity() != null
-                            && !mc.player.capabilities.isCreativeMode) {
-                        if (mc.player.getRidingEntity()
-                                instanceof EntityLivingBase) {
-                            EntityLivingBase entity =
-                                    (EntityLivingBase) mc.player.getRidingEntity();
-                            y = (int) (45
-                                    + Math.ceil((entity.getMaxHealth()
-                                    - 1.0F)
-                                    / 20.0F)
-                                    * 10);
-                        } else {
-                            y = 45;
-                        }
-                    } else if (mc.player.capabilities.isCreativeMode) {
-                        y = mc.player.isRidingHorse() ? 45 : 38;
-                    } else {
-                        y = 55;
-                    }
+                    int y = getArmorY();
                     final float percent = DamageUtil.getPercent(stack) / 100.0f;
                     GlStateManager.pushMatrix();
                     GlStateManager.scale(0.625F, 0.625F, 0.625F);
