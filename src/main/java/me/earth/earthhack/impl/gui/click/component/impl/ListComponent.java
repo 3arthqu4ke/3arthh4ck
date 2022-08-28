@@ -7,7 +7,7 @@ import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 
-public class ListComponent<M extends Nameable> extends SettingComponent
+public class ListComponent<M extends Nameable> extends SettingComponent<M, ListSetting<M>>
 {
 
     private final ListSetting<M> setting;

@@ -12,7 +12,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 
-public class StringComponent extends SettingComponent {
+public class StringComponent extends SettingComponent<String, StringSetting> {
     private final StringSetting stringSetting;
     public boolean isListening;
     private CurrentString currentString = new CurrentString("");

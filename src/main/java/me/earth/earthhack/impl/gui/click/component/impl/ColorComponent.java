@@ -19,7 +19,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
-public class ColorComponent extends SettingComponent {
+public class ColorComponent extends SettingComponent<Color, ColorSetting> {
     private final ColorSetting colorSetting;
     private boolean colorExtended, colorSelectorDragging, alphaSelectorDragging, hueSelectorDragging;
     private float hue, saturation, brightness, alpha;

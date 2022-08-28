@@ -9,7 +9,7 @@ import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import net.minecraft.util.math.MathHelper;
 
-public class NumberComponent extends SettingComponent {
+public class NumberComponent extends SettingComponent<Number, NumberSetting<Number>> {
     private final NumberSetting<Number> numberSetting;
     private boolean sliding;
 

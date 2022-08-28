@@ -7,7 +7,7 @@ import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 
-public class EnumComponent<E extends Enum<E>> extends SettingComponent {
+public class EnumComponent<E extends Enum<E>> extends SettingComponent<E, EnumSetting<E>> {
     private final EnumSetting<E> enumSetting;
 
     public EnumComponent(EnumSetting<E> enumSetting, float posX, float posY, float offsetX, float offsetY, float width, float height) {

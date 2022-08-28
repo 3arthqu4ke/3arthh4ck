@@ -1,12 +1,13 @@
 package me.earth.earthhack.impl.gui.click.component.impl;
 
+import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.impl.gui.click.component.SettingComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 
-public class BooleanComponent extends SettingComponent {
+public class BooleanComponent extends SettingComponent<Boolean, Setting<Boolean>> {
     private final BooleanSetting booleanSetting;
 
     public BooleanComponent(BooleanSetting booleanSetting, float posX, float posY, float offsetX, float offsetY, float width, float height) {

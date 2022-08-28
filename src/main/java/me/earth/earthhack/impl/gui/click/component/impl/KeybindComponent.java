@@ -9,7 +9,7 @@ import me.earth.earthhack.impl.util.render.Render2DUtil;
 import me.earth.earthhack.impl.util.render.RenderUtil;
 import me.earth.earthhack.pingbypass.input.Keyboard;
 
-public class KeybindComponent extends SettingComponent {
+public class KeybindComponent extends SettingComponent<Bind, BindSetting> {
     private final BindSetting bindSetting;
     private boolean binding;
 
