@@ -20,7 +20,7 @@ final class ListenerTick extends ModuleListener<Tracker, TickEvent>
     @Override
     public void invoke(TickEvent event)
     {
-        if (event.isSafe())
+        if (event.isSafe() && module.isEnabled())
         {
             boolean found = false;
             for (EntityPlayer player : mc.world.playerEntities)
