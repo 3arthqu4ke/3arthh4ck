@@ -56,6 +56,7 @@ public class NoSlowDown extends Module
 
     protected final KeyBinding[] keys;
     protected boolean spoof = true;
+    protected boolean usingTimer;
 
     public NoSlowDown()
     {
