@@ -43,4 +43,10 @@ public interface Hole {
         return xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
     }
 
+    default boolean contains(double x, double y, double z) {
+        return x > this.getX() && x < this.getMaxX()
+            && y >= this.getY() && y < this.getY() + 1
+            && z > this.getZ() && z < this.getMaxZ();
+    }
+
 }
