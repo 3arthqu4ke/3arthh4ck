@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -47,7 +48,6 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static net.minecraft.init.Items.TOTEM_OF_UNDYING;
 
 // TODO: REWRITE?
 public class HUD extends Module {
@@ -251,14 +251,14 @@ public class HUD extends Module {
             RenderItem itemRender = mc.getRenderItem();
             int width = resolution.getScaledWidth();
             int height = resolution.getScaledHeight();
-            int totems = InventoryUtil.getCount(TOTEM_OF_UNDYING);
+            int totems = InventoryUtil.getCount(Items.TOTEM_OF_UNDYING);
 
             if (totems > 0) {
                 int x = width / 2 - 7;
                 int y = height - 40 - (mc.playerController.gameIsSurvivalOrAdventure() ? 15 : 0);
                 itemRender.zLevel = 200.0f;
                 GlStateManager.enableDepth();
-                itemRender.renderItemAndEffectIntoGUI(mc.player, new ItemStack(TOTEM_OF_UNDYING), x, y);
+                itemRender.renderItemAndEffectIntoGUI(mc.player, new ItemStack(Items.TOTEM_OF_UNDYING), x, y);
                 itemRender.zLevel = 0.0f;
                 GlStateManager.disableDepth();
                 String text = String.valueOf(totems);
