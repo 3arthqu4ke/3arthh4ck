@@ -18,6 +18,7 @@ import me.earth.earthhack.impl.util.client.ModuleUtil;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.DamageUtil;
+import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.network.ServerUtil;
 import me.earth.earthhack.impl.util.render.ColorHelper;
 import me.earth.earthhack.impl.util.render.ColorUtil;
@@ -29,8 +30,10 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -44,6 +47,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 // TODO: REWRITE?
 public class HUD extends Module {
@@ -59,6 +63,10 @@ public class HUD extends Module {
             register(new BooleanSetting("Coordinates", true));
     protected final Setting<Boolean> armor =
             register(new BooleanSetting("Armor", true));
+    protected final Setting<Boolean> totems =
+            register(new BooleanSetting("Totems", false));
+    protected final Setting<Integer> totemOffset =
+            register(new NumberSetting<>("Totem Offset", 0, -10, 10));
     protected final Setting<Modules> renderModules =
             register(new EnumSetting<>("Modules", Modules.Length));
     protected final Setting<Potions> potions =
@@ -145,6 +153,34 @@ public class HUD extends Module {
                 }
             }
         });
+    }
+
+    public int getArmorY() {
+        int y;
+        if (mc.player.isInsideOfMaterial(Material.WATER)
+                && mc.player.getAir() > 0
+                && !mc.player.capabilities.isCreativeMode) {
+            y = 65;
+        } else if (mc.player.getRidingEntity() != null
+                && !mc.player.capabilities.isCreativeMode) {
+            if (mc.player.getRidingEntity()
+                    instanceof EntityLivingBase) {
+                EntityLivingBase entity =
+                        (EntityLivingBase) mc.player.getRidingEntity();
+                y = (int) (45
+                        + Math.ceil((entity.getMaxHealth()
+                        - 1.0F)
+                        / 20.0F)
+                        * 10);
+            } else {
+                y = 45;
+            }
+        } else if (mc.player.capabilities.isCreativeMode) {
+            y = mc.player.isRidingHorse() ? 45 : 38;
+        } else {
+            y = 55;
+        }
+        return y;
     }
 
     protected void renderLogo() {
@@ -240,6 +276,25 @@ public class HUD extends Module {
             final String dir = RotationUtil.getDirection4D(false);
             renderText(dir, 2, height - 3 - RENDERER.getStringHeightI() * 2 - animationY);
         }
+
+        if (totems.getValue()) {
+            RenderItem itemRender = mc.getRenderItem();
+            int width = resolution.getScaledWidth();
+            int height = resolution.getScaledHeight();
+            int totems = InventoryUtil.getCount(Items.TOTEM_OF_UNDYING);
+
+            if (totems > 0) {
+                int x = width / 2 - 7;
+                int y = height - (totemOffset.getValue()) - getArmorY();
+                itemRender.zLevel = 200.0f;
+                GlStateManager.enableDepth();
+                itemRender.renderItemAndEffectIntoGUI(mc.player, new ItemStack(Items.TOTEM_OF_UNDYING), x, y);
+                itemRender.zLevel = 0.0f;
+                GlStateManager.disableDepth();
+                String text = String.valueOf(totems);
+                renderText(text, x + 17 - RENDERER.getStringWidth(text), y + 9);
+            }
+        }
         renderArmor();
 
         if (renderModules.getValue() != Modules.None) {
@@ -290,30 +345,7 @@ public class HUD extends Module {
             for (int i = 3; i >= 0; i--) {
                 ItemStack stack = mc.player.inventory.armorInventory.get(i);
                 if (!stack.isEmpty()) {
-                    int y;
-                    if (mc.player.isInsideOfMaterial(Material.WATER)
-                            && mc.player.getAir() > 0
-                            && !mc.player.capabilities.isCreativeMode) {
-                        y = 65;
-                    } else if (mc.player.getRidingEntity() != null
-                            && !mc.player.capabilities.isCreativeMode) {
-                        if (mc.player.getRidingEntity()
-                                instanceof EntityLivingBase) {
-                            EntityLivingBase entity =
-                                    (EntityLivingBase) mc.player.getRidingEntity();
-                            y = (int) (45
-                                    + Math.ceil((entity.getMaxHealth()
-                                    - 1.0F)
-                                    / 20.0F)
-                                    * 10);
-                        } else {
-                            y = 45;
-                        }
-                    } else if (mc.player.capabilities.isCreativeMode) {
-                        y = mc.player.isRidingHorse() ? 45 : 38;
-                    } else {
-                        y = 55;
-                    }
+                    int y = getArmorY();
                     final float percent = DamageUtil.getPercent(stack) / 100.0f;
                     GlStateManager.pushMatrix();
                     GlStateManager.scale(0.625F, 0.625F, 0.625F);
