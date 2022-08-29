@@ -1,5 +1,3 @@
-// Decompiled with: CFR 0.152
-// Class Version: 8
 package me.earth.skycolor;
 
 import me.earth.earthhack.api.module.data.DefaultData;
