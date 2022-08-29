@@ -56,6 +56,12 @@ final class ListenerMotion extends ModuleListener<KillAura, MotionUpdateEvent>
                            boolean teleports)
     {
         module.isAttacking = false;
+
+        if (mc.player.isSpectator())
+        {
+            return;
+        }
+
         if (!module.shouldAttack())
         {
             return;
@@ -214,7 +220,7 @@ final class ListenerMotion extends ModuleListener<KillAura, MotionUpdateEvent>
 
     public static void post(KillAura module)
     {
-        if (module.target == null || !module.isAttacking)
+        if (module.target == null || !module.isAttacking || mc.player.isSpectator())
         {
             return;
         }
