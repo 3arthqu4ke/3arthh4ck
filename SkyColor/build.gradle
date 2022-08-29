@@ -20,7 +20,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = '1.0.0'
 group = 'me.earth' // TODO
-archivesBaseName = 'SkyColor' // TODO
+archivesBaseName = 'skycolor' // TODO
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
