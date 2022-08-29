@@ -11,18 +11,25 @@ import me.earth.earthhack.api.util.interfaces.Nameable;
 import me.earth.earthhack.impl.commands.gui.YesNoNonPausing;
 import me.earth.earthhack.impl.commands.util.CommandDescriptions;
 import me.earth.earthhack.impl.commands.util.CommandUtil;
+import me.earth.earthhack.impl.gui.chat.clickevents.SmartClickEvent;
+import me.earth.earthhack.impl.gui.chat.components.SimpleComponent;
+import me.earth.earthhack.impl.gui.chat.components.SuppliedComponent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.managers.config.helpers.AllConfigHelper;
 import me.earth.earthhack.impl.managers.config.helpers.CurrentConfig;
 import me.earth.earthhack.impl.managers.thread.scheduler.Scheduler;
+import me.earth.earthhack.impl.modules.client.commands.Commands;
 import me.earth.earthhack.impl.util.misc.io.IORunnable;
 import me.earth.earthhack.impl.util.text.ChatIDs;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.event.ClickEvent;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class ConfigCommand extends Command implements Globals
 {
@@ -74,43 +81,7 @@ public class ConfigCommand extends Command implements Globals
         switch (args.length)
         {
             case 2:
-                String current = CurrentConfig.getInstance().get(helper);
-                if (current == null)
-                {
-                    current = TextColor.RED + "None";
-                }
-
-                StringBuilder message = new StringBuilder("Use this command")
-                   .append(" to save/delete/load the ")
-                   .append(TextColor.AQUA)
-                   .append(helper.getName())
-                   .append(TextColor.WHITE)
-                   .append(" config. Currently active: ")
-                   .append(TextColor.GREEN)
-                   .append(current)
-                   .append(TextColor.WHITE)
-                   .append(". Available: ");
-
-                Iterator<? extends Config> itr = helper.getConfigs().iterator();
-                while (itr.hasNext())
-                {
-                    Config config = itr.next();
-                    message.append(TextColor.AQUA)
-                           .append(config.getName())
-                           .append(TextColor.WHITE);
-
-                    if (itr.hasNext())
-                    {
-                        message.append(", ");
-                    }
-                }
-
-                message.append(".");
-
-                Managers.CHAT.sendDeleteMessage(
-                        message.toString(),
-                        "config2",
-                        ChatIDs.COMMAND);
+                sendConfigs(helper);
                 break;
             case 3:
                 switch (args[2].toLowerCase())
@@ -401,6 +372,67 @@ public class ConfigCommand extends Command implements Globals
         helpers.addAll(Managers.CONFIG.getRegistered());
         helpers.add(allConfigHelper);
         return helpers;
+    }
+
+    /**
+     * {@link me.earth.earthhack.impl.modules.client.customfont.FontMod#sendFonts()}
+     */
+    public void sendConfigs(ConfigHelper<?> helper)
+    {
+        final Supplier<String> current = () -> {
+            String lCurrent = CurrentConfig.getInstance().get(helper);
+            if (lCurrent == null)
+            {
+                lCurrent = TextColor.RED + "None";
+            }
+            return lCurrent;
+        };
+
+        SimpleComponent component =
+                new SimpleComponent("Use this command" +
+                        " to save/delete/load the " +
+                        TextColor.AQUA +
+                        helper.getName() +
+                        TextColor.WHITE +
+                        " config. List: ");
+        component.setWrap(true);
+
+        List<Config> configs = Arrays.asList(helper.getConfigs().toArray(new Config[]{}));
+        for (int i = 0; i < configs.size(); i++)
+        {
+            Config config = configs.get(i);
+            int finalI = i;
+            component.appendSibling(
+                    new SuppliedComponent(() ->
+                            (current.get().equals(config.getName())
+                                    ? TextColor.GREEN
+                                    : TextColor.AQUA)
+                                    + config.getName()
+                                    + TextColor.WHITE
+                                    + (finalI == configs.size() - 1
+                                    ? ""
+                                    : ", "))
+                            .setStyle(new Style()
+                                    .setClickEvent(new SmartClickEvent
+                                            (ClickEvent.Action.RUN_COMMAND)
+                                    {
+                                        @Override
+                                        public String getValue()
+                                        {
+                                            return Commands.getPrefix()
+                                                    + "config "
+                                                    + helper.getName()
+                                                    + " load "
+                                                    + "\"" + config.getName() + "\"";
+                                        }
+                                    })));
+        }
+
+        Managers.CHAT.sendDeleteComponent(
+                component,
+                "config2",
+                ChatIDs.COMMAND
+        );
     }
 
     private void displayYesNo(String action,
