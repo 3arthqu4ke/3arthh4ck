@@ -1,0 +1,5 @@
+{
+  "name": "SkyColorPlugin",
+  "mainClass": "me.earth.skycolor.SkyColorPlugin",
+  "mixinConfig": null
+}

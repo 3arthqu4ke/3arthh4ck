@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            name = 'forge'
+            url = 'https://files.minecraftforge.net/maven'
+        }
+        maven {
+            name = "jitpack.io"
+            url = "https://jitpack.io"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = '1.0.0'
+group = 'me.earth' // TODO
+archivesBaseName = 'SkyColor' // TODO
+
+sourceCompatibility = targetCompatibility = '1.8'
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = '1.12.2-14.23.5.2768'
+    runDir = 'run'
+    mappings = 'stable_39'
+    makeObfSourceJar = false
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "jitpack.io"
+        url  = "https://jitpack.io"
+    }
+
+    jcenter()
+}
+
+dependencies {
+    compileOnly('com.github.3arthqu4ke:3arthh4ck:1.7.7') {
+        exclude module: 'mixin'
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+            '3arthh4ckConfig': 'SkyColorPluginConfig.json' // TODO
+        )
+    }
+}
