@@ -200,11 +200,13 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             module.fireShader.set("tex", 0);
 
             GlStateManager.pushMatrix();
-            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha());
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
             module.fireShader.set("alpha", color.getAlpha() / 255.0f);
             glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_BLEND);
             glPolygonOffset(1.0f, -2000000f);
             render(event);
+            glDisable(GL_BLEND);
             glDisable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1.0f, 2000000f);
             GlStateManager.popMatrix();
@@ -228,12 +230,14 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             module.galaxyShader.set("tex", 0);
 
             GlStateManager.pushMatrix();
-            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha());
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
             module.galaxyShader.set("alpha", color.getAlpha() / 255.0f);
+            glEnable(GL_BLEND);
             glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1.0f, -2000000f);
             render(event);
             glDisable(GL_POLYGON_OFFSET_FILL);
+            glDisable(GL_BLEND);
             glPolygonOffset(1.0f, 2000000f);
             GlStateManager.popMatrix();
             module.galaxyShader.unbind();
@@ -258,11 +262,13 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             GlStateManager.pushMatrix();
             // glDepthMask(false);
             // glDisable(GL_DEPTH_TEST);
-            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha());
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
             module.waterShader.set("alpha", color.getAlpha() / 255.0f);
             glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_BLEND);
             glPolygonOffset(1.0f, -2000000f);
             render(event);
+            glDisable(GL_BLEND);
             glDisable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1.0f, 2000000f);
             // glDepthMask(true);

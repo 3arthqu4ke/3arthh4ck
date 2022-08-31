@@ -90,6 +90,7 @@ public class Chams extends Module
     protected final GlShader waterShader = GlShader.createShader("water");
     protected final GlShader alphaShader = GlShader.createShader("alpha");
     protected final GlShader imageShader = GlShader.createShader("image");
+    // TODO: custom shader from file?
     protected final long initTime = System.currentTimeMillis();
     protected boolean gif = false;
 
