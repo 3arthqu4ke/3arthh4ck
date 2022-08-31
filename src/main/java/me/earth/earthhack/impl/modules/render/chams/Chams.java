@@ -4,8 +4,10 @@ import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.*;
+import me.earth.earthhack.impl.event.events.render.ModelRenderEvent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
+import me.earth.earthhack.impl.modules.render.chams.mode.WireFrameMode;
 import me.earth.earthhack.impl.util.minecraft.EntityType;
 import me.earth.earthhack.impl.util.render.GlShader;
 import me.earth.earthhack.impl.util.render.RenderUtil;
@@ -19,6 +21,9 @@ import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.EXTPackedDepthStencil;
 
 import java.awt.*;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glPopAttrib;
 
 public class Chams extends Module
 {
@@ -67,8 +72,8 @@ public class Chams extends Module
     protected final Setting<Color> armorEnemyColor      =
             register(new ColorSetting("ArmorEnemyColor", new Color(255, 255, 255, 255)));
 
-    public final Setting<Boolean> wireframe    =
-        register(new BooleanSetting("Wireframe", false));
+    public final Setting<WireFrameMode> wireframe    =
+        register(new EnumSetting<>("Wireframe", WireFrameMode.None));
     public final Setting<Boolean> wireWalls    =
         register(new BooleanSetting("WireThroughWalls", false));
     public final NumberSetting<Float> lineWidth =
@@ -103,6 +108,28 @@ public class Chams extends Module
         mc.getTextureManager().loadTexture(Chams.GALAXY_LOCATION, new SimpleTexture(Chams.GALAXY_LOCATION));
     }
 
+    protected void doWireFrame(ModelRenderEvent event) {
+        Color wireColor = wireFrameColor.getValue();
+        glPushAttrib(GL_ALL_ATTRIB_BITS);
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glDisable(GL_LIGHTING);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glLineWidth(lineWidth.getValue());
+        if (wireWalls.getValue()) {
+            glDepthMask(false);
+            glDisable(GL_DEPTH_TEST);
+        }
+
+        glColor4f(wireColor.getRed() / 255.0f,
+                  wireColor.getGreen() / 255.0f,
+                  wireColor.getBlue() / 255.0f,
+                  wireColor.getAlpha() / 255.0f);
+        event.getModel().render(event.getEntity(), event.getLimbSwing(), event.getLimbSwingAmount(),
+                                event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScale());
+        glPopAttrib();
+    }
 
     public boolean isValid(Entity entity, ChamsMode modeIn)
     {

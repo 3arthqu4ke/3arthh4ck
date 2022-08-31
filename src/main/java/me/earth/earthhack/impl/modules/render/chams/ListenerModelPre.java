@@ -4,6 +4,7 @@ import me.earth.earthhack.impl.core.mixins.render.entity.IEntityRenderer;
 import me.earth.earthhack.impl.event.events.render.ModelRenderEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
+import me.earth.earthhack.impl.modules.render.chams.mode.WireFrameMode;
 import me.earth.earthhack.impl.modules.render.esp.ESP;
 import me.earth.earthhack.impl.util.math.Vec2d;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
@@ -34,27 +35,8 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
 
     @Override
     public void invoke(ModelRenderEvent.Pre event) {
-        if (!ESP.isRendering && module.wireframe.getValue()) {
-            Color wireColor = module.wireFrameColor.getValue();
-            glPushAttrib(GL_ALL_ATTRIB_BITS);
-            glEnable(GL_BLEND);
-            glDisable(GL_TEXTURE_2D);
-            glDisable(GL_LIGHTING);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            glLineWidth(module.lineWidth.getValue());
-            if (module.wireWalls.getValue()) {
-                glDepthMask(false);
-                glDisable(GL_DEPTH_TEST);
-            }
-
-            glColor4f(wireColor.getRed() / 255.0f,
-                      wireColor.getGreen() / 255.0f,
-                      wireColor.getBlue() / 255.0f,
-                      wireColor.getAlpha() / 255.0f);
-            event.getModel().render(event.getEntity(), event.getLimbSwing(), event.getLimbSwingAmount(),
-                                    event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScale());
-            glPopAttrib();
+        if (!ESP.isRendering && (module.wireframe.getValue() == WireFrameMode.Pre || module.wireframe.getValue() == WireFrameMode.All)) {
+            module.doWireFrame(event);
         }
 
         if (!ESP.isRendering && module.mode.getValue() == ChamsMode.CSGO) {

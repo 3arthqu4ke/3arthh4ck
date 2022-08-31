@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.modules.render.chams;
 import me.earth.earthhack.impl.event.events.render.ModelRenderEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
+import me.earth.earthhack.impl.modules.render.chams.mode.WireFrameMode;
 import me.earth.earthhack.impl.modules.render.esp.ESP;
 import net.minecraft.entity.EntityLivingBase;
 import org.lwjgl.opengl.GL11;
@@ -49,6 +50,10 @@ final class ListenerModelPost extends ModuleListener<Chams, ModelRenderEvent.Pos
                 render(event);
 
             }
+        }
+
+        if (!ESP.isRendering && (module.wireframe.getValue() == WireFrameMode.Post || module.wireframe.getValue() == WireFrameMode.All)) {
+            module.doWireFrame(event);
         }
     }
 
