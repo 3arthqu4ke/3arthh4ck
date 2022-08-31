@@ -69,7 +69,9 @@ final class ListenerSpawnObject extends
         if (mc.player == null
             || event.getPacket().getType() != 51
             || mc.world == null
-            || !module.spectator.getValue() && mc.player.isSpectator())
+            || !module.spectator.getValue() && mc.player.isSpectator()
+            || module.stopWhenEating.getValue() && module.isEating()
+            || module.stopWhenMining.getValue() && module.isMining())
         {
             return;
         }

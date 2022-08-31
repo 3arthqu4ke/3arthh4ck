@@ -22,6 +22,8 @@ final class ListenerPostPlace extends ModuleListener<AutoCrystal,
         if (module.idPredict.getValue()
             && !module.noGod
             && module.breakTimer.passed(module.breakDelay.getValue())
+            && !(module.stopWhenEating.getValue() && module.isEating())
+            && !(module.stopWhenMining.getValue() && module.isMining())
             && mc.player
                  .getHeldItem(event.getPacket().getHand())
                  .getItem() == Items.END_CRYSTAL

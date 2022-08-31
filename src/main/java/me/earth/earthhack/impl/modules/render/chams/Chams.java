@@ -67,6 +67,15 @@ public class Chams extends Module
     protected final Setting<Color> armorEnemyColor      =
             register(new ColorSetting("ArmorEnemyColor", new Color(255, 255, 255, 255)));
 
+    public final Setting<Boolean> wireframe    =
+        register(new BooleanSetting("Wireframe", false));
+    public final Setting<Boolean> wireWalls    =
+        register(new BooleanSetting("WireThroughWalls", false));
+    public final NumberSetting<Float> lineWidth =
+        register(new NumberSetting<>("LineWidth" , 1f , 0.1f , 4f));
+    public final Setting<Color> wireFrameColor =
+        register(new ColorSetting("WireframeColor", new Color(255, 255, 255, 255)));
+
     protected boolean force;
     protected boolean hasImageChammed;
     protected boolean renderLayers;

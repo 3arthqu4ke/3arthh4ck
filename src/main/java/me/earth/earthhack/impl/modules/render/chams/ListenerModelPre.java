@@ -19,7 +19,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -35,80 +34,103 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
 
     @Override
     public void invoke(ModelRenderEvent.Pre event) {
+        if (!ESP.isRendering && module.wireframe.getValue()) {
+            Color wireColor = module.wireFrameColor.getValue();
+            glPushAttrib(GL_ALL_ATTRIB_BITS);
+            glEnable(GL_BLEND);
+            glDisable(GL_TEXTURE_2D);
+            glDisable(GL_LIGHTING);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glLineWidth(module.lineWidth.getValue());
+            if (module.wireWalls.getValue()) {
+                glDepthMask(false);
+                glDisable(GL_DEPTH_TEST);
+            }
+
+            glColor4f(wireColor.getRed() / 255.0f,
+                      wireColor.getGreen() / 255.0f,
+                      wireColor.getBlue() / 255.0f,
+                      wireColor.getAlpha() / 255.0f);
+            event.getModel().render(event.getEntity(), event.getLimbSwing(), event.getLimbSwingAmount(),
+                                    event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScale());
+            glPopAttrib();
+        }
+
         if (!ESP.isRendering && module.mode.getValue() == ChamsMode.CSGO) {
             EntityLivingBase entity = event.getEntity();
             if (module.isValid(entity)) {
                 event.setCancelled(true);
-                boolean lightning = GL11.glIsEnabled(GL11.GL_LIGHTING);
-                boolean blend = GL11.glIsEnabled(GL11.GL_BLEND);
-                GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-                GL11.glDisable(GL11.GL_ALPHA_TEST);
+                boolean lightning = glIsEnabled(GL_LIGHTING);
+                boolean blend = glIsEnabled(GL_BLEND);
+                glPushAttrib(GL_ALL_ATTRIB_BITS);
+                glDisable(GL_ALPHA_TEST);
 
                 if (!module.texture.getValue()) {
-                    GL11.glDisable(GL11.GL_TEXTURE_2D);
+                    glDisable(GL_TEXTURE_2D);
                 }
 
                 if (lightning) {
-                    GL11.glDisable(GL11.GL_LIGHTING);
+                    glDisable(GL_LIGHTING);
                 }
 
                 if (!blend) {
-                    GL11.glEnable(GL11.GL_BLEND);
+                    glEnable(GL_BLEND);
                 }
 
-                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 if (module.xqz.getValue()) {
-                    GL11.glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-                    GL11.glDepthMask(false);
-                    GL11.glDisable(GL11.GL_DEPTH_TEST);
+                    glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+                    glDepthMask(false);
+                    glDisable(GL_DEPTH_TEST);
                     OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
 
                     render(event);
                 }
 
-                GL11.glDisable(GL11.GL_BLEND);
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
-                GL11.glDepthMask(true);
-                GL11.glEnable(GL11.GL_LIGHTING);
+                glDisable(GL_BLEND);
+                glEnable(GL_DEPTH_TEST);
+                glDepthMask(true);
+                glEnable(GL_LIGHTING);
 
                 if (!module.texture.getValue()) {
-                    GL11.glEnable(GL11.GL_TEXTURE_2D);
+                    glEnable(GL_TEXTURE_2D);
                 }
 
-                GL11.glEnable(GL11.GL_ALPHA_TEST);
-                GL11.glPopAttrib();
-                GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-                GL11.glDisable(GL11.GL_ALPHA_TEST);
+                glEnable(GL_ALPHA_TEST);
+                glPopAttrib();
+                glPushAttrib(GL_ALL_ATTRIB_BITS);
+                glDisable(GL_ALPHA_TEST);
 
                 if (!module.texture.getValue()) {
-                    GL11.glDisable(GL11.GL_TEXTURE_2D);
+                    glDisable(GL_TEXTURE_2D);
                 }
 
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glEnable(GL11.GL_BLEND);
-                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                GL11.glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+                glDisable(GL_LIGHTING);
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
                 OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
 
                 render(event);
 
                 if (!blend) {
-                    GL11.glDisable(GL11.GL_BLEND);
+                    glDisable(GL_BLEND);
                 }
 
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
-                GL11.glDepthMask(true);
+                glEnable(GL_DEPTH_TEST);
+                glDepthMask(true);
 
                 if (lightning) {
-                    GL11.glEnable(GL11.GL_LIGHTING);
+                    glEnable(GL_LIGHTING);
                 }
 
                 if (!module.texture.getValue()) {
-                    GL11.glEnable(GL11.GL_TEXTURE_2D);
+                    glEnable(GL_TEXTURE_2D);
                 }
 
-                GL11.glEnable(GL11.GL_ALPHA_TEST);
-                GL11.glPopAttrib();
+                glEnable(GL_ALPHA_TEST);
+                glPopAttrib();
             }
         } else if (!ESP.isRendering && module.mode.getValue() == ChamsMode.Better && event.getEntity() instanceof EntityPlayer) {
             event.setCancelled(true);
@@ -121,7 +143,7 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             glDisable(GL_LIGHTING);
             glEnable(GL_BLEND);
             glLineWidth(1.5f);
-            glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glEnable(GL_STENCIL_TEST);
             glEnable(GL_POLYGON_OFFSET_LINE);
             glDepthMask(false);
@@ -158,7 +180,7 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
                     glDisable(GL_LIGHTING);
                     glEnable(GL_BLEND);
                     glLineWidth(1.5f);
-                    glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                     glEnable(GL_STENCIL_TEST);
                     glEnable(GL_POLYGON_OFFSET_LINE);
                     glDepthMask(false);

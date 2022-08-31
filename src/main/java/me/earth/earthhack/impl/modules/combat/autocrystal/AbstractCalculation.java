@@ -431,7 +431,9 @@ public abstract class AbstractCalculation<T extends CrystalData>
             || ANTISURROUND.returnIfPresent(AntiSurround::isActive, false)
             || LEG_SWITCH.returnIfPresent(LegSwitch::isActive, false)
             || raw == null
-            || entities == null)
+            || entities == null
+            || module.stopWhenEating.getValue() && module.isEating()
+            || module.stopWhenMining.getValue() && module.isMining())
         {
             return true;
         }
