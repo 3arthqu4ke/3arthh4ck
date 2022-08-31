@@ -39,7 +39,9 @@ import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
@@ -359,6 +361,10 @@ public class AutoCrystal extends Module
     protected final Setting<Integer> feetBuffer =
             register(new NumberSetting<>("FeetBuffer", 5, 0, 50))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> stopWhenEating =
+            register(new BooleanSetting("StopWhenEating", false));
+    protected final Setting<Boolean> stopWhenMining =
+            register(new BooleanSetting("StopWhenMining", false));
     protected final Setting<Boolean> dangerFacePlace =
             register(new BooleanSetting("Danger-FacePlace", false))
                 .setComplexity(Complexity.Medium);
@@ -1359,6 +1365,17 @@ public class AutoCrystal extends Module
     public void setBypassPos(BlockPos pos) {
         bypassTimer.reset();
         this.bypassPos = pos;
+    }
+
+    public boolean isEating() {
+        ItemStack stack = mc.player.getActiveItemStack();
+        return mc.player.isHandActive()
+            && !stack.isEmpty()
+            && stack.getItem().getItemUseAction(stack) == EnumAction.EAT;
+    }
+
+    public boolean isMining() {
+        return mc.playerController.getIsHittingBlock();
     }
 
 }
