@@ -287,7 +287,6 @@ public class HUD extends Module {
                 int x = width / 2 - 8;
                 int y = height - (totemsYOffset.getValue()) - getArmorY();
                 itemRender.zLevel = 200.0f;
-                GlStateManager.enableDepth();
                 itemRender.renderItemAndEffectIntoGUI(mc.player, new ItemStack(Items.TOTEM_OF_UNDYING), x, y);
                 itemRender.zLevel = 0.0f;
                 GlStateManager.disableDepth();
