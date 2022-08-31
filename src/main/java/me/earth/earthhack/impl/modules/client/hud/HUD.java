@@ -65,8 +65,8 @@ public class HUD extends Module {
             register(new BooleanSetting("Armor", true));
     protected final Setting<Boolean> totems =
             register(new BooleanSetting("Totems", false));
-    protected final Setting<Integer> totemsOffset =
-            register(new NumberSetting<>("Totems Offset", 0, -10, 10));
+    protected final Setting<Integer> totemsYOffset =
+            register(new NumberSetting<>("Totems Y-Offset", 0, -10, 10));
     protected final Setting<Modules> renderModules =
             register(new EnumSetting<>("Modules", Modules.Length));
     protected final Setting<Potions> potions =
@@ -284,15 +284,15 @@ public class HUD extends Module {
             int totems = InventoryUtil.getCount(Items.TOTEM_OF_UNDYING);
 
             if (totems > 0) {
-                int x = width / 2 - 7;
-                int y = height - (totemsOffset.getValue()) - getArmorY();
+                int x = width / 2 - 8;
+                int y = height - (totemsYOffset.getValue()) - getArmorY();
                 itemRender.zLevel = 200.0f;
                 GlStateManager.enableDepth();
                 itemRender.renderItemAndEffectIntoGUI(mc.player, new ItemStack(Items.TOTEM_OF_UNDYING), x, y);
                 itemRender.zLevel = 0.0f;
                 GlStateManager.disableDepth();
-                String text = String.valueOf(totems);
-                renderText(text, x + 17 - RENDERER.getStringWidth(text), y + 9);
+                renderText(String.valueOf(totems), x + 17 - RENDERER.getStringWidth(String.valueOf(totems)), y + 9);
+                GlStateManager.enableDepth();
             }
         }
         renderArmor();
