@@ -27,13 +27,11 @@ jobs:
           cd ${{ github.event.inputs.path }}
           chmod +x gradlew
       - name: Build with Gradle
-        working-directory: ./${{ github.event.inputs.path }}
         run: |
           cd ${{ github.event.inputs.path }}
           ./gradlew setupDecompWorkspace
           ./gradlew build
       - name: List files
-        working-directory: ./${{ github.event.inputs.path }}
         run: |
           cd ${{ github.event.inputs.path }}
           ls
