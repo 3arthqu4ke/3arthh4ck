@@ -727,17 +727,9 @@ public class AutoCrystal extends Module
     public final Setting<Double> breakNormalWeight =
         register(new NumberSetting<>("B-Norm-Weight", 1.0, 0.0, 5.0))
             .setComplexity(Complexity.Medium);
-
-
-    public final Setting<PushMode> pushOutOfBlocks =
-            register(new EnumSetting<>("PushOutOfBlocks", PushMode.None))
-                .setComplexity(Complexity.Expert);
-    public final Setting<Boolean> shrinkPush =
-            register(new BooleanSetting("ShrinkPush", false))
-                .setComplexity(Complexity.Expert);
-    public final Setting<Boolean> noPushOnNoMove =
-            register(new BooleanSetting("NoPushOnNoMove", false))
-                .setComplexity(Complexity.Expert);
+    public final Setting<Boolean> gravityExtrapolation =
+        register(new BooleanSetting("Extra-Gravity", true))
+            .setComplexity(Complexity.Expert);
     public final Setting<Boolean> selfExtrapolation =
             register(new BooleanSetting("SelfExtrapolation", false))
                 .setComplexity(Complexity.Medium);
