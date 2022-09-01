@@ -4,6 +4,7 @@ import me.earth.earthhack.impl.core.mixins.render.entity.IEntityRenderer;
 import me.earth.earthhack.impl.event.events.render.ModelRenderEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
+import me.earth.earthhack.impl.modules.render.chams.mode.WireFrameMode;
 import me.earth.earthhack.impl.modules.render.esp.ESP;
 import me.earth.earthhack.impl.util.math.Vec2d;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
@@ -34,27 +35,8 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
 
     @Override
     public void invoke(ModelRenderEvent.Pre event) {
-        if (!ESP.isRendering && module.wireframe.getValue()) {
-            Color wireColor = module.wireFrameColor.getValue();
-            glPushAttrib(GL_ALL_ATTRIB_BITS);
-            glEnable(GL_BLEND);
-            glDisable(GL_TEXTURE_2D);
-            glDisable(GL_LIGHTING);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            glLineWidth(module.lineWidth.getValue());
-            if (module.wireWalls.getValue()) {
-                glDepthMask(false);
-                glDisable(GL_DEPTH_TEST);
-            }
-
-            glColor4f(wireColor.getRed() / 255.0f,
-                      wireColor.getGreen() / 255.0f,
-                      wireColor.getBlue() / 255.0f,
-                      wireColor.getAlpha() / 255.0f);
-            event.getModel().render(event.getEntity(), event.getLimbSwing(), event.getLimbSwingAmount(),
-                                    event.getAgeInTicks(), event.getNetHeadYaw(), event.getHeadPitch(), event.getScale());
-            glPopAttrib();
+        if (!ESP.isRendering && (module.wireframe.getValue() == WireFrameMode.Pre || module.wireframe.getValue() == WireFrameMode.All)) {
+            module.doWireFrame(event);
         }
 
         if (!ESP.isRendering && module.mode.getValue() == ChamsMode.CSGO) {
@@ -218,11 +200,13 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             module.fireShader.set("tex", 0);
 
             GlStateManager.pushMatrix();
-            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha());
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
             module.fireShader.set("alpha", color.getAlpha() / 255.0f);
             glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_BLEND);
             glPolygonOffset(1.0f, -2000000f);
             render(event);
+            glDisable(GL_BLEND);
             glDisable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1.0f, 2000000f);
             GlStateManager.popMatrix();
@@ -246,12 +230,14 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             module.galaxyShader.set("tex", 0);
 
             GlStateManager.pushMatrix();
-            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha());
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
             module.galaxyShader.set("alpha", color.getAlpha() / 255.0f);
+            glEnable(GL_BLEND);
             glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1.0f, -2000000f);
             render(event);
             glDisable(GL_POLYGON_OFFSET_FILL);
+            glDisable(GL_BLEND);
             glPolygonOffset(1.0f, 2000000f);
             GlStateManager.popMatrix();
             module.galaxyShader.unbind();
@@ -276,17 +262,49 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             GlStateManager.pushMatrix();
             // glDepthMask(false);
             // glDisable(GL_DEPTH_TEST);
-            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha());
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
             module.waterShader.set("alpha", color.getAlpha() / 255.0f);
             glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_BLEND);
             glPolygonOffset(1.0f, -2000000f);
             render(event);
+            glDisable(GL_BLEND);
             glDisable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1.0f, 2000000f);
             // glDepthMask(true);
             // glEnable(GL_DEPTH_TEST);
             GlStateManager.popMatrix();
             module.waterShader.unbind();
+            glPopMatrix();
+            glPopAttrib();
+        }
+
+        if (module.mode.getValue() == ChamsMode.CustomShader
+            && !ESP.isRendering
+            && module.customShader != null)
+        {
+            if (!module.isValid(event.getEntity())) return;
+            event.setCancelled(true);
+            glPushAttrib(GL_ALL_ATTRIB_BITS);
+            glPushMatrix();
+            Color color = module.getVisibleColor(event.getEntity());
+            module.customShader.bind();
+            module.customShader.set("time", (System.currentTimeMillis() - module.initTime) / 2000.0f);
+            module.customShader.set("resolution", new Vec2f((mc.displayWidth * 2) /*/ 20.0f*/, (mc.displayHeight * 2) /*/ 20.0f*/));
+            module.customShader.set("tex", 0);
+
+            GlStateManager.pushMatrix();
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
+            module.customShader.set("alpha", color.getAlpha() / 255.0f);
+            glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_BLEND);
+            glPolygonOffset(1.0f, -2000000f);
+            render(event);
+            glDisable(GL_BLEND);
+            glDisable(GL_POLYGON_OFFSET_FILL);
+            glPolygonOffset(1.0f, 2000000f);
+            GlStateManager.popMatrix();
+            module.customShader.unbind();
             glPopMatrix();
             glPopAttrib();
         }

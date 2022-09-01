@@ -114,7 +114,9 @@ final class ListenerSpawnObject extends
         entity.setEntityId(packet.getEntityID());
         entity.setUniqueId(packet.getUniqueId());
 
-        if (!module.alwaysCalc.getValue()
+        if ((!module.alwaysCalc.getValue()
+                || pos.equals(module.bombPos)
+                    && module.alwaysBomb.getValue())
             && stamp != null
             && stamp.isValid()
             && (stamp.getDamage() > module.slowBreakDamage.getValue()
@@ -122,6 +124,13 @@ final class ListenerSpawnObject extends
                 || module.breakTimer.passed(module.slowBreakDelay.getValue())
                 || pos.down().equals(module.antiTotemHelper.getTargetPos())))
         {
+            if (pos.equals(module.bombPos))
+            {
+                // should probably set the block underneath
+                // to air when calcing self damage...
+                module.bombPos = null;
+            }
+
             float damage = checkPos(entity);
             if (damage <= -1000.0f)
             {

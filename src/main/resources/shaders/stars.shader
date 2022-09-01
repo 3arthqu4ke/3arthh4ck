@@ -108,4 +108,5 @@ void main() {
     starcolor += vec4(pow(rnd2.y,40.0));
 
     gl_FragColor = mix(freqs[3]-.3, 1., v) * vec4(1.5*freqs[2] * t * t* t , 1.2*freqs[1] * t * t, freqs[3]*t, alpha)+c2+starcolor;
+    gl_FragColor[3] = alpha;
 }

@@ -19,12 +19,17 @@ final class ListenerBlockMulti extends ModuleListener<AutoCrystal,
     @Override
     public void invoke(PacketEvent.Receive<SPacketMultiBlockChange> event)
     {
-        if (module.multiThread.getValue()
+        if ((module.multiThread.getValue() || module.mainThreadThreads.getValue())
                 && module.blockChangeThread.getValue())
         {
             SPacketMultiBlockChange packet = event.getPacket();
             event.addPostEvent(() ->
             {
+                if (mc.world == null || mc.player == null)
+                {
+                    return;
+                }
+
                 for (SPacketMultiBlockChange.BlockUpdateData data :
                         packet.getChangedBlocks())
                 {

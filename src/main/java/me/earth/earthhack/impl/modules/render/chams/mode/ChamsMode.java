@@ -10,5 +10,6 @@ public enum ChamsMode
     FireShader,
     GalaxyShader,
     WaterShader,
+    CustomShader,
     Image
 }

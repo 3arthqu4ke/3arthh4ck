@@ -100,6 +100,8 @@ public class Offhand extends Module
             register(new BooleanSetting("NoDoubleGapple", false));
     protected final Setting<Boolean> doubleGappleToCrystal =
             register(new BooleanSetting("DoubleGappleToCrystal", false));
+    protected final Setting<Boolean> swordGapOverride =
+            register(new BooleanSetting("SwordGapOverride", false));
     protected final Setting<Boolean> fixPingBypassAsyncSlot =
             register(new BooleanSetting("FixPingBypassAsyncSlot", true))
                 .setComplexity(Complexity.Expert);
@@ -208,7 +210,7 @@ public class Offhand extends Module
                 }
             }
 
-            if (!isSafe() && !suicide)
+            if (!isSafe() && !suicide && !(swordGapped && swordGapOverride.getValue()))
             {
                 setRecovery(mode);
                 mode = OffhandMode.TOTEM;

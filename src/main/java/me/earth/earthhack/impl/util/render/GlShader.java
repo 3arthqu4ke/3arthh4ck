@@ -199,7 +199,10 @@ public class GlShader implements Nameable {
     // TODO: replace kotlin design with more conventional java design
     public static GlShader createShader(String name) {
         InputStream sourceStream = GlShader.class.getResourceAsStream("/shaders/" + name + ".shader");
+        return createShader(name, sourceStream);
+    }
 
+    public static GlShader createShader(String name, InputStream sourceStream) {
         if (sourceStream == null) return null;
         String source;
         try {
