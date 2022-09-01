@@ -279,6 +279,36 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             glPopAttrib();
         }
 
+        if (module.mode.getValue() == ChamsMode.CustomShader
+            && !ESP.isRendering
+            && module.customShader != null)
+        {
+            if (!module.isValid(event.getEntity())) return;
+            event.setCancelled(true);
+            glPushAttrib(GL_ALL_ATTRIB_BITS);
+            glPushMatrix();
+            Color color = module.getVisibleColor(event.getEntity());
+            module.customShader.bind();
+            module.customShader.set("time", (System.currentTimeMillis() - module.initTime) / 2000.0f);
+            module.customShader.set("resolution", new Vec2f((mc.displayWidth * 2) /*/ 20.0f*/, (mc.displayHeight * 2) /*/ 20.0f*/));
+            module.customShader.set("tex", 0);
+
+            GlStateManager.pushMatrix();
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
+            module.customShader.set("alpha", color.getAlpha() / 255.0f);
+            glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_BLEND);
+            glPolygonOffset(1.0f, -2000000f);
+            render(event);
+            glDisable(GL_BLEND);
+            glDisable(GL_POLYGON_OFFSET_FILL);
+            glPolygonOffset(1.0f, 2000000f);
+            GlStateManager.popMatrix();
+            module.customShader.unbind();
+            glPopMatrix();
+            glPopAttrib();
+        }
+
         if (false
                 && module.isValid(event.getEntity())
                 && !module.renderModels)

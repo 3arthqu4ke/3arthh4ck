@@ -11,6 +11,8 @@ import me.earth.earthhack.impl.modules.render.chams.mode.WireFrameMode;
 import me.earth.earthhack.impl.util.minecraft.EntityType;
 import me.earth.earthhack.impl.util.render.GlShader;
 import me.earth.earthhack.impl.util.render.RenderUtil;
+import me.earth.earthhack.impl.util.text.ChatUtil;
+import me.earth.earthhack.impl.util.text.TextColor;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.shader.Framebuffer;
@@ -21,9 +23,11 @@ import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.EXTPackedDepthStencil;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glPopAttrib;
 
 public class Chams extends Module
 {
@@ -80,6 +84,10 @@ public class Chams extends Module
         register(new NumberSetting<>("LineWidth" , 1f , 0.1f , 4f));
     public final Setting<Color> wireFrameColor =
         register(new ColorSetting("WireframeColor", new Color(255, 255, 255, 255)));
+    protected final Setting<String> customShaderLocation      =
+        register(new StringSetting("CustomShaderLocation", "None!"));
+    protected final Setting<Boolean> refreshCustomShader =
+        register(new BooleanSetting("RefreshCustomShader", false));
 
     protected boolean force;
     protected boolean hasImageChammed;
@@ -90,7 +98,7 @@ public class Chams extends Module
     protected final GlShader waterShader = GlShader.createShader("water");
     protected final GlShader alphaShader = GlShader.createShader("alpha");
     protected final GlShader imageShader = GlShader.createShader("image");
-    // TODO: custom shader from file?
+    protected GlShader customShader = GlShader.createShader("stars");
     protected final long initTime = System.currentTimeMillis();
     protected boolean gif = false;
 
@@ -107,6 +115,33 @@ public class Chams extends Module
         this.listeners.add(new ListenerRenderLayers(this));
         this.setData(new ChamsData(this));
         mc.getTextureManager().loadTexture(Chams.GALAXY_LOCATION, new SimpleTexture(Chams.GALAXY_LOCATION));
+        this.customShaderLocation.addObserver(e -> {
+            if (!e.isCancelled() && !"None!".equalsIgnoreCase(e.getValue())) {
+                loadCustomShader(e.getValue());
+            }
+        });
+        this.refreshCustomShader.addObserver(e -> {
+            if (e.getValue()) {
+                e.setCancelled(true);
+                loadCustomShader(customShaderLocation.getValue());
+            }
+        });
+    }
+
+    private void loadCustomShader(String location) {
+        File file = new File(location);
+        try (FileInputStream fis = new FileInputStream(file)) {
+            GlShader shader = GlShader.createShader(file.getName(), fis);
+            if (shader == null) {
+                ChatUtil.sendMessage(TextColor.RED + "Could not load custom shader! Check the logs.");
+            } else {
+                ChatUtil.sendMessage(TextColor.GREEN + "Custom shader loaded successfully.");
+                this.customShader = shader;
+            }
+        } catch (IOException ex) {
+            ChatUtil.sendMessage(TextColor.RED + "Can not load custom shader: " + ex.getMessage());
+            ex.printStackTrace();
+        }
     }
 
     protected void doWireFrame(ModelRenderEvent event) {
