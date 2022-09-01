@@ -10,6 +10,7 @@ import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.anvilaura.AnvilAura;
 import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
+import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalTimeStamp;
 import me.earth.earthhack.impl.modules.misc.nuker.Nuker;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.ESPMode;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.MineMode;
@@ -255,6 +256,10 @@ final class ListenerUpdate extends ModuleListener<Speedmine, UpdateEvent>
                                     new CPacketAnimation(EnumHand.OFF_HAND);
                             InventoryUtil.syncItem();
                             mc.player.connection.sendPacket(place);
+                            if (AUTOCRYSTAL.isPresent()) {
+                                AUTOCRYSTAL.get().placed.put(p, new CrystalTimeStamp(Float.MAX_VALUE, false));
+                                AUTOCRYSTAL.get().bombPos = p.up();
+                            }
                             mc.player.connection.sendPacket(animation);
                         } else {
                             final int crystalSlot = InventoryUtil.findHotbarItem(Items.END_CRYSTAL);

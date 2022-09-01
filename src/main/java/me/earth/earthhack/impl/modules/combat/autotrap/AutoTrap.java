@@ -1,17 +1,22 @@
 package me.earth.earthhack.impl.modules.combat.autotrap;
 
+import me.earth.earthhack.api.event.events.Stage;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
+import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
+import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.combat.autotrap.modes.TrapTarget;
 import me.earth.earthhack.impl.modules.combat.autotrap.util.Trap;
 import me.earth.earthhack.impl.util.helpers.blocks.ObbyListenerModule;
+import me.earth.earthhack.impl.util.helpers.blocks.modes.Rotate;
 import me.earth.earthhack.impl.util.helpers.blocks.util.TargetResult;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
+import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.HoleUtil;
@@ -73,6 +78,9 @@ protected final Setting<Boolean> top               =
             register(new BooleanSetting("NoScaffold+", false));
     protected final Setting<Boolean> upperFace     =
             register(new BooleanSetting("Upper-FP", false));
+    protected final Setting<Boolean> instant     =
+            register(new BooleanSetting("Instant", false));
+    // maybe help bombing?
 
     /** Players in range mapped to their speed */
     protected final Map<EntityPlayer, Double> speeds = new HashMap<>();
@@ -85,6 +93,8 @@ protected final Setting<Boolean> top               =
     {
         super("AutoTrap", Category.Combat);
         this.setData(new AutoTrapData(this));
+        this.listeners.add(new ListenerBlockChange(this));
+        this.listeners.add(new ListenerMultiBlockChange(this));
     }
 
     @Override
@@ -641,6 +651,36 @@ protected final Setting<Boolean> top               =
         }
 
         return positions;
+    }
+
+    protected boolean instantRotationCheck(BlockPos pos)
+    {
+        return rotate.getValue() != Rotate.Normal || RotationUtil.isLegit(pos);
+    }
+
+    protected void runInstantTick(PacketEvent.Receive<?> event)
+    {
+        event.addPostEvent(() ->
+        {
+            if (mc.player == null || mc.world == null)
+            {
+                return;
+            }
+
+            MotionUpdateEvent motionUpdateEvent = new MotionUpdateEvent(
+                Stage.PRE,
+                Managers.POSITION.getX(),
+                Managers.POSITION.getY(),
+                Managers.POSITION.getZ(),
+                Managers.ROTATION.getServerYaw(),
+                Managers.ROTATION.getServerPitch(),
+                Managers.POSITION.isOnGround());
+
+            this.listener.invoke(motionUpdateEvent);
+            motionUpdateEvent = new MotionUpdateEvent(Stage.POST,
+                                                      motionUpdateEvent);
+            this.listener.invoke(motionUpdateEvent);
+        });
     }
 
 }

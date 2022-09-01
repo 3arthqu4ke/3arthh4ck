@@ -28,7 +28,6 @@ import me.earth.earthhack.impl.util.math.GuardTimer;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.minecraft.CooldownBypass;
-import me.earth.earthhack.impl.util.minecraft.PushMode;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.misc.collections.CollectionUtil;
@@ -778,6 +777,9 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> smartPost =
             register(new BooleanSetting("Smart-Post", true))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> mainThreadThreads =
+            register(new BooleanSetting("MainThreadThreads", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<RotationThread> rotationThread =
             register(new EnumSetting<>("RotationThread", RotationThread.Predict))
                 .setComplexity(Complexity.Expert);
@@ -877,6 +879,9 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> debugAntiPlaceFail =
             register(new BooleanSetting("DebugAntiPlaceFail", false))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> alwaysBomb =
+            register(new BooleanSetting("Always-Bomb", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> removeTime =
             register(new NumberSetting<>("Remove-Time", 1000, 0, 2500))
                 .setComplexity(Complexity.Expert);
@@ -910,6 +915,7 @@ public class AutoCrystal extends Module
     protected final Queue<Runnable> post = new ConcurrentLinkedQueue<>();
     protected volatile RotationFunction rotation;
     private BlockPos bypassPos;
+    public BlockPos bombPos;
     protected EntityPlayer target;
     protected Entity crystal;
     protected Entity focus;
