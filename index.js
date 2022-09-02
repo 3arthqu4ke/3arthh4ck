@@ -289,6 +289,7 @@
          * definition.
          */
         loadImages: function () {
+            console.log("Is high DPI: " + IS_HIDPI + ", aspect: " + window.devicePixelRatio)
             if (IS_HIDPI) {
                 Runner.imageSprite = document.getElementById('offline-resources-2x');
                 this.spriteDef = Runner.spriteDefinition.HDPI;
@@ -2750,3 +2751,8 @@ function onDocumentLoad() {
 }
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
+document.ontouchstart = function(evt) {
+    if (document.getElementById("messageBox") != null) {
+        document.getElementById("messageBox").style.visibility="hidden";
+    }
+};
