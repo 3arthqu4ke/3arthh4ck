@@ -145,6 +145,10 @@ public class Chams extends Module
     }
 
     protected void doWireFrame(ModelRenderEvent event) {
+        if (!isValid(event.getEntity())) {
+            return;
+        }
+        
         Color wireColor = wireFrameColor.getValue();
         glPushAttrib(GL_ALL_ATTRIB_BITS);
         glEnable(GL_BLEND);
