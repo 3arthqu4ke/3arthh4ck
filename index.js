@@ -295,8 +295,7 @@
                 this.spriteDef = Runner.spriteDefinition.HDPI;
             } else {
                 // idk why but gh-pages starts the page with very low DPI
-                // Runner.imageSprite = document.getElementById('offline-resources-1x');
-                Runner.imageSprite = document.getElementById('offline-resources-2x');
+                Runner.imageSprite = document.getElementById('offline-resources-1x');
                 this.spriteDef = Runner.spriteDefinition.LDPI;
             }
 
