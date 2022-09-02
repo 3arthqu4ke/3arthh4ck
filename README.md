@@ -1,94 +1,51 @@
-# 3arthh4ck
+Play here: http://3arthqu4ke.github.io/3arthh4ck/
 
-[![CodeFactor](https://www.codefactor.io/repository/github/3arthqu4ke/3arthh4ck/badge/main)](https://www.codefactor.io/repository/github/3arthqu4ke/3arthh4ck/overview/main)
-[![GitHub All Releases](https://img.shields.io/github/downloads/3arthqu4ke/3arthh4ck/total.svg)](https://github.com/3arthqu4ke/3arthh4ck/releases)
-[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/3arthqu4ke/pingbypass?logo=docker)](https://hub.docker.com/r/3arthqu4ke/pingbypass)
-[![Lines of code](docs/loc.svg)](https://tokei.rs/b1/github/3arthqu4ke/3arthh4ck?category=code)
-![Repo size](https://img.shields.io/github/repo-size/3arthqu4ke/3arthh4ck.svg)
-[![Build](https://github.com/3arthqu4ke/3arthh4ck/actions/workflows/gradle-publish.yml/badge.svg)](https://github.com/3arthqu4ke/3arthh4ck/actions)
+Forked from here: https://github.com/wayou/t-rex-runner
 
-3arthh4ck is Minecraft 1.12.2 utility mod for anarchy PvP. With the 1.7.0 release it also takes over the role
-of the now outdated PingBypass [Server](https://github.com/3arthqu4ke/PingBypass) and 
-[Client](https://github.com/3arthqu4ke/PingBypass-Client). To install it just drop the jar into your forge mods folder.
-By default, any message prefixed with a `+` will be handled as command, e.g. `+toggle clickgui`, to open the gui. 
-Because of bloat I decided to hide some of the more complicated Settings by default. You can find those by using the 
-Settings module.
+## t-rex-runner
 
-## Proxy/PingBypass
-![Image of a PingBypass server](docs/pingbypass.png)  
-3arthh4ck can be used as a Proxy server. With ping being such an important factor in crystal PvP this allows you to play
-on servers far away from where you are without the disadvantage of high ping. This proxy can, opposed to the old
-PingBypass, stay connected to a server, allowing to join through it at a later point. This can for example be used to 
-wait out 2b2t's queue system.
+the trex runner game extracted from chrome offline err page.
 
-To set up the 3arthh4ck proxy you need a server, I personally started out using [GCP's](https://cloud.google.com/) free
-trial. The location of that server should be as close as possible to the one you want to play on. That server should 
-have an Ip and port which are reachable from the outside. The game will run on that server. Keep in mind that no matter
-which account you use on your client, the Minecraft account on the server will always be used when you play.
+see the [source](https://cs.chromium.org/chromium/src/components/neterror/resources/offline.js?q=t-rex+package:%5Echromium$&dr=C&l=7) from chromium
 
-### Setup with docker
-1.  Install [docker](https://docs.docker.com/engine/install/) on your server.
 
-2.  Run `docker pull 3arthqu4ke/pingbypass`.
+[go and enjoy! :smile: ](http://wayou.github.io/t-rex-runner/)
 
-3.  Run `docker run -i -t -p <ip>:<port>:25565 3arthqu4ke/pingbypass`.
+![chrome offline game cast](assets/screenshot.gif)
 
-4.  You should now be in the shell of the docker container.
+## Interesting Forks/In Chinese, we call it 「花样玩法」
 
-5.  Login to your Minecraft account via `hmc login <email>`, then enter your account password.
+- [vianroyal](https://github.com/vianroyal)/[t-rex-runner](https://github.com/vianroyal/t-rex-runner) [Kumamon runner](http://vianroyal.github.io/t-rex-runner/) 
+<br>
 
-6.  Launch the PingBypass server with `hmc launch 1 -id --jvm -Dpb.password=<some password>`.
+![](assets/kumamon-runner.gif)
 
-7.  You are now done with the server. Use the commands from the
-    [HMC-Specifics](https://github.com/3arthqu4ke/HMC-Specifics) to stop the game. Or just stop the container.
+- [xkuga](https://github.com/xkuga)/[t-rex-runner](https://github.com/xkuga/t-rex-runner) [Hello KuGou](http://hellokugou.com/) 
+<br>
 
-8.  On your own PC just install 3arthh4ck by using its Installer or dropping it inside your mods folder.
+![](assets/hello-kugou.gif)
 
-9.  In the MultiPlayer Menus top right corner you will see a book and a PingBypass button. Use PingBypass button to
-     toggle it on and off and the book to enter the server's connection details, also the password you used in step 6.
+- [d-nery](https://github.com/d-nery/)/[t-rex-runner](https://github.com/d-nery/t-rex-runner) [Novas coisas](http://d-nery.github.io/t-rex-runner/) 
+<br>
 
-10. You can add the PingBypass server like a normal Minecraft server, this will make it look like in the picture above.
-     When the PingBypass button is toggled on you will join any server you click through the PingBypass proxy.
+![](assets/novas-coisas.gif)
 
-11. There is two sets of modules, one accessible through the PB-Gui module. These modules have separate configs and 
-     represent the ones on the proxy server.
+- [chirag64](https://github.com/chirag64)/[t-rex-runner-bot](https://github.com/chirag64/t-rex-runner-bot) [t-rex runner bot](https://chirag64.github.io/t-rex-runner-bot/) 
+<br>
 
-### Manual Setup with HeadlessMc
-This is just what the docker container already automates.
+![](assets/t-rex-runner-bot.gif)
 
-1.  Install Java 8 on the server
+- [19janil](https://github.com/19janil)/[t-rex-runner](https://github.com/19janil/t-rex-runner) [t-rex runner](https://19janil.github.io/t-rex-runner/) 
+<br>
 
-2.  Create a folder where your game will run.
+![](assets/t-rex-runner-19janil.gif)
 
-3.  Inside that folder create two directories: `mods` and `earthhack`
+- [enthus1ast](https://github.com/enthus1ast)/[chromeTrip](https://github.com/enthus1ast/chromeTrip) [Chrome Trip by code0](https://code0.itch.io/chrome-trip) 
+<br>
 
-4.  Put the 3arthh4ck jar and the [HMC-Specifics-1.12.2](https://github.com/3arthqu4ke/HMC-Specifics/releases/tag/1.0.3) 
-    jar inside the mods folder.
+![](https://user-images.githubusercontent.com/13794470/37289691-964618be-260a-11e8-8c4a-6df04d6c490d.gif)
 
-5.  Inside the earthhack directory create a file called `pingbypass.properties` filled with the following:
-    ```properties
-    pb.server=true
-    pb.password=<password for your pingbypass proxy>
-    pb.ip=<the aforementioned ip (definitely not 127.0.0.1)>
-    pb.port=<the aforementioned port>
-    ```
+- [zouariste](https://github.com/zouariste)/[corona-runner](https://github.com/zouariste/corona-runner) [Corona runner](https://zouariste.github.io/corona-runner/) 
+<br>
 
-6.  Download [HeadlessMc](https://github.com/3arthqu4ke/HeadlessMc) and run its jar once.
-
-7.  This should create a file called `HeadlessMC/config.properties`. Edit that file and add:
-    ```properties
-    hmc.gamedir=<the directory created in step 2.>
-    hmc.java.versions=<the directory where the java binary is located, e.g. /usr/bin/java>
-    hmc.invert.jndi.flag=true
-    hmc.invert.lookup.flag=true
-    hmc.invert.lwjgl.flag=true
-    hmc.invert.pauls.flag=true
-    ```
-
-8.  Run HeadlessMc again:
-    * Login to your Microsoft account with `login <email>`, then enter your password.
-    * Run `download 1.12.2`., then `forge 1.12.2`.
-    * List the downloaded versions with `versions -refresh`.
-    * Launch the game with `launch <id of the forge version> -id`.
-
-9.  You are now done with the server. Just follow the steps after 7. in the docker setup.
+![](https://raw.githubusercontent.com/zouariste/corona-runner/gh-pages/assets/corona-runner.gif)
