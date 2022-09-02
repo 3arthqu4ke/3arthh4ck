@@ -1,6 +1,7 @@
 Play here: http://3arthqu4ke.github.io/3arthh4ck/
 
-Forked from here: https://github.com/wayou/t-rex-runner
+Forked from here: https://github.com/wayou/t-rex-runner  
+Some changes taken from here: https://github.com/zouariste/corona-runner
 
 ## t-rex-runner
 
