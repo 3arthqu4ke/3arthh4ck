@@ -71,6 +71,9 @@ public class ExtrapolationHelper extends SubscriberImpl implements Globals {
         tracker.active = false;
         tracker.copyLocationAndAnglesFrom(tracker.tracked);
         tracker.gravity = module.gravityExtrapolation.getValue();
+        tracker.gravityFactor = module.gravityFactor.getValue();
+        tracker.yPlusFactor = module.yPlusFactor.getValue();
+        tracker.yMinusFactor = module.yMinusFactor.getValue();
         for (tracker.ticks = 0; tracker.ticks < ticks; tracker.ticks++) {
             tracker.updateFromTrackedEntity();
         }

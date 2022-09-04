@@ -27,6 +27,9 @@ public class MotionTracker extends EntityPlayerNoInterp
     public volatile boolean active;
     public boolean shrinkPush;
     public boolean gravity;
+    public double gravityFactor = 1.0;
+    public double yPlusFactor = 1.0;
+    public double yMinusFactor = 1.0;
     public int ticks;
 
     public MotionTracker(World worldIn, EntityPlayer from)
@@ -67,11 +70,11 @@ public class MotionTracker extends EntityPlayerNoInterp
     public void updateFromTrackedEntity()
     {
         this.motionX = tracked.motionX;
-        this.motionY = tracked.motionY;
+        this.motionY = tracked.motionY > 0.0 ? tracked.motionY * yPlusFactor : tracked.motionY * yMinusFactor;
         this.motionZ = tracked.motionZ;
 
         if (gravity) {
-            this.motionY -= 0.03999999910593033D * ticks; // * 0.9800000190734863D ?
+            this.motionY -= 0.03999999910593033D * gravityFactor * ticks; // * 0.9800000190734863D ?
         }
 
         List<AxisAlignedBB> list1 = this.world.getCollisionBoxes(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ));
