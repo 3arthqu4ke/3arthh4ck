@@ -716,7 +716,6 @@ public class AutoCrystal extends Module
     public final Setting<Double> placeNormalWeight =
         register(new NumberSetting<>("P-Norm-Weight", 1.0, 0.0, 5.0))
             .setComplexity(Complexity.Medium);
-
     public final Setting<Boolean> avgBreakExtra =
             register(new BooleanSetting("AvgBreakExtra", false))
                 .setComplexity(Complexity.Expert);
@@ -728,6 +727,15 @@ public class AutoCrystal extends Module
             .setComplexity(Complexity.Medium);
     public final Setting<Boolean> gravityExtrapolation =
         register(new BooleanSetting("Extra-Gravity", true))
+            .setComplexity(Complexity.Expert);
+    public final Setting<Double> gravityFactor =
+        register(new NumberSetting<>("Gravity-Factor", 1.0, 0.0, 5.0))
+            .setComplexity(Complexity.Expert);
+    public final Setting<Double> yPlusFactor =
+        register(new NumberSetting<>("Y-Plus-Factor", 1.0, 0.0, 5.0))
+            .setComplexity(Complexity.Expert);
+    public final Setting<Double> yMinusFactor =
+        register(new NumberSetting<>("Y-Minus-Factor", 1.0, 0.0, 5.0))
             .setComplexity(Complexity.Expert);
     public final Setting<Boolean> selfExtrapolation =
             register(new BooleanSetting("SelfExtrapolation", false))
