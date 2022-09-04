@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.modules.combat.autocrystal.helpers;
 
 import me.earth.earthhack.api.event.bus.SubscriberImpl;
+import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.event.listeners.ReceiveListener;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.SwingTime;
@@ -32,11 +33,13 @@ public class IDHelper extends SubscriberImpl implements Globals
         THREAD = ThreadUtil.newDaemonScheduledExecutor("ID-Helper");
     }
 
+    private final Setting<Boolean> basePlaceOnly;
     private volatile int highestID;
     private boolean updated;
 
-    public IDHelper()
+    public IDHelper(Setting<Boolean> basePlaceOnly)
     {
+        this.basePlaceOnly = basePlaceOnly;
         this.listeners.add(new ReceiveListener<>(SPacketSpawnObject.class,
             event -> checkID(event.getPacket().getEntityID())));
         this.listeners.add(new ReceiveListener<>(SPacketSpawnExperienceOrb.class,
@@ -131,6 +134,12 @@ public class IDHelper extends SubscriberImpl implements Globals
                        int packets,
                        int sleep)
     {
+
+        if (basePlaceOnly.getValue())
+        {
+            return;
+        }
+
         if (sleep <= 0)
         {
             attackPackets(breakSwing, godSwing, idOffset, packets);

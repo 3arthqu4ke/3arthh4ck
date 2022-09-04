@@ -523,6 +523,9 @@ public class AutoCrystal extends Module
     /* ---------------- Obsidian Settings -------------- */
     protected final Setting<Boolean> obsidian =
             register(new BooleanSetting("Obsidian", false));
+    protected final Setting<Boolean> basePlaceOnly =
+            register(new BooleanSetting("BasePlaceOnly", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> obbySwitch =
             register(new BooleanSetting("Obby-Switch", false))
                 .setComplexity(Complexity.Medium);
@@ -943,7 +946,7 @@ public class AutoCrystal extends Module
 
     // TODO: static
     protected final IDHelper idHelper =
-            new IDHelper();
+            new IDHelper(basePlaceOnly);
 
     protected final HelperLiquids liquidHelper =
             new HelperLiquids(this);

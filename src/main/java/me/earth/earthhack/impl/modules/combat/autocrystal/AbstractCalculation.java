@@ -219,7 +219,8 @@ public abstract class AbstractCalculation<T extends CrystalData>
                                        .passed(module.obbyCalc.getValue());
                 if (obbyCheck()
                     && passed
-                    && placeObby(placeData, null))
+                    && placeObby(placeData, null)
+                    || module.basePlaceOnly.getValue())
                 {
                     return;
                 }
@@ -510,6 +511,11 @@ public abstract class AbstractCalculation<T extends CrystalData>
             ifBlocked = () -> attack(entity, validity, false);
             return false;
         }*/
+
+        if (module.basePlaceOnly.getValue())
+        {
+            return validity != BreakValidity.INVALID;
+        }
 
         module.setCrystal(entity);
         switch (validity)
@@ -944,6 +950,10 @@ public abstract class AbstractCalculation<T extends CrystalData>
                          float damage,
                          MutableWrapper<Boolean> liquidBreak,
                          boolean shield) {
+        if (module.basePlaceOnly.getValue()) {
+            return;
+        }
+
         if (liquidBreak != null) {
             module.liquidTimer.reset();
         }
