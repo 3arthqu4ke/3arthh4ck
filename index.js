@@ -293,11 +293,10 @@
                 Runner.imageSprite = document.getElementById('offline-resources-2x');
                 this.spriteDef = Runner.spriteDefinition.HDPI;
             } else {
-                Runner.imageSprite = document.getElementById('offline-resources-1x');
-                this.spriteDef = Runner.spriteDefinition.LDPI;
+                console.log('need resources 1x')
             }
 
-            if (Runner.imageSprite.complete) {
+            if (Runner.imageSprite) {
                 this.init();
             } else {
                 // If the images are not yet loaded, add a listener.
@@ -2750,3 +2749,8 @@ function onDocumentLoad() {
 }
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
+document.ontouchstart = function(evt) {
+    if (document.getElementById("messageBox") != null) {
+        document.getElementById("messageBox").style.visibility="hidden";
+    }
+};
