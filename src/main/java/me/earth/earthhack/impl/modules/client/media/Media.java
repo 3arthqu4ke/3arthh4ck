@@ -9,6 +9,7 @@ import me.earth.earthhack.api.util.TextUtil;
 import me.earth.earthhack.impl.commands.util.CommandUtil;
 import me.earth.earthhack.impl.core.mixins.gui.MixinGuiNewChat;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.accountspoof.AccountSpoof;
 import me.earth.earthhack.impl.modules.client.autoconfig.RemovingString;
 import me.earth.earthhack.impl.modules.client.pingbypass.PingBypassModule;
 import me.earth.earthhack.impl.util.helpers.addable.RegisteringModule;
@@ -28,6 +29,8 @@ public class Media extends RegisteringModule<String, RemovingString>
 {
     protected static final ModuleCache<PingBypassModule> PING_BYPASS =
             Caches.getModule(PingBypassModule.class);
+    protected static final ModuleCache<AccountSpoof> ACCOUNT_SPOOF =
+        Caches.getModule(AccountSpoof.class);
 
     protected final Setting<String> replacement =
             register(new StringSetting("Replacement", "3arthqu4ke"));
@@ -218,8 +221,21 @@ public class Media extends RegisteringModule<String, RemovingString>
                                   .replaceAll(replacement.getValue());
             }
 
+            if (ACCOUNT_SPOOF.isEnabled())
+            {
+                toAdd = ACCOUNT_SPOOF.get().pattern
+                    .matcher(toAdd)
+                    .replaceAll(replacement.getValue());
+            }
+
             return pattern.matcher(toAdd).replaceAll(replacement.getValue());
         });
+    }
+
+    private Pattern compile(String name)
+    {
+        cache.clear();
+        return compileWithColorCodes(name);
     }
 
     /**
@@ -230,9 +246,8 @@ public class Media extends RegisteringModule<String, RemovingString>
      * @param name the name to get a regex from
      * @return a pattern for the name.
      */
-    private Pattern compile(String name)
+    public static Pattern compileWithColorCodes(String name)
     {
-        cache.clear();
         if (name == null)
         {
             return null;
