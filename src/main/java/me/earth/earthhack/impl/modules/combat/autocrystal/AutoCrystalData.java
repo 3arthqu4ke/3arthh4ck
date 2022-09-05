@@ -452,6 +452,8 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
             " when using RotationThread - Wait.");
         register(module.threadDelay, "Delay between 2 calculations (Low " +
             "delays mean more Load for the CPU).");
+        register(module.pullBasedDelay, "An additional delay for pull-based" +
+            " threads (Motion, GameLoop).");
         register(module.blockDestroyThread,
             "Places right after SpeedMine broke a block.");
         register(module.explosionThread, "Starts a Thread" +

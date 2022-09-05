@@ -27,6 +27,7 @@ import me.earth.earthhack.impl.util.math.DiscreteTimer;
 import me.earth.earthhack.impl.util.math.GuardTimer;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.StopWatch;
+import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.CooldownBypass;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
@@ -131,6 +132,12 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> smartTrace =
             register(new BooleanSetting("Smart-Trace", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> placeRangeEyes =
+            register(new BooleanSetting("PlaceRangeEyes", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> placeRangeCenter =
+            register(new BooleanSetting("PlaceRangeCenter", true))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Double> traceWidth =
             register(new NumberSetting<>("TraceWidth", -1.0, -1.0, 1.0))
@@ -337,6 +344,12 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> multiPlaceMinDmg =
             register(new BooleanSetting("MultiPlace-MinDmg", true))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> countDeadCrystals =
+            register(new BooleanSetting("CountDeadCrystals", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> countDeathTime =
+            register(new BooleanSetting("CountWithinDeathTime", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> yCalc =
             register(new BooleanSetting("Y-Calc", false))
@@ -818,6 +831,9 @@ public class AutoCrystal extends Module
     protected final Setting<Integer> maxEarlyThread =
             register(new NumberSetting<>("MaxEarlyThread", 8, 1, 20))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> pullBasedDelay =
+            register(new NumberSetting<>("PullBasedDelay", 0, 0, 1000))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> explosionThread =
             register(new BooleanSetting("ExplosionThread", false))
                 .setComplexity(Complexity.Medium);
@@ -830,6 +846,9 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> spawnThread =
             register(new BooleanSetting("SpawnThread", false))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> spawnThreadWhenAttacked =
+            register(new BooleanSetting("SpawnThreadWhenAttacked", true))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> destroyThread =
             register(new BooleanSetting("DestroyThread", false))
                 .setComplexity(Complexity.Medium);
@@ -921,6 +940,7 @@ public class AutoCrystal extends Module
     protected final StopWatch shieldTimer = new StopWatch();
     protected final StopWatch slideTimer = new StopWatch();
     protected final StopWatch zoomTimer = new StopWatch();
+    protected final StopWatch pullTimer = new StopWatch();
 
     /* ---------------- States -------------- */
     protected final Queue<Runnable> post = new ConcurrentLinkedQueue<>();
@@ -1386,6 +1406,15 @@ public class AutoCrystal extends Module
 
     public boolean isMining() {
         return mc.playerController.getIsHittingBlock();
+    }
+
+    public boolean isOutsidePlaceRange(BlockPos pos) {
+        EntityPlayer player = RotationUtil.getRotationPlayer();
+        double x = player.posX;
+        double y = player.posY + (placeRangeEyes.getValue() ? player.getEyeHeight() : 0);
+        double z = player.posZ;
+        double distance = placeRangeCenter.getValue() ? pos.distanceSqToCenter(x, y, z) : pos.distanceSq(x, y, z);
+        return distance >= MathUtil.square(placeRange.getValue());
     }
 
 }

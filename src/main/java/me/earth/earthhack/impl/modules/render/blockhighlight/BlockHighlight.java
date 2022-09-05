@@ -23,6 +23,8 @@ public class BlockHighlight extends BlockESPModule
             register(new BooleanSetting("Eyes", false));
     protected final Setting<Boolean> slide =
             register(new BooleanSetting("Slide", false));
+    protected final Setting<Boolean> toCenter =
+            register(new BooleanSetting("ToCenter", false));
     protected final Setting<Integer> slideTime =
             register(new NumberSetting<>("Slide-Time", 100, 0, 1_000));
 

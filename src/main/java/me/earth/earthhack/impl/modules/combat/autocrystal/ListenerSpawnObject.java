@@ -21,6 +21,7 @@ import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.Swing;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.misc.MutableWrapper;
+import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
@@ -115,6 +116,7 @@ final class ListenerSpawnObject extends
         entity.setEntityId(packet.getEntityID());
         entity.setUniqueId(packet.getUniqueId());
 
+        boolean attacked = false;
         if ((!module.alwaysCalc.getValue()
                 || pos.equals(module.bombPos)
                     && module.alwaysBomb.getValue())
@@ -172,6 +174,7 @@ final class ListenerSpawnObject extends
                     event,
                     entity,
                     stamp.getDamage() <= module.slowBreakDamage.getValue());
+            attacked = true;
         }
         else if (module.asyncCalc.getValue() || module.alwaysCalc.getValue())
         {
@@ -236,6 +239,7 @@ final class ListenerSpawnObject extends
             {
                 attack(packet, event, entity,
                        (stamp == null || !stamp.isShield()) && slow);
+                attacked = true;
             }
             else if (stamp != null
                 && stamp.isShield()
@@ -243,10 +247,12 @@ final class ListenerSpawnObject extends
                 && self <= module.shieldSelfDamage.getValue())
             {
                 attack(packet, event, entity, false);
+                attacked = true;
             }
         }
 
-        if (module.spawnThread.getValue())
+        if (module.spawnThread.getValue()
+            && (!module.spawnThreadWhenAttacked.getValue() || attacked))
         {
             module.threadHelper.schedulePacket(event);
         }

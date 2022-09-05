@@ -7,6 +7,7 @@ import me.earth.earthhack.impl.modules.combat.autocrystal.util.BreakData;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalDataMotion;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.IBreakHelper;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
+import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.misc.MutableWrapper;
 import me.earth.earthhack.impl.util.network.ServerUtil;
 import net.minecraft.entity.Entity;
@@ -57,6 +58,11 @@ public class CalculationMotion extends AbstractCalculation<CrystalDataMotion>
             List<CrystalDataMotion> valids = new ArrayList<>(packets);
             for (CrystalDataMotion data : this.breakData.getData())
             {
+                if (EntityUtil.isDead(data.getCrystal()))
+                {
+                    continue;
+                }
+
                 if (data.getTiming() == CrystalDataMotion.Timing.NONE)
                 {
                     continue;

@@ -49,8 +49,10 @@ final class ListenerMotion extends
                         mc.world.playerEntities);
                 module.threadHelper.start(calc, false);
             } else {
-                if (module.motionThread.getValue()) {
+                if (module.motionThread.getValue()
+                    && module.pullTimer.passed(module.pullBasedDelay.getValue())) {
                     module.threadHelper.startThread();
+                    module.pullTimer.reset();
                 }
             }
 
