@@ -84,10 +84,10 @@
      * Frames per second.
      * @const
      */
-    var FPS = 60;
+    var FPS = 40;
 
     /** @const */
-    var IS_HIDPI = 2;
+    var IS_HIDPI = window.devicePixelRatio > 1;
 
     /** @const */
     var IS_IOS = /iPad|iPhone|iPod/.test(window.navigator.platform);
@@ -103,14 +103,14 @@
      * @enum {number}
      */
     Runner.config = {
-        ACCELERATION: 0.001,
+        ACCELERATION: 0.00002,
         BG_CLOUD_SPEED: 0.2,
         BOTTOM_PAD: 10,
         CLEAR_TIME: 3000,
         CLOUD_FREQUENCY: 0.5,
         GAMEOVER_CLEAR_TIME: 750,
         GAP_COEFFICIENT: 0.6,
-        GRAVITY: 0.6,
+        GRAVITY: 0.35,
         INITIAL_JUMP_VELOCITY: 12,
         INVERT_FADE_DURATION: 12000,
         INVERT_DISTANCE: 700,
@@ -123,7 +123,9 @@
         MOBILE_SPEED_COEFFICIENT: 1.2,
         RESOURCE_TEMPLATE_ID: 'audio-resources',
         SPEED: 6,
-        SPEED_DROP_COEFFICIENT: 3
+        SPEED_DROP_COEFFICIENT: 3,
+        ARCADE_MODE_INITIAL_TOP_POSITION: 35,
+        ARCADE_MODE_TOP_POSITION_PERCENT: 0.1
     };
 
 
@@ -142,6 +144,7 @@
      * @enum {string}
      */
     Runner.classes = {
+        ARCADE_MODE: 'arcade-mode',
         CANVAS: 'runner-canvas',
         CONTAINER: 'runner-container',
         CRASHED: 'crashed',
@@ -290,7 +293,7 @@
                 Runner.imageSprite = document.getElementById('offline-resources-2x');
                 this.spriteDef = Runner.spriteDefinition.HDPI;
             } else {
-                Runner.imageSprite = document.getElementById('offline-resources-2x');
+                Runner.imageSprite = document.getElementById('offline-resources-1x');
                 this.spriteDef = Runner.spriteDefinition.LDPI;
             }
 
@@ -422,7 +425,11 @@
                 boxStyles.paddingLeft.length - 2));
 
             this.dimensions.WIDTH = this.outerContainerEl.offsetWidth - padding * 2;
-
+            this.dimensions.WIDTH = Math.min(DEFAULT_WIDTH, this.dimensions.WIDTH); //Arcade Mode
+            if (this.activated) {
+                this.setArcadeModeContainerScale();
+            }
+            
             // Redraw the elements back onto the canvas.
             if (this.canvas) {
                 this.canvas.width = this.dimensions.WIDTH;
@@ -467,9 +474,9 @@
                     'from { width:' + Trex.config.WIDTH + 'px }' +
                     'to { width: ' + this.dimensions.WIDTH + 'px }' +
                     '}';
-
-                // create a style sheet to put the keyframe rule in
-                // and then place the style sheet in the html head
+                
+                // create a style sheet to put the keyframe rule in 
+                // and then place the style sheet in the html head    
                 var sheet = document.createElement('style');
                 sheet.innerHTML = keyframes;
                 document.head.appendChild(sheet);
@@ -495,6 +502,7 @@
          * Update the game status to started.
          */
         startGame: function () {
+            this.setArcadeMode();
             this.runningTime = 0;
             this.playingIntro = false;
             this.tRex.playingIntro = false;
@@ -834,7 +842,36 @@
                 this.update();
             }
         },
+        
+        /**
+         * Hides offline messaging for a fullscreen game only experience.
+         */
+        setArcadeMode() {
+            document.body.classList.add(Runner.classes.ARCADE_MODE);
+            this.setArcadeModeContainerScale();
+        },
 
+        /**
+         * Sets the scaling for arcade mode.
+         */
+        setArcadeModeContainerScale() {
+            const windowHeight = window.innerHeight;
+            const scaleHeight = windowHeight / this.dimensions.HEIGHT;
+            const scaleWidth = window.innerWidth / this.dimensions.WIDTH;
+            const scale = Math.max(1, Math.min(scaleHeight, scaleWidth));
+            const scaledCanvasHeight = this.dimensions.HEIGHT * scale;
+            // Positions the game container at 10% of the available vertical window
+            // height minus the game container height.
+            const translateY = Math.ceil(Math.max(0, (windowHeight - scaledCanvasHeight -
+                                                      Runner.config.ARCADE_MODE_INITIAL_TOP_POSITION) *
+                                                  Runner.config.ARCADE_MODE_TOP_POSITION_PERCENT)) *
+                  window.devicePixelRatio;
+
+            const cssScale = scale;
+            this.containerEl.style.transform =
+                'scale(' + cssScale + ') translateY(' + translateY + 'px)';
+        },
+        
         /**
          * Pause the game if the tab is not in focus.
          */
@@ -1903,7 +1940,7 @@
      */
     DistanceMeter.config = {
         // Number of digits.
-        MAX_DISTANCE_UNITS: 5,
+        MAX_DISTANCE_UNITS: 6,
 
         // Distance that causes achievement animation.
         ACHIEVEMENT_DISTANCE: 100,
@@ -2713,8 +2750,3 @@ function onDocumentLoad() {
 }
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
-document.ontouchstart = function(evt) {
-    if (document.getElementById("messageBox") != null) {
-        document.getElementById("messageBox").style.visibility="hidden";
-    }
-};
