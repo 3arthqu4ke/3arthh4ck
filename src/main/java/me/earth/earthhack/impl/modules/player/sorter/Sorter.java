@@ -65,6 +65,7 @@ public class Sorter extends LoadableModule
         Bus.EVENT_BUS.register(
             new LambdaListener<>(ShutDownEvent.class, e -> this.saveConfig()));
         this.listeners.add(new ListenerMotion(this));
+        this.unregister(super.listType);
     }
 
     public boolean scroll(int direction)

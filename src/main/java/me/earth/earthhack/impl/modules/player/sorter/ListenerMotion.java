@@ -16,6 +16,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -70,7 +71,7 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
         int otherFallback = -1;
         boolean emptyFallback = false;
         Set<Item> missing = new HashSet<>();
-        for (int i = 44; i > 8; i--)
+        for (int i = 9; i < 45; i++)
         {
             ItemStack s = InventoryUtil.get(i);
             Item shouldBeHere = layout.getItem(i);
@@ -92,15 +93,14 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
                 fallback = slot;
                 otherFallback = i;
                 emptyFallback = s.isEmpty();
-                fallbackItem = InventoryUtil.get(i).getItem();
-                otherFallbackItem = shouldBeHere;
+                fallbackItem = InventoryUtil.get(slot).getItem();
+                otherFallbackItem = s.getItem();
             }
         }
 
         if (fallback != -1)
         {
             click(fallback, otherFallback, fallbackItem, otherFallbackItem);
-            module.timer.reset();
         }
     }
 
@@ -119,6 +119,11 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
             }
 
             Item item = InventoryUtil.get(i).getItem();
+            if (item == layout.getItem(i))
+            {
+                continue;
+            }
+
             if (item == shouldBeHere)
             {
                 result = i;
@@ -126,7 +131,6 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
                 if (shouldBeThere == inSlot)
                 {
                     click(i, slot, item, inSlot);
-                    module.timer.reset();
                     return -2;
                 }
             }
