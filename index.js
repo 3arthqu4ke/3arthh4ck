@@ -293,16 +293,19 @@
                 Runner.imageSprite = document.getElementById('offline-resources-2x');
                 this.spriteDef = Runner.spriteDefinition.HDPI;
             } else {
-                console.log('need resources 1x')
+                console.log('[DEBUG] need resources 1x')
             }
 
-            if (Runner.imageSprite) {
+            if (Runner.imageSprite.complete) {
                 this.init();
             } else {
+                console.log('[DEBUG] error while loading...')
                 // If the images are not yet loaded, add a listener.
                 Runner.imageSprite.addEventListener(Runner.events.LOAD,
                     this.init.bind(this));
-            }
+                Runner.events.LOAD
+                this.init()
+            } 
         },
 
         /**
