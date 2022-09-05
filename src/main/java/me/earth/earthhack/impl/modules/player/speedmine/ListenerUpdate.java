@@ -257,7 +257,7 @@ final class ListenerUpdate extends ModuleListener<Speedmine, UpdateEvent>
                             InventoryUtil.syncItem();
                             mc.player.connection.sendPacket(place);
                             if (AUTOCRYSTAL.isPresent()) {
-                                AUTOCRYSTAL.get().placed.put(p, new CrystalTimeStamp(Float.MAX_VALUE, false));
+                                AUTOCRYSTAL.get().placed.put(p.up(), new CrystalTimeStamp(Float.MAX_VALUE, false));
                                 AUTOCRYSTAL.get().bombPos = p.up();
                             }
                             mc.player.connection.sendPacket(animation);

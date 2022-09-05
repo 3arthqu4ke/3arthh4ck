@@ -104,13 +104,6 @@ public class CrystalHelper implements Globals {
             mc.player.connection.sendPacket(
                 new CPacketPlayerTryUseItemOnBlock(
                     pos, ray.sideHit, hand, f[0], f[1], f[2]));
-
-            if (AUTOCRYSTAL.isPresent())
-            {
-                AUTOCRYSTAL.get().placed.put(
-                    pos, new CrystalTimeStamp(Float.MAX_VALUE, false));
-                AUTOCRYSTAL.get().bombPos = pos.up();
-            }
         });
 
         if (AUTOCRYSTAL.get().placeSwing.getValue() == SwingTime.Post)
@@ -118,7 +111,13 @@ public class CrystalHelper implements Globals {
             AUTOCRYSTAL.get().rotationHelper.swing(hand, false);
         }
 
-        AUTOCRYSTAL.get().placed.put(pos, new CrystalTimeStamp(Float.MAX_VALUE, false));
+
+        if (AUTOCRYSTAL.isPresent())
+        {
+            AUTOCRYSTAL.get().placed.put(
+                pos.up(), new CrystalTimeStamp(Float.MAX_VALUE, false));
+            AUTOCRYSTAL.get().bombPos = pos.up();
+        }
     }
 
 }

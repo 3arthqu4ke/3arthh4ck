@@ -300,7 +300,7 @@ public class AutoCrystal extends Module
 
     /* ---------------- Misc Settings -------------- */
     protected final Setting<Float> targetRange =
-            register(new NumberSetting<>("TargetRange", 12.0f, 0.1f, 20.0f));
+            register(new NumberSetting<>("TargetRange", 20.0f, 0.1f, 20.0f));
     protected final Setting<Float> pbTrace =
             register(new NumberSetting<>("CombinedTrace", 3.0f, 0.0f, 6.0f))
                 .setComplexity(Complexity.Medium);
@@ -977,10 +977,11 @@ public class AutoCrystal extends Module
 
     protected final ThreadHelper threadHelper =
             new ThreadHelper(this,
-                    multiThread,
-                    threadDelay,
-                    rotationThread,
-                    rotate);
+                             multiThread,
+                             mainThreadThreads,
+                             threadDelay,
+                             rotationThread,
+                             rotate);
 
     protected final DamageHelper damageHelper =
             new DamageHelper(this,

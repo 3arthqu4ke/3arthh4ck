@@ -24,6 +24,7 @@ public class ThreadHelper implements Globals
 {
     private final StopWatch threadTimer = new StopWatch();
     private final Setting<Boolean> multiThread;
+    private final Setting<Boolean> mainThreadThreads;
     private final Setting<Integer> threadDelay;
     private final Setting<RotationThread> rotationThread;
     private final Setting<ACRotate> rotate;
@@ -33,12 +34,14 @@ public class ThreadHelper implements Globals
 
     public ThreadHelper(AutoCrystal module,
                         Setting<Boolean> multiThread,
+                        Setting<Boolean> mainThreadThreads,
                         Setting<Integer> threadDelay,
                         Setting<RotationThread> rotationThread,
                         Setting<ACRotate> rotate)
     {
         this.module = module;
         this.multiThread = multiThread;
+        this.mainThreadThreads = mainThreadThreads;
         this.threadDelay = threadDelay;
         this.rotationThread = rotationThread;
         this.rotate = rotate;
@@ -145,7 +148,7 @@ public class ThreadHelper implements Globals
 
     public void schedulePacket(PacketEvent.Receive<?> event)
     {
-        if (multiThread.getValue()
+        if ((multiThread.getValue() || mainThreadThreads.getValue())
             && (rotate.getValue() == ACRotate.None
                 || rotationThread.getValue() != RotationThread.Predict))
         {

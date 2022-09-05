@@ -312,10 +312,12 @@ public class PositionData extends BasePath
             {
                 if (!dead)
                 {
-                    if (EntityUtil.isDead(entity))
+                    boolean crystalIsDead = entity.isDead;
+                    boolean crystalIsPseudoDead = ((IEntity) entity).isPseudoDead();
+                    if (crystalIsDead || crystalIsPseudoDead)
                     {
-                        if (Managers.SET_DEAD.passedDeathTime(entity, deathTime)
-                            || ((IEntity) entity).getPseudoTime().passed(deathTime))
+                        if (crystalIsDead && Managers.SET_DEAD.passedDeathTime(entity, deathTime)
+                            || crystalIsPseudoDead && ((IEntity) entity).getPseudoTime().passed(deathTime))
                         {
                             continue; // Entity is like very dead now
                         }
