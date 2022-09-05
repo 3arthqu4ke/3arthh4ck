@@ -118,6 +118,9 @@ public class AntiSurround extends ObbyListenerModule<ListenerObby>
     protected final Setting<Boolean> normal =
         register(new BooleanSetting("Normal", true))
             .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> stopOnObby =
+        register(new BooleanSetting("StopOnObby", false))
+            .setComplexity(Complexity.Expert);
 
     // TODO: don't register this until we found implemented
     //  a way to attack the block x ticks before we break it
