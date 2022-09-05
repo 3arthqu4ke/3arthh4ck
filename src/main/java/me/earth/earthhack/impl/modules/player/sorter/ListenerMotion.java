@@ -16,7 +16,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.CPacketPlayerTryUseItemOnBlock;
 
 import java.util.HashSet;
 import java.util.Set;
