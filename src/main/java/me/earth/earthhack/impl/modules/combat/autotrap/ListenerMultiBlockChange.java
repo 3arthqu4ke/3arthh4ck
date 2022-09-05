@@ -5,6 +5,7 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.init.Blocks;
+import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.network.play.server.SPacketMultiBlockChange;
 
 import java.util.Arrays;
@@ -16,6 +17,11 @@ final class ListenerMultiBlockChange extends ModuleListener<AutoTrap, PacketEven
 
     @Override
     public void invoke(PacketEvent.Receive<SPacketMultiBlockChange> event) {
+        for (SPacketMultiBlockChange.BlockUpdateData data : event.getPacket().getChangedBlocks())
+        {
+            module.blackList.remove(data.getPos());
+        }
+
         EntityPlayerSP player = mc.player;
         if (player != null
             && module.instant.getValue()

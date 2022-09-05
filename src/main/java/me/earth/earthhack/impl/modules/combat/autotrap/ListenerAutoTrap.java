@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.modules.combat.autotrap;
 
 import me.earth.earthhack.api.cache.ModuleCache;
+import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.player.freecam.Freecam;
 import me.earth.earthhack.impl.util.helpers.blocks.ObbyListener;
@@ -20,6 +21,15 @@ final class ListenerAutoTrap extends ObbyListener<AutoTrap>
     protected TargetResult getTargets(TargetResult result)
     {
         return module.getTargets(result);
+    }
+
+    @Override
+    protected void pre(MotionUpdateEvent event)
+    {
+        module.blackList
+            .entrySet()
+            .removeIf(e -> System.currentTimeMillis() - e.getValue() > 1000);
+        super.pre(event);
     }
 
     @Override

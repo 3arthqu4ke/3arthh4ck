@@ -10,6 +10,7 @@ import me.earth.earthhack.api.util.bind.Bind;
 import me.earth.earthhack.impl.core.ducks.network.ICPacketPlayerDigging;
 import me.earth.earthhack.impl.core.ducks.network.IPlayerControllerMP;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.combat.autotrap.AutoTrap;
 import me.earth.earthhack.impl.modules.player.automine.AutoMine;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.ESPMode;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.MineMode;
@@ -17,10 +18,18 @@ import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.CooldownBypass;
+import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.Swing;
+import me.earth.earthhack.impl.util.minecraft.blocks.states.BlockStateHelper;
+import me.earth.earthhack.impl.util.minecraft.blocks.states.IBlockStateHelper;
+import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
+import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.impl.util.thread.Locks;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumFacing;
@@ -40,6 +49,8 @@ public class Speedmine extends Module
 {
     private static final ModuleCache<AutoMine> AUTO_MINE =
             Caches.getModule(AutoMine.class);
+    private static final ModuleCache<AutoTrap> AUTO_TRAP =
+        Caches.getModule(AutoTrap.class);
 
     protected final Setting<MineMode> mode     =
             register(new EnumSetting<>("Mode", MineMode.Smart));
@@ -93,6 +104,9 @@ public class Speedmine extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> placeCrystal =
             register(new BooleanSetting("PlaceCrystal", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> breakCrystal =
+            register(new BooleanSetting("BreakCrystal", false))
                 .setComplexity(Complexity.Medium);
     protected final Setting<Bind> breakBind =
             register(new BindSetting("BreakBind", Bind.none()))
@@ -383,6 +397,12 @@ public class Speedmine extends Module
 
     protected void postSend(boolean toAir)
     {
+        if (placeCrystal.getValue())
+        {
+            AUTO_TRAP.computeIfPresent(autoTrap -> autoTrap.blackList
+                .put(pos, System.currentTimeMillis()));
+        }
+
         if (swingStop.getValue())
         {
             Swing.Packet.swing(EnumHand.MAIN_HAND);
@@ -391,6 +411,35 @@ public class Speedmine extends Module
         if (toAir)
         {
             mc.playerController.onPlayerDestroyBlock(pos);
+        }
+
+        if (breakCrystal.getValue())
+        {
+            IBlockStateHelper helper = new BlockStateHelper();
+            helper.addAir(pos);
+            for (Entity crystal : mc.world.loadedEntityList)
+            {
+                double distance;
+                if (crystal instanceof EntityEnderCrystal
+                    && !EntityUtil.isDead(crystal)
+                    && (distance = mc.player.getDistanceSq(crystal)) < MathUtil.square(crystalRange.getValue())
+                    && (mc.player.canEntityBeSeen(crystal) || distance < MathUtil.square(crystalBreakTrace.getValue())))
+                {
+                    float selfDamage = DamageUtil.calculate(crystal, mc.player, helper);
+                    if (selfDamage < EntityUtil.getHealth(mc.player) && selfDamage < maxSelfDmg.getValue())
+                    {
+                        for (EntityPlayer player : mc.world.playerEntities)
+                        {
+                            float damage = DamageUtil.calculate(crystal, player, helper);
+                            if (damage >= minDmg.getValue())
+                            {
+                                PacketUtil.attack(crystal);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if (resetAfterPacket.getValue() && mode.getValue() != MineMode.Fast)
