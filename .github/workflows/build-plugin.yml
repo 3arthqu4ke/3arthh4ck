@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       path:
-        description: 'Path to the plugin to build'     
+        description: 'Path to the plugin to build'
         required: true
         default: baritone
 
@@ -39,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ github.event.inputs.path }}
-          path: ./${{ github.event.inputs.path }}/build/libs/*.jar  
+          path: ./${{ github.event.inputs.path }}/build/libs/*.jar
