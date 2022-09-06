@@ -34,6 +34,12 @@ final class OffhandData extends DefaultData<Offhand>
         register(module.hudMode, "Changes the way this module is displayed" +
                 " in the HUD arraylist.");
         register(module.timeOut, "Delay for recovery.");
+        register(module.crystalCheck,
+                 "Checks for crystals dealing damage to you." +
+                     " Should be redundant since Safety does this for you.");
+        register(module.oldCrystalCheck, "The old bugged and thus way" +
+            " too safe crystalCheck. Maybe someone likes it," +
+            " so it has been left in.");
     }
 
     @Override

@@ -87,7 +87,7 @@ public class Offhand extends Module
     protected final Setting<Integer> asyncCheck =
             register(new NumberSetting<>("Async-Check", 100, 0, 1000));
     protected final Setting<Boolean> crystalCheck    =
-            register(new BooleanSetting("CrystalCheck", true));
+            register(new BooleanSetting("CrystalCheck", false));
     protected final Setting<Boolean> doubleClicks =
             register(new BooleanSetting("DoubleClicks", false));
     protected final Setting<Boolean> noMove =
@@ -104,6 +104,9 @@ public class Offhand extends Module
             register(new BooleanSetting("SwordGapOverride", false));
     protected final Setting<Boolean> fixPingBypassAsyncSlot =
             register(new BooleanSetting("FixPingBypassAsyncSlot", true))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> oldCrystalCheck =
+            register(new BooleanSetting("OldCrystalCheck", false))
                 .setComplexity(Complexity.Expert);
 
     protected final Map<Item, Integer> lastSlots = new HashMap<>();
@@ -374,19 +377,25 @@ public class Offhand extends Module
     public boolean isSafe()
     {
         float playerHealth = EntityUtil.getHealth(mc.player);
-        if (crystalCheck.getValue()
-                && mc.player != null
-                && mc.world != null)
+        if (crystalCheck.getValue() && mc.player != null && mc.world != null)
         {
             float highestDamage = mc.world.loadedEntityList
                     .stream()
                     .filter(entity -> entity instanceof EntityEnderCrystal)
+                    .filter(entity -> entity.getDistanceSq(mc.player) <= 144)
                     .map(DamageUtil::calculate)
                     .max(Comparator.comparing(damage -> damage))
                     .orElse(0.0f);
-            playerHealth -= highestDamage;
+
+            if (oldCrystalCheck.getValue()) {
+                playerHealth -= highestDamage;
+            } else if (highestDamage >= playerHealth) {
+                return false;
+            }
         }
+
         return (PINGBYPASS.isEnabled()
+                    && PINGBYPASS.get().isOld()
                     && AUTOTOTEM.isEnabled())
                 || (Managers.SAFETY.isSafe()
                     && playerHealth >= safeH.getValue()
