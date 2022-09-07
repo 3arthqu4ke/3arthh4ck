@@ -68,6 +68,13 @@ public class Speed extends Module
     protected final Setting<Boolean> noWaterInstant =
             register(new BooleanSetting("NoLiquidInstant", false));
 
+    protected final Setting<Boolean> modify =
+        register(new BooleanSetting("Modify", false));
+    protected final Setting<Double> xzFactor    =
+        register(new NumberSetting<>("XZ-Factor", 1.0, 0.0, 5.0));
+    protected final Setting<Double> yFactor    =
+        register(new NumberSetting<>("Y-Factor", 1.0, 0.0, 5.0));
+
     protected final StopWatch expTimer = new StopWatch();
 
     protected boolean stop;
