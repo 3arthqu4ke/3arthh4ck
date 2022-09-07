@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       path:
-        description: 'Path to the plugin to replace the wrapper for'     
+        description: 'Path to the plugin to replace the wrapper for'
         required: true
         default: baritone
 
@@ -27,4 +27,3 @@ jobs:
           skip_checkout: true
           commit_message: Replace gradle wrapper for the ${{ github.event.inputs.path }} plugin
           push_options: '--force'
-          
