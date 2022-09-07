@@ -4,10 +4,10 @@
     "Toggle": "Normal",
     "RandomUUID": "false",
     "Hidden": "Hidden",
-    "Enabled": "true",
+    "Enabled": "false",
     "SpoofSinglePlayer": "false",
     "Name": "AccountSpoof",
-    "AccountName": "zzzzzzzzdddddee"
+    "AccountName": "3arthIsD3rp"
   },
   "AntiCheat": {
     "CooldownBypass": "None",
