@@ -16,6 +16,8 @@ public class AccountSpoof extends Module {
         register(new StringSetting("AccountName", "SpoofAccountName"));
     protected final Setting<String> uuid =
         register(new StringSetting("AccountUUID", UUID.randomUUID().toString()));
+    protected final Setting<Boolean> spoofSP =
+        register(new BooleanSetting("SpoofSinglePlayer", false));
 
     public Pattern pattern = Media.compileWithColorCodes("SpoofAccountName");
 

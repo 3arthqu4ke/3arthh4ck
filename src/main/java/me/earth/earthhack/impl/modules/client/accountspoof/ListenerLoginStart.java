@@ -17,6 +17,10 @@ final class ListenerLoginStart extends ModuleListener<AccountSpoof, PacketEvent.
 
     @Override
     public void invoke(PacketEvent.Send<CPacketLoginStart> event) {
+        if (mc.isSingleplayer() && !module.spoofSP.getValue()) {
+            return;
+        }
+
         UUID uuid;
         try {
             uuid = UUID.fromString(module.uuid.getValue());
