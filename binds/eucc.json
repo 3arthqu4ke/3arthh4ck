@@ -1,4 +1,9 @@
 {
+  "AccountSpoof-Bind": {
+    "name": "Bind",
+    "module": "AccountSpoof",
+    "value": "NONE"
+  },
   "AntiCheat-Bind": {
     "name": "Bind",
     "module": "AntiCheat",
@@ -49,6 +54,11 @@
     "module": "Management",
     "value": "NONE"
   },
+  "NoSpoof-Bind": {
+    "name": "Bind",
+    "module": "NoSpoof",
+    "value": "NONE"
+  },
   "Notifications-Bind": {
     "name": "Bind",
     "module": "Notifications",
@@ -72,7 +82,12 @@
   "PB-Gui-Bind": {
     "name": "Bind",
     "module": "PB-Gui",
-    "value": "SLASH"
+    "value": "NONE"
+  },
+  "PB-Teleport-Bind": {
+    "name": "Bind",
+    "module": "PB-Teleport",
+    "value": "NONE"
   },
   "Settings-Bind": {
     "name": "Bind",
@@ -87,11 +102,6 @@
   "Media-Bind": {
     "name": "Bind",
     "module": "Media",
-    "value": "NONE"
-  },
-  "HudEditor-Bind": {
-    "name": "Bind",
-    "module": "HudEditor",
     "value": "NONE"
   },
   "AntiSurround-Bind": {
@@ -167,7 +177,7 @@
   "HoleFiller-Bind": {
     "name": "Bind",
     "module": "HoleFiller",
-    "value": "NONE"
+    "value": "LMENU"
   },
   "KillAura-Bind": {
     "name": "Bind",
@@ -227,7 +237,7 @@
   "AntiAim-Bind": {
     "name": "Bind",
     "module": "AntiAim",
-    "value": "NONE"
+    "value": "N"
   },
   "AntiPackets-Bind": {
     "name": "Bind",
@@ -892,6 +902,16 @@
   "ShaderESP-Bind": {
     "name": "Bind",
     "module": "ShaderESP",
+    "value": "NONE"
+  },
+  "Phobos-HUD-Bind": {
+    "name": "Bind",
+    "module": "Phobos-HUD",
+    "value": "NONE"
+  },
+  "Phobos-Components-Bind": {
+    "name": "Bind",
+    "module": "Phobos-Components",
     "value": "NONE"
   }
 }
