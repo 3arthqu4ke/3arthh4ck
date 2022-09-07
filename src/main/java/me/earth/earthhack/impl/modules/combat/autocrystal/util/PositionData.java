@@ -164,8 +164,22 @@ public class PositionData extends BasePath
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public int compareTo(PositionData o)
     {
+        if (module.useSafetyFactor.getValue())
+        {
+            double thisFactor = this.damage * module.safetyFactor.getValue()
+                - this.selfDamage * module.selfFactor.getValue();
+            double otherFactor = o.damage * module.safetyFactor.getValue()
+                - o.selfDamage * module.selfFactor.getValue();
+
+            if (thisFactor != otherFactor)
+            {
+                return Double.compare(otherFactor, thisFactor);
+            }
+        }
+
         if (Math.abs(o.damage - this.damage) < 1.0f)
         {
             if (this.usesObby() && o.usesObby())

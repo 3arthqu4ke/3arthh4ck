@@ -912,6 +912,15 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> alwaysBomb =
             register(new BooleanSetting("Always-Bomb", false))
                 .setComplexity(Complexity.Expert);
+    public final Setting<Boolean> useSafetyFactor =
+            register(new BooleanSetting("UseSafetyFactor", false))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Double> selfFactor =
+            register(new NumberSetting<>("SelfFactor", 1.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Double> safetyFactor =
+            register(new NumberSetting<>("SafetyFactor", 1.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> removeTime =
             register(new NumberSetting<>("Remove-Time", 1000, 0, 2500))
                 .setComplexity(Complexity.Expert);
