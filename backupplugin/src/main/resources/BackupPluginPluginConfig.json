@@ -1,0 +1,5 @@
+{
+    "name": "BackupPlugin",
+    "mainClass": "me.earth.backup.BackupPlugin",
+    "mixinConfig": "mixins.backupplugin.json"
+}

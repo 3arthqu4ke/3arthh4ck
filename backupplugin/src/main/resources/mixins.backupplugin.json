@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "me.earth.backup.mixins",
+  "refmap": "mixins.backupplugin.refmap.json",
+  "mixins": [
+    "MixinManagers"
+  ]
+}
