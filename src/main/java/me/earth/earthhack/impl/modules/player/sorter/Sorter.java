@@ -13,6 +13,7 @@ import me.earth.earthhack.impl.event.events.client.ShutDownEvent;
 import me.earth.earthhack.impl.event.listeners.LambdaListener;
 import me.earth.earthhack.impl.managers.config.helpers.CurrentConfig;
 import me.earth.earthhack.impl.managers.config.util.JsonPathWriter;
+import me.earth.earthhack.impl.util.client.ModuleUtil;
 import me.earth.earthhack.impl.util.helpers.addable.LoadableModule;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
@@ -50,6 +51,8 @@ public class Sorter extends LoadableModule
         register(new BooleanSetting("SortInLoot", false));
     protected final Setting<Boolean> sortInInv =
         register(new BooleanSetting("SortInInventory", false));
+    protected final Setting<Boolean> ensureHotbar =
+        register(new BooleanSetting("EnsureHotbarSorting", false));
 
     protected final StopWatch timer = new StopWatch();
 
@@ -211,6 +214,9 @@ public class Sorter extends LoadableModule
         InventoryLayout layout = InventoryLayout.createFromMcPlayer();
         layouts.put(string.toLowerCase(), layout);
         load(string.toLowerCase());
+        ModuleUtil.sendMessage(
+            this, TextColor.GREEN + "Created new layout "
+                + TextColor.AQUA + string + TextColor.GREEN + ".", "add");
     }
 
     @Override
@@ -220,7 +226,29 @@ public class Sorter extends LoadableModule
         if (string.equalsIgnoreCase(currentLayout))
         {
             currentLayout = layouts.keySet().stream().findFirst().orElse(null);
+            ModuleUtil.sendMessage(
+                    this,
+                    TextColor.GREEN + "Deleted layout " + TextColor.RED
+                    + string + TextColor.GREEN
+                    + (currentLayout == null
+                        ? ", no replacement found."
+                        : (", now active: " + TextColor.AQUA
+                            + currentLayout + TextColor.GREEN + ".")),
+                    "del");
+
             load(currentLayout);
+            if (currentLayout == null)
+            {
+                current = null;
+                reverse = null;
+                mapping = null;
+            }
+        }
+        else
+        {
+            ModuleUtil.sendMessage(
+                this, TextColor.GREEN + "Deleted layout " + TextColor.RED +
+                    string + TextColor.GREEN + ".", "del");
         }
     }
 
@@ -229,14 +257,16 @@ public class Sorter extends LoadableModule
     {
         if (noArgGiven)
         {
-            ChatUtil.sendMessage(TextColor.RED
+            ModuleUtil.sendMessage(
+                this, TextColor.RED
                     + "Please specify a Layout to load!");
             return;
         }
 
         if (load(string))
         {
-            ChatUtil.sendMessage(TextColor.RED
+            ModuleUtil.sendMessage(
+                this, TextColor.RED
                     + "Couldn't find layout "
                     + TextColor.WHITE
                     + string
@@ -245,7 +275,8 @@ public class Sorter extends LoadableModule
         }
         else
         {
-            ChatUtil.sendMessage(TextColor.GREEN + "Layout "
+            ModuleUtil.sendMessage(
+                this, TextColor.GREEN + "Layout "
                     + TextColor.WHITE + string + TextColor.GREEN
                     + " loaded successfully.");
         }

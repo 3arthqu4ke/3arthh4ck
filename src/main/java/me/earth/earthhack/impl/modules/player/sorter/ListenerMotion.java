@@ -27,6 +27,8 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
     private static final ModuleCache<Cleaner> CLEANER =
             Caches.getModule(Cleaner.class);
 
+    private final Set<Item> missing = new HashSet<>();
+
     public ListenerMotion(Sorter module)
     {
         super(module, MotionUpdateEvent.class, 999999);
@@ -69,8 +71,8 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
         int fallback = -1;
         int otherFallback = -1;
         boolean emptyFallback = false;
-        Set<Item> missing = new HashSet<>();
-        for (int i = 9; i < 45; i++)
+        missing.clear();
+        for (int i = 44; i > 8; i--)
         {
             ItemStack s = InventoryUtil.get(i);
             Item shouldBeHere = layout.getItem(i);
@@ -81,7 +83,16 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
                 continue;
             }
 
-            int slot = getSlot(shouldBeHere, s.getItem(), i, missing, layout);
+            if (mc.player.inventory.getItemStack().getItem() == shouldBeHere)
+            {
+                int finalSlot = i;
+                Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
+                    InventoryUtil.click(finalSlot));
+
+                return;
+            }
+
+            int slot = getSlot(shouldBeHere, s.getItem(), i, layout);
             if (slot == -2)
             {
                 return;
@@ -106,10 +117,10 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
     private int getSlot(Item shouldBeHere,
                         Item inSlot,
                         int slot,
-                        Set<Item> missing,
                         InventoryLayout layout)
     {
         int result = -1;
+        int hotbarSlot = -1;
         for (int i = 44; i > 8; i--)
         {
             if (i == slot)
@@ -118,14 +129,24 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
             }
 
             Item item = InventoryUtil.get(i).getItem();
-            if (item == layout.getItem(i))
+            boolean hotbar;
+            if ((hotbar = item == layout.getItem(i))
+                && !(module.ensureHotbar.getValue() && slot >= 36 && i < 36))
             {
                 continue;
             }
 
             if (item == shouldBeHere)
             {
-                result = i;
+                if (hotbar)
+                {
+                    hotbarSlot = i;
+                }
+                else
+                {
+                    result = i;
+                }
+
                 Item shouldBeThere = layout.getItem(i);
                 if (shouldBeThere == inSlot)
                 {
@@ -137,6 +158,11 @@ final class ListenerMotion extends ModuleListener<Sorter, MotionUpdateEvent>
 
         if (result == -1)
         {
+            if (hotbarSlot != -1)
+            {
+                return hotbarSlot;
+            }
+
             missing.add(shouldBeHere);
         }
 
