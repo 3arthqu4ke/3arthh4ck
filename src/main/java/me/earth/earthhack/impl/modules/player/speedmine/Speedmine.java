@@ -19,6 +19,7 @@ import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.CooldownBypass;
 import me.earth.earthhack.impl.util.minecraft.DamageUtil;
+import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.Swing;
 import me.earth.earthhack.impl.util.minecraft.blocks.states.BlockStateHelper;
 import me.earth.earthhack.impl.util.minecraft.blocks.states.IBlockStateHelper;
@@ -108,6 +109,27 @@ public class Speedmine extends Module
     protected final Setting<Boolean> breakCrystal =
             register(new BooleanSetting("BreakCrystal", false))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> breakInstant =
+            register(new BooleanSetting("BreakSpawningCrystals", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> offhandPlace =
+            register(new BooleanSetting("OffhandPlace", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> offhandSilent =
+            register(new BooleanSetting("OffhandSilent", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> megaSilent =
+            register(new BooleanSetting("MegaSilent", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> antiAntiSilentSwitch =
+            register(new BooleanSetting("AntiAntiSilentSwitch", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> prePlace =
+            register(new BooleanSetting("PrePlace", false))
+                .setComplexity(Complexity.Medium);
+    public final Setting<Float> prePlaceLimit       =
+            register(new NumberSetting<>("PrePlaceLimit", 0.95f, 0.0f, 2.0f))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Bind> breakBind =
             register(new BindSetting("BreakBind", Bind.none()))
                 .setComplexity(Complexity.Medium);
@@ -168,6 +190,9 @@ public class Speedmine extends Module
     protected final Setting<Boolean> abortNextTick =
             register(new BooleanSetting("AbortNextTick", false))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> aASSwitchTime =
+            register(new NumberSetting<>("AASSwitchTime", 500, 0, 1000))
+                .setComplexity(Complexity.Medium);
 
     protected final FastHelper fastHelper = new FastHelper(this);
     protected final CrystalHelper crystalHelper = new CrystalHelper(this);
@@ -185,6 +210,7 @@ public class Speedmine extends Module
      * A StopWatch to handle Resetting after sending a Packet.
      */
     protected final StopWatch resetTimer = new StopWatch();
+    protected final StopWatch aASSSwitchTimer = new StopWatch();
     /**
      * The Pos we are currently mining.
      */
@@ -245,6 +271,7 @@ public class Speedmine extends Module
         this.listeners.add(new ListenerMotion(this));
         this.listeners.add(new ListenerDigging(this));
         this.listeners.add(new ListenerKeyPress(this));
+        this.listeners.add(new ListenerSpawnObject(this));
         this.setData(new SpeedMineData(this));
     }
 
@@ -354,6 +381,14 @@ public class Speedmine extends Module
                                       EnumFacing facing,
                                       boolean toAir)
     {
+        return sendStopDestroy(pos, facing, toAir, true);
+    }
+
+    protected boolean sendStopDestroy(BlockPos pos,
+                                      EnumFacing facing,
+                                      boolean toAir,
+                                      boolean withRotations)
+    {
         CPacketPlayerDigging stop  =
                 new CPacketPlayerDigging(
                         CPacketPlayerDigging
@@ -368,7 +403,8 @@ public class Speedmine extends Module
             ((ICPacketPlayerDigging) stop).setClientSideBreaking(true);
         }
 
-        if (rotate.getValue()
+        if (withRotations
+                && rotate.getValue()
                 && limitRotations.getValue()
                 && !RotationUtil.isLegit(pos, facing))
         {
@@ -539,6 +575,60 @@ public class Speedmine extends Module
     {
         sentPacket = true;
         resetTimer.reset();
+    }
+
+    public int getFastSlot()
+    {
+        int fastSlot = -1;
+        for (int i = 0; i < damages.length; i++)
+        {
+            if (damages[i] >= limit.getValue())
+            {
+                fastSlot = i;
+                if (i == mc.player.inventory.currentItem)
+                {
+                    break;
+                }
+            }
+        }
+
+        return fastSlot;
+    }
+
+    public void postCrystalPlace(int fastSlot, int lastSlot, boolean swap)
+    {
+        if (swap)
+        {
+            cooldownBypass.getValue().switchTo(fastSlot);
+        }
+
+        boolean toAir = this.toAir.getValue();
+        InventoryUtil.syncItem();
+        if (sendStopDestroy(pos, facing, toAir))
+        {
+            postSend(toAir);
+        }
+
+        if (swap)
+        {
+            cooldownBypass.getValue().switchBack(lastSlot, fastSlot);
+        }
+    }
+
+    public boolean prePlaceCheck()
+    {
+        if (prePlace.getValue() && placeCrystal.getValue())
+        {
+            for (float damage : damages)
+            {
+                if (damage >= prePlaceLimit.getValue())
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }

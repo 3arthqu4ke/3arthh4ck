@@ -183,6 +183,16 @@ public class Offhand extends Module
         return mode;
     }
 
+    public void forceMode(OffhandMode mode)
+    {
+        setMode(mode);
+        for (int i = 0; i < 3; i++)
+        {
+            this.getTimer().setTime(10000);
+            this.doOffhand();
+        }
+    }
+
     public void doOffhand()
     {
         boolean suicide = SUICIDE.returnIfPresent(Suicide::deactivateOffhand, false);
