@@ -8,6 +8,7 @@ import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.antisurround.AntiSurround;
 import me.earth.earthhack.impl.modules.combat.anvilaura.AnvilAura;
 import me.earth.earthhack.impl.modules.combat.surround.Surround;
+import me.earth.earthhack.impl.modules.movement.step.Step;
 import me.earth.earthhack.impl.modules.player.automine.mode.AutoMineMode;
 import me.earth.earthhack.impl.modules.player.automine.util.BigConstellation;
 import me.earth.earthhack.impl.modules.player.automine.util.Constellation;
@@ -48,6 +49,8 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
         Caches.getModule(AntiSurround.class);
     private static final ModuleCache<Surround> SURROUND =
         Caches.getModule(Surround.class);
+    private static final ModuleCache<Step> STEP =
+        Caches.getModule(Step.class);
 
     private Set<BlockPos> surrounding = Collections.emptySet();
 
@@ -143,7 +146,9 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                                                Managers.ENTITIES.getPlayers());
             }
 
-            if (module.prioSelf.getValue() && checkSelfTrap()
+            if (module.prioSelf.getValue()
+                && (!module.prioSelfWithStep.getValue() || STEP.isEnabled())
+                && checkSelfTrap()
                 || checkEnemies(false))
             {
                 return;
@@ -151,7 +156,9 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
 
             BlockPos position = PositionUtil.getPosition();
             if (module.self.getValue()
-                && (!module.prioSelf.getValue() && checkSelfTrap()
+                && ((!module.prioSelf.getValue()
+                    || module.prioSelfWithStep.getValue() && !STEP.isEnabled())
+                && checkSelfTrap()
                 || checkPos(mc.player, position)))
             {
                 return;
@@ -173,7 +180,8 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                             mc.player,
                                             position,
                                             position,
-                                            state));
+                                            state,
+                                            module));
                 return;
             }
 
@@ -340,7 +348,9 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                                 player,
                                                 playerPos,
                                                 playerPos,
-                                                state);
+                                                state,
+                                                module);
+                    closest.setBurrow(true);
                     distance = dist;
                     continue;
                 }
@@ -424,7 +434,8 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                                                     player,
                                                                     offset,
                                                                     playerPos,
-                                                                    state);
+                                                                    state,
+                                                                    module);
                                         distance = dist;
                                         found = true;
                                         break;
@@ -445,7 +456,8 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                                             player,
                                                             offset,
                                                             playerPos,
-                                                            state);
+                                                            state,
+                                                            module);
                                 distance = dist;
                             }
                         }
@@ -485,8 +497,12 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
         IBlockState state = mc.world.getBlockState(upUp);
         if (isValid(upUp, state))
         {
-            attackPos(upUp,
-                      new Constellation(mc.world, mc.player, upUp, playerPos, state));
+            attackPos(upUp, new Constellation(mc.world,
+                                              mc.player,
+                                              upUp,
+                                              playerPos,
+                                              state,
+                                              module));
             return true;
         }
 
@@ -507,7 +523,8 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                             player,
                                             offset,
                                             playerPos,
-                                            state));
+                                            state,
+                                            module));
                 return true;
             }
         }
