@@ -124,6 +124,7 @@ public class HelperBreak extends AbstractBreakHelper<CrystalData>
         }
 
         if (module.antiTotem.getValue()
+                && !EntityUtil.isDead(crystal)
                 && crystal.getPosition()
                           .down()
                           .equals(module.antiTotemHelper.getTargetPos()))

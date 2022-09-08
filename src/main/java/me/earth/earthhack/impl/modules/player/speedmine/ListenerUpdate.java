@@ -16,7 +16,6 @@ import me.earth.earthhack.impl.modules.player.speedmine.mode.ESPMode;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.MineMode;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
-import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.ArmUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.PlayerUtil;
@@ -37,6 +36,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.Arrays;
 
 //TODO: maybe account for Tps?
 final class ListenerUpdate extends ModuleListener<Speedmine, UpdateEvent>
@@ -160,24 +161,14 @@ final class ListenerUpdate extends ModuleListener<Speedmine, UpdateEvent>
 
             if (module.normal.getValue())
             {
-                int fastSlot = -1;
-                for (int i = 0; i < module.damages.length; i++)
-                {
-                    if (module.damages[i] >= module.limit.getValue())
-                    {
-                        fastSlot = i;
-                        if (i == mc.player.inventory.currentItem)
-                        {
-                            break;
-                        }
-                    }
-                }
-
+                int fastSlot = module.getFastSlot();
+                boolean prePlace = false;
                 if ((module.damages[mc.player.inventory.currentItem] >= module.limit.getValue()
-                        || module.swap.getValue() && fastSlot != -1)
+                        || module.swap.getValue() && fastSlot != -1
+                        || (prePlace = module.prePlaceCheck()))
                         && (!module.checkPacket.getValue() || !module.sentPacket))
                 {
-                    int finalFastSlot = fastSlot;
+                    boolean finalPrePlace = prePlace;
                     Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
                     {
                         int crystalSlot;
@@ -187,42 +178,14 @@ final class ListenerUpdate extends ModuleListener<Speedmine, UpdateEvent>
 
                         if (module.placeCrystal.getValue()
                                 && (crystalSlot = InventoryUtil.findHotbarItem(Items.END_CRYSTAL)) != -1
-                                && (crystalPos = module.crystalHelper.calcCrystal(module.pos)) != null)
+                                && (crystalPos = module.crystalHelper.calcCrystal(module.pos)) != null
+                                && module.crystalHelper.doCrystalPlace(crystalPos, crystalSlot, lastSlot, swap)
+                                    || finalPrePlace)
                         {
-                            RayTraceResult ray = RotationUtil.rayTraceTo(crystalPos, mc.world);
-                            if (ray != null && ray.sideHit != null && ray.hitVec != null)
-                            {
-                                module.crystalHelper.placeCrystal(crystalPos, crystalSlot, ray);
-                                if (!swap || module.rotate.getValue()
-                                        && module.limitRotations.getValue()
-                                        && !RotationUtil.isLegit(module.pos, module.facing))
-                                {
-                                    // TODO:?????????????????????????
-                                    module.cooldownBypass.getValue().switchBack(
-                                        lastSlot, crystalSlot);
-                                }
-                            }
+                            return;
                         }
 
-                        if (swap)
-                        {
-                            module.cooldownBypass.getValue().switchTo(
-                                finalFastSlot);
-                        }
-
-                        boolean toAir = module.toAir.getValue();
-                        InventoryUtil.syncItem();
-                        if (module.sendStopDestroy(
-                            module.pos, module.facing, toAir))
-                        {
-                            module.postSend(toAir);
-                        }
-
-                        if (swap)
-                        {
-                            module.cooldownBypass.getValue().switchBack(
-                                lastSlot, finalFastSlot);
-                        }
+                        module.postCrystalPlace(fastSlot, lastSlot, swap);
                     });
                 }
 
@@ -257,7 +220,7 @@ final class ListenerUpdate extends ModuleListener<Speedmine, UpdateEvent>
                             InventoryUtil.syncItem();
                             mc.player.connection.sendPacket(place);
                             if (AUTOCRYSTAL.isPresent()) {
-                                AUTOCRYSTAL.get().placed.put(p, new CrystalTimeStamp(Float.MAX_VALUE, false));
+                                AUTOCRYSTAL.get().placed.put(p.up(), new CrystalTimeStamp(Float.MAX_VALUE, false));
                                 AUTOCRYSTAL.get().bombPos = p.up();
                             }
                             mc.player.connection.sendPacket(animation);

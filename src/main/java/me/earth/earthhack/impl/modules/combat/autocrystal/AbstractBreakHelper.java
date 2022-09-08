@@ -1,6 +1,8 @@
 package me.earth.earthhack.impl.modules.combat.autocrystal;
 
 import me.earth.earthhack.api.util.interfaces.Globals;
+import me.earth.earthhack.impl.core.ducks.entity.IEntity;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.AntiFriendPop;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.BreakData;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalData;
@@ -46,7 +48,11 @@ public abstract class AbstractBreakHelper<T extends CrystalData>
         for (Entity crystal : entities)
         {
             if (!(crystal instanceof EntityEnderCrystal)
-                    || EntityUtil.isDead(crystal))
+                    || EntityUtil.isDead(crystal)
+                        && (!module.countDeadCrystals.getValue()
+                            || module.countDeathTime.getValue()
+                                && (crystal.isDead && Managers.SET_DEAD.passedDeathTime(crystal, module.deathTime.getValue())
+                                    || ((IEntity) crystal).isPseudoDead() && ((IEntity) crystal).getPseudoTime().passed(module.deathTime.getValue()))))
             {
                 continue;
             }

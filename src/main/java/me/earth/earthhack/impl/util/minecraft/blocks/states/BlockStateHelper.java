@@ -14,6 +14,7 @@ import net.minecraft.world.chunk.Chunk;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * {@link IBlockAccess} that delegates all its methods
@@ -27,15 +28,28 @@ import java.util.Map;
 public class BlockStateHelper implements Globals, IBlockStateHelper
 {
     private final Map<BlockPos, IBlockState> states;
+    private final Supplier<IBlockAccess> world;
 
     public BlockStateHelper()
     {
         this(new HashMap<>());
     }
 
+    public BlockStateHelper(Supplier<IBlockAccess> world)
+    {
+        this(new HashMap<>(), world);
+    }
+
     public BlockStateHelper(Map<BlockPos, IBlockState> stateMap)
     {
+        this(stateMap, () -> mc.world);
+    }
+
+    public BlockStateHelper(Map<BlockPos, IBlockState> stateMap,
+                            Supplier<IBlockAccess> world)
+    {
         this.states = stateMap;
+        this.world = world;
     }
 
     /**
@@ -53,7 +67,7 @@ public class BlockStateHelper implements Globals, IBlockStateHelper
         IBlockState state = states.get(pos);
         if (state == null)
         {
-            return mc.world.getBlockState(pos);
+            return world.get().getBlockState(pos);
         }
 
         return state;
@@ -109,13 +123,13 @@ public class BlockStateHelper implements Globals, IBlockStateHelper
     @Override
     public TileEntity getTileEntity(BlockPos pos)
     {
-        return mc.world.getTileEntity(pos);
+        return world.get().getTileEntity(pos);
     }
 
     @Override
     public int getCombinedLight(BlockPos pos, int lightValue)
     {
-        return mc.world.getCombinedLight(pos, lightValue);
+        return world.get().getCombinedLight(pos, lightValue);
     }
 
     @Override
@@ -129,7 +143,7 @@ public class BlockStateHelper implements Globals, IBlockStateHelper
     @Override
     public Biome getBiome(BlockPos pos)
     {
-        return mc.world.getBiome(pos);
+        return world.get().getBiome(pos);
     }
 
     @Override
@@ -141,7 +155,7 @@ public class BlockStateHelper implements Globals, IBlockStateHelper
     @Override
     public WorldType getWorldType()
     {
-        return mc.world.getWorldType();
+        return world.get().getWorldType();
     }
 
     @Override
@@ -161,4 +175,5 @@ public class BlockStateHelper implements Globals, IBlockStateHelper
 
         return this.getBlockState(pos).isSideSolid(this, pos, side);
     }
+
 }

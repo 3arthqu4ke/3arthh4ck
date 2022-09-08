@@ -7,6 +7,8 @@ import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.autocrystal.AutoCrystal;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.SwingTime;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalTimeStamp;
+import me.earth.earthhack.impl.modules.combat.offhand.Offhand;
+import me.earth.earthhack.impl.modules.combat.offhand.modes.OffhandMode;
 import me.earth.earthhack.impl.util.math.RayTraceUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.DamageUtil;
@@ -34,6 +36,8 @@ public class CrystalHelper implements Globals {
         };
     private static final ModuleCache<AutoCrystal> AUTOCRYSTAL =
         Caches.getModule(AutoCrystal.class);
+    private static final ModuleCache<Offhand> OFFHAND =
+        Caches.getModule(Offhand.class);
     private final IBlockStateHelper helper = new BlockStateHelper();
 
     private final Speedmine module;
@@ -87,13 +91,29 @@ public class CrystalHelper implements Globals {
 
     public void placeCrystal(BlockPos pos, int slot, RayTraceResult ray)
     {
-        EnumHand hand = InventoryUtil.getHand(slot);
+        EnumHand hand = module.offhandPlace.getValue()
+            ? EnumHand.OFF_HAND
+            : InventoryUtil.getHand(slot);
+
         float[] f = RayTraceUtil.hitVecToPlaceVec(pos, ray.hitVec);
         Locks.acquire(Locks.PLACE_SWITCH_LOCK, () ->
         {
+            OffhandMode mode = null;
             if (slot != -2)
             {
-                module.cooldownBypass.getValue().switchTo(slot);
+                if (module.offhandPlace.getValue())
+                {
+                    mode = OFFHAND.get().getMode();
+                    OFFHAND.get().forceMode(OffhandMode.CRYSTAL);
+                    if (OFFHAND.get().getMode() != OffhandMode.CRYSTAL)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    module.cooldownBypass.getValue().switchTo(slot);
+                }
             }
 
             if (AUTOCRYSTAL.get().placeSwing.getValue() == SwingTime.Pre)
@@ -105,20 +125,64 @@ public class CrystalHelper implements Globals {
                 new CPacketPlayerTryUseItemOnBlock(
                     pos, ray.sideHit, hand, f[0], f[1], f[2]));
 
-            if (AUTOCRYSTAL.isPresent())
+            if (AUTOCRYSTAL.get().placeSwing.getValue() == SwingTime.Post)
             {
-                AUTOCRYSTAL.get().placed.put(
-                    pos, new CrystalTimeStamp(Float.MAX_VALUE, false));
-                AUTOCRYSTAL.get().bombPos = pos.up();
+                AUTOCRYSTAL.get().rotationHelper.swing(hand, false);
+            }
+
+            if (module.offhandSilent.getValue() && mode != null)
+            {
+                OFFHAND.get().setMode(mode);
+                if (module.megaSilent.getValue())
+                {
+                    OFFHAND.get().forceMode(mode);
+                }
             }
         });
 
-        if (AUTOCRYSTAL.get().placeSwing.getValue() == SwingTime.Post)
+        if (AUTOCRYSTAL.isPresent())
         {
-            AUTOCRYSTAL.get().rotationHelper.swing(hand, false);
+            AUTOCRYSTAL.get().placed.put(
+                pos.up(), new CrystalTimeStamp(Float.MAX_VALUE, false));
+            AUTOCRYSTAL.get().bombPos = pos.up();
+        }
+    }
+
+    public boolean doCrystalPlace(BlockPos crystalPos, int crystalSlot, int lastSlot, boolean swap)
+    {
+        if (module.antiAntiSilentSwitch.getValue()
+            && !module.aASSSwitchTimer.passed(module.aASSwitchTime.getValue()))
+        {
+            return true;
         }
 
-        AUTOCRYSTAL.get().placed.put(pos, new CrystalTimeStamp(Float.MAX_VALUE, false));
+        RayTraceResult ray = RotationUtil.rayTraceTo(crystalPos, mc.world);
+        if (ray != null && ray.sideHit != null && ray.hitVec != null)
+        {
+            module.crystalHelper.placeCrystal(crystalPos, crystalSlot, ray);
+            boolean swappedBack = false;
+            if (!swap || module.rotate.getValue()
+                && module.limitRotations.getValue()
+                && !RotationUtil.isLegit(module.pos, module.facing))
+            {
+                swappedBack = true;
+                // TODO:?????????????????????????
+                module.cooldownBypass.getValue().switchBack(
+                    lastSlot, crystalSlot);
+            }
+
+            if (module.antiAntiSilentSwitch.getValue()) {
+                if (!swappedBack && !module.offhandPlace.getValue()) {
+                    module.cooldownBypass.getValue().switchBack(
+                        lastSlot, crystalSlot);
+                }
+
+                module.aASSSwitchTimer.reset();
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

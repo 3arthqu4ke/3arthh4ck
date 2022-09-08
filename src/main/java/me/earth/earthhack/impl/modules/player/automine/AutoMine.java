@@ -44,6 +44,8 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("Self", true));
     protected final Setting<Boolean> prioSelf =
         register(new BooleanSetting("Prio-SelfUntrap", true));
+    protected final Setting<Boolean> prioSelfWithStep =
+        register(new BooleanSetting("PrioSelfWithStep", false));
     protected final Setting<Boolean> constellationCheck =
         register(new BooleanSetting("ConstCheck", true));
     protected final Setting<Boolean> improve =
@@ -94,10 +96,17 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("ClosestPlayer", true));
     protected final Setting<Boolean> improveCalcs =
         register(new BooleanSetting("ImproveCalcs", false));
-    protected final Setting<Float> minDmg =
+    public final Setting<Boolean> extraBurrowCheck =
+        register(new BooleanSetting("ExtraBurrowCheck", false));
+    public final Setting<Float> minDmg =
         register(new NumberSetting<>("MinDamage", 6.0f, 0.1f, 100.0f));
-    protected final Setting<Float> maxSelfDmg =
+    public final Setting<Float> maxSelfDmg =
         register(new NumberSetting<>("MaxSelfDmg", 10.0f, 0.1f, 100.0f));
+    // we need this for normal constellations too!!!
+    public final Setting<Boolean> damageCheck =
+        register(new BooleanSetting("DamageCheck", false));
+    public final Setting<Boolean> selfDmgCheck =
+        register(new BooleanSetting("SelfDmgCheck", false));
     protected final Setting<Integer> terrainDelay =
         register(new NumberSetting<>("TerrainDelay", 500, 0, 10000));
     protected final Setting<Boolean> suicide =

@@ -93,6 +93,7 @@
     "network.server.MixinSPacketEntityTeleport",
     "network.server.MixinSPacketResourcePack",
     "network.server.MixinSPacketSpawnMob",
+    "network.server.MixinSPacketSpawnObject",
     "network.server.MixinSPacketSpawnPlayer",
     "render.MixinActiveRenderInfo",
     "render.MixinBlockModelRenderer",

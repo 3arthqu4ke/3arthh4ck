@@ -30,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class AutoTrap extends ObbyListenerModule<ListenerAutoTrap>
@@ -86,6 +87,7 @@ protected final Setting<Boolean> top               =
     protected final Map<EntityPlayer, Double> speeds = new HashMap<>();
     /** Caches trapping positions for players while looking for a target */
     protected final Map<EntityPlayer, List<BlockPos>> cached = new HashMap<>();
+    public final Map<BlockPos, Long> blackList = new ConcurrentHashMap<>();
     /** The current target */
     protected EntityPlayer target;
 
@@ -110,6 +112,7 @@ protected final Setting<Boolean> top               =
         boolean checkNull = super.checkNull();
         cached.clear();
         speeds.clear();
+        blackList.clear();
         if (checkNull)
         {
             updateSpeed();
@@ -136,6 +139,17 @@ protected final Setting<Boolean> top               =
         return super.shouldHelp(facing, pos) // ??????
                 && helping.getValue()
                 && !legs.getValue();
+    }
+
+    @Override
+    public boolean placeBlock(BlockPos pos)
+    {
+        if (blackList.containsKey(pos))
+        {
+            return false;
+        }
+
+        return super.placeBlock(pos);
     }
 
     public EntityPlayer getTarget()

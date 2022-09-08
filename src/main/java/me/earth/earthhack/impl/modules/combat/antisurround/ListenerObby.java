@@ -104,6 +104,14 @@ final class ListenerObby extends ObbyListener<AntiSurround>
                     return;
                 }
 
+                if (module.stopOnObby.getValue()
+                    && mc.world.getBlockState(module.pos)
+                               .getBlock() == Blocks.OBSIDIAN)
+                {
+                    module.reset();
+                    return;
+                }
+
                 IBlockStateHelper helper = new BlockStateHelper();
                 helper.addAir(module.pos);
                 float damage = DamageUtil.calculate(module.pos, target, helper);

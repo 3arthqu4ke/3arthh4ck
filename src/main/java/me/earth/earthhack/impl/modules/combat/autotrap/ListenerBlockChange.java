@@ -15,6 +15,7 @@ final class ListenerBlockChange extends ModuleListener<AutoTrap, PacketEvent.Rec
     @Override
     public void invoke(PacketEvent.Receive<SPacketBlockChange> event) {
         EntityPlayerSP player = mc.player;
+        module.blackList.remove(event.getPacket().getBlockPosition());
         if (player != null
             && module.instant.getValue()
             && event.getPacket().getBlockState().getBlock() == Blocks.AIR

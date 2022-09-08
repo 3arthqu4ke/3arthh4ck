@@ -1,5 +1,6 @@
 package me.earth.earthhack.impl.modules.combat.autocrystal.util;
 
+import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import net.minecraft.entity.Entity;
 
 import java.util.Collection;
@@ -20,7 +21,8 @@ public class BreakData<T extends CrystalData>
 
     public void register(T dataIn)
     {
-        if (dataIn.getSelfDmg() < fallBackDmg)
+        if (dataIn.getSelfDmg() < fallBackDmg
+            && !EntityUtil.isDead(dataIn.getCrystal()))
         {
             fallBack    = dataIn.getCrystal();
             fallBackDmg = dataIn.getSelfDmg();

@@ -463,7 +463,7 @@ final class ListenerTick extends ModuleListener<AutoArmor, TickEvent>
 
             return true;
         }
-        else if (slot != -2) // slot == -2 shouldn't happen.
+        else if (slot != -2 && mc.player.inventory.getItemStack().isEmpty())
         {
             if (checkMendingStage(mendBlock))
             {

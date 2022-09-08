@@ -497,6 +497,12 @@ public enum SpeedMode implements Globals
                 module.constStage++;
             }
         }
+    },
+    None {
+        @Override
+        public void move(MoveEvent event, Speed module) {
+            // NOP
+        }
     };
 
     public abstract void move(MoveEvent event, Speed module);

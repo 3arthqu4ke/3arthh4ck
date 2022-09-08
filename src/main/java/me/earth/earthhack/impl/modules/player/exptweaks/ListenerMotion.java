@@ -42,7 +42,9 @@ final class ListenerMotion extends ModuleListener<ExpTweaks, MotionUpdateEvent>
                 Locks.acquire(Locks.PLACE_SWITCH_LOCK, () ->
                 {
                     int lastSlot = mc.player.inventory.currentItem;
-                    boolean silent = module.silent.getValue();
+                    boolean silent = module.silent.getValue()
+                        && (!module.silentOnlyWhenUsing.getValue()
+                            || mc.gameSettings.keyBindUseItem.isKeyDown());
                     if (silent)
                     {
                         module.isMiddleClick = true;

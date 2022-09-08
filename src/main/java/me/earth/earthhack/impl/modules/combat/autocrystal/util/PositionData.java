@@ -164,8 +164,22 @@ public class PositionData extends BasePath
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public int compareTo(PositionData o)
     {
+        if (module.useSafetyFactor.getValue())
+        {
+            double thisFactor = this.damage * module.safetyFactor.getValue()
+                - this.selfDamage * module.selfFactor.getValue();
+            double otherFactor = o.damage * module.safetyFactor.getValue()
+                - o.selfDamage * module.selfFactor.getValue();
+
+            if (thisFactor != otherFactor)
+            {
+                return Double.compare(otherFactor, thisFactor);
+            }
+        }
+
         if (Math.abs(o.damage - this.damage) < 1.0f)
         {
             if (this.usesObby() && o.usesObby())
@@ -312,10 +326,12 @@ public class PositionData extends BasePath
             {
                 if (!dead)
                 {
-                    if (EntityUtil.isDead(entity))
+                    boolean crystalIsDead = entity.isDead;
+                    boolean crystalIsPseudoDead = ((IEntity) entity).isPseudoDead();
+                    if (crystalIsDead || crystalIsPseudoDead)
                     {
-                        if (Managers.SET_DEAD.passedDeathTime(entity, deathTime)
-                            || ((IEntity) entity).getPseudoTime().passed(deathTime))
+                        if (crystalIsDead && Managers.SET_DEAD.passedDeathTime(entity, deathTime)
+                            || crystalIsPseudoDead && ((IEntity) entity).getPseudoTime().passed(deathTime))
                         {
                             continue; // Entity is like very dead now
                         }

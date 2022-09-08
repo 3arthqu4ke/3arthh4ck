@@ -70,6 +70,8 @@ public class Offhand extends Module
             register(new BooleanSetting("Crystal-Totem", true));
     protected final Setting<Boolean> swordGap    =
             register(new BooleanSetting("Sword-Gapple", false));
+    protected final Setting<Boolean> swordGapCrystal    =
+            register(new BooleanSetting("SwordGapCrystal", false));
     protected final Setting<Boolean> recover     =
             register(new BooleanSetting("RecoverSwitch", true));
     protected final Setting<Boolean> noOGC       =
@@ -87,7 +89,7 @@ public class Offhand extends Module
     protected final Setting<Integer> asyncCheck =
             register(new NumberSetting<>("Async-Check", 100, 0, 1000));
     protected final Setting<Boolean> crystalCheck    =
-            register(new BooleanSetting("CrystalCheck", true));
+            register(new BooleanSetting("CrystalCheck", false));
     protected final Setting<Boolean> doubleClicks =
             register(new BooleanSetting("DoubleClicks", false));
     protected final Setting<Boolean> noMove =
@@ -105,6 +107,9 @@ public class Offhand extends Module
     protected final Setting<Boolean> fixPingBypassAsyncSlot =
             register(new BooleanSetting("FixPingBypassAsyncSlot", true))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> oldCrystalCheck =
+            register(new BooleanSetting("OldCrystalCheck", false))
+                .setComplexity(Complexity.Expert);
 
     protected final Map<Item, Integer> lastSlots = new HashMap<>();
     protected final StopWatch setSlotTimer = new StopWatch();
@@ -118,6 +123,7 @@ public class Offhand extends Module
     protected volatile int asyncSlot = -1;
 
     protected boolean swordGapped;
+    protected boolean swordGappedWithCrystal;
     protected boolean lookedUp;
     protected boolean pulledFromHotbar;
 
@@ -180,6 +186,16 @@ public class Offhand extends Module
         return mode;
     }
 
+    public void forceMode(OffhandMode mode)
+    {
+        setMode(mode);
+        for (int i = 0; i < 3; i++)
+        {
+            this.getTimer().setTime(10000);
+            this.doOffhand();
+        }
+    }
+
     public void doOffhand()
     {
         boolean suicide = SUICIDE.returnIfPresent(Suicide::deactivateOffhand, false);
@@ -187,26 +203,40 @@ public class Offhand extends Module
             && timer.passed(delay.getValue())
             && InventoryUtil.validScreen())
         {
+            boolean isCrystal = false;
             if ((mc.player.getHeldItemMainhand().getItem() instanceof ItemSword
                 || mc.player.getHeldItemMainhand().getItem() instanceof ItemAxe)
                     && swordGap.getValue()
                     && (mc.player.getHeldItemOffhand().getItem() ==
                                                         Items.GOLDEN_APPLE
-                    || mc.player.getHeldItemOffhand().getItem() ==
+                        || swordGapCrystal.getValue()
+                            && (isCrystal =
+                                mc.player.getHeldItemOffhand().getItem() ==
+                                                        Items.END_CRYSTAL)
+                        || mc.player.getHeldItemOffhand().getItem() ==
                                                         Items.TOTEM_OF_UNDYING))
             {
                 if (Mouse.isButtonDown(1)
-                        && OffhandMode.TOTEM.equals(mode)
+                        && (OffhandMode.TOTEM.equals(mode)
+                            || swordGapCrystal.getValue() && isCrystal)
                         && mc.currentScreen == null)
                 {
                     this.mode = OffhandMode.GAPPLE;
                     swordGapped = true;
+                    swordGappedWithCrystal = isCrystal;
                 }
                 else if (swordGapped
                             && !Mouse.isButtonDown(1)
                             && OffhandMode.GAPPLE.equals(mode))
                 {
-                    setMode(OffhandMode.TOTEM);
+                    if (swordGappedWithCrystal)
+                    {
+                        setMode(OffhandMode.CRYSTAL);
+                    }
+                    else
+                    {
+                        setMode(OffhandMode.TOTEM);
+                    }
                 }
             }
 
@@ -374,19 +404,25 @@ public class Offhand extends Module
     public boolean isSafe()
     {
         float playerHealth = EntityUtil.getHealth(mc.player);
-        if (crystalCheck.getValue()
-                && mc.player != null
-                && mc.world != null)
+        if (crystalCheck.getValue() && mc.player != null && mc.world != null)
         {
             float highestDamage = mc.world.loadedEntityList
                     .stream()
                     .filter(entity -> entity instanceof EntityEnderCrystal)
+                    .filter(entity -> entity.getDistanceSq(mc.player) <= 144)
                     .map(DamageUtil::calculate)
                     .max(Comparator.comparing(damage -> damage))
                     .orElse(0.0f);
-            playerHealth -= highestDamage;
+
+            if (oldCrystalCheck.getValue()) {
+                playerHealth -= highestDamage;
+            } else if (highestDamage >= playerHealth) {
+                return false;
+            }
         }
+
         return (PINGBYPASS.isEnabled()
+                    && PINGBYPASS.get().isOld()
                     && AUTOTOTEM.isEnabled())
                 || (Managers.SAFETY.isSafe()
                     && playerHealth >= safeH.getValue()

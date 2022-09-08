@@ -475,8 +475,7 @@ public class HelperPlace implements Globals
     {
         if (pos.getY() < 0
             || pos.getY() - 1 >= maxY
-            || BlockUtil.getDistanceSq(pos)
-                >= MathUtil.square(module.placeRange.getValue()))
+            || module.isOutsidePlaceRange(pos))
         {
             return true;
         }

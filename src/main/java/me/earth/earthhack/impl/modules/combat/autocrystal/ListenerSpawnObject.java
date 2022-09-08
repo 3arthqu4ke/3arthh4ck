@@ -4,7 +4,7 @@ import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
-import me.earth.earthhack.impl.core.ducks.entity.IEntity;
+import me.earth.earthhack.impl.core.ducks.network.ISPacketSpawnObject;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
@@ -13,23 +13,18 @@ import me.earth.earthhack.impl.modules.client.safety.Safety;
 import me.earth.earthhack.impl.modules.combat.antisurround.AntiSurround;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.AntiFriendPop;
 import me.earth.earthhack.impl.modules.combat.autocrystal.modes.BreakValidity;
-import me.earth.earthhack.impl.modules.combat.autocrystal.modes.SwingTime;
 import me.earth.earthhack.impl.modules.combat.autocrystal.util.CrystalTimeStamp;
-import me.earth.earthhack.impl.modules.combat.autocrystal.util.WeaknessSwitch;
 import me.earth.earthhack.impl.modules.combat.legswitch.LegSwitch;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
-import me.earth.earthhack.impl.util.minecraft.Swing;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.misc.MutableWrapper;
-import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.impl.util.text.ChatUtil;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.play.client.CPacketUseEntity;
 import net.minecraft.network.play.server.SPacketSpawnObject;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.List;
 
@@ -66,12 +61,16 @@ final class ListenerSpawnObject extends
 
     private void onEvent(PacketEvent.Receive<SPacketSpawnObject> event)
     {
+        World world = mc.world;
         if (mc.player == null
+            || world == null
+            || module.basePlaceOnly.getValue()
             || event.getPacket().getType() != 51
             || mc.world == null
             || !module.spectator.getValue() && mc.player.isSpectator()
             || module.stopWhenEating.getValue() && module.isEating()
-            || module.stopWhenMining.getValue() && module.isMining())
+            || module.stopWhenMining.getValue() && module.isMining()
+            || ((ISPacketSpawnObject) event.getPacket()).isAttacked())
         {
             return;
         }
@@ -80,7 +79,7 @@ final class ListenerSpawnObject extends
         double x = packet.getX();
         double y = packet.getY();
         double z = packet.getZ();
-        EntityEnderCrystal entity = new EntityEnderCrystal(mc.world, x, y, z);
+        EntityEnderCrystal entity = new EntityEnderCrystal(world, x, y, z);
 
         if (module.simulatePlace.getValue() != 0)
         {
@@ -114,6 +113,7 @@ final class ListenerSpawnObject extends
         entity.setEntityId(packet.getEntityID());
         entity.setUniqueId(packet.getUniqueId());
 
+        boolean attacked = false;
         if ((!module.alwaysCalc.getValue()
                 || pos.equals(module.bombPos)
                     && module.alwaysBomb.getValue())
@@ -171,6 +171,7 @@ final class ListenerSpawnObject extends
                     event,
                     entity,
                     stamp.getDamage() <= module.slowBreakDamage.getValue());
+            attacked = true;
         }
         else if (module.asyncCalc.getValue() || module.alwaysCalc.getValue())
         {
@@ -221,6 +222,7 @@ final class ListenerSpawnObject extends
                 if ((dmg > self
                         || module.suicide.getValue()
                             && dmg >= module.minDamage.getValue())
+                    && dmg > module.minBreakDamage.getValue()
                     && (dmg > module.slowBreakDamage.getValue()
                         || module.shouldDanger()
                         || module.breakTimer.passed(module.slowBreakDelay
@@ -235,6 +237,7 @@ final class ListenerSpawnObject extends
             {
                 attack(packet, event, entity,
                        (stamp == null || !stamp.isShield()) && slow);
+                attacked = true;
             }
             else if (stamp != null
                 && stamp.isShield()
@@ -242,10 +245,12 @@ final class ListenerSpawnObject extends
                 && self <= module.shieldSelfDamage.getValue())
             {
                 attack(packet, event, entity, false);
+                attacked = true;
             }
         }
 
-        if (module.spawnThread.getValue())
+        if (module.spawnThread.getValue()
+            && (!module.spawnThreadWhenAttacked.getValue() || attacked))
         {
             module.threadHelper.schedulePacket(event);
         }
@@ -256,108 +261,7 @@ final class ListenerSpawnObject extends
                         EntityEnderCrystal entityIn,
                         boolean slow)
     {
-        CPacketUseEntity p = new CPacketUseEntity(entityIn);
-        WeaknessSwitch w = HelperRotation.antiWeakness(module);
-        if (w.needsSwitch())
-        {
-            if (w.getSlot() == -1 || !module.instantAntiWeak.getValue())
-            {
-                return;
-            }
-        }
-
-        int lastSlot = mc.player.inventory.currentItem;
-        Runnable runnable = () ->
-        {
-            if (w.getSlot() != -1)
-            {
-                module.antiWeaknessBypass.getValue().switchTo(w.getSlot());
-            }
-
-            if (module.breakSwing.getValue() == SwingTime.Pre)
-            {
-                Swing.Packet.swing(EnumHand.MAIN_HAND);
-            }
-
-            mc.player.connection.sendPacket(p);
-
-            if (module.breakSwing.getValue() == SwingTime.Post)
-            {
-                Swing.Packet.swing(EnumHand.MAIN_HAND);
-            }
-
-            if (w.getSlot() != -1)
-            {
-                module.antiWeaknessBypass.getValue().switchBack(
-                    lastSlot, w.getSlot());
-            }
-        };
-
-        if (w.getSlot() != -1)
-        {
-            Locks.acquire(Locks.PLACE_SWITCH_LOCK, runnable);
-        }
-        else
-        {
-            runnable.run();
-        }
-
-        module.breakTimer.reset(slow
-                ? module.slowBreakDelay.getValue()
-                : module.breakDelay.getValue());
-
-        event.addPostEvent(() ->
-        {
-            Entity entity = mc.world.getEntityByID(packet.getEntityID());
-            if (entity instanceof EntityEnderCrystal)
-            {
-                module.setCrystal(entity);
-            }
-        });
-
-        if (module.simulateExplosion.getValue())
-        {
-            HelperUtil.simulateExplosion(
-                module, packet.getX(), packet.getY(), packet.getZ());
-        }
-
-        if (module.pseudoSetDead.getValue())
-        {
-            event.addPostEvent(() ->
-            {
-                Entity entity = mc.world.getEntityByID(packet.getEntityID());
-                if (entity != null)
-                {
-                    ((IEntity) entity).setPseudoDead(true);
-                }
-            });
-
-            return;
-        }
-
-        if (module.instantSetDead.getValue())
-        {
-            event.setCancelled(true);
-            mc.addScheduledTask(() ->
-            {
-                Entity entity = mc.world.getEntityByID(packet.getEntityID());
-                if (entity instanceof EntityEnderCrystal)
-                {
-                    module.crystalRender.onSpawn((EntityEnderCrystal) entity);
-                }
-
-                if (!event.isCancelled())
-                {
-                    return;
-                }
-
-                EntityTracker.updateServerPosition(entityIn,
-                                                   packet.getX(),
-                                                   packet.getY(),
-                                                   packet.getZ());
-                Managers.SET_DEAD.setDead(entityIn);
-            });
-        }
+        HelperInstantAttack.attack(module, packet, event, entityIn, slow);
     }
 
     private float checkPos(Entity entity)

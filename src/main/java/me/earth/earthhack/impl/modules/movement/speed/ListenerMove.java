@@ -49,6 +49,11 @@ final class ListenerMove extends ModuleListener<Speed, MoveEvent>
         }
 
         module.mode.getValue().move(event, module);
+        if (module.modify.getValue()) {
+            event.setX(event.getX() * module.xzFactor.getValue());
+            event.setY(event.getY() * module.yFactor.getValue());
+            event.setZ(event.getZ() * module.xzFactor.getValue());
+        }
     }
 
 }

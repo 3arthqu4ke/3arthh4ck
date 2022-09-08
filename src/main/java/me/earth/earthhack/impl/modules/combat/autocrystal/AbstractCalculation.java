@@ -219,7 +219,8 @@ public abstract class AbstractCalculation<T extends CrystalData>
                                        .passed(module.obbyCalc.getValue());
                 if (obbyCheck()
                     && passed
-                    && placeObby(placeData, null))
+                    && placeObby(placeData, null)
+                    || module.basePlaceOnly.getValue())
                 {
                     return;
                 }
@@ -281,12 +282,18 @@ public abstract class AbstractCalculation<T extends CrystalData>
         {
             count = (int) breakData.getData()
                                    .stream()
+                                   .filter(d -> module.countDeadCrystals.getValue()
+                                       || !EntityUtil.isDead(d.getCrystal()))
                                    .filter(d -> d.getDamage() > minDmg)
                                    .count();
             return;
         }
 
-        count = breakData.getData().size();
+        count = (int) breakData.getData()
+                               .stream()
+                               .filter(d -> module.countDeadCrystals.getValue()
+                                   || !EntityUtil.isDead(d.getCrystal()))
+                               .count();
     }
 
     protected boolean evaluate(BreakData<T> breakData)
@@ -315,6 +322,11 @@ public abstract class AbstractCalculation<T extends CrystalData>
             List<T> valids = new ArrayList<>(packets);
             for (T data : this.breakData.getData())
             {
+                if (EntityUtil.isDead(data.getCrystal()))
+                {
+                    continue;
+                }
+
                 validity = HelperUtil.isValid(module, data.getCrystal());
                 if (validity == BreakValidity.VALID && valids.size() < packets)
                 {
@@ -349,7 +361,9 @@ public abstract class AbstractCalculation<T extends CrystalData>
                     if (high
                         || shouldDanger
                         || module.breakTimer
-                                 .passed(module.slowBreakDelay.getValue()))
+                                 .passed(module.slowBreakDelay.getValue())
+                            && valid.getDamage()
+                                >= module.minBreakDamage.getValue())
                     {
                         slowReset = slowReset && !high;
                         attack(valid.getCrystal(), BreakValidity.VALID);
@@ -510,6 +524,11 @@ public abstract class AbstractCalculation<T extends CrystalData>
             ifBlocked = () -> attack(entity, validity, false);
             return false;
         }*/
+
+        if (module.basePlaceOnly.getValue())
+        {
+            return validity != BreakValidity.INVALID;
+        }
 
         module.setCrystal(entity);
         switch (validity)
@@ -944,6 +963,10 @@ public abstract class AbstractCalculation<T extends CrystalData>
                          float damage,
                          MutableWrapper<Boolean> liquidBreak,
                          boolean shield) {
+        if (module.basePlaceOnly.getValue()) {
+            return;
+        }
+
         if (liquidBreak != null) {
             module.liquidTimer.reset();
         }
@@ -1095,11 +1118,12 @@ public abstract class AbstractCalculation<T extends CrystalData>
     protected boolean placeCheckPre(BlockPos pos)
     {
         double x = Managers.POSITION.getX();
-        double y = Managers.POSITION.getY();
+        double y = Managers.POSITION.getY() + (module.placeRangeEyes.getValue() ? RotationUtil.getRotationPlayer().getEyeHeight() : 0);
         double z = Managers.POSITION.getZ();
 
-        if (pos.distanceSqToCenter(x, y, z)
-                >= MathUtil.square(module.placeRange.getValue()))
+        if ((module.placeRangeCenter.getValue()
+            ? pos.distanceSqToCenter(x, y, z)
+            : pos.distanceSq(x, y, z)) >= MathUtil.square(module.placeRange.getValue()))
         {
             return false;
         }
@@ -1303,6 +1327,11 @@ public abstract class AbstractCalculation<T extends CrystalData>
                 double minAngle = Double.MAX_VALUE;
                 for (T data : breakData.getData())
                 {
+                    if (EntityUtil.isDead(data.getCrystal()))
+                    {
+                        continue;
+                    }
+
                     if (data.hasCachedRotations() && data.getAngle() < minAngle)
                     {
                         minAngle = data.getAngle();
@@ -1325,7 +1354,7 @@ public abstract class AbstractCalculation<T extends CrystalData>
                     focusData.getData().add(data);
                 }
 
-                Optional<T> first = focusData.getData().stream().findFirst();
+                Optional<T> first = focusData.getData().stream().filter(d -> !EntityUtil.isDead(d.getCrystal())).findFirst();
                 if (!first.isPresent())
                 {
                     module.focus = null;

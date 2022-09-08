@@ -2,7 +2,7 @@ package me.earth.earthhack.impl.util.math;
 
 public class StopWatch implements Passable
 {
-    private long time;
+    private volatile long time;
 
     public boolean passed(double ms)
     {
@@ -29,10 +29,6 @@ public class StopWatch implements Passable
     public void setTime(long ns)
     {
         time = ns;
-    }
-
-    public void adjust(int time) {
-        this.time += time;
     }
 
 }

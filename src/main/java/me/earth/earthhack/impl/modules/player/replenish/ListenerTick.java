@@ -9,7 +9,9 @@ import me.earth.earthhack.impl.modules.player.xcarry.XCarry;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.thread.Locks;
+import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,7 +34,10 @@ final class ListenerTick extends ModuleListener<Replenish, TickEvent>
     {
         if (event.isSafe()
                 && !mc.player.isCreative()
-                && !(mc.currentScreen instanceof GuiContainer))
+                && !(mc.currentScreen instanceof GuiContainer
+                    && !(mc.currentScreen instanceof GuiInventory
+                        && module.inInvWithMiddleClick.getValue()
+                        && Mouse.isButtonDown(2))))
         {
             reset = false;
             if (!module.timer.passed(module.delay.getValue())
