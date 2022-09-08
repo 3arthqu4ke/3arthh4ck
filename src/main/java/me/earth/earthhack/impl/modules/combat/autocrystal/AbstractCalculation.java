@@ -361,7 +361,9 @@ public abstract class AbstractCalculation<T extends CrystalData>
                     if (high
                         || shouldDanger
                         || module.breakTimer
-                                 .passed(module.slowBreakDelay.getValue()))
+                                 .passed(module.slowBreakDelay.getValue())
+                            && valid.getDamage()
+                                >= module.minBreakDamage.getValue())
                     {
                         slowReset = slowReset && !high;
                         attack(valid.getCrystal(), BreakValidity.VALID);

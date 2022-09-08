@@ -189,7 +189,7 @@ public class AutoCrystal extends Module
             register(new NumberSetting<>("BreakTrace", 3.0f, 0.0f, 6.0f))
                 .setComplexity(Complexity.Medium);
     protected final Setting<Float> minBreakDamage =
-            register(new NumberSetting<>("MinBreakDmg", 2.0f, 0.0f, 20.0f))
+            register(new NumberSetting<>("MinBreakDmg", 0.5f, 0.0f, 20.0f))
                 .setComplexity(Complexity.Medium);
     protected final Setting<Float> maxSelfBreak =
             register(new NumberSetting<>("MaxSelfBreak", 10.0f, 0.0f, 20.0f))
