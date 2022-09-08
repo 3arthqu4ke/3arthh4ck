@@ -70,6 +70,8 @@ public class Offhand extends Module
             register(new BooleanSetting("Crystal-Totem", true));
     protected final Setting<Boolean> swordGap    =
             register(new BooleanSetting("Sword-Gapple", false));
+    protected final Setting<Boolean> swordGapCrystal    =
+            register(new BooleanSetting("SwordGapCrystal", false));
     protected final Setting<Boolean> recover     =
             register(new BooleanSetting("RecoverSwitch", true));
     protected final Setting<Boolean> noOGC       =
@@ -121,6 +123,7 @@ public class Offhand extends Module
     protected volatile int asyncSlot = -1;
 
     protected boolean swordGapped;
+    protected boolean swordGappedWithCrystal;
     protected boolean lookedUp;
     protected boolean pulledFromHotbar;
 
@@ -200,26 +203,40 @@ public class Offhand extends Module
             && timer.passed(delay.getValue())
             && InventoryUtil.validScreen())
         {
+            boolean isCrystal = false;
             if ((mc.player.getHeldItemMainhand().getItem() instanceof ItemSword
                 || mc.player.getHeldItemMainhand().getItem() instanceof ItemAxe)
                     && swordGap.getValue()
                     && (mc.player.getHeldItemOffhand().getItem() ==
                                                         Items.GOLDEN_APPLE
-                    || mc.player.getHeldItemOffhand().getItem() ==
+                        || swordGapCrystal.getValue()
+                            && (isCrystal =
+                                mc.player.getHeldItemOffhand().getItem() ==
+                                                        Items.END_CRYSTAL)
+                        || mc.player.getHeldItemOffhand().getItem() ==
                                                         Items.TOTEM_OF_UNDYING))
             {
                 if (Mouse.isButtonDown(1)
-                        && OffhandMode.TOTEM.equals(mode)
+                        && (OffhandMode.TOTEM.equals(mode)
+                            || swordGapCrystal.getValue() && isCrystal)
                         && mc.currentScreen == null)
                 {
                     this.mode = OffhandMode.GAPPLE;
                     swordGapped = true;
+                    swordGappedWithCrystal = isCrystal;
                 }
                 else if (swordGapped
                             && !Mouse.isButtonDown(1)
                             && OffhandMode.GAPPLE.equals(mode))
                 {
-                    setMode(OffhandMode.TOTEM);
+                    if (swordGappedWithCrystal)
+                    {
+                        setMode(OffhandMode.CRYSTAL);
+                    }
+                    else
+                    {
+                        setMode(OffhandMode.TOTEM);
+                    }
                 }
             }
 
