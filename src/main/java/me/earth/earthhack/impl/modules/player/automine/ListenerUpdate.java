@@ -497,12 +497,14 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
         IBlockState state = mc.world.getBlockState(upUp);
         if (isValid(upUp, state))
         {
-            attackPos(upUp, new Constellation(mc.world,
-                                              mc.player,
-                                              upUp,
-                                              playerPos,
-                                              state,
-                                              module));
+            Constellation c = new Constellation(mc.world,
+                                                mc.player,
+                                                upUp,
+                                                playerPos,
+                                                state,
+                                                module);
+            attackPos(upUp, c);
+            c.setSelfUntrap(true);
             return true;
         }
 

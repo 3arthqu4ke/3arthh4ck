@@ -46,6 +46,8 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("Prio-SelfUntrap", true));
     protected final Setting<Boolean> prioSelfWithStep =
         register(new BooleanSetting("PrioSelfWithStep", false));
+    public final Setting<Boolean> untrapCheck =
+        register(new BooleanSetting("UntrapCheck", false));
     protected final Setting<Boolean> constellationCheck =
         register(new BooleanSetting("ConstCheck", true));
     protected final Setting<Boolean> improve =
