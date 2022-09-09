@@ -6,7 +6,11 @@ import me.earth.earthhack.impl.event.events.network.MotionUpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.player.fakeplayer.util.Position;
 import me.earth.earthhack.impl.util.client.ModuleUtil;
+import me.earth.earthhack.impl.util.minecraft.ICachedDamage;
+import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
