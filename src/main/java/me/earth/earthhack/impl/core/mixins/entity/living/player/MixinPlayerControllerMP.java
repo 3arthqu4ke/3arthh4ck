@@ -96,14 +96,14 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
         cancellable = true)
     public void clickBlockHook(BlockPos pos,
                                 EnumFacing facing,
-                                CallbackInfoReturnable<Boolean> info)
+                                CallbackInfoReturnable<Boolean> cir)
     {
         ClickBlockEvent event = new ClickBlockEvent(pos, facing);
         Bus.EVENT_BUS.post(event);
 
         if (event.isCancelled())
         {
-            info.cancel();
+            cir.setReturnValue(true);
         }
     }
 
@@ -148,7 +148,7 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
                                 EnumFacing direction,
                                 Vec3d vec,
                                 EnumHand hand,
-                                CallbackInfoReturnable<EnumActionResult> info)
+                                CallbackInfoReturnable<EnumActionResult> cir)
     {
         ClickBlockEvent.Right event = new ClickBlockEvent
                                             .Right(pos, direction, vec, hand);
@@ -156,7 +156,7 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
 
         if (event.isCancelled())
         {
-            info.cancel();
+            cir.setReturnValue(EnumActionResult.PASS);
         }
     }
 
@@ -179,7 +179,7 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
 
         if (event.isCancelled())
         {
-            cir.cancel();
+            cir.setReturnValue(true);
         }
     }
 
@@ -195,6 +195,17 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
     {
         CPacketPlayerDigging packet =
                 new CPacketPlayerDigging(actionIn, posIn, facingIn);
+
+        switch (actionIn)
+        {
+            case START_DESTROY_BLOCK:
+            case STOP_DESTROY_BLOCK:
+            case ABORT_DESTROY_BLOCK:
+                ((ICPacketPlayerDigging) packet).setNormalDigging(true);
+                break;
+            default:
+                break;
+        }
 
         if (actionIn == CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK)
         {
@@ -271,29 +282,35 @@ public abstract class MixinPlayerControllerMP implements IPlayerControllerMP
         return digging;
     }
 
+    // documentation and recaf attach say otherwise
+    @SuppressWarnings({"InvalidMemberReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature", "UnresolvedMixinReference"})
     @Redirect(
         method = "resetBlockRemoving",
         at = @At(
             value = "NEW",
-            target = "Lnet/minecraft/network/play/client/CPacketPlayerDigging;<init>(Lnet/minecraft/network/play/client/CPacketPlayerDigging$Action;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)V"))
+            target = "(Lnet/minecraft/network/play/client/CPacketPlayerDigging$Action;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)Lnet/minecraft/network/play/client/CPacketPlayerDigging;"))
     private CPacketPlayerDigging resetBlockRemovingInitPacketHook(CPacketPlayerDigging.Action actionIn, BlockPos posIn, EnumFacing facingIn) {
         return initDigging(actionIn, posIn, facingIn);
     }
 
+    // documentation and recaf attach say otherwise
+    @SuppressWarnings({"InvalidMemberReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature", "UnresolvedMixinReference"})
     @Redirect(
         method = "onPlayerDamageBlock",
         at = @At(
             value = "NEW",
-            target = "Lnet/minecraft/network/play/client/CPacketPlayerDigging;<init>(Lnet/minecraft/network/play/client/CPacketPlayerDigging$Action;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)V"))
+            target = "(Lnet/minecraft/network/play/client/CPacketPlayerDigging$Action;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)Lnet/minecraft/network/play/client/CPacketPlayerDigging;"))
     private CPacketPlayerDigging onPlayerDamageBlockInitPacketHook(CPacketPlayerDigging.Action actionIn, BlockPos posIn, EnumFacing facingIn) {
         return initDigging(actionIn, posIn, facingIn);
     }
 
+    // documentation and recaf attach say otherwise
+    @SuppressWarnings({"InvalidMemberReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature", "UnresolvedMixinReference"})
     @Redirect(
         method = "clickBlock",
         at = @At(
             value = "NEW",
-            target = "Lnet/minecraft/network/play/client/CPacketPlayerDigging;<init>(Lnet/minecraft/network/play/client/CPacketPlayerDigging$Action;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)V"))
+            target = "(Lnet/minecraft/network/play/client/CPacketPlayerDigging$Action;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;)Lnet/minecraft/network/play/client/CPacketPlayerDigging;"))
     private CPacketPlayerDigging clickBlockInitPacketHook(CPacketPlayerDigging.Action actionIn, BlockPos posIn, EnumFacing facingIn) {
         return initDigging(actionIn, posIn, facingIn);
     }

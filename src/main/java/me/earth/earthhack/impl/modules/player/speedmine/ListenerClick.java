@@ -24,6 +24,13 @@ final class ListenerClick extends ModuleListener<Speedmine, ClickBlockEvent>
         {
             ((IPlayerControllerMP) mc.playerController).setIsHittingBlock(true);
         }
+
+        if (module.cancelClick.getValue()
+            && (module.mode.getValue() == MineMode.Smart
+                || module.mode.getValue() == MineMode.Fast))
+        {
+            event.setCancelled(true);
+        }
     }
 
 }
