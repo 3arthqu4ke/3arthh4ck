@@ -180,7 +180,9 @@ public class PositionData extends BasePath
             }
         }
 
-        if (Math.abs(o.damage - this.damage) < 1.0f)
+        if (Math.abs(o.damage - this.damage) < module.compareDiff.getValue()
+            && (!module.facePlaceCompare.getValue()
+                || this.damage >= module.minDamage.getValue()))
         {
             if (this.usesObby() && o.usesObby())
             {

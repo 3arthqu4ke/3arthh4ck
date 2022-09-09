@@ -102,7 +102,7 @@ public class AutoCrystal extends Module
     protected final Setting<Float> placeTrace =
             register(new NumberSetting<>("PlaceTrace", 6.0f, 0.0f, 6.0f))
                 .setComplexity(Complexity.Expert);
-    protected final Setting<Float> minDamage =
+    public final Setting<Float> minDamage =
             register(new NumberSetting<>("MinDamage", 6.0f, 0.1f, 20.0f));
     protected final Setting<Integer> placeDelay =
             register(new NumberSetting<>("PlaceDelay", 25, 0, 500));
@@ -920,6 +920,12 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     public final Setting<Double> safetyFactor =
             register(new NumberSetting<>("SafetyFactor", 1.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Double> compareDiff =
+            register(new NumberSetting<>("CompareDiff", 1.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Boolean> facePlaceCompare =
+            register(new BooleanSetting("FacePlaceCompare", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Integer> removeTime =
             register(new NumberSetting<>("Remove-Time", 1000, 0, 2500))
