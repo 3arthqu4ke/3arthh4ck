@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.combat.surround;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -16,6 +17,7 @@ import me.earth.earthhack.impl.util.client.ModuleUtil;
 import me.earth.earthhack.impl.util.helpers.blocks.BlockPlacingModule;
 import me.earth.earthhack.impl.util.helpers.blocks.ObbyModule;
 import me.earth.earthhack.impl.util.helpers.blocks.modes.Rotate;
+import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
@@ -90,6 +92,13 @@ public class Surround extends ObbyModule
         register(new BooleanSetting("NoSelfExtend", false));
     protected final Setting<SurroundFreecamMode> freecam =
         register(new EnumSetting<>("Freecam", SurroundFreecamMode.Off));
+    public final Setting<Boolean> teleport =
+        register(new BooleanSetting("Teleport", false));
+    protected final Setting<Double> yTeleportRange =
+        register(new NumberSetting<>("PlayerExtend", 0.0, 0.0, 100.0));
+    public final Setting<Boolean> fixStartPos =
+        register(new BooleanSetting("FixStartPos", true))
+            .setComplexity(Complexity.Dev);
 
     /** A Listener for the SetDeadManager (Instant + Sound). */
     protected final ListenerSound soundObserver = new ListenerSound(this);
@@ -102,9 +111,10 @@ public class Surround extends ObbyModule
     /** Positions that have been confirmed by a SPacketBlockChange */
     protected Set<BlockPos> confirmed = new HashSet<>();
     /** The position we were at when we enabled the module */
-    protected BlockPos startPos;
+    public volatile BlockPos startPos;
     /** <tt>true</tt> if we are centered, or don't have to center */
     protected boolean setPosition;
+    public boolean blockTeleporting;
 
     public Surround()
     {
@@ -114,6 +124,7 @@ public class Surround extends ObbyModule
         this.listeners.add(new ListenerMultiBlockChange(this));
         this.listeners.add(new ListenerExplosion(this));
         this.listeners.add(new ListenerSpawnObject(this));
+        this.listeners.add(new ListenerTeleport(this));
         this.setData(new SurroundData(this));
     }
 
@@ -222,6 +233,8 @@ public class Surround extends ObbyModule
             return timer.passed(delay.getValue());
         }
 
+        double teleported;
+        double yTeleportRange = MathUtil.square(this.yTeleportRange.getValue());
         switch (movement.getValue())
         {
             case None:
@@ -237,21 +250,36 @@ public class Surround extends ObbyModule
             case Y:
                 currentPos = getPlayerPos();
                 BlockPos startPos = this.startPos;
-                if (startPos != null && startPos.getY() != currentPos.getY())
+                teleported = startPos == null
+                    ? 0.0
+                    : currentPos.distanceSq(startPos);
+
+                if (startPos != null && startPos.getY() != currentPos.getY()
+                    || yTeleportRange != 0.0 && yTeleportRange < teleported)
                 {
                     this.disable();
                     return false;
                 }
+                else if (fixStartPos.getValue())
+                {
+                    this.startPos = currentPos;
+                }
+
                 break;
             case YPlus:
                 currentPos = getPlayerPos();
                 startPos = this.startPos;
-                if (startPos != null && startPos.getY() < currentPos.getY())
+                teleported = startPos == null
+                    ? 0.0
+                    : currentPos.distanceSq(startPos);
+
+                if (startPos != null && startPos.getY() < currentPos.getY()
+                    || yTeleportRange != 0.0 && yTeleportRange < teleported)
                 {
                     this.disable();
                     return false;
                 }
-                else
+                else if (fixStartPos.getValue())
                 {
                     this.startPos = currentPos;
                 }
@@ -568,7 +596,7 @@ public class Surround extends ObbyModule
         return surrounding;
     }
 
-    protected BlockPos getPlayerPos()
+    public BlockPos getPlayerPos()
     {
         return deltaY.getValue() && Math.abs(getPlayer().motionY) > 0.1
             ? new BlockPos(getPlayer())
