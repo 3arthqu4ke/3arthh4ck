@@ -529,6 +529,12 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> soundRemove =
             register(new BooleanSetting("SoundRemove", true))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> useSafeDeathTime =
+            register(new BooleanSetting("UseSafeDeathTime", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> safeDeathTime =
+            register(new NumberSetting<>("Safe-Death-Time", 0, 0, 500))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> deathTime =
             register(new NumberSetting<>("Death-Time", 0, 0, 500))
                 .setComplexity(Complexity.Medium);
@@ -908,7 +914,7 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> debugAntiPlaceFail =
             register(new BooleanSetting("DebugAntiPlaceFail", false))
-                .setComplexity(Complexity.Expert);
+                .setComplexity(Complexity.Dev);
     protected final Setting<Boolean> alwaysBomb =
             register(new BooleanSetting("Always-Bomb", false))
                 .setComplexity(Complexity.Expert);
@@ -1430,6 +1436,14 @@ public class AutoCrystal extends Module
         double z = player.posZ;
         double distance = placeRangeCenter.getValue() ? pos.distanceSqToCenter(x, y, z) : pos.distanceSq(x, y, z);
         return distance >= MathUtil.square(placeRange.getValue());
+    }
+
+    public int getDeathTime() {
+        if (useSafeDeathTime.getValue() && Managers.SAFETY.isSafe()) {
+            return safeDeathTime.getValue();
+        }
+
+        return deathTime.getValue();
     }
 
 }
