@@ -29,6 +29,14 @@ public enum AntiTrapMode
         new Vec3i(0, 1, 1),
         new Vec3i(-1, 1, 0),
         new Vec3i(0, 1, -1),
+        new Vec3i(1, 2, 0),
+        new Vec3i(0, 2, 1),
+        new Vec3i(-1, 2, 0),
+        new Vec3i(0, 2, -1),
+    }),
+    Bomb(new Vec3i[]
+    {
+        new Vec3i(0, 3, 0)
     }),
     Fill(new Vec3i[]
     {
