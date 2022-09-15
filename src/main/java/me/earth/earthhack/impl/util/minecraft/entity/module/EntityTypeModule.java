@@ -42,8 +42,8 @@ public class EntityTypeModule extends Module
         }
 
         if (!tamedMobs.getValue()
-            && entity instanceof EntityTameable
-            && ((EntityTameable) entity).isOwner(mc.player))
+                && entity instanceof EntityTameable
+                && ((EntityTameable) entity).getOwner() != null)
         {
             return false;
         }
