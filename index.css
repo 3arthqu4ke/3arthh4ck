@@ -1,12 +1,21 @@
 /* Copyright 2013 The Chromium Authors. All rights reserved.
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file. */
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 html, body {
   padding: 0;
   margin: 0;
   width: 100%;
   height: 100%;
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  background-color: hsl(225, 100%, 94%);
 }
 
 .icon {
@@ -162,4 +171,137 @@ html, body {
   transform-origin: top center;
   transition: transform 250ms cubic-bezier(0.4, 0, 1, 1) 400ms;
   z-index: 2;
+}
+
+:root {
+	--gray-5:#010101; /*dark*/
+	--gray-10:#040404;
+	--gray-15:#070808;
+	--gray-20:#0D0D0E;
+	--gray-25:#141516;
+	--gray-30:#1E2022;
+	--gray-35:#2D2F31;
+	--gray-40:#404346;
+	--gray-45:#5B5E62;
+	--gray-50:#7C8084;
+	--gray-55:#9DA1A5;
+	--gray-60:#B9BDC1;
+	--gray-65:#CDD1D5;
+	--gray-70:#DCE0E3;
+	--gray-75:#E7EAED;
+	--gray-80:#EFF2F5;
+	--gray-85:#F4F7FA;
+	--gray-90:#F7FAFD;
+	--gray-95:#FCFEFE; /*light*/
+	--animate:200ms;
+}
+body {
+	color:var(--gray-40);
+	transition:color var(--animate) ease-in-out, background var(--animate) ease-in-out;
+}
+body.dark {
+	color:var(--gray-80);
+	background:var(--gray-35);
+}
+h6 {
+	color:var(--gray-40);
+	transition:color var(--animate) ease-in-out;
+}
+body.dark h6 {
+	color:var(--gray-80);
+}
+.load-flash {
+	z-index:1000;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	position:absolute;
+	background:var(--gray-35);
+}
+.mode-toggle {
+	display:inline-flex;
+	flex-direction:row;
+	align-items:left;
+}
+.label-dark {
+	letter-spacing:-0.15px;
+  position: relative;
+  top:10cm;
+}
+.label-light {
+	letter-spacing:-0.031px;
+  position: relative;
+  top: 10cm;
+}
+.mode-toggle h6,
+body.dark .mode-toggle h6 {
+	text-transform:uppercase;
+}
+.label-dark,
+.label-light {
+	padding:8px 12px;
+	min-width:32px;
+	text-align:center;
+	color:var(--gray-45);
+}
+body.dark .label-dark,
+body.dark .label-light {
+	color:var(--gray-60);
+}
+.toggle-switch {
+	margin:0;
+	padding:0;
+	width:48px;
+	height:28px;
+	border:none;
+	outline:none;
+	overflow:hidden;
+	position:relative;
+  top: 10cm;
+	border-radius:14px;
+	display:inline-block;
+	background:var(--gray-40);
+}
+.toggle-switch,
+.toggle-switch:before,
+.toggle-switch:after {
+	transition:all var(--animate) ease-in-out;
+}
+body.dark .toggle-switch {
+	background:var(--gray-70);
+}
+.toggle-switch:before {
+	top:4px;
+	left:24px;
+	content:"";
+	width:20px;
+	height:20px;
+	display:block;
+	position:absolute;
+	border-radius:12px;
+	background:var(--gray-70);
+}
+body.dark .toggle-switch:before {
+	left:4px;
+	background:var(--gray-35);
+}
+.toggle-switch:after {
+	content:"";
+	top:14px;
+	right:2px;
+	width:1px;
+	height:1px;
+	display:block;
+	position:absolute;
+	border-radius:0.5px;
+	background:var(--gray-40);
+}
+body.dark .toggle-switch:after {
+	top:-2px;
+	right:2px;
+	width:32px;
+	height:32px;
+	border-radius:16px;
+	background:var(--gray-70);
 }
