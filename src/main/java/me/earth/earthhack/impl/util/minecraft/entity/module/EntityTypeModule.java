@@ -6,8 +6,9 @@ import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.impl.core.ducks.entity.IEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityTameable;
 
-// TODO: implement this for Killaura, ESP, etc.
+// TODO: implement this for ESP, etc.
 public class EntityTypeModule extends Module
 {
     public final Setting<Boolean> players =
@@ -16,6 +17,8 @@ public class EntityTypeModule extends Module
             register(new BooleanSetting("Monsters", false));
     public final Setting<Boolean> animals  =
             register(new BooleanSetting("Animals", false));
+    public final Setting<Boolean> tamedMobs =
+            register(new BooleanSetting("TamedMobs", false));
     public final Setting<Boolean> boss =
             register(new BooleanSetting("Boss", false));
     public final Setting<Boolean> vehicles =
@@ -34,6 +37,13 @@ public class EntityTypeModule extends Module
     public boolean isValid(Entity entity)
     {
         if (entity == null)
+        {
+            return false;
+        }
+
+        if (!tamedMobs.getValue()
+                && entity instanceof EntityTameable
+                && ((EntityTameable) entity).getOwner() != null)
         {
             return false;
         }
