@@ -9,6 +9,7 @@ import me.earth.earthhack.api.setting.settings.*;
 import me.earth.earthhack.api.util.bind.Bind;
 import me.earth.earthhack.impl.core.ducks.network.ICPacketPlayerDigging;
 import me.earth.earthhack.impl.core.ducks.network.IPlayerControllerMP;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.combat.autotrap.AutoTrap;
 import me.earth.earthhack.impl.modules.player.automine.AutoMine;
@@ -21,6 +22,7 @@ import me.earth.earthhack.impl.util.minecraft.CooldownBypass;
 import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.Swing;
+import me.earth.earthhack.impl.util.minecraft.blocks.mine.MineUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.states.BlockStateHelper;
 import me.earth.earthhack.impl.util.minecraft.blocks.states.IBlockStateHelper;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
@@ -31,6 +33,7 @@ import me.earth.earthhack.impl.util.thread.Locks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumFacing;
@@ -189,6 +192,15 @@ public class Speedmine extends Module
                 .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> abortNextTick =
             register(new BooleanSetting("AbortNextTick", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> cancelNormalPackets =
+            register(new BooleanSetting("CancelNormalPackets", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> cancelClick =
+            register(new BooleanSetting("CancelClick", true))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> cancelEvent =
+            register(new BooleanSetting("CancelEvent", true))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Integer> aASSwitchTime =
             register(new NumberSetting<>("AASSwitchTime", 500, 0, 1000))
@@ -575,6 +587,25 @@ public class Speedmine extends Module
     {
         sentPacket = true;
         resetTimer.reset();
+    }
+
+    public void updateDamages()
+    {
+        maxDamage = 0.0f;
+        for (int i = 0; i < 9; i++)
+        {
+            ItemStack stack = mc.player.inventory.getStackInSlot(i);
+            float damage = MineUtil.getDamage(stack, pos, onGround.getValue());
+            if (tpsSync.getValue()) {
+                damage *= Managers.TPS.getFactor();
+            }
+
+            damages[i] = MathUtil.clamp(damages[i] + damage, 0.0f, Float.MAX_VALUE);
+            if (damages[i] > maxDamage)
+            {
+                maxDamage = damages[i];
+            }
+        }
     }
 
     public int getFastSlot()

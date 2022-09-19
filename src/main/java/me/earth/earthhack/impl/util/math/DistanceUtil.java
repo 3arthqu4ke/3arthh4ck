@@ -17,6 +17,14 @@ public class DistanceUtil {
         return distanceSq(pos.getX() + 0.5f, pos.getY() + 1, pos.getZ() + 0.5f, x, y, z);
     }
 
+    public static double distanceSq2Bottom(BlockPos pos) {
+        return distanceSq(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, RotationUtil.getRotationPlayer());
+    }
+
+    public static double distanceSq2Bottom(BlockPos pos, Entity entity) {
+        return distanceSq(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, entity);
+    }
+
     public static double distanceSq(double x, double y, double z, Entity entity) {
         return distanceSq(x, y, z, entity.posX, entity.posY, entity.posZ);
     }

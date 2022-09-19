@@ -4,6 +4,7 @@ import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.impl.core.ducks.network.IPlayerControllerMP;
+import me.earth.earthhack.impl.core.mixins.util.MixinOptions;
 import me.earth.earthhack.impl.event.events.misc.UpdateEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
@@ -142,23 +143,7 @@ final class ListenerUpdate extends ModuleListener<Speedmine, UpdateEvent>
                 module.sendStopDestroy(module.pos, module.facing, false);
             }
 
-            module.maxDamage = 0.0f;
-            for (int i = 0; i < 9; i++)
-            {
-                ItemStack stack = mc.player.inventory.getStackInSlot(i);
-                float damage = MineUtil.getDamage(stack, module.pos, module.onGround.getValue());
-                if (module.tpsSync.getValue()) {
-                    damage *= Managers.TPS.getFactor();
-                }
-
-                module.damages[i] = MathUtil.clamp(module.damages[i] + damage, 0.0f, Float.MAX_VALUE);
-
-                if (module.damages[i] > module.maxDamage)
-                {
-                    module.maxDamage = module.damages[i];
-                }
-            }
-
+            module.updateDamages();
             if (module.normal.getValue())
             {
                 int fastSlot = module.getFastSlot();

@@ -51,8 +51,8 @@ public abstract class AbstractBreakHelper<T extends CrystalData>
                     || EntityUtil.isDead(crystal)
                         && (!module.countDeadCrystals.getValue()
                             || module.countDeathTime.getValue()
-                                && (crystal.isDead && Managers.SET_DEAD.passedDeathTime(crystal, module.deathTime.getValue())
-                                    || ((IEntity) crystal).isPseudoDead() && ((IEntity) crystal).getPseudoTime().passed(module.deathTime.getValue()))))
+                                && (crystal.isDead && Managers.SET_DEAD.passedDeathTime(crystal, module.getDeathTime())
+                                    || ((IEntity) crystal).isPseudoDead() && ((IEntity) crystal).getPseudoTime().passed(module.getDeathTime()))))
             {
                 continue;
             }

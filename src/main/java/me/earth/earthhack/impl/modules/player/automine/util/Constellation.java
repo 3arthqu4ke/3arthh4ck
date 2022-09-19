@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.modules.player.automine.util;
 
 import me.earth.earthhack.impl.modules.player.automine.AutoMine;
+import me.earth.earthhack.impl.util.math.DistanceUtil;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +17,7 @@ public class Constellation implements IConstellation
     protected final IBlockState playerState;
     protected final BlockPos pos;
     protected final AutoMine autoMine;
+    protected boolean selfUntrap;
     protected boolean burrow;
 
     public Constellation(IBlockAccess world,
@@ -28,7 +30,7 @@ public class Constellation implements IConstellation
         this.player      = player;
         this.pos         = pos;
         this.playerPos   = playerPos;
-        this.autoMine = autoMine;
+        this.autoMine    = autoMine;
         this.playerState = world.getBlockState(playerPos);
         this.state       = state;
     }
@@ -44,12 +46,15 @@ public class Constellation implements IConstellation
     {
         // Can't test this with a FakePlayer!
         return (PositionUtil.getPosition(player).equals(playerPos)
-                || isBurrow()
-                    && autoMine.extraBurrowCheck.getValue()
-                    && player.getDistanceSq(pos) < 1)
-                && world.getBlockState(pos).equals(state)
-                && (!checkPlayerState
-                    || world.getBlockState(playerPos).equals(playerState));
+            || (isBurrow()
+                && autoMine.extraBurrowCheck.getValue()
+                && DistanceUtil.distanceSq2Bottom(playerPos, player) <= 1.5)
+            || (isSelfUntrap()
+                && autoMine.untrapCheck.getValue()
+                && DistanceUtil.distanceSq2Bottom(playerPos) <= 1.5))
+            && world.getBlockState(pos).equals(state)
+            && (!checkPlayerState
+                || world.getBlockState(playerPos).equals(playerState));
     }
 
     public boolean isBurrow()
@@ -60,6 +65,16 @@ public class Constellation implements IConstellation
     public void setBurrow(boolean burrow)
     {
         this.burrow = burrow;
+    }
+
+    public boolean isSelfUntrap()
+    {
+        return selfUntrap;
+    }
+
+    public void setSelfUntrap(boolean selfUntrap)
+    {
+        this.selfUntrap = selfUntrap;
     }
 
 }

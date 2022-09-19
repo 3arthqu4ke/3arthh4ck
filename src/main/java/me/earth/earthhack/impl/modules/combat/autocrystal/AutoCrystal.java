@@ -102,7 +102,7 @@ public class AutoCrystal extends Module
     protected final Setting<Float> placeTrace =
             register(new NumberSetting<>("PlaceTrace", 6.0f, 0.0f, 6.0f))
                 .setComplexity(Complexity.Expert);
-    protected final Setting<Float> minDamage =
+    public final Setting<Float> minDamage =
             register(new NumberSetting<>("MinDamage", 6.0f, 0.1f, 20.0f));
     protected final Setting<Integer> placeDelay =
             register(new NumberSetting<>("PlaceDelay", 25, 0, 500));
@@ -529,6 +529,12 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> soundRemove =
             register(new BooleanSetting("SoundRemove", true))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> useSafeDeathTime =
+            register(new BooleanSetting("UseSafeDeathTime", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> safeDeathTime =
+            register(new NumberSetting<>("Safe-Death-Time", 0, 0, 500))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> deathTime =
             register(new NumberSetting<>("Death-Time", 0, 0, 500))
                 .setComplexity(Complexity.Medium);
@@ -908,7 +914,7 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> debugAntiPlaceFail =
             register(new BooleanSetting("DebugAntiPlaceFail", false))
-                .setComplexity(Complexity.Expert);
+                .setComplexity(Complexity.Dev);
     protected final Setting<Boolean> alwaysBomb =
             register(new BooleanSetting("Always-Bomb", false))
                 .setComplexity(Complexity.Expert);
@@ -920,6 +926,12 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     public final Setting<Double> safetyFactor =
             register(new NumberSetting<>("SafetyFactor", 1.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Double> compareDiff =
+            register(new NumberSetting<>("CompareDiff", 1.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Boolean> facePlaceCompare =
+            register(new BooleanSetting("FacePlaceCompare", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Integer> removeTime =
             register(new NumberSetting<>("Remove-Time", 1000, 0, 2500))
@@ -1424,6 +1436,14 @@ public class AutoCrystal extends Module
         double z = player.posZ;
         double distance = placeRangeCenter.getValue() ? pos.distanceSqToCenter(x, y, z) : pos.distanceSq(x, y, z);
         return distance >= MathUtil.square(placeRange.getValue());
+    }
+
+    public int getDeathTime() {
+        if (useSafeDeathTime.getValue() && Managers.SAFETY.isSafe()) {
+            return safeDeathTime.getValue();
+        }
+
+        return deathTime.getValue();
     }
 
 }

@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.player.freecam;
 
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
+import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
 import me.earth.earthhack.api.setting.settings.NumberSetting;
 import me.earth.earthhack.impl.modules.player.freecam.mode.CamMode;
@@ -18,6 +19,8 @@ public class Freecam extends DisablingModule
             register(new EnumSetting<>("Mode", CamMode.Position));
     protected final Setting<Float> speed  =
             register(new NumberSetting<>("Speed", 0.5f, 0.1f, 5.0f));
+    protected final Setting<Boolean> dismount =
+            register(new BooleanSetting("Dismount", true));
 
     private EntityOtherPlayerMP fakePlayer;
 
@@ -58,7 +61,11 @@ public class Freecam extends DisablingModule
             return;
         }
 
-        mc.player.dismountRidingEntity();
+        if (dismount.getValue())
+        {
+            mc.player.dismountRidingEntity();
+        }
+
         fakePlayer = PlayerUtil
                 .createFakePlayerAndAddToWorld(mc.player.getGameProfile());
         fakePlayer.onGround = mc.player.onGround;

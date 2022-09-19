@@ -5,6 +5,7 @@ import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.combat.surround.Surround;
 import me.earth.earthhack.impl.modules.movement.packetfly.PacketFly;
 import me.earth.earthhack.impl.modules.player.freecam.Freecam;
 import me.earth.earthhack.impl.util.network.PacketUtil;
@@ -20,6 +21,8 @@ final class ListenerPosLook extends
             Caches.getModule(PacketFly.class);
     private static final ModuleCache<Freecam> FREE_CAM =
             Caches.getModule(Freecam.class);
+    private static final ModuleCache<Surround> SURROUND =
+            Caches.getModule(Surround.class);
 
     public ListenerPosLook(Packets module)
     {
@@ -61,8 +64,17 @@ final class ListenerPosLook extends
         float yaw = packet.getYaw()   + (yawFlag ? mc.player.rotationYaw   : 0);
         float pit = packet.getPitch() + (pitFlag ? mc.player.rotationPitch : 0);
 
-        mc.player.connection.sendPacket(
+        try
+        {
+            SURROUND.computeIfPresent(s -> s.blockTeleporting = true);
+            mc.player.connection.sendPacket(
                 new CPacketConfirmTeleport(packet.getTeleportId()));
+        }
+        finally
+        {
+            SURROUND.computeIfPresent(s -> s.blockTeleporting = false);
+        }
+
         Managers.ROTATION.setBlocking(true);
         mc.player.connection.sendPacket(
                 new CPacketPlayer.PositionRotation(
@@ -110,6 +122,10 @@ final class ListenerPosLook extends
         }
 
         mc.player.setPositionAndRotation(x, y, z, yaw, pitch);
+        if (SURROUND.isEnabled() && SURROUND.get().teleport.getValue())
+        {
+            SURROUND.get().startPos = SURROUND.get().getPlayerPos();
+        }
     }
 
 }

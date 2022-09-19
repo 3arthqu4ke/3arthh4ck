@@ -203,7 +203,7 @@ public class HelperPlace implements Globals
                                 : module.helpingBlocks.getValue(),
             module.newVer.getValue(),
             module.newVerEntities.getValue(),
-            module.deathTime.getValue(),
+            module.getDeathTime(),
             entities,
             module.lava.getValue(),
             module.water.getValue(),
