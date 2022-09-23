@@ -91,6 +91,7 @@ import me.earth.earthhack.impl.modules.misc.truedurability.TrueDurability;
 import me.earth.earthhack.impl.modules.movement.anchor.Anchor;
 import me.earth.earthhack.impl.modules.movement.antimove.NoMove;
 import me.earth.earthhack.impl.modules.movement.autosprint.AutoSprint;
+import me.earth.earthhack.impl.modules.movement.avoid.Avoid;
 import me.earth.earthhack.impl.modules.movement.blocklag.BlockLag;
 import me.earth.earthhack.impl.modules.movement.boatfly.BoatFly;
 import me.earth.earthhack.impl.modules.movement.elytraflight.ElytraFlight;
@@ -269,6 +270,7 @@ public class ModuleManager extends IterationRegister<Module>
 
         this.forceRegister(new Anchor());
         this.forceRegister(new AutoSprint());
+        this.forceRegister(new Avoid());
         this.forceRegister(new BlockLag());
         this.forceRegister(new BoatFly());
         this.forceRegister(new ElytraFlight());
