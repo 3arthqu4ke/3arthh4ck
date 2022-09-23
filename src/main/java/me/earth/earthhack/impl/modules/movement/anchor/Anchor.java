@@ -77,7 +77,9 @@ public class Anchor extends Module
         // TODO: tracer?
         this.listeners.add(new LambdaListener<>(MoveEvent.class, event ->
         {
-            if (!Managers.NCP.passed(lagTime.getValue()) || !sneaking.getValue() && mc.player.isSneaking())
+            if (mc.player.isSpectator()
+                || !Managers.NCP.passed(lagTime.getValue())
+                || !sneaking.getValue() && mc.player.isSneaking())
             {
                 return;
             }
