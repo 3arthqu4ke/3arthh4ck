@@ -4,6 +4,7 @@ import me.earth.earthhack.impl.event.events.misc.TickEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.movement.jesus.mode.JesusMode;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
+import net.minecraft.entity.Entity;
 
 final class ListenerTick extends ModuleListener<Jesus, TickEvent>
 {
@@ -15,26 +16,27 @@ final class ListenerTick extends ModuleListener<Jesus, TickEvent>
     @Override
     public void invoke(TickEvent event)
     {
-        if (module.timer.passed(800) && mc.player != null)
+        Entity entity = PositionUtil.getPositionEntity();
+        if (module.timer.passed(800) && entity != null)
         {
             if (module.mode.getValue() == JesusMode.Solid)
             {
-                if (mc.player.fallDistance > 3.0F)
+                if (entity.fallDistance > 3.0F)
                 {
                     return;
                 }
 
-                if ((mc.player.isInLava()
-                        || mc.player.isInWater())
-                        && !mc.player.isSneaking())
+                if ((entity.isInLava()
+                        || entity.isInWater())
+                        && !entity.isSneaking())
                 {
-                    mc.player.motionY = 0.1D;
+                    entity.motionY = 0.1D;
                     return;
                 }
 
-                if (PositionUtil.inLiquid() && !mc.player.isSneaking())
+                if (PositionUtil.inLiquid() && !entity.isSneaking())
                 {
-                    mc.player.motionY = 0.1D;
+                    entity.motionY = 0.1D;
                 }
             }
         }

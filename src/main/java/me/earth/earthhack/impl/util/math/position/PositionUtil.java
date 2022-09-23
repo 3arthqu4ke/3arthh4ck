@@ -5,13 +5,16 @@ import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class PositionUtil implements Globals
@@ -96,16 +99,34 @@ public class PositionUtil implements Globals
                                             .size() > 0;
     }
 
+    public static Entity getPositionEntity()
+    {
+        EntityPlayerSP player = mc.player;
+        Entity ridingEntity;
+        return player == null
+                ? null
+                : (ridingEntity = player.getRidingEntity()) != null
+                    && !(ridingEntity instanceof EntityBoat)
+                    ? ridingEntity
+                    : player;
+    }
+
+    public static Entity requirePositionEntity()
+    {
+        return Objects.requireNonNull(getPositionEntity());
+    }
+
     public static boolean inLiquid()
     {
         return inLiquid(MathHelper.floor(
-                mc.player.getEntityBoundingBox().minY + 0.01));
+            requirePositionEntity().getEntityBoundingBox().minY + 0.01));
     }
 
     public static boolean inLiquid(boolean feet)
     {
         return inLiquid(MathHelper.floor(
-                mc.player.getEntityBoundingBox().minY - (feet ? 0.03 : 0.2)));
+            requirePositionEntity().getEntityBoundingBox().minY
+                - (feet ? 0.03 : 0.2)));
     }
 
     private static boolean inLiquid(int y)
@@ -115,10 +136,11 @@ public class PositionUtil implements Globals
 
     private static IBlockState findState(Class<? extends Block> block, int y)
     {
-        int startX = MathHelper.floor(mc.player.getEntityBoundingBox().minX);
-        int startZ = MathHelper.floor(mc.player.getEntityBoundingBox().minZ);
-        int endX   = MathHelper.ceil(mc.player.getEntityBoundingBox().maxX);
-        int endZ   = MathHelper.ceil(mc.player.getEntityBoundingBox().maxZ);
+        Entity entity = requirePositionEntity();
+        int startX = MathHelper.floor(entity.getEntityBoundingBox().minX);
+        int startZ = MathHelper.floor(entity.getEntityBoundingBox().minZ);
+        int endX   = MathHelper.ceil(entity.getEntityBoundingBox().maxX);
+        int endZ   = MathHelper.ceil(entity.getEntityBoundingBox().maxZ);
         for (int x = startX; x < endX; x++)
         {
             for (int z = startZ; z < endZ; z++)
@@ -153,18 +175,14 @@ public class PositionUtil implements Globals
                             (bb.minZ + bb.maxZ) / 2.0);
     }
 
-    public static AxisAlignedBB newBB(double x,
-                                      double y,
-                                      double z,
-                                      double w,
-                                      double h)
-    {
-        return new AxisAlignedBB(x - w, y, z - w, x + w, y + h, z + w);
-    }
-
     public static boolean intersects(AxisAlignedBB bb, BlockPos pos)
     {
-        return bb.intersects(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+        return bb.intersects(pos.getX(),
+                             pos.getY(),
+                             pos.getZ(),
+                             pos.getX() + 1,
+                             pos.getY() + 1,
+                             pos.getZ() + 1);
     }
 
 }

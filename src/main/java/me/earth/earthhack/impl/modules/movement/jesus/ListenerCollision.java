@@ -5,6 +5,7 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.movement.jesus.mode.JesusMode;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
@@ -20,6 +21,7 @@ final class ListenerCollision extends ModuleListener<Jesus, CollisionEvent>
     @Override
     public void invoke(CollisionEvent event)
     {
+        Entity entity;
         if (event.getEntity() != null
             && mc.player != null
             && (event.getEntity().equals(mc.player)
@@ -28,9 +30,10 @@ final class ListenerCollision extends ModuleListener<Jesus, CollisionEvent>
                     && Objects.equals(
                             event.getEntity().getControllingPassenger(),
                             mc.player))
+            && (entity = PositionUtil.getPositionEntity()) != null
             && event.getBlock() instanceof BlockLiquid
             && !mc.player.isSneaking()
-            && mc.player.fallDistance < 3.0F
+            && entity.fallDistance < 3.0F
             && !PositionUtil.inLiquid()
             && PositionUtil.inLiquid(false)
             && PositionUtil.isAbove(event.getPos()))
