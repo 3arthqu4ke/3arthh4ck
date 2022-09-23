@@ -238,6 +238,11 @@ final class ListenerMotion extends ModuleListener<KillAura, MotionUpdateEvent>
         event.setX(to.x);
         event.setY(to.y);
         event.setZ(to.z);
+
+        if (module.tpSetPos.getValue())
+        {
+            mc.player.setPosition(to.x, to.y, to.z);
+        }
     }
 
     private static void attack(KillAura module, Entity entity, int slot)
