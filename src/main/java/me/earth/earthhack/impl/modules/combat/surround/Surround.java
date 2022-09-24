@@ -95,7 +95,7 @@ public class Surround extends ObbyModule
     public final Setting<Boolean> teleport =
         register(new BooleanSetting("Teleport", false));
     protected final Setting<Double> yTeleportRange =
-        register(new NumberSetting<>("PlayerExtend", 0.0, 0.0, 100.0));
+        register(new NumberSetting<>("Y-TeleportRange", 0.0, 0.0, 100.0));
     public final Setting<Boolean> fixStartPos =
         register(new BooleanSetting("FixStartPos", true))
             .setComplexity(Complexity.Dev);
@@ -531,7 +531,7 @@ public class Surround extends ObbyModule
                 {
                     if (player == null
                         || (noSelfExtend.getValue() && player == mc.player)
-                        || PlayerUtil.isFakePlayer(player)
+                        || PlayerUtil.isFakePlayer(player) // do we want this?
                         || EntityUtil.isDead(player)
                         || !BlockUtil.isBlocking(pos,
                                                  player,
