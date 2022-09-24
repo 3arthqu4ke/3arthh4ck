@@ -55,6 +55,7 @@ public class Freecam extends DisablingModule
     @Override
     protected void onEnable()
     {
+        mc.renderChunksMany = false;
         if (mc.player == null)
         {
             this.disable();
@@ -74,6 +75,7 @@ public class Freecam extends DisablingModule
     @Override
     protected void onDisable()
     {
+        mc.renderChunksMany = true;
         if (mc.player == null)
         {
             return;
