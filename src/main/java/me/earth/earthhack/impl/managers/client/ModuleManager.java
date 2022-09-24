@@ -110,6 +110,7 @@ import me.earth.earthhack.impl.modules.movement.phase.Phase;
 import me.earth.earthhack.impl.modules.movement.reversestep.ReverseStep;
 import me.earth.earthhack.impl.modules.movement.safewalk.SafeWalk;
 import me.earth.earthhack.impl.modules.movement.speed.Speed;
+import me.earth.earthhack.impl.modules.movement.stairs.Stairs;
 import me.earth.earthhack.impl.modules.movement.step.Step;
 import me.earth.earthhack.impl.modules.movement.tickshift.TickShift;
 import me.earth.earthhack.impl.modules.movement.velocity.Velocity;
@@ -290,6 +291,7 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new Phase());
         this.forceRegister(new SafeWalk());
         this.forceRegister(new Speed());
+        this.forceRegister(new Stairs());
         this.forceRegister(new Step());
         this.forceRegister(new TickShift());
         this.forceRegister(new Velocity());
