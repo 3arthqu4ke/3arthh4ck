@@ -84,8 +84,12 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                 || SPEED_MINE.get().getMode() == MineMode.Fast
                 || SPEED_MINE.get().getMode() == MineMode.Instant)))
         {
-            ModuleUtil.disable(module, TextColor.RED
-                + "Disabled, enable Speedmine - Smart for AutoMine - Combat!");
+            if (module.disableOnNoSpeedmine.getValue())
+            {
+                ModuleUtil.disable(module, TextColor.RED
+                 + "Disabled, enable Speedmine - Smart for AutoMine - Combat!");
+            }
+
             return;
         }
 

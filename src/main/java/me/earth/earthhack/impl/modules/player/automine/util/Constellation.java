@@ -1,16 +1,24 @@
 package me.earth.earthhack.impl.modules.player.automine.util;
 
+import me.earth.earthhack.api.cache.ModuleCache;
+import me.earth.earthhack.impl.modules.Caches;
 import me.earth.earthhack.impl.modules.player.automine.AutoMine;
+import me.earth.earthhack.impl.modules.player.speedmine.Speedmine;
+import me.earth.earthhack.impl.modules.player.speedmine.mode.MineMode;
 import me.earth.earthhack.impl.util.math.DistanceUtil;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 // TODO: more generic approach maybe map BlockPositions to BlockStates
 public class Constellation implements IConstellation
 {
+    protected static final ModuleCache<Speedmine> SPEEDMINE =
+        Caches.getModule(Speedmine.class);
+
     protected final EntityPlayer player;
     protected final BlockPos playerPos;
     protected final IBlockState state;
@@ -44,6 +52,7 @@ public class Constellation implements IConstellation
     @Override
     public boolean isValid(IBlockAccess world, boolean checkPlayerState)
     {
+        IBlockState s;
         // Can't test this with a FakePlayer!
         return (PositionUtil.getPosition(player).equals(playerPos)
             || (isBurrow()
@@ -52,7 +61,12 @@ public class Constellation implements IConstellation
             || (isSelfUntrap()
                 && autoMine.untrapCheck.getValue()
                 && DistanceUtil.distanceSq2Bottom(playerPos) <= 1.5))
-            && world.getBlockState(pos).equals(state)
+            && ((s = world.getBlockState(pos)).getBlock() == state.getBlock()
+                || autoMine.multiBreakCheck.getValue()
+                    && SPEEDMINE.returnIfPresent(Speedmine::getMode,
+                                                 MineMode.Smart)
+                                .isMultiBreaking
+                    && s.getBlock() == Blocks.AIR)
             && (!checkPlayerState
                 || world.getBlockState(playerPos).equals(playerState));
     }

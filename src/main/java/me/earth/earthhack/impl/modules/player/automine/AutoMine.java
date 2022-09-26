@@ -20,7 +20,11 @@ import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.HashMap;
@@ -123,6 +127,10 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("CheckCrystalDownTime", false));
     protected final Setting<Integer> downTime =
         register(new NumberSetting<>("AutoCrystalDownTime", 500, 0, 5000));
+    public final Setting<Boolean> multiBreakCheck =
+        register(new BooleanSetting("MultiBreakCheck", true));
+    protected final Setting<Boolean> disableOnNoSpeedmine =
+        register(new BooleanSetting("DisableOnBadSpeedmine", true));
     protected final Setting<Boolean> noSelfMine =
         register(new BooleanSetting("NoSelfMine", false));
 
@@ -358,8 +366,30 @@ public class AutoMine extends BlockAddingModule implements IAutomine
 
     public boolean isValidCrystalPos(BlockPos pos)
     {
-        return BlockUtil.canPlaceCrystal(pos, true, newV.getValue(), mc.world.loadedEntityList, newVEntities.getValue(), 0L)
-            && BlockUtil.isCrystalPosInRange(pos, placeRange.getValue(), placeTrace.getValue(), breakTrace.getValue());
+        return isValidCrystalPos(pos, false);
+    }
+
+    public boolean isValidCrystalPos(BlockPos pos, boolean airCheck)
+    {
+        IBlockState state = mc.world.getBlockState(pos);
+        boolean isValidBase =
+            airCheck
+                && state.getBlock() == Blocks.AIR
+                && mc.world.getEntitiesWithinAABB(Entity.class,
+                                                  new AxisAlignedBB(pos))
+                           .stream()
+                           .noneMatch(e -> e.preventEntitySpawning
+                                        && !(e instanceof EntityEnderCrystal))
+            || state.getBlock() == Blocks.OBSIDIAN
+            || state.getBlock() == Blocks.BEDROCK;
+
+        return isValidBase
+            && BlockUtil.checkBoost(
+                pos, true, newV.getValue(), mc.world.loadedEntityList,
+                newVEntities.getValue(), 0L)
+            && BlockUtil.isCrystalPosInRange(
+                pos, placeRange.getValue(), placeTrace.getValue(),
+                breakTrace.getValue());
     }
 
 }
