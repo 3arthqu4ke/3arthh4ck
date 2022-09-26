@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.modules.player.speedmine;
 
 import me.earth.earthhack.api.cache.ModuleCache;
+import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Complexity;
@@ -91,7 +92,7 @@ public class Speedmine extends Module
     protected final Setting<Integer> realDelay =
             register(new NumberSetting<>("Delay", 50, 0, 500))
                 .setComplexity(Complexity.Medium);
-    public final Setting<Boolean> onGround  =
+    public final Setting<Boolean> onGround  = // this should be true?
             register(new BooleanSetting("OnGround", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> toAir     =
@@ -205,9 +206,17 @@ public class Speedmine extends Module
     protected final Setting<Integer> aASSwitchTime =
             register(new NumberSetting<>("AASSwitchTime", 500, 0, 1000))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> resetFastOnAir     =
+            register(new BooleanSetting("ResetFastOnAir", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> resetFastOnNonAir     =
+            register(new BooleanSetting("ResetFastOnNonAir", false))
+                .setComplexity(Complexity.Expert);
 
     protected final FastHelper fastHelper = new FastHelper(this);
     protected final CrystalHelper crystalHelper = new CrystalHelper(this);
+    protected final OngroundHistoryHelper ongroundHistoryHelper =
+        new OngroundHistoryHelper();
 
     /**
      * Damage dealt to block for each hotbarSlot.
@@ -271,6 +280,7 @@ public class Speedmine extends Module
     public Speedmine()
     {
         super("Speedmine", Category.Player);
+        Bus.EVENT_BUS.subscribe(ongroundHistoryHelper);
         this.listeners.add(new ListenerDamage(this));
         this.listeners.add(new ListenerReset(this));
         this.listeners.add(new ListenerClick(this));
