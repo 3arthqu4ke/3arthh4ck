@@ -54,6 +54,13 @@ public class Constellation implements IConstellation
     public boolean isValid(IBlockAccess world, boolean checkPlayerState)
     {
         IBlockState s;
+        boolean speedmineCheck =
+            (autoMine.dependOnSMCheck.getValue()
+                    || autoMine.speedmineCrystalDamageCheck.getValue())
+                && !isBurrow()
+                && !isSelfUntrap()
+                && SPEEDMINE.returnIfPresent(sm -> sm.crystalHelper
+                            .calcCrystal(pos, player, true), null) != null;
         // Can't test this with a FakePlayer!
         return (PositionUtil.getPosition(player).equals(playerPos)
             || (isBurrow()
@@ -62,11 +69,8 @@ public class Constellation implements IConstellation
             || (isSelfUntrap()
                 && autoMine.untrapCheck.getValue()
                 && DistanceUtil.distanceSq2Bottom(playerPos) <= 1.5)
-            || (autoMine.speedmineCrystalDamageCheck.getValue()
-                && !isBurrow()
-                && !isSelfUntrap()
-                && SPEEDMINE.returnIfPresent(sm -> sm.crystalHelper
-                            .calcCrystal(pos, player), null) != null))
+            || speedmineCheck)
+            && (!autoMine.dependOnSMCheck.getValue() || speedmineCheck)
             && ((s = world.getBlockState(pos)).getBlock() == state.getBlock()
                 || autoMine.multiBreakCheck.getValue()
                     && SPEEDMINE.returnIfPresent(Speedmine::getMode,

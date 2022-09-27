@@ -48,10 +48,10 @@ public class CrystalHelper implements Globals {
 
     public BlockPos calcCrystal(BlockPos mined)
     {
-        return calcCrystal(mined, null);
+        return calcCrystal(mined, null, false);
     }
 
-    public BlockPos calcCrystal(BlockPos mined, EntityPlayer player)
+    public BlockPos calcCrystal(BlockPos mined, EntityPlayer player, boolean ignoreCrystals)
     {
         helper.clearAllStates();
         helper.addAir(mined);
@@ -62,7 +62,7 @@ public class CrystalHelper implements Globals {
             BlockPos pos = mined.add(offset);
             if (BlockUtil.isCrystalPosInRange(pos, module.crystalRange.getValue(), module.crystalTrace.getValue(),
                                               module.crystalBreakTrace.getValue())
-                && BlockUtil.canPlaceCrystal(pos, false, module.newVer.getValue(), mc.world.loadedEntityList,
+                && BlockUtil.canPlaceCrystal(pos, ignoreCrystals, module.newVer.getValue(), mc.world.loadedEntityList,
                                              module.newVerEntities.getValue(), 0L))
             {
                 float selfDamage = DamageUtil.calculate(pos, mc.player, helper);

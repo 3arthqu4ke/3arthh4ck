@@ -141,6 +141,8 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("NoSelfMine", false));
     protected final Setting<Boolean> resetOnPacket =
         register(new BooleanSetting("ResetOnPacket", false));
+    public final Setting<Boolean> dependOnSMCheck =
+        register(new BooleanSetting("DependOnSMCheck", false));
 
     protected final Map<BlockPos, Long> blackList = new HashMap<>();
     protected final StopWatch constellationTimer = new StopWatch();
