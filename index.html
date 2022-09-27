@@ -10,18 +10,41 @@
     <script src="index.js"></script>
 </head>
 
-<body id="t" class="offline dark"> <!--using space inbetween classes can have 2 different functions, pretty cool amiright-->
-    <div class="load-flash"></div>
-    <div class="mode-toggle noselect">
-        <!--Great way to showcase a btn that can switch between dark and light-->
-        <h6 class="label-dark">Dark</h6> <!--When the button gets clicked to dark mode, switches bg to dark mode-->
-        <div class="toggle-switch"></div> <!--Actual switch btn-->
-        <h6 class="label-light">Light</h6> <!--When the button gets clicked to light mode, switches bg to light-->
-    </div>
+<body id="t" class="offline">
     <div id="messageBox" class="sendmessage">
         <h1 style="text-align: center;font-family: 'Open Sans', sans-serif;">Press Space to start</h1>
         <div class="niokbu tton" onclick="okbuttonsend()"></div>
-   </div>
+    </div>
+    <script>
+    const button = document.createElement("button");
+    const background = document.body.style.backgroundColor;
+    button.innerHTML = "Click Me";
+    button.style.position = "absolute";
+    button.style.top = "50%";
+    button.style.left = "50%";
+    button.style.width = "100%";
+    button.style.height = "100%";
+    button.style.transform = "translate(-50%, -50%)";
+    button.style.padding = "10px 20px";
+    button.style.border = "none";
+    button.style.borderRadius = "5px";
+    button.style.backgroundColor = "white";
+    button.style.color = "black";
+    button.style.fontSize = "20px";
+    button.style.cursor = "pointer";
+    button.style.outline = "none";
+    button.style.transition = "all 0.3s ease";
+    button.addEventListener("click", function() {
+    if (button.style.backgroundColor == "white") {
+        button.style.backgroundColor = "grey";
+        button.style.color = "white";
+    } else {
+        button.style.backgroundColor = "white";
+        button.style.color = "black";
+    }
+    });
+document.body.appendChild(button);
+    </script>
    <div id="main-frame-error" class="interstitial-wrapper">
        <div id="main-content">
            <div class="icon icon-offline" alt=""></div>
@@ -47,7 +70,4 @@
     }
 };
 </script>
-    <!--Put script at bottom to load faster!-->
-   <script src="jquery.js"></script>
-   <script src="script.js"></script>
 </html>
