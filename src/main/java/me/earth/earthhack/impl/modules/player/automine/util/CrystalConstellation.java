@@ -68,7 +68,8 @@ public class CrystalConstellation extends Constellation implements Globals
                                 .isMultiBreaking
                     && s.getBlock() == Blocks.AIR)
             && (!checkPlayerState
-                || world.getBlockState(playerPos).equals(playerState));
+                || world.getBlockState(playerPos).getBlock()
+                    == playerState.getBlock());
     }
 
 }

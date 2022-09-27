@@ -46,7 +46,8 @@ public class Constellation implements IConstellation
     @Override
     public boolean isAffected(BlockPos pos, IBlockState state)
     {
-        return this.pos.equals(pos) && !this.state.equals(state);
+        return this.pos.equals(pos)
+            && this.state.getBlock() != state.getBlock();
     }
 
     @Override
@@ -60,7 +61,12 @@ public class Constellation implements IConstellation
                 && DistanceUtil.distanceSq2Bottom(playerPos, player) <= 1.5)
             || (isSelfUntrap()
                 && autoMine.untrapCheck.getValue()
-                && DistanceUtil.distanceSq2Bottom(playerPos) <= 1.5))
+                && DistanceUtil.distanceSq2Bottom(playerPos) <= 1.5)
+            || (autoMine.speedmineCrystalDamageCheck.getValue()
+                && !isBurrow()
+                && !isSelfUntrap()
+                && SPEEDMINE.returnIfPresent(sm -> sm.crystalHelper
+                            .calcCrystal(pos, player), null) != null))
             && ((s = world.getBlockState(pos)).getBlock() == state.getBlock()
                 || autoMine.multiBreakCheck.getValue()
                     && SPEEDMINE.returnIfPresent(Speedmine::getMode,
@@ -68,7 +74,8 @@ public class Constellation implements IConstellation
                                 .isMultiBreaking
                     && s.getBlock() == Blocks.AIR)
             && (!checkPlayerState
-                || world.getBlockState(playerPos).equals(playerState));
+                || world.getBlockState(playerPos).getBlock()
+                        == playerState.getBlock());
     }
 
     public boolean isBurrow()

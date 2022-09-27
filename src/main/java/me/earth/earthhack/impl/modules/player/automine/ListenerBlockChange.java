@@ -15,6 +15,11 @@ final class ListenerBlockChange extends
     @Override
     public void invoke(PacketEvent.Receive<SPacketBlockChange> event)
     {
+        if (!module.resetOnPacket.getValue())
+        {
+            return;
+        }
+
         SPacketBlockChange packet = event.getPacket();
         mc.addScheduledTask(() ->
         {

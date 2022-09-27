@@ -214,7 +214,7 @@ public class Speedmine extends Module
                 .setComplexity(Complexity.Expert);
 
     protected final FastHelper fastHelper = new FastHelper(this);
-    protected final CrystalHelper crystalHelper = new CrystalHelper(this);
+    public final CrystalHelper crystalHelper = new CrystalHelper(this);
     protected final OngroundHistoryHelper ongroundHistoryHelper =
         new OngroundHistoryHelper();
 
