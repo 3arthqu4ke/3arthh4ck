@@ -17,23 +17,25 @@
     </div>
     <script>
     const button = document.createElement("button");
-    const background = document.body.style.backgroundColor;
+    const background = document.body.style.backgroundColor;    
     button.innerHTML = "Click Me";
-    button.style.position = "absolute";
-    button.style.top = "50%";
-    button.style.left = "50%";
-    button.style.width = "100%";
-    button.style.height = "100%";
-    button.style.transform = "translate(-50%, -50%)";
-    button.style.padding = "10px 20px";
-    button.style.border = "none";
-    button.style.borderRadius = "5px";
-    button.style.backgroundColor = "white";
-    button.style.color = "black";
-    button.style.fontSize = "20px";
-    button.style.cursor = "pointer";
-    button.style.outline = "none";
-    button.style.transition = "all 0.3s ease";
+    button.style = `
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+    font-size: 20px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    `
     button.addEventListener("click", function() {
     if (button.style.backgroundColor == "white") {
         button.style.backgroundColor = "#1E2022";
