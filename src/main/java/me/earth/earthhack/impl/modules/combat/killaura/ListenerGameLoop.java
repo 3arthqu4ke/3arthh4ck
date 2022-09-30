@@ -2,6 +2,7 @@ package me.earth.earthhack.impl.modules.combat.killaura;
 
 import me.earth.earthhack.impl.event.events.misc.GameLoopEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.DamageUtil;
 import me.earth.earthhack.impl.util.minecraft.Swing;
@@ -43,7 +44,8 @@ final class ListenerGameLoop extends ModuleListener<KillAura, GameLoopEvent>
                 for (EntityPlayer player : mc.world.playerEntities)
                 {
                     if (module.isValid(player)
-                            && module.isInRange(from, player))
+                            && module.isInRange(Managers.POSITION.getVec(),
+                                                player))
                     {
                         PacketUtil.attack(player);
                         if (++packets >= module.packets.getValue())

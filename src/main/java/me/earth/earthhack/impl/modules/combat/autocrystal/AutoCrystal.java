@@ -118,7 +118,7 @@ public class AutoCrystal extends Module
     protected final Setting<Integer> slowPlaceDelay =
             register(new NumberSetting<>("SlowPlaceDelay", 500, 0, 500))
                 .setComplexity(Complexity.Medium);
-    protected final Setting<Boolean> override = // TODO: Isnt implemented properly
+    protected final Setting<Boolean> override =
             register(new BooleanSetting("OverridePlace", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> newVer =
@@ -171,6 +171,9 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> ignoreNonFull =
             register(new BooleanSetting("IgnoreNonFull", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> efficientPlacements =
+            register(new BooleanSetting("EfficientPlacements", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Integer> simulatePlace =
             register(new NumberSetting<>("Simulate-Place", 0, 0, 10))

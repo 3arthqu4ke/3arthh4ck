@@ -807,6 +807,17 @@ public abstract class AbstractCalculation<T extends CrystalData>
         PositionData firstData = null;
         for (PositionData d : data.getData())
         {
+            if (module.override.getValue()
+                && d.getSelfDamage() > module.maxSelfPlace.getValue()
+                && d.getMaxDamage() < d.getHealth()
+                || module.efficientPlacements.getValue()
+                    && d.getMaxDamage() < d.getSelfDamage()
+                    && (!module.override.getValue()
+                        || d.getMaxDamage() < d.getHealth()))
+            {
+                continue;
+            }
+
             if (d.isBlocked())
             {
                 if (maxBlockedDamage < d.getMaxDamage())

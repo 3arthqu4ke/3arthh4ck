@@ -48,16 +48,21 @@ public class CrystalHelper implements Globals {
 
     public BlockPos calcCrystal(BlockPos mined)
     {
+        return calcCrystal(mined, null, false);
+    }
+
+    public BlockPos calcCrystal(BlockPos mined, EntityPlayer player, boolean ignoreCrystals)
+    {
         helper.clearAllStates();
         helper.addAir(mined);
-        BlockPos bestPos = null;
-        float bestDamage = Float.MIN_VALUE;
+        DamageResult result = new DamageResult();
+        result.bestDamage = Float.MIN_VALUE;
         for (Vec3i offset : CRYSTAL_OFFSETS)
         {
             BlockPos pos = mined.add(offset);
             if (BlockUtil.isCrystalPosInRange(pos, module.crystalRange.getValue(), module.crystalTrace.getValue(),
                                               module.crystalBreakTrace.getValue())
-                && BlockUtil.canPlaceCrystal(pos, false, module.newVer.getValue(), mc.world.loadedEntityList,
+                && BlockUtil.canPlaceCrystal(pos, ignoreCrystals, module.newVer.getValue(), mc.world.loadedEntityList,
                                              module.newVerEntities.getValue(), 0L))
             {
                 float selfDamage = DamageUtil.calculate(pos, mc.player, helper);
@@ -66,27 +71,40 @@ public class CrystalHelper implements Globals {
                     continue;
                 }
 
-                for (EntityPlayer player : mc.world.playerEntities)
+                if (player == null)
                 {
-                    if (player != null
-                        && !player.equals(mc.player)
-                        && !player.equals(RotationUtil.getRotationPlayer())
-                        && !Managers.FRIENDS.contains(player)
-                        && !EntityUtil.isDead(player)
-                        && player.getDistanceSq(pos) < 144)
+                    for (EntityPlayer p : mc.world.playerEntities)
                     {
-                        float damage = DamageUtil.calculate(pos, player, helper);
-                        if (damage > module.minDmg.getValue() && damage > bestDamage)
-                        {
-                            bestPos = pos;
-                            bestDamage = damage;
-                        }
+                        checkPlayer(p, pos, result);
                     }
+                }
+                else
+                {
+                    checkPlayer(player, pos, result);
                 }
             }
         }
 
-        return bestPos;
+        return result.bestPos;
+    }
+
+    private void checkPlayer(EntityPlayer player,
+                             BlockPos pos,
+                             DamageResult result) {
+        if (player != null
+            && !player.equals(mc.player)
+            && !player.equals(RotationUtil.getRotationPlayer())
+            && !Managers.FRIENDS.contains(player)
+            && !EntityUtil.isDead(player)
+            && player.getDistanceSq(pos) < 144)
+        {
+            float damage = DamageUtil.calculate(pos, player, helper);
+            if (damage > module.minDmg.getValue() && damage > result.bestDamage)
+            {
+                result.bestPos = pos;
+                result.bestDamage = damage;
+            }
+        }
     }
 
     public void placeCrystal(BlockPos pos, int slot, RayTraceResult ray)
@@ -183,6 +201,12 @@ public class CrystalHelper implements Globals {
         }
 
         return false;
+    }
+
+    private static final class DamageResult
+    {
+        public BlockPos bestPos;
+        public float bestDamage;
     }
 
 }

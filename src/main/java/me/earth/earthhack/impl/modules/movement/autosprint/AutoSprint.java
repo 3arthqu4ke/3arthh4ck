@@ -4,6 +4,8 @@ import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
+import me.earth.earthhack.impl.event.events.misc.UpdateEvent;
+import me.earth.earthhack.impl.event.listeners.LambdaListener;
 import me.earth.earthhack.impl.modules.movement.autosprint.mode.SprintMode;
 import me.earth.earthhack.impl.util.minecraft.KeyBoardUtil;
 import me.earth.earthhack.impl.util.minecraft.MovementUtil;
@@ -18,7 +20,8 @@ public class AutoSprint extends Module
     public AutoSprint()
     {
         super("Sprint", Category.Movement);
-        this.listeners.add(new ListenerTick(this));
+        this.listeners.add(new LambdaListener<>(
+            UpdateEvent.class, e -> onTick()));
         this.setData(new AutoSprintData(this));
     }
 
@@ -39,6 +42,17 @@ public class AutoSprint extends Module
     public SprintMode getMode()
     {
         return mode.getValue();
+    }
+
+    public void onTick()
+    {
+        if ((canSprint()
+            && (mode.getValue() == SprintMode.Legit))
+            || (AutoSprint.canSprintBetter()
+            && (mode.getValue() == SprintMode.Rage)))
+        {
+            mode.getValue().sprint();
+        }
     }
 
     public static boolean canSprint()

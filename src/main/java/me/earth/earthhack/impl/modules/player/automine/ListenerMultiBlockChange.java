@@ -15,6 +15,11 @@ final class ListenerMultiBlockChange extends
     @Override
     public void invoke(PacketEvent.Receive<SPacketMultiBlockChange> event)
     {
+        if (!module.resetOnPacket.getValue())
+        {
+            return;
+        }
+
         SPacketMultiBlockChange packet = event.getPacket();
         mc.addScheduledTask(() ->
         {

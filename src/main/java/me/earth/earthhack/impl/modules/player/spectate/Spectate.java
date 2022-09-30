@@ -148,6 +148,7 @@ public class Spectate extends DisablingModule implements CustomCommandModule
     @Override
     protected void onEnable()
     {
+        mc.renderChunksMany = false;
         if (mc.player == null || mc.world == null)
         {
             this.disable();
@@ -184,6 +185,7 @@ public class Spectate extends DisablingModule implements CustomCommandModule
     @Override
     protected void onDisable()
     {
+        mc.renderChunksMany = true;
         EntityPlayerSP playerSP = mc.player;
         if (playerSP != null)
         {

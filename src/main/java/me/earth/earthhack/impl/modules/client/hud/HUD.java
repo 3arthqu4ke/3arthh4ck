@@ -24,6 +24,7 @@ import me.earth.earthhack.impl.util.render.ColorHelper;
 import me.earth.earthhack.impl.util.render.ColorUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
+import me.earth.earthhack.pingbypass.modules.PbModule;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -308,7 +309,16 @@ public class HUD extends Module {
                     if (isArrayMember(module.getValue()))
                         continue;
                     getArrayEntries().put(module.getValue(), new ArrayEntry(module.getValue()));
+                    if (!(module.getValue() instanceof PbModule)) {
+                        getArrayEntries()
+                            .entrySet()
+                            .removeIf(m -> m.getKey() instanceof PbModule
+                                && Objects.equals(
+                                    ((PbModule) m.getKey()).getModule(),
+                                    module.getValue()));
+                    }
                 }
+
                 Map<Module, ArrayEntry> arrayEntriesSorted;
                 if (renderModules.getValue() == Modules.Length) {
                     arrayEntriesSorted = getArrayEntries().entrySet().stream().sorted(Comparator.comparingDouble(entry -> Managers.TEXT.getStringWidth(ModuleUtil.getHudName(entry.getKey())) * -1)).collect(Collectors.toMap(
@@ -406,7 +416,10 @@ public class HUD extends Module {
     }
 
     protected boolean isArrayMember(Module module) {
-        return getArrayEntries().containsKey(module);
+        return getArrayEntries().containsKey(module)
+            || module instanceof PbModule
+               && getArrayEntries().containsKey(((PbModule) module)
+                                                    .getModule());
     }
 
 }

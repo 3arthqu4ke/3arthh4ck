@@ -13,9 +13,12 @@ public class DataManagerUtil
 {
     public static void writeDataEntries(PacketBuffer buffer, List<EntityDataManager.DataEntry<?>> entries)
     {
-        for (EntityDataManager.DataEntry<?> dataentry : entries)
+        if (entries != null)
         {
-            writeEntry(buffer, dataentry);
+            for (EntityDataManager.DataEntry<?> dataentry : entries)
+            {
+                writeEntry(buffer, dataentry);
+            }
         }
 
         buffer.writeByte(255);

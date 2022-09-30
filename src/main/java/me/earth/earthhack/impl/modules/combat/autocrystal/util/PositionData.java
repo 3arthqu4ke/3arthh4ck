@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -161,6 +162,12 @@ public class PositionData extends BasePath
     public boolean isLiquid()
     {
         return liquid;
+    }
+
+    public float getHealth()
+    {
+        EntityLivingBase target = getTarget();
+        return target == null ? 36.0f : EntityUtil.getHealth(target);
     }
 
     @Override
