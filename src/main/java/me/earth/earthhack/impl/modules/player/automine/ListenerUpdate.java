@@ -440,6 +440,7 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                                                     playerPos,
                                                                     state,
                                                                     module);
+                                        closest.setL(true);
                                         distance = dist;
                                         found = true;
                                         break;
@@ -452,8 +453,10 @@ final class ListenerUpdate extends ModuleListener<AutoMine, UpdateEvent>
                                 }
                             }
 
-                            if (module.checkCrystalPos(offset.offset(facing)
-                                                             .down()))
+                            BlockPos finalOffset = offset;
+                            if (module.checkCrystalPos(offset.offset(facing).down())
+                                && (!(module.dependOnSMCheck.getValue() || module.speedmineCrystalDamageCheck.getValue())
+                                    || SPEED_MINE.returnIfPresent(sm -> sm.crystalHelper.calcCrystal(finalOffset, player, true), null) != null))
                             {
                                 closestPos = offset;
                                 closest = new Constellation(mc.world,
