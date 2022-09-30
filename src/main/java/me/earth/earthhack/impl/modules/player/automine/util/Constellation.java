@@ -27,6 +27,7 @@ public class Constellation implements IConstellation
     protected final AutoMine autoMine;
     protected boolean selfUntrap;
     protected boolean burrow;
+    protected boolean l;
 
     public Constellation(IBlockAccess world,
                          EntityPlayer player,
@@ -59,6 +60,7 @@ public class Constellation implements IConstellation
                     || autoMine.speedmineCrystalDamageCheck.getValue())
                 && !isBurrow()
                 && !isSelfUntrap()
+                && !isL()
                 && SPEEDMINE.returnIfPresent(sm -> sm.crystalHelper
                             .calcCrystal(pos, player, true), null) != null;
         // Can't test this with a FakePlayer!
@@ -70,7 +72,11 @@ public class Constellation implements IConstellation
                 && autoMine.untrapCheck.getValue()
                 && DistanceUtil.distanceSq2Bottom(playerPos) <= 1.5)
             || speedmineCheck)
-            && (!autoMine.dependOnSMCheck.getValue() || speedmineCheck)
+            && (!autoMine.dependOnSMCheck.getValue()
+                || isL()
+                || isBurrow()
+                || isSelfUntrap()
+                || speedmineCheck)
             && ((s = world.getBlockState(pos)).getBlock() == state.getBlock()
                 || autoMine.multiBreakCheck.getValue()
                     && SPEEDMINE.returnIfPresent(Speedmine::getMode,
@@ -90,6 +96,16 @@ public class Constellation implements IConstellation
     public void setBurrow(boolean burrow)
     {
         this.burrow = burrow;
+    }
+
+    public boolean isL()
+    {
+        return l;
+    }
+
+    public void setL(boolean l)
+    {
+        this.l = l;
     }
 
     public boolean isSelfUntrap()
