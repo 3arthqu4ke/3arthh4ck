@@ -123,7 +123,7 @@ public class Speed extends Module
 
         vanillaStage   = 0;
         onGroundStage  = 2;
-        oldGroundStage = 4;
+        oldGroundStage = 2;
         ncpStage    = 0;
         gayStage    = 1;
         vStage      = 1;
@@ -140,7 +140,8 @@ public class Speed extends Module
         Managers.TIMER.reset();
     }
 
-    // TODO: What was this used for???????????????????????????
+    // "What was this used for???????????????????????????"
+    // it was used in OldGround but you removed it
     protected boolean notColliding()
     {
         boolean stepping = false;

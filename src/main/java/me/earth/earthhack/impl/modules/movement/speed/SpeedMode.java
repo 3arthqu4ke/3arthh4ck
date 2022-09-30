@@ -28,7 +28,7 @@ public enum SpeedMode implements Globals
         @Override
         public void move(MoveEvent event, Speed module)
         {
-            OnGround.move(event, module);
+            // unused block
         }
     },
     OnGround()
