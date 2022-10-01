@@ -110,7 +110,6 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new NumberSetting<>("MinDamage", 6.0f, 0.1f, 100.0f));
     public final Setting<Float> maxSelfDmg =
         register(new NumberSetting<>("MaxSelfDmg", 10.0f, 0.1f, 100.0f));
-    // we need this for normal constellations too!!!
     public final Setting<Boolean> damageCheck =
         register(new BooleanSetting("DamageCheck", false));
     public final Setting<Boolean> selfDmgCheck =
