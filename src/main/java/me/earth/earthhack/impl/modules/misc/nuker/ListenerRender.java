@@ -34,7 +34,7 @@ final class ListenerRender extends ModuleListener<Nuker, Render3DEvent>
             if (!positions.isEmpty())
             {
                 GL11.glPushMatrix();
-                GL11.glPushAttrib(1048575);
+                GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
             }
 
             for (BlockPos pos : positions)
