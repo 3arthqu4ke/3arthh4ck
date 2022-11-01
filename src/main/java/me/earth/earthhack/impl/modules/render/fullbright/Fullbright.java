@@ -12,6 +12,8 @@ public class Fullbright extends Module
 {
     protected final Setting<BrightMode> mode =
             register(new EnumSetting<>("Mode", BrightMode.Gamma));
+            
+    private float previousGamma;
 
     public Fullbright()
     {
@@ -24,11 +26,17 @@ public class Fullbright extends Module
                 "-Potion applies a NightVision potion to you.");
         this.setData(data);
     }
+    
+    @Override
+    protected void onEnable()
+    {
+        this.previousGamma = mc.gameSettings.gammaSetting;
+    }
 
     @Override
     protected void onDisable()
     {
-        mc.gameSettings.gammaSetting = 1.0F;
+        mc.gameSettings.gammaSettings = this.previousGamma;
         if (mc.player != null && mode.getValue() == BrightMode.Potion)
         {
             mc.player.removePotionEffect(MobEffects.NIGHT_VISION);
