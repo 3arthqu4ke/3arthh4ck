@@ -3,6 +3,7 @@ package me.earth.earthhack.impl.modules.player.speedmine;
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
+import me.earth.earthhack.impl.core.ducks.network.ICPacketPlayerDigging;
 import me.earth.earthhack.impl.event.events.network.PacketEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.Caches;
@@ -32,6 +33,19 @@ final class ListenerDigging extends
     @Override
     public void invoke(PacketEvent.Send<CPacketPlayerDigging> event)
     {
+        if (module.cancelNormalPackets.getValue()
+            && ((ICPacketPlayerDigging) event.getPacket()).isNormalDigging()
+            && (event.getPacket().getAction() ==
+                    CPacketPlayerDigging.Action.START_DESTROY_BLOCK
+                || event.getPacket().getAction() ==
+                    CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK
+                || event.getPacket().getAction() ==
+                    CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK))
+        {
+            event.setCancelled(true);
+            return;
+        }
+
         if (!PlayerUtil.isCreative(mc.player)
             && !ANTISURROUND.returnIfPresent(AntiSurround::isActive, false)
             && (!NUKER.isEnabled() || !NUKE.getValue())

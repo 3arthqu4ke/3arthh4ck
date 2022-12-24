@@ -188,6 +188,11 @@ final class ListenerDamage extends ModuleListener<Speedmine, DamageBlockEvent>
             event.setCancelled(true);
             module.timer.reset();
         }
+
+        if (module.cancelEvent.getValue())
+        {
+            event.setCancelled(true);
+        }
     }
 
     private void setPos(DamageBlockEvent event)

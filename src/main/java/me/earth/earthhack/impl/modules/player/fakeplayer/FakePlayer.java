@@ -34,7 +34,7 @@ public class FakePlayer extends DisablingModule
     protected final Setting<Boolean> damage =
         register(new BooleanSetting("Damage", true));
     protected final Setting<String> name =
-            register(new StringSetting("Name", "FakePlayer"));
+        register(new StringSetting("PlayerName", "FakePlayer"));
 
     protected final List<Position> positions = new ArrayList<>();
     protected final StopWatch timer = new StopWatch();

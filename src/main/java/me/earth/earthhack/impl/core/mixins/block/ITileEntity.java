@@ -9,8 +9,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface ITileEntity
 {
     @Accessor(value = "blockType")
-    Block getBlockType();
-
-    @Accessor(value = "blockType")
     void setBlockType(Block block);
 }

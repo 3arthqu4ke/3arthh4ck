@@ -100,7 +100,6 @@ public abstract class MixinRenderLivingBase {
         }
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(
         method = "setBrightness",
         at = @At(

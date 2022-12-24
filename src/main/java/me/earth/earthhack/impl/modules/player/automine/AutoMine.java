@@ -20,9 +20,15 @@ import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -44,6 +50,10 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("Self", true));
     protected final Setting<Boolean> prioSelf =
         register(new BooleanSetting("Prio-SelfUntrap", true));
+    protected final Setting<Boolean> prioSelfWithStep =
+        register(new BooleanSetting("PrioSelfWithStep", false));
+    public final Setting<Boolean> untrapCheck =
+        register(new BooleanSetting("UntrapCheck", false));
     protected final Setting<Boolean> constellationCheck =
         register(new BooleanSetting("ConstCheck", true));
     protected final Setting<Boolean> improve =
@@ -94,10 +104,17 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("ClosestPlayer", true));
     protected final Setting<Boolean> improveCalcs =
         register(new BooleanSetting("ImproveCalcs", false));
-    protected final Setting<Float> minDmg =
+    public final Setting<Boolean> extraBurrowCheck =
+        register(new BooleanSetting("ExtraBurrowCheck", false));
+    public final Setting<Float> minDmg =
         register(new NumberSetting<>("MinDamage", 6.0f, 0.1f, 100.0f));
-    protected final Setting<Float> maxSelfDmg =
+    public final Setting<Float> maxSelfDmg =
         register(new NumberSetting<>("MaxSelfDmg", 10.0f, 0.1f, 100.0f));
+    // we need this for normal constellations too!!!
+    public final Setting<Boolean> damageCheck =
+        register(new BooleanSetting("DamageCheck", false));
+    public final Setting<Boolean> selfDmgCheck =
+        register(new BooleanSetting("SelfDmgCheck", false));
     protected final Setting<Integer> terrainDelay =
         register(new NumberSetting<>("TerrainDelay", 500, 0, 10000));
     protected final Setting<Boolean> suicide =
@@ -112,8 +129,20 @@ public class AutoMine extends BlockAddingModule implements IAutomine
         register(new BooleanSetting("CheckCrystalDownTime", false));
     protected final Setting<Integer> downTime =
         register(new NumberSetting<>("AutoCrystalDownTime", 500, 0, 5000));
+    public final Setting<Boolean> multiBreakCheck =
+        register(new BooleanSetting("MultiBreakCheck", true));
+    protected final Setting<Boolean> disableOnNoSpeedmine =
+        register(new BooleanSetting("DisableOnBadSpeedmine", true));
+    protected final Setting<Boolean> checkEntities =
+        register(new BooleanSetting("CheckEntities", false));
+    public final Setting<Boolean> speedmineCrystalDamageCheck =
+        register(new BooleanSetting("SpeedmineCrystalDamageCheck", false));
     protected final Setting<Boolean> noSelfMine =
         register(new BooleanSetting("NoSelfMine", false));
+    protected final Setting<Boolean> resetOnPacket =
+        register(new BooleanSetting("ResetOnPacket", false));
+    public final Setting<Boolean> dependOnSMCheck =
+        register(new BooleanSetting("DependOnSMCheck", false));
 
     protected final Map<BlockPos, Long> blackList = new HashMap<>();
     protected final StopWatch constellationTimer = new StopWatch();
@@ -347,8 +376,34 @@ public class AutoMine extends BlockAddingModule implements IAutomine
 
     public boolean isValidCrystalPos(BlockPos pos)
     {
-        return BlockUtil.canPlaceCrystal(pos, true, newV.getValue(), mc.world.loadedEntityList, newVEntities.getValue(), 0L)
-            && BlockUtil.isCrystalPosInRange(pos, placeRange.getValue(), placeTrace.getValue(), breakTrace.getValue());
+        return isValidCrystalPos(pos, false);
+    }
+
+    public boolean isValidCrystalPos(BlockPos pos, boolean airCheck)
+    {
+        IBlockState state = mc.world.getBlockState(pos);
+        boolean isValidBase =
+            airCheck
+                && state.getBlock() == Blocks.AIR
+                && mc.world.getEntitiesWithinAABB(Entity.class,
+                                                  new AxisAlignedBB(pos))
+                           .stream()
+                           .noneMatch(e -> e.preventEntitySpawning
+                                        && !(e instanceof EntityItem)
+                                        && !(e instanceof EntityEnderCrystal))
+            || state.getBlock() == Blocks.OBSIDIAN
+            || state.getBlock() == Blocks.BEDROCK;
+
+        return isValidBase
+            && BlockUtil.checkBoost(
+                pos, true, newV.getValue(),
+                checkEntities.getValue()
+                    ? mc.world.loadedEntityList
+                    : Collections.emptyList(),
+                newVEntities.getValue(), 0L)
+            && BlockUtil.isCrystalPosInRange(
+                pos, placeRange.getValue(), placeTrace.getValue(),
+                breakTrace.getValue());
     }
 
 }

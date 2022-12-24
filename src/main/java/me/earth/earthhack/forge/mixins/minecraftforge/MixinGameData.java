@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.List;
 
 @Mixin(value = GameData.class, remap = false)
-public class MixinGameData
+public abstract class MixinGameData
 {
     private static final SettingCache
      <Boolean, BooleanSetting, Management> IGNORE =

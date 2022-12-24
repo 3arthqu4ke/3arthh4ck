@@ -119,14 +119,32 @@ public class MineUtil implements Globals
         return getDamage(state, stack, pos, onGround);
     }
 
-    public static float getDamage(IBlockState state, ItemStack stack, BlockPos pos, boolean onGround)
+    public static float getDamage(ItemStack stack, BlockPos pos,
+                                  boolean onGround, boolean isOnGround)
     {
-        return getDigSpeed(stack, state, onGround)
+        IBlockState state = mc.world.getBlockState(pos);
+        return getDamage(state, stack, pos, onGround, isOnGround);
+    }
+
+    public static float getDamage(IBlockState state, ItemStack stack,
+                                  BlockPos pos, boolean onGround)
+    {
+        return getDigSpeed(stack, state, onGround, true)
                 / (state.getBlockHardness(mc.world, pos)
                     * (canHarvestBlock(pos, stack) ? 30 : 100));
     }
 
-    private static float getDigSpeed(ItemStack stack, IBlockState state, boolean onGround)
+    public static float getDamage(IBlockState state, ItemStack stack,
+                                  BlockPos pos, boolean onGround,
+                                  boolean isOnGround)
+    {
+        return getDigSpeed(stack, state, onGround, isOnGround)
+                / (state.getBlockHardness(mc.world, pos)
+                    * (canHarvestBlock(pos, stack) ? 30 : 100));
+    }
+
+    private static float getDigSpeed(ItemStack stack, IBlockState state,
+                                     boolean onGround, boolean isOnGround)
     {
         float digSpeed = 1.0F;
 
@@ -183,7 +201,7 @@ public class MineUtil implements Globals
             digSpeed /= 5.0F;
         }
 
-        if (onGround && !mc.player.onGround)
+        if (onGround && (!isOnGround || !mc.player.onGround))
         {
             digSpeed /= 5.0F;
         }

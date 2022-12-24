@@ -55,6 +55,8 @@ public class ExpTweaks extends Module
         register(new NumberSetting<>("MCE-Packets", 0, 0, 64));
     protected final Setting<Boolean> silent =
         register(new BooleanSetting("Silent", true));
+    protected final Setting<Boolean> silentOnlyWhenUsing =
+        register(new BooleanSetting("SilentOnlyWhenUsing", false));
     protected final Setting<Boolean> whileEating =
         register(new BooleanSetting("WhileEating", true));
     protected final Setting<Boolean> xCarry =

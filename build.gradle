@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         mavenCentral()
-        //jcenter()
         maven {
             name = 'forge'
             url = 'https://files.minecraftforge.net/maven'
@@ -11,8 +10,8 @@ buildscript {
             url = 'https://repo.spongepowered.org/maven'
         }
         maven {
-            name = "jitpack.io"
-            url = "https://jitpack.io"
+            name = 'jitpack.io'
+            url = 'https://jitpack.io'
         }
     }
     dependencies {
@@ -41,9 +40,9 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 
-mainClassName = "me.earth.earthhack.installer.main.Main"
+mainClassName = 'me.earth.earthhack.installer.main.Main'
 group project.modGroup //http://maven.apache.org/guides/mini/guide-naming-conventions.html
-project.version = '1.8.1'
+project.version = '1.8.5'
 
 boolean VANILLA = false
 //noinspection GroovyUnusedAssignment
@@ -66,18 +65,16 @@ minecraft {
 }
 
 repositories {
+    mavenCentral()
+    google()
     maven {
         name = 'spongepowered-repo'
         url = 'https://repo.spongepowered.org/maven'
     }
-
     maven {
-        name = "jitpack.io"
-        url  = "https://jitpack.io"
+        name = 'jitpack.io'
+        url  = 'https://jitpack.io'
     }
-
-    mavenCentral()
-    google()
 }
 
 dependencies {

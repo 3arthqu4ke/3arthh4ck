@@ -265,6 +265,9 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
         register(module.obsidian, "Places Obsidian for crystals when" +
             " no positions can be found. Placing Obsidian doesn't work" +
             " together with step by step Rotations.");
+        register(module.basePlaceOnly, "Makes this module obsidian only." +
+            " Use this when you want to use another clients CrystalAura which "
+            + "does not have this feature.");
         register(module.obbySwitch, "Without this Obsidian will only be " +
                 "placed if you are holding it. With this it will switch" +
                 " to Obsidian silently.");
@@ -449,6 +452,8 @@ public class AutoCrystalData extends DefaultData<AutoCrystal>
             " when using RotationThread - Wait.");
         register(module.threadDelay, "Delay between 2 calculations (Low " +
             "delays mean more Load for the CPU).");
+        register(module.pullBasedDelay, "An additional delay for pull-based" +
+            " threads (Motion, GameLoop).");
         register(module.blockDestroyThread,
             "Places right after SpeedMine broke a block.");
         register(module.explosionThread, "Starts a Thread" +

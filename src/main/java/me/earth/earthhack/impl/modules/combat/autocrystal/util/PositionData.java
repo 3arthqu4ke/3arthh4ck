@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityEnderCrystal;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -163,10 +164,32 @@ public class PositionData extends BasePath
         return liquid;
     }
 
+    public float getHealth()
+    {
+        EntityLivingBase target = getTarget();
+        return target == null ? 36.0f : EntityUtil.getHealth(target);
+    }
+
     @Override
+    @SuppressWarnings("NullableProblems")
     public int compareTo(PositionData o)
     {
-        if (Math.abs(o.damage - this.damage) < 1.0f)
+        if (module.useSafetyFactor.getValue())
+        {
+            double thisFactor = this.damage * module.safetyFactor.getValue()
+                - this.selfDamage * module.selfFactor.getValue();
+            double otherFactor = o.damage * module.safetyFactor.getValue()
+                - o.selfDamage * module.selfFactor.getValue();
+
+            if (thisFactor != otherFactor)
+            {
+                return Double.compare(otherFactor, thisFactor);
+            }
+        }
+
+        if (Math.abs(o.damage - this.damage) < module.compareDiff.getValue()
+            && (!module.facePlaceCompare.getValue()
+                || this.damage >= module.minDamage.getValue()))
         {
             if (this.usesObby() && o.usesObby())
             {
@@ -312,10 +335,12 @@ public class PositionData extends BasePath
             {
                 if (!dead)
                 {
-                    if (EntityUtil.isDead(entity))
+                    boolean crystalIsDead = entity.isDead;
+                    boolean crystalIsPseudoDead = ((IEntity) entity).isPseudoDead();
+                    if (crystalIsDead || crystalIsPseudoDead)
                     {
-                        if (Managers.SET_DEAD.passedDeathTime(entity, deathTime)
-                            || ((IEntity) entity).getPseudoTime().passed(deathTime))
+                        if (crystalIsDead && Managers.SET_DEAD.passedDeathTime(entity, deathTime)
+                            || crystalIsPseudoDead && ((IEntity) entity).getPseudoTime().passed(deathTime))
                         {
                             continue; // Entity is like very dead now
                         }

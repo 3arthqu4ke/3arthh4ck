@@ -4,6 +4,8 @@ public enum Movement
 {
     None,
     Static,
+    Y,
+    YPlus,
     Limit,
     Disable
 }

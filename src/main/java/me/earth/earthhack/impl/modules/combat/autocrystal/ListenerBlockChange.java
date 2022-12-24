@@ -19,7 +19,7 @@ final class ListenerBlockChange extends ModuleListener<AutoCrystal,
     @Override
     public void invoke(PacketEvent.Receive<SPacketBlockChange> event)
     {
-        if (module.multiThread.getValue()
+        if ((module.multiThread.getValue() || module.mainThreadThreads.getValue())
                 && module.blockChangeThread.getValue())
         {
             SPacketBlockChange packet = event.getPacket();
@@ -29,6 +29,7 @@ final class ListenerBlockChange extends ModuleListener<AutoCrystal,
                 event.addPostEvent(() ->
                 {
                     if (mc.world != null
+                        && mc.player != null
                         && HelperUtil.validChange(packet.getBlockPosition(),
                                                   mc.world.playerEntities))
                     {

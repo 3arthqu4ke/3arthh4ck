@@ -1,0 +1,29 @@
+name: Replace gradle wrapper in plugin
+
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: 'Path to the plugin to replace the wrapper for'
+        required: true
+        default: baritone
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: 'plugins'
+      - name: Copy wrapper
+        run: cp -rf ./example/gradle/wrapper/gradle-wrapper.jar ./${{ github.event.inputs.path }}/gradle/wrapper/gradle-wrapper.jar
+      - name: Copy wrapper properties
+        run: cp -rf ./example/gradle/wrapper/gradle-wrapper.properties ./${{ github.event.inputs.path }}/gradle/wrapper/gradle-wrapper.properties
+      - name: Push
+        uses: stefanzweifel/git-auto-commit-action@v4.14.1
+        with:
+          branch: plugins
+          skip_checkout: true
+          commit_message: Replace gradle wrapper for the ${{ github.event.inputs.path }} plugin
+          push_options: '--force'

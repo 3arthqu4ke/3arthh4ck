@@ -9,6 +9,7 @@ import me.earth.earthhack.api.register.exception.CantUnregisterException;
 import me.earth.earthhack.impl.Earthhack;
 import me.earth.earthhack.impl.event.events.client.PostInitEvent;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.accountspoof.AccountSpoof;
 import me.earth.earthhack.impl.modules.client.anticheat.AntiCheat;
 import me.earth.earthhack.impl.modules.client.autoconfig.AutoConfig;
 import me.earth.earthhack.impl.modules.client.clickgui.ClickGui;
@@ -90,6 +91,7 @@ import me.earth.earthhack.impl.modules.misc.truedurability.TrueDurability;
 import me.earth.earthhack.impl.modules.movement.anchor.Anchor;
 import me.earth.earthhack.impl.modules.movement.antimove.NoMove;
 import me.earth.earthhack.impl.modules.movement.autosprint.AutoSprint;
+import me.earth.earthhack.impl.modules.movement.avoid.Avoid;
 import me.earth.earthhack.impl.modules.movement.blocklag.BlockLag;
 import me.earth.earthhack.impl.modules.movement.boatfly.BoatFly;
 import me.earth.earthhack.impl.modules.movement.elytraflight.ElytraFlight;
@@ -108,6 +110,7 @@ import me.earth.earthhack.impl.modules.movement.phase.Phase;
 import me.earth.earthhack.impl.modules.movement.reversestep.ReverseStep;
 import me.earth.earthhack.impl.modules.movement.safewalk.SafeWalk;
 import me.earth.earthhack.impl.modules.movement.speed.Speed;
+import me.earth.earthhack.impl.modules.movement.stairs.Stairs;
 import me.earth.earthhack.impl.modules.movement.step.Step;
 import me.earth.earthhack.impl.modules.movement.tickshift.TickShift;
 import me.earth.earthhack.impl.modules.movement.velocity.Velocity;
@@ -181,6 +184,7 @@ public class ModuleManager extends IterationRegister<Module>
     public void init()
     {
         Earthhack.getLogger().info("Initializing Modules.");
+        this.forceRegister(new AccountSpoof());
         this.forceRegister(new AntiCheat());
         this.forceRegister(new AutoConfig());
         this.forceRegister(new ClickGui());
@@ -267,6 +271,7 @@ public class ModuleManager extends IterationRegister<Module>
 
         this.forceRegister(new Anchor());
         this.forceRegister(new AutoSprint());
+        this.forceRegister(new Avoid());
         this.forceRegister(new BlockLag());
         this.forceRegister(new BoatFly());
         this.forceRegister(new ElytraFlight());
@@ -286,6 +291,7 @@ public class ModuleManager extends IterationRegister<Module>
         this.forceRegister(new Phase());
         this.forceRegister(new SafeWalk());
         this.forceRegister(new Speed());
+        this.forceRegister(new Stairs());
         this.forceRegister(new Step());
         this.forceRegister(new TickShift());
         this.forceRegister(new Velocity());

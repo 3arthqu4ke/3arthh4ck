@@ -56,13 +56,10 @@ public class VectorUtil {
         pos.x = halfWidth + (0.5f * pos.x * res.getScaledWidth() + 0.5f);
         pos.y = halfHeight - (0.5f * pos.y * res.getScaledHeight() + 0.5f);
 
-        boolean bVisible = true;
-
-        if (pos.x < 0 || pos.y < 0 || pos.x > res.getScaledWidth() || pos.y > res.getScaledHeight()) {
-            bVisible = false;
-        }
-
-        return new Plane(pos.x, pos.y, bVisible);
+        return new Plane(
+                pos.x, pos.y,
+                !(pos.x < 0) && !(pos.y < 0) && !(pos.x > res.getScaledWidth()) && !(pos.y > res.getScaledHeight())
+        );
     }
 
     private static void VecTransformCoordinate(Vector4f vec, Matrix4f matrix) {

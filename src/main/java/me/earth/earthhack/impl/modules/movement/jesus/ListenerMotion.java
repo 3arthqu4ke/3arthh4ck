@@ -6,6 +6,7 @@ import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 
 final class ListenerMotion extends ModuleListener<Jesus, MotionUpdateEvent>
@@ -18,9 +19,11 @@ final class ListenerMotion extends ModuleListener<Jesus, MotionUpdateEvent>
     @Override
     public void invoke(MotionUpdateEvent event)
     {
-        if (mc.player.isDead
-                || mc.player.isSneaking()
-                || !module.timer.passed(800))
+        Entity entity = PositionUtil.getPositionEntity();
+        if (entity == null
+            || entity.isDead
+            || entity.isSneaking()
+            || !module.timer.passed(800))
         {
             return;
         }
@@ -29,55 +32,55 @@ final class ListenerMotion extends ModuleListener<Jesus, MotionUpdateEvent>
         {
             case Dolphin:
                 if (PositionUtil.inLiquid()
-                        && mc.player.fallDistance < 3.0f
-                        && !mc.player.isSneaking())
+                        && entity.fallDistance < 3.0f
+                        && !entity.isSneaking())
                 {
-                    mc.player.motionY = 0.1;
+                    entity.motionY = 0.1;
                 }
 
                 return;
             case Trampoline:
                 if (event.getStage() == Stage.PRE)
                 {
-                    if (PositionUtil.inLiquid(false) && !mc.player.isSneaking())
+                    if (PositionUtil.inLiquid(false) && !entity.isSneaking())
                     {
-                        mc.player.onGround = false;
+                        entity.onGround = false;
                     }
 
                     Block block =
-                        mc.world.getBlockState(new BlockPos(mc.player.posX,
-                                                            mc.player.posY,
-                                                            mc.player.posZ))
+                        mc.world.getBlockState(new BlockPos(entity.posX,
+                                                            entity.posY,
+                                                            entity.posZ))
                                                 .getBlock();
 
                     if (module.jumped
                             && !mc.player.capabilities.isFlying
-                            && !mc.player.isInWater())
+                            && !entity.isInWater())
                     {
-                        if (mc.player.motionY < -0.3
-                                || mc.player.onGround
+                        if (entity.motionY < -0.3
+                                || entity.onGround
                                 || mc.player.isOnLadder())
                         {
                             module.jumped = false;
                             return;
                         }
 
-                        mc.player.motionY =
-                                mc.player.motionY / 0.9800000190734863 + 0.08;
-                        mc.player.motionY -= 0.03120000000005;
+                        entity.motionY =
+                                entity.motionY / 0.9800000190734863 + 0.08;
+                        entity.motionY -= 0.03120000000005;
                     }
 
-                    if (mc.player.isInWater() || mc.player.isInLava())
+                    if (entity.isInWater() || entity.isInLava())
                     {
-                        mc.player.motionY = 0.1;
+                        entity.motionY = 0.1;
                         break;
                     }
 
-                    if (!mc.player.isInLava()
+                    if (!entity.isInLava()
                             && block instanceof BlockLiquid
-                            && mc.player.motionY < 0.2)
+                            && entity.motionY < 0.2)
                     {
-                        mc.player.motionY = 0.5;
+                        entity.motionY = 0.5;
                         module.jumped = true;
                     }
                 }
@@ -90,7 +93,7 @@ final class ListenerMotion extends ModuleListener<Jesus, MotionUpdateEvent>
                 && !PositionUtil.inLiquid()
                 && PositionUtil.inLiquid(true)
                 && !PositionUtil.isMovementBlocked()
-                && mc.player.ticksExisted % 2 == 0)
+                && entity.ticksExisted % 2 == 0)
         {
             event.setY(event.getY() + 0.02);
         }

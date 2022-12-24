@@ -1,0 +1,42 @@
+name: Build Plugin
+
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: 'Path to the plugin to build'
+        required: true
+        default: baritone
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: 'plugins'
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Print path
+        run: echo ${{ github.event.inputs.path }}
+      - name: Grant execute permission for gradlew
+        run: |
+          cd ${{ github.event.inputs.path }}
+          chmod +x gradlew
+      - name: Build with Gradle
+        run: |
+          cd ${{ github.event.inputs.path }}
+          ./gradlew setupDecompWorkspace
+          ./gradlew build
+      - name: List files
+        run: |
+          cd ${{ github.event.inputs.path }}
+          ls
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.event.inputs.path }}
+          path: ./${{ github.event.inputs.path }}/build/libs/*.jar

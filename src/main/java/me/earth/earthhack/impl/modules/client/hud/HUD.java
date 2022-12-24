@@ -24,6 +24,7 @@ import me.earth.earthhack.impl.util.render.ColorHelper;
 import me.earth.earthhack.impl.util.render.ColorUtil;
 import me.earth.earthhack.impl.util.text.ChatUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
+import me.earth.earthhack.pingbypass.modules.PbModule;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -48,7 +49,6 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 // TODO: REWRITE?
 public class HUD extends Module {
     public static final TextRenderer RENDERER = Managers.TEXT;
@@ -65,8 +65,10 @@ public class HUD extends Module {
             register(new BooleanSetting("Armor", true));
     protected final Setting<Boolean> totems =
             register(new BooleanSetting("Totems", false));
-    protected final Setting<Integer> totemOffset =
-            register(new NumberSetting<>("Totem Offset", 0, -10, 10));
+    protected final Setting<Integer> totemsYOffset =
+            register(new NumberSetting<>("Totems-Y-Offset", 0, -10, 10));
+    protected final Setting<Integer> totemsXOffset =
+            register(new NumberSetting<>("Totems-X-Offset", 0, -10, 10));
     protected final Setting<Modules> renderModules =
             register(new EnumSetting<>("Modules", Modules.Length));
     protected final Setting<Potions> potions =
@@ -284,15 +286,15 @@ public class HUD extends Module {
             int totems = InventoryUtil.getCount(Items.TOTEM_OF_UNDYING);
 
             if (totems > 0) {
-                int x = width / 2 - 7;
-                int y = height - (totemOffset.getValue()) - getArmorY();
+                int x = width / 2 - (totemsXOffset.getValue()) - 7;
+                int y = height - (totemsYOffset.getValue()) - getArmorY();
                 itemRender.zLevel = 200.0f;
-                GlStateManager.enableDepth();
                 itemRender.renderItemAndEffectIntoGUI(mc.player, new ItemStack(Items.TOTEM_OF_UNDYING), x, y);
                 itemRender.zLevel = 0.0f;
                 GlStateManager.disableDepth();
                 String text = String.valueOf(totems);
                 renderText(text, x + 17 - RENDERER.getStringWidth(text), y + 9);
+                GlStateManager.enableDepth();
             }
         }
         renderArmor();
@@ -307,7 +309,16 @@ public class HUD extends Module {
                     if (isArrayMember(module.getValue()))
                         continue;
                     getArrayEntries().put(module.getValue(), new ArrayEntry(module.getValue()));
+                    if (!(module.getValue() instanceof PbModule)) {
+                        getArrayEntries()
+                            .entrySet()
+                            .removeIf(m -> m.getKey() instanceof PbModule
+                                && Objects.equals(
+                                    ((PbModule) m.getKey()).getModule(),
+                                    module.getValue()));
+                    }
                 }
+
                 Map<Module, ArrayEntry> arrayEntriesSorted;
                 if (renderModules.getValue() == Modules.Length) {
                     arrayEntriesSorted = getArrayEntries().entrySet().stream().sorted(Comparator.comparingDouble(entry -> Managers.TEXT.getStringWidth(ModuleUtil.getHudName(entry.getKey())) * -1)).collect(Collectors.toMap(
@@ -405,7 +416,10 @@ public class HUD extends Module {
     }
 
     protected boolean isArrayMember(Module module) {
-        return getArrayEntries().containsKey(module);
+        return getArrayEntries().containsKey(module)
+            || module instanceof PbModule
+               && getArrayEntries().containsKey(((PbModule) module)
+                                                    .getModule());
     }
 
 }

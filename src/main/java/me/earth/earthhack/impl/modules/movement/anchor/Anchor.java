@@ -4,6 +4,7 @@ import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.api.cache.SettingCache;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
+import me.earth.earthhack.api.setting.Complexity;
 import me.earth.earthhack.api.setting.Setting;
 import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.setting.settings.EnumSetting;
@@ -28,6 +29,7 @@ import me.earth.earthhack.impl.util.client.SimpleData;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.minecraft.MovementUtil;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.Comparator;
 
@@ -42,6 +44,7 @@ public class Anchor extends Module
     private static final SettingCache<SpeedMode, EnumSetting<SpeedMode>, Speed> SPEED_MODE =
             Caches.getSetting(Speed.class, Setting.class, "Mode", SpeedMode.Instant);
 
+    private final Setting<InputMode> inputMode = register(new EnumSetting<>("Input-Mode", InputMode.Keys));
     private final Setting<Float> pitch = register(new NumberSetting<>("Pitch", 90f, -90f, 90f));
     private final Setting<Integer> delay = register(new NumberSetting<>("Delay", 400, 0, 5000));
     private final Setting<Mode> yMode = register(new EnumSetting<>("Y-Mode", Mode.Off));
@@ -55,7 +58,14 @@ public class Anchor extends Module
     private final Setting<Boolean> withSpeedInstant = register(new BooleanSetting("UseWithSpeedInstant", true));
     private final Setting<Boolean> withStep = register(new BooleanSetting("UseWithStep", false));
     private final Setting<Boolean> withRStep = register(new BooleanSetting("UseWithReverseStep", true));
-    private final Setting<Boolean> requireInput = register(new BooleanSetting("RequireInput", true));
+    private final Setting<Boolean> movingTowardsCheck = register(new BooleanSetting("MovingTowardsCheck", false));
+    private final Setting<Boolean> movingTowardsWithoutKeys = register(new BooleanSetting("MovingTowardsWithoutKeys", false));
+    private final Setting<Boolean> holeCheck = register(new BooleanSetting("HoleCheck", true)).setComplexity(Complexity.Expert);
+    private final Setting<Boolean> oldCheck = register(new BooleanSetting("HoleCheck", false)).setComplexity(Complexity.Expert);
+    private final Setting<Boolean> filterByY = register(new BooleanSetting("FilterByY", true)).setComplexity(Complexity.Expert);
+
+    // TODO: higher distance for 2x1 and 2x2
+    // TODO: check if we are going to get pulled through a wall
 
     private final HoleManager holeManager = new SimpleHoleManager();
     private final AirHoleFinder holeFinder = new AirHoleFinder(holeManager);
@@ -64,9 +74,12 @@ public class Anchor extends Module
     public Anchor()
     {
         super("Anchor", Category.Movement);
+        // TODO: tracer?
         this.listeners.add(new LambdaListener<>(MoveEvent.class, event ->
         {
-            if (!Managers.NCP.passed(lagTime.getValue()) || !sneaking.getValue() && mc.player.isSneaking())
+            if (mc.player.isSpectator()
+                || !Managers.NCP.passed(lagTime.getValue())
+                || !sneaking.getValue() && mc.player.isSneaking())
             {
                 return;
             }
@@ -86,6 +99,11 @@ public class Anchor extends Module
             Hole hole = holeManager.getHoles()
                                    .values()
                                    .stream()
+                                   .filter(h -> !filterByY.getValue() || h.getY() < mc.player.posY)
+                                   .filter(h -> !movingTowardsCheck.getValue()
+                                       || !((movingTowardsWithoutKeys.getValue()
+                                                || !MovementUtil.noMovementKeys())
+                                                    && !isMovingTowards(h, event)))
                                    .min(Comparator.comparingDouble(this::getDistance))
                                    .orElse(null);
             if (hole == null)
@@ -93,22 +111,26 @@ public class Anchor extends Module
                 return;
             }
 
-            if (Math.ceil(mc.player.posY) == hole.getY()) // TODO: this is kinda inaccurate
+            if (oldCheck.getValue() && Math.ceil(mc.player.posY) == hole.getY()
+                || holeCheck.getValue() && isInHole())
             {
                 timer.reset();
                 return;
             }
+
             // checks come here because we want to have the timer always reset while we are in a hole.
             if (!withSpeed.getValue()
-                    && SPEED.isEnabled() && (!withSpeedInstant.getValue() || SPEED_MODE.getValue() != SpeedMode.Instant)
-                    || !withStep.getValue() && STEP.isEnabled()
-                    || !withRStep.getValue() && REVERSE_STEP.isEnabled()
-                    || PACKET_FLY.isEnabled()
-                    || BLOCK_LAG.isEnabled()
-                    || LONGJUMP.isEnabled()
-                    || requireInput.getValue() && MovementUtil.noMovementKeys()
-                    || !timer.passed(delay.getValue())
-                    || mc.player.rotationPitch > pitch.getValue())
+                && SPEED.isEnabled() && (!withSpeedInstant.getValue() || SPEED_MODE.getValue() != SpeedMode.Instant)
+                || !withStep.getValue() && STEP.isEnabled()
+                || !withRStep.getValue() && REVERSE_STEP.isEnabled()
+                || PACKET_FLY.isEnabled()
+                || BLOCK_LAG.isEnabled()
+                || LONGJUMP.isEnabled()
+                || inputMode.getValue() == InputMode.Keys && MovementUtil.noMovementKeys()
+                || inputMode.getValue() == InputMode.NoKeys && !MovementUtil.noMovementKeys()
+                || !timer.passed(delay.getValue())
+                || mc.player.rotationPitch > pitch.getValue()
+                || holeCheck.getValue() && isInHole())
             {
                 return;
             }
@@ -148,8 +170,19 @@ public class Anchor extends Module
         data.register(yOffset, "Offset to the bottom of the hole when calculating distance.");
         data.register(withSpeedInstant, "Exception to UseWithSpeed for Speed Mode - Instant.");
         data.register(withRStep, "Whether to use this module together with ReverseStep.");
-        data.register(requireInput, "Whether to use this module while you are not pressing any keys.");
+        data.register(inputMode, "-Always: module is always active.\n" +
+            "-NoKeys: module is only active while you are not pressing any movement keys.\n" +
+            "-Keys: module is only active while you are pressing movement keys.");
+        data.register(movingTowardsCheck, "Checks if you are moving towards the hole.");
         this.setData(data);
+    }
+
+    private boolean isInHole() {
+        return holeManager
+            .getHoles()
+            .values()
+            .stream()
+            .anyMatch(h -> h.contains(mc.player.posX, mc.player.posY, mc.player.posZ));
     }
 
     private double modify(Mode mode, double value, double setting)
@@ -176,12 +209,35 @@ public class Anchor extends Module
         return mc.player.getDistanceSq(holeX, holeY, holeZ);
     }
 
+    private boolean isMovingTowards(Hole hole, MoveEvent event)
+    {
+        double holeX = hole.getX() + (hole.getMaxX() - hole.getX()) / 2.0;
+        double holeY = hole.getY();
+        double holeZ = hole.getZ() + (hole.getMaxZ() - hole.getZ()) / 2.0;
+        double distance = mc.player.getDistanceSq(holeX, holeY, holeZ);
+        double nextDistance = mc.player
+            .getPositionVector()
+            .add(new Vec3d(event.getX(), event.getY(), event.getZ())
+                     .normalize()
+                     .scale(Math.sqrt(distance)))
+            .squareDistanceTo(holeX, holeY, holeZ);
+
+        return distance >= nextDistance;
+    }
+
     public enum Mode
     {
         Factor,
         Constant,
         Add,
         Off
+    }
+
+    public enum InputMode
+    {
+        Always,
+        NoKeys,
+        Keys
     }
 
 }

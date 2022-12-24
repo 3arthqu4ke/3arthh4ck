@@ -189,6 +189,21 @@ public class DamageUtil implements Globals
                 RotationUtil.getRotationPlayer());
     }
 
+    public static float calculate(Entity crystal,
+                                  EntityLivingBase player,
+                                  IBlockAccess world)
+    {
+        return calculate(
+            crystal.posX,
+            crystal.posY,
+            crystal.posZ,
+            player.getEntityBoundingBox(),
+            player,
+            world,
+            false,
+            false);
+    }
+
     /**
      * Convenience method, calls
      * {@link DamageUtil#calculate(BlockPos, EntityLivingBase)}

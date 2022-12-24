@@ -1,6 +1,7 @@
 package me.earth.earthhack.impl.modules.player.speedmine;
 
 import me.earth.earthhack.api.cache.ModuleCache;
+import me.earth.earthhack.api.event.bus.instance.Bus;
 import me.earth.earthhack.api.module.Module;
 import me.earth.earthhack.api.module.util.Category;
 import me.earth.earthhack.api.setting.Complexity;
@@ -9,7 +10,9 @@ import me.earth.earthhack.api.setting.settings.*;
 import me.earth.earthhack.api.util.bind.Bind;
 import me.earth.earthhack.impl.core.ducks.network.ICPacketPlayerDigging;
 import me.earth.earthhack.impl.core.ducks.network.IPlayerControllerMP;
+import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.combat.autotrap.AutoTrap;
 import me.earth.earthhack.impl.modules.player.automine.AutoMine;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.ESPMode;
 import me.earth.earthhack.impl.modules.player.speedmine.mode.MineMode;
@@ -17,10 +20,21 @@ import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.StopWatch;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.CooldownBypass;
+import me.earth.earthhack.impl.util.minecraft.DamageUtil;
+import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.Swing;
+import me.earth.earthhack.impl.util.minecraft.blocks.mine.MineUtil;
+import me.earth.earthhack.impl.util.minecraft.blocks.states.BlockStateHelper;
+import me.earth.earthhack.impl.util.minecraft.blocks.states.IBlockStateHelper;
+import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
+import me.earth.earthhack.impl.util.network.PacketUtil;
 import me.earth.earthhack.impl.util.text.TextColor;
 import me.earth.earthhack.impl.util.thread.Locks;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityEnderCrystal;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumFacing;
@@ -40,6 +54,8 @@ public class Speedmine extends Module
 {
     private static final ModuleCache<AutoMine> AUTO_MINE =
             Caches.getModule(AutoMine.class);
+    private static final ModuleCache<AutoTrap> AUTO_TRAP =
+        Caches.getModule(AutoTrap.class);
 
     protected final Setting<MineMode> mode     =
             register(new EnumSetting<>("Mode", MineMode.Smart));
@@ -76,7 +92,7 @@ public class Speedmine extends Module
     protected final Setting<Integer> realDelay =
             register(new NumberSetting<>("Delay", 50, 0, 500))
                 .setComplexity(Complexity.Medium);
-    public final Setting<Boolean> onGround  =
+    public final Setting<Boolean> onGround  = // this should be true?
             register(new BooleanSetting("OnGround", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> toAir     =
@@ -93,6 +109,30 @@ public class Speedmine extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> placeCrystal =
             register(new BooleanSetting("PlaceCrystal", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> breakCrystal =
+            register(new BooleanSetting("BreakCrystal", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> breakInstant =
+            register(new BooleanSetting("BreakSpawningCrystals", false))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> offhandPlace =
+            register(new BooleanSetting("OffhandPlace", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> offhandSilent =
+            register(new BooleanSetting("OffhandSilent", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> megaSilent =
+            register(new BooleanSetting("MegaSilent", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> antiAntiSilentSwitch =
+            register(new BooleanSetting("AntiAntiSilentSwitch", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> prePlace =
+            register(new BooleanSetting("PrePlace", false))
+                .setComplexity(Complexity.Medium);
+    public final Setting<Float> prePlaceLimit       =
+            register(new NumberSetting<>("PrePlaceLimit", 0.95f, 0.0f, 2.0f))
                 .setComplexity(Complexity.Medium);
     protected final Setting<Bind> breakBind =
             register(new BindSetting("BreakBind", Bind.none()))
@@ -154,9 +194,29 @@ public class Speedmine extends Module
     protected final Setting<Boolean> abortNextTick =
             register(new BooleanSetting("AbortNextTick", false))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> cancelNormalPackets =
+            register(new BooleanSetting("CancelNormalPackets", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> cancelClick =
+            register(new BooleanSetting("CancelClick", true))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> cancelEvent =
+            register(new BooleanSetting("CancelEvent", true))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> aASSwitchTime =
+            register(new NumberSetting<>("AASSwitchTime", 500, 0, 1000))
+                .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> resetFastOnAir     =
+            register(new BooleanSetting("ResetFastOnAir", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> resetFastOnNonAir     =
+            register(new BooleanSetting("ResetFastOnNonAir", false))
+                .setComplexity(Complexity.Expert);
 
     protected final FastHelper fastHelper = new FastHelper(this);
-    protected final CrystalHelper crystalHelper = new CrystalHelper(this);
+    public final CrystalHelper crystalHelper = new CrystalHelper(this);
+    protected final OngroundHistoryHelper ongroundHistoryHelper =
+        new OngroundHistoryHelper();
 
     /**
      * Damage dealt to block for each hotbarSlot.
@@ -171,6 +231,7 @@ public class Speedmine extends Module
      * A StopWatch to handle Resetting after sending a Packet.
      */
     protected final StopWatch resetTimer = new StopWatch();
+    protected final StopWatch aASSSwitchTimer = new StopWatch();
     /**
      * The Pos we are currently mining.
      */
@@ -219,6 +280,7 @@ public class Speedmine extends Module
     public Speedmine()
     {
         super("Speedmine", Category.Player);
+        Bus.EVENT_BUS.subscribe(ongroundHistoryHelper);
         this.listeners.add(new ListenerDamage(this));
         this.listeners.add(new ListenerReset(this));
         this.listeners.add(new ListenerClick(this));
@@ -231,6 +293,7 @@ public class Speedmine extends Module
         this.listeners.add(new ListenerMotion(this));
         this.listeners.add(new ListenerDigging(this));
         this.listeners.add(new ListenerKeyPress(this));
+        this.listeners.add(new ListenerSpawnObject(this));
         this.setData(new SpeedMineData(this));
     }
 
@@ -340,6 +403,14 @@ public class Speedmine extends Module
                                       EnumFacing facing,
                                       boolean toAir)
     {
+        return sendStopDestroy(pos, facing, toAir, true);
+    }
+
+    protected boolean sendStopDestroy(BlockPos pos,
+                                      EnumFacing facing,
+                                      boolean toAir,
+                                      boolean withRotations)
+    {
         CPacketPlayerDigging stop  =
                 new CPacketPlayerDigging(
                         CPacketPlayerDigging
@@ -354,7 +425,8 @@ public class Speedmine extends Module
             ((ICPacketPlayerDigging) stop).setClientSideBreaking(true);
         }
 
-        if (rotate.getValue()
+        if (withRotations
+                && rotate.getValue()
                 && limitRotations.getValue()
                 && !RotationUtil.isLegit(pos, facing))
         {
@@ -383,6 +455,12 @@ public class Speedmine extends Module
 
     protected void postSend(boolean toAir)
     {
+        if (placeCrystal.getValue())
+        {
+            AUTO_TRAP.computeIfPresent(autoTrap -> autoTrap.blackList
+                .put(pos, System.currentTimeMillis()));
+        }
+
         if (swingStop.getValue())
         {
             Swing.Packet.swing(EnumHand.MAIN_HAND);
@@ -391,6 +469,35 @@ public class Speedmine extends Module
         if (toAir)
         {
             mc.playerController.onPlayerDestroyBlock(pos);
+        }
+
+        if (breakCrystal.getValue())
+        {
+            IBlockStateHelper helper = new BlockStateHelper();
+            helper.addAir(pos);
+            for (Entity crystal : mc.world.loadedEntityList)
+            {
+                double distance;
+                if (crystal instanceof EntityEnderCrystal
+                    && !EntityUtil.isDead(crystal)
+                    && (distance = mc.player.getDistanceSq(crystal)) < MathUtil.square(crystalRange.getValue())
+                    && (mc.player.canEntityBeSeen(crystal) || distance < MathUtil.square(crystalBreakTrace.getValue())))
+                {
+                    float selfDamage = DamageUtil.calculate(crystal, mc.player, helper);
+                    if (selfDamage < EntityUtil.getHealth(mc.player) && selfDamage < maxSelfDmg.getValue())
+                    {
+                        for (EntityPlayer player : mc.world.playerEntities)
+                        {
+                            float damage = DamageUtil.calculate(crystal, player, helper);
+                            if (damage >= minDmg.getValue())
+                            {
+                                PacketUtil.attack(crystal);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if (resetAfterPacket.getValue() && mode.getValue() != MineMode.Fast)
@@ -490,6 +597,79 @@ public class Speedmine extends Module
     {
         sentPacket = true;
         resetTimer.reset();
+    }
+
+    public void updateDamages()
+    {
+        maxDamage = 0.0f;
+        for (int i = 0; i < 9; i++)
+        {
+            ItemStack stack = mc.player.inventory.getStackInSlot(i);
+            float damage = MineUtil.getDamage(stack, pos, onGround.getValue());
+            if (tpsSync.getValue()) {
+                damage *= Managers.TPS.getFactor();
+            }
+
+            damages[i] = MathUtil.clamp(damages[i] + damage, 0.0f, Float.MAX_VALUE);
+            if (damages[i] > maxDamage)
+            {
+                maxDamage = damages[i];
+            }
+        }
+    }
+
+    public int getFastSlot()
+    {
+        int fastSlot = -1;
+        for (int i = 0; i < damages.length; i++)
+        {
+            if (damages[i] >= limit.getValue())
+            {
+                fastSlot = i;
+                if (i == mc.player.inventory.currentItem)
+                {
+                    break;
+                }
+            }
+        }
+
+        return fastSlot;
+    }
+
+    public void postCrystalPlace(int fastSlot, int lastSlot, boolean swap)
+    {
+        if (swap)
+        {
+            cooldownBypass.getValue().switchTo(fastSlot);
+        }
+
+        boolean toAir = this.toAir.getValue();
+        InventoryUtil.syncItem();
+        if (sendStopDestroy(pos, facing, toAir))
+        {
+            postSend(toAir);
+        }
+
+        if (swap)
+        {
+            cooldownBypass.getValue().switchBack(lastSlot, fastSlot);
+        }
+    }
+
+    public boolean prePlaceCheck()
+    {
+        if (prePlace.getValue() && placeCrystal.getValue())
+        {
+            for (float damage : damages)
+            {
+                if (damage >= prePlaceLimit.getValue())
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }

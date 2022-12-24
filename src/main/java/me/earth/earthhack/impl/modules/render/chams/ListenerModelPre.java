@@ -4,6 +4,7 @@ import me.earth.earthhack.impl.core.mixins.render.entity.IEntityRenderer;
 import me.earth.earthhack.impl.event.events.render.ModelRenderEvent;
 import me.earth.earthhack.impl.event.listeners.ModuleListener;
 import me.earth.earthhack.impl.modules.render.chams.mode.ChamsMode;
+import me.earth.earthhack.impl.modules.render.chams.mode.WireFrameMode;
 import me.earth.earthhack.impl.modules.render.esp.ESP;
 import me.earth.earthhack.impl.util.math.Vec2d;
 import me.earth.earthhack.impl.util.render.Render2DUtil;
@@ -19,7 +20,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -35,80 +35,84 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
 
     @Override
     public void invoke(ModelRenderEvent.Pre event) {
+        if (!ESP.isRendering && (module.wireframe.getValue() == WireFrameMode.Pre || module.wireframe.getValue() == WireFrameMode.All)) {
+            module.doWireFrame(event);
+        }
+
         if (!ESP.isRendering && module.mode.getValue() == ChamsMode.CSGO) {
             EntityLivingBase entity = event.getEntity();
             if (module.isValid(entity)) {
                 event.setCancelled(true);
-                boolean lightning = GL11.glIsEnabled(GL11.GL_LIGHTING);
-                boolean blend = GL11.glIsEnabled(GL11.GL_BLEND);
-                GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-                GL11.glDisable(GL11.GL_ALPHA_TEST);
+                boolean lightning = glIsEnabled(GL_LIGHTING);
+                boolean blend = glIsEnabled(GL_BLEND);
+                glPushAttrib(GL_ALL_ATTRIB_BITS);
+                glDisable(GL_ALPHA_TEST);
 
                 if (!module.texture.getValue()) {
-                    GL11.glDisable(GL11.GL_TEXTURE_2D);
+                    glDisable(GL_TEXTURE_2D);
                 }
 
                 if (lightning) {
-                    GL11.glDisable(GL11.GL_LIGHTING);
+                    glDisable(GL_LIGHTING);
                 }
 
                 if (!blend) {
-                    GL11.glEnable(GL11.GL_BLEND);
+                    glEnable(GL_BLEND);
                 }
 
-                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                 if (module.xqz.getValue()) {
-                    GL11.glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-                    GL11.glDepthMask(false);
-                    GL11.glDisable(GL11.GL_DEPTH_TEST);
+                    glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+                    glDepthMask(false);
+                    glDisable(GL_DEPTH_TEST);
                     OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
 
                     render(event);
                 }
 
-                GL11.glDisable(GL11.GL_BLEND);
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
-                GL11.glDepthMask(true);
-                GL11.glEnable(GL11.GL_LIGHTING);
+                glDisable(GL_BLEND);
+                glEnable(GL_DEPTH_TEST);
+                glDepthMask(true);
+                glEnable(GL_LIGHTING);
 
                 if (!module.texture.getValue()) {
-                    GL11.glEnable(GL11.GL_TEXTURE_2D);
+                    glEnable(GL_TEXTURE_2D);
                 }
 
-                GL11.glEnable(GL11.GL_ALPHA_TEST);
-                GL11.glPopAttrib();
-                GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-                GL11.glDisable(GL11.GL_ALPHA_TEST);
+                glEnable(GL_ALPHA_TEST);
+                glPopAttrib();
+                glPushAttrib(GL_ALL_ATTRIB_BITS);
+                glDisable(GL_ALPHA_TEST);
 
                 if (!module.texture.getValue()) {
-                    GL11.glDisable(GL11.GL_TEXTURE_2D);
+                    glDisable(GL_TEXTURE_2D);
                 }
 
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glEnable(GL11.GL_BLEND);
-                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                GL11.glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+                glDisable(GL_LIGHTING);
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
                 OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
 
                 render(event);
 
                 if (!blend) {
-                    GL11.glDisable(GL11.GL_BLEND);
+                    glDisable(GL_BLEND);
                 }
 
-                GL11.glEnable(GL11.GL_DEPTH_TEST);
-                GL11.glDepthMask(true);
+                glEnable(GL_DEPTH_TEST);
+                glDepthMask(true);
 
                 if (lightning) {
-                    GL11.glEnable(GL11.GL_LIGHTING);
+                    glEnable(GL_LIGHTING);
                 }
 
                 if (!module.texture.getValue()) {
-                    GL11.glEnable(GL11.GL_TEXTURE_2D);
+                    glEnable(GL_TEXTURE_2D);
                 }
 
-                GL11.glEnable(GL11.GL_ALPHA_TEST);
-                GL11.glPopAttrib();
+                glEnable(GL_ALPHA_TEST);
+                glPopAttrib();
             }
         } else if (!ESP.isRendering && module.mode.getValue() == ChamsMode.Better && event.getEntity() instanceof EntityPlayer) {
             event.setCancelled(true);
@@ -121,7 +125,7 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             glDisable(GL_LIGHTING);
             glEnable(GL_BLEND);
             glLineWidth(1.5f);
-            glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glEnable(GL_STENCIL_TEST);
             glEnable(GL_POLYGON_OFFSET_LINE);
             glDepthMask(false);
@@ -158,7 +162,7 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
                     glDisable(GL_LIGHTING);
                     glEnable(GL_BLEND);
                     glLineWidth(1.5f);
-                    glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
                     glEnable(GL_STENCIL_TEST);
                     glEnable(GL_POLYGON_OFFSET_LINE);
                     glDepthMask(false);
@@ -196,11 +200,13 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             module.fireShader.set("tex", 0);
 
             GlStateManager.pushMatrix();
-            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha());
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
             module.fireShader.set("alpha", color.getAlpha() / 255.0f);
             glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_BLEND);
             glPolygonOffset(1.0f, -2000000f);
             render(event);
+            glDisable(GL_BLEND);
             glDisable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1.0f, 2000000f);
             GlStateManager.popMatrix();
@@ -224,12 +230,14 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             module.galaxyShader.set("tex", 0);
 
             GlStateManager.pushMatrix();
-            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha());
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
             module.galaxyShader.set("alpha", color.getAlpha() / 255.0f);
+            glEnable(GL_BLEND);
             glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1.0f, -2000000f);
             render(event);
             glDisable(GL_POLYGON_OFFSET_FILL);
+            glDisable(GL_BLEND);
             glPolygonOffset(1.0f, 2000000f);
             GlStateManager.popMatrix();
             module.galaxyShader.unbind();
@@ -254,17 +262,49 @@ final class ListenerModelPre extends ModuleListener<Chams, ModelRenderEvent.Pre>
             GlStateManager.pushMatrix();
             // glDepthMask(false);
             // glDisable(GL_DEPTH_TEST);
-            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha());
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
             module.waterShader.set("alpha", color.getAlpha() / 255.0f);
             glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_BLEND);
             glPolygonOffset(1.0f, -2000000f);
             render(event);
+            glDisable(GL_BLEND);
             glDisable(GL_POLYGON_OFFSET_FILL);
             glPolygonOffset(1.0f, 2000000f);
             // glDepthMask(true);
             // glEnable(GL_DEPTH_TEST);
             GlStateManager.popMatrix();
             module.waterShader.unbind();
+            glPopMatrix();
+            glPopAttrib();
+        }
+
+        if (module.mode.getValue() == ChamsMode.CustomShader
+            && !ESP.isRendering
+            && module.customShader != null)
+        {
+            if (!module.isValid(event.getEntity())) return;
+            event.setCancelled(true);
+            glPushAttrib(GL_ALL_ATTRIB_BITS);
+            glPushMatrix();
+            Color color = module.getVisibleColor(event.getEntity());
+            module.customShader.bind();
+            module.customShader.set("time", (System.currentTimeMillis() - module.initTime) / 2000.0f);
+            module.customShader.set("resolution", new Vec2f((mc.displayWidth * 2) /*/ 20.0f*/, (mc.displayHeight * 2) /*/ 20.0f*/));
+            module.customShader.set("tex", 0);
+
+            GlStateManager.pushMatrix();
+            GlStateManager.color(1.0f, 1.0f, 1.0f, color.getAlpha() / 255.0f);
+            module.customShader.set("alpha", color.getAlpha() / 255.0f);
+            glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_BLEND);
+            glPolygonOffset(1.0f, -2000000f);
+            render(event);
+            glDisable(GL_BLEND);
+            glDisable(GL_POLYGON_OFFSET_FILL);
+            glPolygonOffset(1.0f, 2000000f);
+            GlStateManager.popMatrix();
+            module.customShader.unbind();
             glPopMatrix();
             glPopAttrib();
         }

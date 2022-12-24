@@ -66,7 +66,7 @@ final class ListenerEntity extends SPacketEntityListener
         onEvent(event.getPacket());
     }
 
-    protected void onEvent(SPacketEntity packet)
+    private void onEvent(SPacketEntity packet)
     {
         if (!shouldCalc())
         {
@@ -86,7 +86,7 @@ final class ListenerEntity extends SPacketEntityListener
         onEvent(p, x, y, z);
     }
 
-    protected void onEvent(EntityPlayer player, double x, double y, double z)
+    private void onEvent(EntityPlayer player, double x, double y, double z)
     {
         Entity entity = RotationUtil.getRotationPlayer();
         if (entity != null
@@ -128,7 +128,7 @@ final class ListenerEntity extends SPacketEntityListener
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    protected boolean shouldCalc()
+    private boolean shouldCalc()
     {
         return module.multiThread.getValue()
                 && module.entityThread.getValue()
@@ -136,7 +136,7 @@ final class ListenerEntity extends SPacketEntityListener
                  || module.rotationThread.getValue() != RotationThread.Predict);
     }
 
-    protected EntityPlayer getEntity(int id)
+    private EntityPlayer getEntity(int id)
     {
         List<Entity> entities = Managers.ENTITIES.getEntities();
         if (entities == null)

@@ -68,6 +68,13 @@ public class Speed extends Module
     protected final Setting<Boolean> noWaterInstant =
             register(new BooleanSetting("NoLiquidInstant", false));
 
+    protected final Setting<Boolean> modify =
+        register(new BooleanSetting("Modify", false));
+    protected final Setting<Double> xzFactor    =
+        register(new NumberSetting<>("XZ-Factor", 1.0, 0.0, 5.0));
+    protected final Setting<Double> yFactor    =
+        register(new NumberSetting<>("Y-Factor", 1.0, 0.0, 5.0));
+
     protected final StopWatch expTimer = new StopWatch();
 
     protected boolean stop;
@@ -116,7 +123,7 @@ public class Speed extends Module
 
         vanillaStage   = 0;
         onGroundStage  = 2;
-        oldGroundStage = 4;
+        oldGroundStage = 2;
         ncpStage    = 0;
         gayStage    = 1;
         vStage      = 1;
@@ -133,7 +140,8 @@ public class Speed extends Module
         Managers.TIMER.reset();
     }
 
-    // TODO: What was this used for???????????????????????????
+    // "What was this used for???????????????????????????"
+    // it was used in OldGround but you removed it
     protected boolean notColliding()
     {
         boolean stepping = false;

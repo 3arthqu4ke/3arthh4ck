@@ -23,6 +23,10 @@ public class Step extends BlockESPModule
 
     protected final Setting<Float> height =
             register(new NumberSetting<>("Height", 2.0f, 0.6f, 10.0f));
+    protected final Setting<Boolean> useTimer =
+            register(new BooleanSetting("UseTimer", false));
+    protected final Setting<Double> timer =
+            register(new NumberSetting<>("Timer", 1.0, 0.1, 2.0));
     protected final Setting<Boolean> entityStep =
             register(new BooleanSetting("EntityStep", true));
     protected final Setting<Boolean> autoOff =
@@ -103,6 +107,7 @@ public class Step extends BlockESPModule
     }
 
     protected void reset() {
+        Managers.TIMER.reset();
         stepping = false;
         bb = null;
         offsets = null;

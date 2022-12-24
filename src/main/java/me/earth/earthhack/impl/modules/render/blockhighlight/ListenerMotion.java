@@ -53,7 +53,7 @@ final class ListenerMotion extends
                                               0.0)
                                          .distanceTo(r.hitVec);
                 }
-                else
+                else if (module.toCenter.getValue())
                 {
                     d = Managers.POSITION.getVec()
                                          .add(0.0, module.eyes.getValue()
@@ -61,6 +61,14 @@ final class ListenerMotion extends
                                              : 0.0, 0.0)
                                          .distanceTo(
                      new Vec3d(p.getX() + 0.5, p.getY() + 0.5, p.getZ() + 0.5));
+                }
+                else
+                {
+                    d = Managers.POSITION.getVec()
+                                         .add(0.0, module.eyes.getValue()
+                                             ? mc.player.getEyeHeight()
+                                             : 0.0, 0.0)
+                                         .distanceTo(new Vec3d(p));
                 }
 
                 x = p.getX();

@@ -4,7 +4,6 @@ import me.earth.earthhack.api.util.interfaces.Globals;
 import me.earth.earthhack.impl.managers.Managers;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.StopWatch;
-import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.InventoryUtil;
 import me.earth.earthhack.impl.util.minecraft.blocks.mine.MineUtil;
 import me.earth.earthhack.impl.util.network.NetworkUtil;
@@ -16,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayerDigging;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 
 public class FastHelper implements Globals {
     private final StopWatch timer = new StopWatch();
@@ -35,8 +33,12 @@ public class FastHelper implements Globals {
         mc.addScheduledTask(() -> {
             if (module.sentPacket && pos.equals(module.pos)) {
                 module.sentPacket = false;
-                if (state.getBlock() != Blocks.AIR) {
-                    timer.reset();
+                timer.reset();
+
+                if (state.getBlock() != Blocks.AIR
+                        && module.resetFastOnAir.getValue()
+                    || state.getBlock() != Blocks.AIR
+                        && module.resetFastOnNonAir.getValue()) {
                     CPacketPlayerDigging abort = new CPacketPlayerDigging(
                         CPacketPlayerDigging.Action.ABORT_DESTROY_BLOCK,
                         module.pos, module.facing);
@@ -103,75 +105,61 @@ public class FastHelper implements Globals {
         module.maxDamage = 0.0f;
         for (int i = 0; i < 9; i++) {
             ItemStack stack = mc.player.inventory.getStackInSlot(i);
-            // TODO: this doesn't take into account if we have not been onground at some point!
-            float damage = MineUtil.getDamage(stack, module.pos, module.onGround.getValue()) * (timer.getTime() / 50.0f) * (module.tpsSync.getValue() ? Managers.TPS.getFactor() : 1.0f);
+            float damage = 0.0f;
+            long ticks = timer.getTime() / 50;
+            for (Boolean onGround : module.ongroundHistoryHelper) {
+                if (ticks-- <= 0) {
+                    break;
+                }
+
+                damage += MineUtil.getDamage(stack, module.pos,
+                                             module.onGround.getValue(),
+                                             onGround)
+                    * (module.tpsSync.getValue()
+                        ? Managers.TPS.getFactor()
+                        : 1.0f);
+            }
+
+            while (ticks-- > 0) {
+                damage += MineUtil.getDamage(stack, module.pos,
+                                             module.onGround.getValue(),
+                                             true)
+                    * (module.tpsSync.getValue()
+                        ? Managers.TPS.getFactor()
+                        : 1.0f);
+            }
+
             module.damages[i] = MathUtil.clamp(damage, 0.0f, Float.MAX_VALUE);
             if (module.damages[i] > module.maxDamage) {
                 module.maxDamage = module.damages[i];
             }
         }
 
-        int fastSlot = -1;
-        for (int i = 0; i < module.damages.length; i++) {
-            if (module.damages[i] >= module.limit.getValue()) {
-                fastSlot = i;
-                if (i == mc.player.inventory.currentItem) {
-                    break;
-                }
-            }
-        }
-
+        int fastSlot = module.getFastSlot();
+        boolean prePlace = false;
         if ((module.damages[mc.player.inventory.currentItem] >= module.limit.getValue()
-            || module.swap.getValue() && fastSlot != -1)
+            || module.swap.getValue() && fastSlot != -1
+            || (prePlace = module.prePlaceCheck()))
             && (!module.checkPacket.getValue() || !module.sentPacket))
         {
-            int finalFastSlot = fastSlot;
+            boolean finalPrePlace = prePlace;
             Locks.acquire(Locks.WINDOW_CLICK_LOCK, () ->
             {
                 int crystalSlot;
                 BlockPos crystalPos;
                 boolean swap = module.swap.getValue();
                 int lastSlot = mc.player.inventory.currentItem;
-
                 if (module.placeCrystal.getValue()
-                    && (crystalSlot = InventoryUtil.findHotbarItem(
-                    Items.END_CRYSTAL)) != -1
-                    && (crystalPos = module.crystalHelper.calcCrystal(module.pos)) != null)
+                    && ((crystalSlot = InventoryUtil.findHotbarItem(Items.END_CRYSTAL)) != -1
+                        || module.offhandPlace.getValue())
+                    && (crystalPos = module.crystalHelper.calcCrystal(module.pos)) != null
+                    && module.crystalHelper.doCrystalPlace(crystalPos, crystalSlot, lastSlot, swap)
+                        || finalPrePlace)
                 {
-                    RayTraceResult ray = RotationUtil.rayTraceTo(crystalPos, mc.world);
-                    if (ray != null && ray.sideHit != null && ray.hitVec != null)
-                    {
-                        module.crystalHelper.placeCrystal(crystalPos, crystalSlot, ray);
-                        if (!swap || module.rotate.getValue()
-                            && module.limitRotations.getValue()
-                            && !RotationUtil.isLegit(module.pos, module.facing))
-                        {
-                            // TODO:?????????????????????????
-                            module.cooldownBypass.getValue().switchBack(
-                                lastSlot, crystalSlot);
-                        }
-                    }
+                    return;
                 }
 
-                if (swap)
-                {
-                    module.cooldownBypass.getValue().switchTo(
-                        finalFastSlot);
-                }
-
-                boolean toAir = module.toAir.getValue();
-                InventoryUtil.syncItem();
-                if (module.sendStopDestroy(
-                    module.pos, module.facing, toAir))
-                {
-                    module.postSend(toAir);
-                }
-
-                if (swap)
-                {
-                    module.cooldownBypass.getValue().switchBack(
-                        lastSlot, finalFastSlot);
-                }
+                module.postCrystalPlace(fastSlot, lastSlot, swap);
             });
         }
     }

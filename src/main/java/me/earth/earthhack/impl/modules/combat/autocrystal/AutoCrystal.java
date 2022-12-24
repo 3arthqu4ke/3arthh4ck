@@ -27,8 +27,8 @@ import me.earth.earthhack.impl.util.math.DiscreteTimer;
 import me.earth.earthhack.impl.util.math.GuardTimer;
 import me.earth.earthhack.impl.util.math.MathUtil;
 import me.earth.earthhack.impl.util.math.StopWatch;
+import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import me.earth.earthhack.impl.util.minecraft.CooldownBypass;
-import me.earth.earthhack.impl.util.minecraft.PushMode;
 import me.earth.earthhack.impl.util.minecraft.blocks.BlockUtil;
 import me.earth.earthhack.impl.util.minecraft.entity.EntityUtil;
 import me.earth.earthhack.impl.util.misc.collections.CollectionUtil;
@@ -39,7 +39,9 @@ import me.earth.earthhack.pingbypass.PingBypass;
 import me.earth.earthhack.pingbypass.input.Mouse;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
 import java.awt.*;
@@ -100,7 +102,7 @@ public class AutoCrystal extends Module
     protected final Setting<Float> placeTrace =
             register(new NumberSetting<>("PlaceTrace", 6.0f, 0.0f, 6.0f))
                 .setComplexity(Complexity.Expert);
-    protected final Setting<Float> minDamage =
+    public final Setting<Float> minDamage =
             register(new NumberSetting<>("MinDamage", 6.0f, 0.1f, 20.0f));
     protected final Setting<Integer> placeDelay =
             register(new NumberSetting<>("PlaceDelay", 25, 0, 500));
@@ -116,7 +118,7 @@ public class AutoCrystal extends Module
     protected final Setting<Integer> slowPlaceDelay =
             register(new NumberSetting<>("SlowPlaceDelay", 500, 0, 500))
                 .setComplexity(Complexity.Medium);
-    protected final Setting<Boolean> override = // TODO: Isnt implemented properly
+    protected final Setting<Boolean> override =
             register(new BooleanSetting("OverridePlace", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> newVer =
@@ -130,6 +132,12 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> smartTrace =
             register(new BooleanSetting("Smart-Trace", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> placeRangeEyes =
+            register(new BooleanSetting("PlaceRangeEyes", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> placeRangeCenter =
+            register(new BooleanSetting("PlaceRangeCenter", true))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Double> traceWidth =
             register(new NumberSetting<>("TraceWidth", -1.0, -1.0, 1.0))
@@ -164,6 +172,9 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> ignoreNonFull =
             register(new BooleanSetting("IgnoreNonFull", false))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> efficientPlacements =
+            register(new BooleanSetting("EfficientPlacements", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> simulatePlace =
             register(new NumberSetting<>("Simulate-Place", 0, 0, 10))
                 .setComplexity(Complexity.Medium);
@@ -181,7 +192,7 @@ public class AutoCrystal extends Module
             register(new NumberSetting<>("BreakTrace", 3.0f, 0.0f, 6.0f))
                 .setComplexity(Complexity.Medium);
     protected final Setting<Float> minBreakDamage =
-            register(new NumberSetting<>("MinBreakDmg", 2.0f, 0.0f, 20.0f))
+            register(new NumberSetting<>("MinBreakDmg", 0.5f, 0.0f, 20.0f))
                 .setComplexity(Complexity.Medium);
     protected final Setting<Float> maxSelfBreak =
             register(new NumberSetting<>("MaxSelfBreak", 10.0f, 0.0f, 20.0f))
@@ -299,7 +310,7 @@ public class AutoCrystal extends Module
 
     /* ---------------- Misc Settings -------------- */
     protected final Setting<Float> targetRange =
-            register(new NumberSetting<>("TargetRange", 12.0f, 0.1f, 20.0f));
+            register(new NumberSetting<>("TargetRange", 20.0f, 0.1f, 20.0f));
     protected final Setting<Float> pbTrace =
             register(new NumberSetting<>("CombinedTrace", 3.0f, 0.0f, 6.0f))
                 .setComplexity(Complexity.Medium);
@@ -337,6 +348,12 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> multiPlaceMinDmg =
             register(new BooleanSetting("MultiPlace-MinDmg", true))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> countDeadCrystals =
+            register(new BooleanSetting("CountDeadCrystals", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> countDeathTime =
+            register(new BooleanSetting("CountWithinDeathTime", false))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> yCalc =
             register(new BooleanSetting("Y-Calc", false))
                 .setComplexity(Complexity.Expert);
@@ -359,6 +376,10 @@ public class AutoCrystal extends Module
     protected final Setting<Integer> feetBuffer =
             register(new NumberSetting<>("FeetBuffer", 5, 0, 50))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Boolean> stopWhenEating =
+            register(new BooleanSetting("StopWhenEating", false));
+    protected final Setting<Boolean> stopWhenMining =
+            register(new BooleanSetting("StopWhenMining", false));
     protected final Setting<Boolean> dangerFacePlace =
             register(new BooleanSetting("Danger-FacePlace", false))
                 .setComplexity(Complexity.Medium);
@@ -511,6 +532,12 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> soundRemove =
             register(new BooleanSetting("SoundRemove", true))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> useSafeDeathTime =
+            register(new BooleanSetting("UseSafeDeathTime", false))
+                .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> safeDeathTime =
+            register(new NumberSetting<>("Safe-Death-Time", 0, 0, 500))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Integer> deathTime =
             register(new NumberSetting<>("Death-Time", 0, 0, 500))
                 .setComplexity(Complexity.Medium);
@@ -518,6 +545,9 @@ public class AutoCrystal extends Module
     /* ---------------- Obsidian Settings -------------- */
     protected final Setting<Boolean> obsidian =
             register(new BooleanSetting("Obsidian", false));
+    protected final Setting<Boolean> basePlaceOnly =
+            register(new BooleanSetting("BasePlaceOnly", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<Boolean> obbySwitch =
             register(new BooleanSetting("Obby-Switch", false))
                 .setComplexity(Complexity.Medium);
@@ -711,7 +741,6 @@ public class AutoCrystal extends Module
     public final Setting<Double> placeNormalWeight =
         register(new NumberSetting<>("P-Norm-Weight", 1.0, 0.0, 5.0))
             .setComplexity(Complexity.Medium);
-
     public final Setting<Boolean> avgBreakExtra =
             register(new BooleanSetting("AvgBreakExtra", false))
                 .setComplexity(Complexity.Expert);
@@ -721,17 +750,18 @@ public class AutoCrystal extends Module
     public final Setting<Double> breakNormalWeight =
         register(new NumberSetting<>("B-Norm-Weight", 1.0, 0.0, 5.0))
             .setComplexity(Complexity.Medium);
-
-
-    public final Setting<PushMode> pushOutOfBlocks =
-            register(new EnumSetting<>("PushOutOfBlocks", PushMode.None))
-                .setComplexity(Complexity.Expert);
-    public final Setting<Boolean> shrinkPush =
-            register(new BooleanSetting("ShrinkPush", false))
-                .setComplexity(Complexity.Expert);
-    public final Setting<Boolean> noPushOnNoMove =
-            register(new BooleanSetting("NoPushOnNoMove", false))
-                .setComplexity(Complexity.Expert);
+    public final Setting<Boolean> gravityExtrapolation =
+        register(new BooleanSetting("Extra-Gravity", true))
+            .setComplexity(Complexity.Expert);
+    public final Setting<Double> gravityFactor =
+        register(new NumberSetting<>("Gravity-Factor", 1.0, 0.0, 5.0))
+            .setComplexity(Complexity.Expert);
+    public final Setting<Double> yPlusFactor =
+        register(new NumberSetting<>("Y-Plus-Factor", 1.0, 0.0, 5.0))
+            .setComplexity(Complexity.Expert);
+    public final Setting<Double> yMinusFactor =
+        register(new NumberSetting<>("Y-Minus-Factor", 1.0, 0.0, 5.0))
+            .setComplexity(Complexity.Expert);
     public final Setting<Boolean> selfExtrapolation =
             register(new BooleanSetting("SelfExtrapolation", false))
                 .setComplexity(Complexity.Medium);
@@ -780,6 +810,9 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> smartPost =
             register(new BooleanSetting("Smart-Post", true))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> mainThreadThreads =
+            register(new BooleanSetting("MainThreadThreads", false))
+                .setComplexity(Complexity.Medium);
     protected final Setting<RotationThread> rotationThread =
             register(new EnumSetting<>("RotationThread", RotationThread.Predict))
                 .setComplexity(Complexity.Expert);
@@ -807,6 +840,9 @@ public class AutoCrystal extends Module
     protected final Setting<Integer> maxEarlyThread =
             register(new NumberSetting<>("MaxEarlyThread", 8, 1, 20))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> pullBasedDelay =
+            register(new NumberSetting<>("PullBasedDelay", 0, 0, 1000))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> explosionThread =
             register(new BooleanSetting("ExplosionThread", false))
                 .setComplexity(Complexity.Medium);
@@ -819,6 +855,9 @@ public class AutoCrystal extends Module
     protected final Setting<Boolean> spawnThread =
             register(new BooleanSetting("SpawnThread", false))
                 .setComplexity(Complexity.Medium);
+    protected final Setting<Boolean> spawnThreadWhenAttacked =
+            register(new BooleanSetting("SpawnThreadWhenAttacked", true))
+                .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> destroyThread =
             register(new BooleanSetting("DestroyThread", false))
                 .setComplexity(Complexity.Medium);
@@ -878,6 +917,24 @@ public class AutoCrystal extends Module
                 .setComplexity(Complexity.Expert);
     protected final Setting<Boolean> debugAntiPlaceFail =
             register(new BooleanSetting("DebugAntiPlaceFail", false))
+                .setComplexity(Complexity.Dev);
+    protected final Setting<Boolean> alwaysBomb =
+            register(new BooleanSetting("Always-Bomb", false))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Boolean> useSafetyFactor =
+            register(new BooleanSetting("UseSafetyFactor", false))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Double> selfFactor =
+            register(new NumberSetting<>("SelfFactor", 1.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Double> safetyFactor =
+            register(new NumberSetting<>("SafetyFactor", 1.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Double> compareDiff =
+            register(new NumberSetting<>("CompareDiff", 1.0, 0.0, 10.0))
+                .setComplexity(Complexity.Expert);
+    public final Setting<Boolean> facePlaceCompare =
+            register(new BooleanSetting("FacePlaceCompare", false))
                 .setComplexity(Complexity.Expert);
     protected final Setting<Integer> removeTime =
             register(new NumberSetting<>("Remove-Time", 1000, 0, 2500))
@@ -907,11 +964,13 @@ public class AutoCrystal extends Module
     protected final StopWatch shieldTimer = new StopWatch();
     protected final StopWatch slideTimer = new StopWatch();
     protected final StopWatch zoomTimer = new StopWatch();
+    protected final StopWatch pullTimer = new StopWatch();
 
     /* ---------------- States -------------- */
     protected final Queue<Runnable> post = new ConcurrentLinkedQueue<>();
     protected volatile RotationFunction rotation;
     private BlockPos bypassPos;
+    public BlockPos bombPos;
     protected EntityPlayer target;
     protected Entity crystal;
     protected Entity focus;
@@ -931,7 +990,7 @@ public class AutoCrystal extends Module
 
     // TODO: static
     protected final IDHelper idHelper =
-            new IDHelper();
+            new IDHelper(basePlaceOnly);
 
     protected final HelperLiquids liquidHelper =
             new HelperLiquids(this);
@@ -962,10 +1021,11 @@ public class AutoCrystal extends Module
 
     protected final ThreadHelper threadHelper =
             new ThreadHelper(this,
-                    multiThread,
-                    threadDelay,
-                    rotationThread,
-                    rotate);
+                             multiThread,
+                             mainThreadThreads,
+                             threadDelay,
+                             rotationThread,
+                             rotate);
 
     protected final DamageHelper damageHelper =
             new DamageHelper(this,
@@ -1359,6 +1419,34 @@ public class AutoCrystal extends Module
     public void setBypassPos(BlockPos pos) {
         bypassTimer.reset();
         this.bypassPos = pos;
+    }
+
+    public boolean isEating() {
+        ItemStack stack = mc.player.getActiveItemStack();
+        return mc.player.isHandActive()
+            && !stack.isEmpty()
+            && stack.getItem().getItemUseAction(stack) == EnumAction.EAT;
+    }
+
+    public boolean isMining() {
+        return mc.playerController.getIsHittingBlock();
+    }
+
+    public boolean isOutsidePlaceRange(BlockPos pos) {
+        EntityPlayer player = RotationUtil.getRotationPlayer();
+        double x = player.posX;
+        double y = player.posY + (placeRangeEyes.getValue() ? player.getEyeHeight() : 0);
+        double z = player.posZ;
+        double distance = placeRangeCenter.getValue() ? pos.distanceSqToCenter(x, y, z) : pos.distanceSq(x, y, z);
+        return distance >= MathUtil.square(placeRange.getValue());
+    }
+
+    public int getDeathTime() {
+        if (useSafeDeathTime.getValue() && Managers.SAFETY.isSafe()) {
+            return safeDeathTime.getValue();
+        }
+
+        return deathTime.getValue();
     }
 
 }

@@ -203,7 +203,7 @@ public class HelperPlace implements Globals
                                 : module.helpingBlocks.getValue(),
             module.newVer.getValue(),
             module.newVerEntities.getValue(),
-            module.deathTime.getValue(),
+            module.getDeathTime(),
             entities,
             module.lava.getValue(),
             module.water.getValue(),
@@ -475,8 +475,7 @@ public class HelperPlace implements Globals
     {
         if (pos.getY() < 0
             || pos.getY() - 1 >= maxY
-            || BlockUtil.getDistanceSq(pos)
-                >= MathUtil.square(module.placeRange.getValue()))
+            || module.isOutsidePlaceRange(pos))
         {
             return true;
         }

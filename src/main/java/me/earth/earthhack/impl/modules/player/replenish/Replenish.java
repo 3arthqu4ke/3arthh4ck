@@ -25,6 +25,8 @@ public class Replenish extends RemovingItemAddingModule
             register(new BooleanSetting("PutBack", true));
     protected final Setting<Boolean> replenishInLoot   =
             register(new BooleanSetting("ReplenishInLoot", true));
+    protected final Setting<Boolean> inInvWithMiddleClick   =
+            register(new BooleanSetting("InInvWithMiddleClick", false));
 
     /** A list, permanently kept at size 9, resembling the hotbar. */
     protected final List<ItemStack> hotbar = new CopyOnWriteArrayList<>();

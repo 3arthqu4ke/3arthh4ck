@@ -75,6 +75,8 @@ public class KillAura extends EntityTypeModule
         register(new EnumSetting<>("Teleport", AuraTeleport.None));
     protected final Setting<Double> teleportRange =
         register(new NumberSetting<>("TP-Range", 0.0, 0.0, 100.0));
+    protected final Setting<Boolean> tpSetPos =
+        register(new BooleanSetting("TP-SetPos", false));
     protected final Setting<Boolean> yTeleport  =
         register(new BooleanSetting("Y-Teleport", false));
     protected final Setting<Boolean> movingTeleport  =
@@ -90,7 +92,7 @@ public class KillAura extends EntityTypeModule
     protected final Setting<Integer> armor =
         register(new NumberSetting<>("Armor", 0, 0, 100));
     protected final Setting<Float> targetRange =
-        register(new NumberSetting<>("Target-Range", 10.0f, 0.0f, 20.0f));
+        register(new NumberSetting<>("Target-Range", 10.0f, 0.0f, 120.0f));
     protected final Setting<Boolean> multi32k =
         register(new BooleanSetting("Multi-32k", false));
     protected final Setting<Integer> packets =

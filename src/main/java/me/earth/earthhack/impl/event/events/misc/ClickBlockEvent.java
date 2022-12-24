@@ -21,7 +21,7 @@ public class ClickBlockEvent extends Event
     {
         return pos;
     }
-
+    
     public EnumFacing getFacing()
     {
         return facing;

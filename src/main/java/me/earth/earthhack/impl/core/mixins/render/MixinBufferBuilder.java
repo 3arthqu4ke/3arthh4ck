@@ -2,7 +2,6 @@ package me.earth.earthhack.impl.core.mixins.render;
 
 import me.earth.earthhack.api.cache.ModuleCache;
 import me.earth.earthhack.impl.modules.Caches;
-import me.earth.earthhack.impl.modules.render.ambience.Ambience;
 import me.earth.earthhack.impl.modules.render.xray.XRay;
 import me.earth.earthhack.impl.modules.render.xray.mode.XrayMode;
 import net.minecraft.client.renderer.BufferBuilder;

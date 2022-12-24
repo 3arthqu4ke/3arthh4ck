@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.*;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,16 +18,18 @@ public abstract class Shader implements Globals {
     public Shader(final String fragmentShader) {
         int vertexShaderID, fragmentShaderID;
 
-        try {
-            final InputStream vertexStream = getClass().getResourceAsStream("/assets/minecraft/earthhack/shaders/vertex.vert");
-            vertexShaderID = createShader(IOUtils.toString(vertexStream), ARBVertexShader.GL_VERTEX_SHADER_ARB);
+        try (final InputStream vertexStream = getClass().getResourceAsStream("/assets/minecraft/earthhack/shaders/vertex.vert")) {
+            vertexShaderID = createShader(IOUtils.toString(vertexStream, Charset.defaultCharset()), ARBVertexShader.GL_VERTEX_SHADER_ARB);
             IOUtils.closeQuietly(vertexStream);
-
-            final InputStream fragmentStream = getClass().getResourceAsStream("/assets/minecraft/earthhack/shaders/frag/" + fragmentShader);
-            fragmentShaderID = createShader(IOUtils.toString(fragmentStream), ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
-            IOUtils.closeQuietly(fragmentStream);
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return;
         }
-        catch (final Exception e) {
+
+        try (final InputStream fragmentStream = getClass().getResourceAsStream("/assets/minecraft/earthhack/shaders/frag/" + fragmentShader)) {
+            fragmentShaderID = createShader(IOUtils.toString(fragmentStream, Charset.defaultCharset()), ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
+            IOUtils.closeQuietly(fragmentStream);
+        } catch (final Exception e) {
             e.printStackTrace();
             return;
         }

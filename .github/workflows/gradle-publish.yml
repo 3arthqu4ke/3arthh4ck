@@ -2,6 +2,7 @@ name: Gradle Build
 
 on:
   push:
+  workflow_dispatch:
   pull_request:
     types: [opened, reopened]
 

@@ -10,6 +10,7 @@ public class EntityTypeData<T extends EntityTypeModule> extends DefaultData<T>
         register(module.players, "Targets Players.");
         register(module.monsters, "Targets Monsters.");
         register(module.animals, "Targets Animals.");
+        register(module.tamedMobs, "Targets Tamed Mobs.");
         register(module.boss, "Targets Boss Monsters.");
         register(module.animals, "Targets Vehicles.");
         register(module.misc, "Targets Fireballs, ShulkerBullets etc.");

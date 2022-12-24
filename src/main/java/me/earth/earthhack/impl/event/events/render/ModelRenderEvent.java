@@ -10,14 +10,28 @@ public class ModelRenderEvent extends Event
     private final RenderLivingBase<?> renderLiving;
     private final EntityLivingBase entity;
     private final ModelBase model;
+    private final float limbSwing;
+    private final float limbSwingAmount;
+    private final float ageInTicks;
+    private final float netHeadYaw;
+    private final float headPitch;
+    private final float scale;
 
     private ModelRenderEvent(RenderLivingBase<?> renderLiving,
                              EntityLivingBase entity,
-                             ModelBase model)
+                             ModelBase model, float limbSwing,
+                             float limbSwingAmount, float ageInTicks,
+                             float netHeadYaw, float headPitch, float scale)
     {
         this.renderLiving = renderLiving;
         this.entity       = entity;
         this.model        = model;
+        this.limbSwing = limbSwing;
+        this.limbSwingAmount = limbSwingAmount;
+        this.ageInTicks = ageInTicks;
+        this.netHeadYaw = netHeadYaw;
+        this.headPitch = headPitch;
+        this.scale = scale;
     }
 
     public RenderLivingBase<?> getRenderLiving()
@@ -35,15 +49,38 @@ public class ModelRenderEvent extends Event
         return model;
     }
 
+    public float getLimbSwing()
+    {
+        return limbSwing;
+    }
+
+    public float getLimbSwingAmount()
+    {
+        return limbSwingAmount;
+    }
+
+    public float getAgeInTicks()
+    {
+        return ageInTicks;
+    }
+
+    public float getNetHeadYaw()
+    {
+        return netHeadYaw;
+    }
+
+    public float getHeadPitch()
+    {
+        return headPitch;
+    }
+
+    public float getScale()
+    {
+        return scale;
+    }
+
     public static class Pre extends ModelRenderEvent
     {
-        private final float limbSwing;
-        private final float limbSwingAmount;
-        private final float ageInTicks;
-        private final float netHeadYaw;
-        private final float headPitch;
-        private final float scale;
-
         public Pre(RenderLivingBase<?> renderLiving,
                       EntityLivingBase entity,
                       ModelBase model,
@@ -54,55 +91,13 @@ public class ModelRenderEvent extends Event
                       float headPitch,
                       float scale)
         {
-            super(renderLiving, entity, model);
-            this.limbSwing       = limbSwing;
-            this.limbSwingAmount = limbSwingAmount;
-            this.ageInTicks      = ageInTicks;
-            this.netHeadYaw      = netHeadYaw;
-            this.headPitch       = headPitch;
-            this.scale           = scale;
-        }
-
-        public float getLimbSwing()
-        {
-            return limbSwing;
-        }
-
-        public float getLimbSwingAmount()
-        {
-            return limbSwingAmount;
-        }
-
-        public float getAgeInTicks()
-        {
-            return ageInTicks;
-        }
-
-        public float getNetHeadYaw()
-        {
-            return netHeadYaw;
-        }
-
-        public float getHeadPitch()
-        {
-            return headPitch;
-        }
-
-        public float getScale()
-        {
-            return scale;
+            super(renderLiving, entity, model, limbSwing, limbSwingAmount,
+                  ageInTicks, netHeadYaw, headPitch, scale);
         }
     }
 
     public static class Post extends ModelRenderEvent
     {
-        private final float limbSwing;
-        private final float limbSwingAmount;
-        private final float ageInTicks;
-        private final float netHeadYaw;
-        private final float headPitch;
-        private final float scale;
-
         public Post(RenderLivingBase<?> renderLiving,
                    EntityLivingBase entity,
                    ModelBase model,
@@ -113,43 +108,8 @@ public class ModelRenderEvent extends Event
                    float headPitch,
                    float scale)
         {
-            super(renderLiving, entity, model);
-            this.limbSwing       = limbSwing;
-            this.limbSwingAmount = limbSwingAmount;
-            this.ageInTicks      = ageInTicks;
-            this.netHeadYaw      = netHeadYaw;
-            this.headPitch       = headPitch;
-            this.scale           = scale;
-        }
-
-        public float getLimbSwing()
-        {
-            return limbSwing;
-        }
-
-        public float getLimbSwingAmount()
-        {
-            return limbSwingAmount;
-        }
-
-        public float getAgeInTicks()
-        {
-            return ageInTicks;
-        }
-
-        public float getNetHeadYaw()
-        {
-            return netHeadYaw;
-        }
-
-        public float getHeadPitch()
-        {
-            return headPitch;
-        }
-
-        public float getScale()
-        {
-            return scale;
+            super(renderLiving, entity, model, limbSwing, limbSwingAmount,
+                  ageInTicks, netHeadYaw, headPitch, scale);
         }
     }
 

@@ -1,5 +1,7 @@
+import sys
 from os import path, linesep
 from sys import argv
+import subprocess
 import fileinput
 import re
 
@@ -20,11 +22,22 @@ if __name__ == '__main__':
     else:
         version = argv[1]
         used_input = False
+
     if used_input or (len(argv) > 2 and argv[2] == '-f') or input(f"Set version to {version} (y/n)?{linesep}") == 'y':
         base = path.dirname(__file__)
-        update(path.join(base, 'build.gradle'), r"(project.version = ').*('.*)", version)
-        update(path.join(base, 'src', 'main', 'resources', 'mcmod.info'), r"(.*\"version\": \").*(\",.*)", version)
-        update(path.join(base, 'src', 'main', 'java', 'me', 'earth', 'earthhack', 'impl', 'Earthhack.java'),
-            r"(.*VERSION = \").*(\";.*)", version)
+        build_gradle = path.join(base, 'build.gradle')
+        mcmod_info = path.join(base, 'src', 'main', 'resources', 'mcmod.info')
+        earthhack = path.join(base, 'src', 'main', 'java', 'me', 'earth', 'earthhack', 'impl', 'Earthhack.java')
+
+        update(build_gradle, r"(project.version = ').*('.*)", version)
+        update(mcmod_info, r"(.*\"version\": \").*(\",.*)", version)
+        update(earthhack, r"(.*VERSION = \").*(\";.*)", version)
+
+        if '-nogit' not in argv:
+            subprocess.run(['git', 'reset'], stdout=sys.stdout, stderr=sys.stderr)
+            subprocess.run(['git', 'add', build_gradle], stdout=sys.stdout, stderr=sys.stderr)
+            subprocess.run(['git', 'add', mcmod_info], stdout=sys.stdout, stderr=sys.stderr)
+            subprocess.run(['git', 'add', earthhack], stdout=sys.stdout, stderr=sys.stderr)
+            subprocess.run(['git', 'commit', '-m', f"[{version}] Bump version"], stdout=sys.stdout, stderr=sys.stderr)
     else:
         print("Cancelled version update!")

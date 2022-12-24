@@ -23,9 +23,11 @@ final class ListenerGameLoop extends ModuleListener<AutoCrystal, GameLoopEvent>
             return;
         }
 
-        if (module.gameloop.getValue())
+        if (module.gameloop.getValue()
+            && module.pullTimer.passed(module.pullBasedDelay.getValue()))
         {
             module.threadHelper.startThread();
+            module.pullTimer.reset();
         }
         else if (module.rotate.getValue() != ACRotate.None
             && module.rotationThread.getValue() == RotationThread.Predict

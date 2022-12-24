@@ -12,7 +12,10 @@ final class SurroundData extends ObbyData<Surround>
                 "using this on a PingBypass proxy!");
         register(module.movement, "-None well, nothing happens.\n" +
                 "-Static if you move a block this module" +
-                " will disable itself.\n-Limit If you move" +
+                " will disable itself.\n-Y if you move along the Y-Axis this " +
+                "module will disable itself.\n-YPlus similar to Y," +
+                " but only for upwards motion. So in case you are falling" +
+                " down, you are safe.\n-Limit If you move" +
                 " faster than the Speed setting this module" +
                 " won't do anything.\n-Disable if you move" +
                 " faster than the Speed setting this module" +
@@ -46,7 +49,10 @@ final class SurroundData extends ObbyData<Surround>
                 "Takes the players vertical speed into Account.");
         register(module.centerY, "Prevents you from getting centered down.");
         register(module.burrow, "Automatically enable BlockLag.");
-
+        register(module.teleport, "Do not disable on teleports.");
+        register(module.yTeleportRange, "Leave at 0 to disable." +
+            " Movement - Y and YPlus will not disable when you teleport" +
+            " to the same Y-Level. This can be fixed with this setting.");
     }
 
     @Override
