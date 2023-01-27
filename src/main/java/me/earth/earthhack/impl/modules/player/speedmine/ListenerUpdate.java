@@ -164,7 +164,7 @@ final class ListenerUpdate extends ModuleListener<Speedmine, UpdateEvent>
                         if (module.placeCrystal.getValue()
                                 && (crystalSlot = InventoryUtil.findHotbarItem(Items.END_CRYSTAL)) != -1
                                 && (crystalPos = module.crystalHelper.calcCrystal(module.pos)) != null
-                                && module.crystalHelper.doCrystalPlace(crystalPos, crystalSlot, lastSlot, swap)
+                                && module.crystalHelper.doCrystalPlace(crystalPos, crystalSlot, lastSlot, swap, finalPrePlace)
                                     || finalPrePlace)
                         {
                             return;

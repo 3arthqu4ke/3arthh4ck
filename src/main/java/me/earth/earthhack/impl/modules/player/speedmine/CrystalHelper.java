@@ -107,7 +107,7 @@ public class CrystalHelper implements Globals {
         }
     }
 
-    public void placeCrystal(BlockPos pos, int slot, RayTraceResult ray)
+    public void placeCrystal(BlockPos pos, int slot, RayTraceResult ray, boolean prePlace)
     {
         EnumHand hand = module.offhandPlace.getValue()
             ? EnumHand.OFF_HAND
@@ -158,7 +158,7 @@ public class CrystalHelper implements Globals {
             }
         });
 
-        if (AUTOCRYSTAL.isPresent())
+        if (AUTOCRYSTAL.isPresent() && !prePlace)
         {
             AUTOCRYSTAL.get().placed.put(
                 pos.up(), new CrystalTimeStamp(Float.MAX_VALUE, false));
@@ -166,7 +166,7 @@ public class CrystalHelper implements Globals {
         }
     }
 
-    public boolean doCrystalPlace(BlockPos crystalPos, int crystalSlot, int lastSlot, boolean swap)
+    public boolean doCrystalPlace(BlockPos crystalPos, int crystalSlot, int lastSlot, boolean swap, boolean prePlace)
     {
         if (module.antiAntiSilentSwitch.getValue()
             && !module.aASSSwitchTimer.passed(module.aASSwitchTime.getValue()))
@@ -177,7 +177,7 @@ public class CrystalHelper implements Globals {
         RayTraceResult ray = RotationUtil.rayTraceTo(crystalPos, mc.world);
         if (ray != null && ray.sideHit != null && ray.hitVec != null)
         {
-            module.crystalHelper.placeCrystal(crystalPos, crystalSlot, ray);
+            module.crystalHelper.placeCrystal(crystalPos, crystalSlot, ray, prePlace);
             boolean swappedBack = false;
             if (!swap || module.rotate.getValue()
                 && module.limitRotations.getValue()

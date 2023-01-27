@@ -35,7 +35,9 @@ public class CrystalConstellation extends Constellation implements Globals
 
         boolean result = superCheckNoPlayerPos(world, checkPlayerState);
         boolean correctPos = PositionUtil.getPosition(player).equals(playerPos);
-        if (autoMine.damageCheck.getValue() && result && !correctPos)
+        if (autoMine.damageCheck.getValue()
+            && result
+            && (!correctPos || autoMine.dependOnSMCheck.getValue()))
         {
             IBlockStateHelper helper = new BlockStateHelper(() -> world);
             helper.addAir(pos);

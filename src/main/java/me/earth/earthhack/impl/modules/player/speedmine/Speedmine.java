@@ -212,6 +212,9 @@ public class Speedmine extends Module
     protected final Setting<Boolean> resetFastOnNonAir     =
             register(new BooleanSetting("ResetFastOnNonAir", false))
                 .setComplexity(Complexity.Expert);
+    protected final Setting<Integer> tickTime  =
+            register(new NumberSetting<>("TickTime", 50, 0, 200))
+                .setComplexity(Complexity.Expert);
 
     protected final FastHelper fastHelper = new FastHelper(this);
     public final CrystalHelper crystalHelper = new CrystalHelper(this);
