@@ -41,6 +41,8 @@ public class NoRender extends Module
             register(new BooleanSetting("Advancements", false));
     protected final Setting<Boolean> critParticles =
             register(new BooleanSetting("CritParticles", false));
+    protected final Setting<Boolean> eatingParticles =
+            register(new BooleanSetting("EatingParticles", false));
     protected final Setting<Boolean> dynamicFov    =
             register(new BooleanSetting("DynamicFov", true));
     public final Setting<Boolean> boss         =
@@ -125,6 +127,11 @@ public class NoRender extends Module
     public boolean noAdvancements()
     {
         return this.isEnabled() && advancements.getValue();
+    }
+
+    public boolean noEatingParticles()
+    {
+        return this.isEnabled() && eatingParticles.getValue();
     }
 
     public boolean noWeather()
