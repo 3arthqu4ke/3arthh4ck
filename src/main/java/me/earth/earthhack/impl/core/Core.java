@@ -9,12 +9,14 @@ import me.earth.earthhack.impl.util.misc.FileUtil;
 import me.earth.earthhack.tweaker.EarthhackTweaker;
 import me.earth.earthhack.tweaker.TweakerCore;
 import me.earth.earthhack.vanilla.Environment;
+import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
+import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -77,6 +79,27 @@ public class Core implements TweakerCore
                                                 .getConfigs()
                                                 .values())
         {
+            if (config.getTweakerClass() != null) {
+                LOGGER.info("Adding "
+                        + config.getName()
+                        + "'s CustomTweaker: "
+                        + config.getMixinConfig());
+                try {
+                    Class<?> clazz = Class.forName(config.getTweakerClass());
+                    Constructor<?> constructor = clazz.getConstructor();
+                    constructor.setAccessible(true);
+                    TweakerCore tweakerCore = (TweakerCore) constructor.newInstance();
+                    tweakerCore.init(pluginClassLoader);
+                    for (String transformer : tweakerCore.getTransformers()) {
+                        if (pluginClassLoader instanceof LaunchClassLoader) {
+                            ((LaunchClassLoader) pluginClassLoader).registerTransformer(transformer);
+                        }
+                    }
+                } catch (Throwable ex) {
+                    ex.printStackTrace();
+                }
+            }
+
             if (config.getMixinConfig() != null)
             {
                 LOGGER.info("Adding "
