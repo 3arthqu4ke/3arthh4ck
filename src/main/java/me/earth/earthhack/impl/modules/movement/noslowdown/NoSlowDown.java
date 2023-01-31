@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * {@link MixinBlockSoulSand} for SoulSand.
- * {@link MixinBlockSlime} for Slime.
+ * {@link MixinBlockSlime} for Slime. 
  */
 public class NoSlowDown extends Module
 {
