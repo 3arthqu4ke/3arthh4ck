@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * {@link MixinBlockSoulSand} for SoulSand.
+ * {@link MixinBlockSlime} for Slime. 
  */
 public class NoSlowDown extends Module
 {
@@ -62,6 +63,7 @@ public class NoSlowDown extends Module
     {
         super("NoSlowDown", Category.Movement);
         register(new BooleanSetting("SoulSand", true));
+        register(new BooleanSetting("Slime", false));
 
         keys = new KeyBinding[]
         {
