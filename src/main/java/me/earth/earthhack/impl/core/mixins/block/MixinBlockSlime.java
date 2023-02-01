@@ -18,7 +18,7 @@ public abstract class MixinBlockSlime
         NO_SLOW_DOWN = Caches.getModule(NoSlowDown.class);
     private static final SettingCache<Boolean, BooleanSetting, NoSlowDown>
         SLIME_BLOCK = Caches.getSetting
-            (NoSlowDown.class, BooleanSetting.class, "Slime", true);
+            (NoSlowDown.class, BooleanSetting.class, "Slime", false);
 
     @Inject(
         method = "onEntityWalk",
