@@ -63,7 +63,7 @@ public class NoSlowDown extends Module
     {
         super("NoSlowDown", Category.Movement);
         register(new BooleanSetting("SoulSand", true));
-        register(new BooleanSetting("Slime", true));
+        register(new BooleanSetting("Slime", false));
 
         keys = new KeyBinding[]
         {
