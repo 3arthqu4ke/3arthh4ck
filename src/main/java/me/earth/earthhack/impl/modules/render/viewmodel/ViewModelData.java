@@ -8,6 +8,7 @@ final class ViewModelData extends DefaultData<ViewModel>
     {
         super(module);
         register(module.noSway, "Removes sway animation while the camera moves.");
+        register(module.swingSpeed, "The speed at which your hand swings. 6 is default speed.");
         register(module.offX, "Rotates your Offhand around on the X-Axis.");
         register(module.offY, "Set the height of your Offhand.");
         register(module.mainX, "Rotates your mainhand around on the X-Axis.");

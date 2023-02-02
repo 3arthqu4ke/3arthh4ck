@@ -16,9 +16,11 @@ import me.earth.earthhack.impl.modules.player.fasteat.FastEat;
 import me.earth.earthhack.impl.modules.player.fasteat.mode.FastEatMode;
 import me.earth.earthhack.impl.modules.player.spectate.Spectate;
 import me.earth.earthhack.impl.modules.render.norender.NoRender;
+import me.earth.earthhack.impl.modules.render.viewmodel.ViewModel;
 import me.earth.earthhack.impl.util.minecraft.ICachedDamage;
 import me.earth.earthhack.impl.util.minecraft.MotionTracker;
 import me.earth.earthhack.impl.util.thread.EnchantmentUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -27,10 +29,13 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.play.client.CPacketPlayerTryUseItem;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
@@ -38,13 +43,14 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Accessor;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Objects;
 
 @Mixin(EntityLivingBase.class)
 public abstract class MixinEntityLivingBase extends MixinEntity
@@ -61,6 +67,8 @@ public abstract class MixinEntityLivingBase extends MixinEntity
             Caches.getModule(Spectate.class);
     private static final ModuleCache<NoRender> NO_RENDER =
             Caches.getModule(NoRender.class);
+    private static final ModuleCache<ViewModel> VIEW_MODEL =
+            Caches.getModule(ViewModel.class);
 
     @Shadow
     @Final
@@ -73,6 +81,12 @@ public abstract class MixinEntityLivingBase extends MixinEntity
     protected int activeItemStackUseCount;
     @Shadow
     protected ItemStack activeItemStack;
+
+    @Shadow
+    public abstract boolean isPotionActive(Potion var1);
+
+    @Shadow
+    public abstract PotionEffect getActivePotionEffect(Potion var1);
 
     protected double noInterpX;
     protected double noInterpY;
@@ -99,10 +113,6 @@ public abstract class MixinEntityLivingBase extends MixinEntity
 
     @Shadow
     public abstract boolean isServerWorld();
-
-    @Override
-    @Invoker(value = "getArmSwingAnimationEnd")
-    public abstract int armSwingAnimationEnd();
 
     @Override
     @Accessor(value = "ticksSinceLastSwing")
@@ -426,6 +436,20 @@ public abstract class MixinEntityLivingBase extends MixinEntity
             {
                 player.swingArm(hand);
             }
+        }
+    }
+
+    @Inject(method = "getArmSwingAnimationEnd", at = @At("HEAD"), cancellable = true)
+    public void getArmSwingAnimationEnd(CallbackInfoReturnable<Integer> cir) {
+        int swingSpeed = VIEW_MODEL.isEnabled() ? VIEW_MODEL.get().swingSpeed.getValue() : 6;
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        if (player == null) {
+            return;
+        }
+        if (this.isPotionActive(MobEffects.HASTE)) {
+            cir.setReturnValue(swingSpeed - (1 + (Objects.requireNonNull(getActivePotionEffect(MobEffects.HASTE))).getAmplifier()));
+        } else {
+            cir.setReturnValue((this.isPotionActive(MobEffects.MINING_FATIGUE) ? swingSpeed + (1 + Objects.requireNonNull(getActivePotionEffect(MobEffects.MINING_FATIGUE)).getAmplifier()) * 2 : swingSpeed));
         }
     }
 

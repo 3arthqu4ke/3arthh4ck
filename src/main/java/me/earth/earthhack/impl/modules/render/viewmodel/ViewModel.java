@@ -20,6 +20,8 @@ public class ViewModel extends Module
 
     public final BooleanSetting noSway =
             register(new BooleanSetting("No-Sway", false));
+    public final Setting<Integer> swingSpeed =
+            register(new NumberSetting<>("SwingSpeed", 6, 0, 20));
     protected final Setting<Float> offX  =
             register(new NumberSetting<>("OffHand-X", 0.0f, -10.0f, 10.0f));
     protected final Setting<Float> offY  =
