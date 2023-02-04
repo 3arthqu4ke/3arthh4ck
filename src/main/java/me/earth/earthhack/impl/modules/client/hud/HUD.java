@@ -59,6 +59,8 @@ public class HUD extends Module {
             register(new ColorSetting("Color", Color.WHITE));
     protected final Setting<Boolean> logo =
             register(new BooleanSetting("Logo", true));
+    protected final Setting<String> logoText =
+            register(new StringSetting("LogoText", "3arthh4ck"));
     protected final Setting<Boolean> coordinates =
             register(new BooleanSetting("Coordinates", true));
     protected final Setting<Boolean> armor =
@@ -187,7 +189,7 @@ public class HUD extends Module {
 
     protected void renderLogo() {
         if (logo.getValue()) {
-            renderText("3arthh4ck - " + Earthhack.VERSION, 2, 2);
+            renderText(logoText.getValue() + " - " + Earthhack.VERSION, 2, 2);
         }
     }
 
