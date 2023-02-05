@@ -440,7 +440,7 @@ public abstract class MixinEntityLivingBase extends MixinEntity
     }
 
     @Inject(method = "getArmSwingAnimationEnd", at = @At("HEAD"), cancellable = true)
-    public void getArmSwingAnimationEnd(CallbackInfoReturnable<Integer> cir) {
+    public void getArmSwingAnimationEndHook(CallbackInfoReturnable<Integer> cir) {
         int swingSpeed = VIEW_MODEL.isEnabled() ? VIEW_MODEL.get().swingSpeed.getValue() : 6;
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         if (player == null) {
@@ -450,6 +450,17 @@ public abstract class MixinEntityLivingBase extends MixinEntity
             cir.setReturnValue(swingSpeed - (1 + (Objects.requireNonNull(getActivePotionEffect(MobEffects.HASTE))).getAmplifier()));
         } else {
             cir.setReturnValue((this.isPotionActive(MobEffects.MINING_FATIGUE) ? swingSpeed + (1 + Objects.requireNonNull(getActivePotionEffect(MobEffects.MINING_FATIGUE)).getAmplifier()) * 2 : swingSpeed));
+        }
+    }
+
+    public int armSwingAnimationEnd() {
+        if (this.isPotionActive(MobEffects.HASTE))
+        {
+            return 6 - (1 + this.getActivePotionEffect(MobEffects.HASTE).getAmplifier());
+        }
+        else
+        {
+            return this.isPotionActive(MobEffects.MINING_FATIGUE) ? 6 + (1 + this.getActivePotionEffect(MobEffects.MINING_FATIGUE).getAmplifier()) * 2 : 6;
         }
     }
 
