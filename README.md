@@ -1,4 +1,4 @@
-> :warning: This is an outdated and archived 1.12.2 client. More and more servers are updating to newer versions. Any new PingBypass I release can be found [here](https://github.com/3arthqu4ke/PingBypass).
+> :warning: This is an outdated and archived 1.12.2 client. More and more servers are updating to newer versions. Any new PingBypass I release will be found [here](https://github.com/3arthqu4ke/PingBypass).
 
 # 3arthh4ck
 
