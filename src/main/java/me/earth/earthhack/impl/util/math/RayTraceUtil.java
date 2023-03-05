@@ -1,6 +1,10 @@
 package me.earth.earthhack.impl.util.math;
 
+import me.earth.earthhack.api.cache.SettingCache;
+import me.earth.earthhack.api.setting.settings.BooleanSetting;
 import me.earth.earthhack.api.util.interfaces.Globals;
+import me.earth.earthhack.impl.modules.Caches;
+import me.earth.earthhack.impl.modules.client.management.Management;
 import me.earth.earthhack.impl.util.math.position.PositionUtil;
 import me.earth.earthhack.impl.util.math.rotation.RotationUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -18,6 +22,9 @@ import java.util.Optional;
 // TODO: better rayTrace for 2b2t. Find the part of the block we can see
 public class RayTraceUtil implements Globals
 {
+    private static final SettingCache
+        <Boolean, BooleanSetting, Management> NEW_PLACE =
+        Caches.getSetting(Management.class, BooleanSetting.class, "1.19-Place", false);
     /**
      * Produces a float array of length 3 representing
      * the needed facingX, facingY and facingZ for a
@@ -30,11 +37,17 @@ public class RayTraceUtil implements Globals
      */
     public static float[] hitVecToPlaceVec(BlockPos pos, Vec3d hitVec)
     {
-        float x = (float)(hitVec.x - pos.getX());
-        float y = (float)(hitVec.y - pos.getY());
-        float z = (float)(hitVec.z - pos.getZ());
+        double x = hitVec.x - pos.getX();
+        double y = hitVec.y - pos.getY();
+        double z = hitVec.z - pos.getZ();
+        // TODO: also fix any outgoing packet?
+        if (NEW_PLACE.getValue()) {
+            if (!(Math.abs(x - 0.5) < 1.0000001f && Math.abs(y - 0.5) < 1.0000001 && Math.abs(z - 0.5) < 1.0000001)) {
+                return new float[]{(float) hitVec.x,(float)  hitVec.y, (float) hitVec.z};
+            }
+        }
 
-        return new float[]{x, y, z};
+        return new float[]{(float) x, (float) y, (float) z};
     }
 
     public static RayTraceResult getRayTraceResult(float yaw, float pitch)
