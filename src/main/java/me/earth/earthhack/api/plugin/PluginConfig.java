@@ -14,6 +14,9 @@ public final class PluginConfig
     @SerializedName("mixinConfig")
     private String mixinConfig;
 
+    @SerializedName("tweakerClass")
+    private String tweakerClass;
+
     public String getName()
     {
         return name;
@@ -27,6 +30,10 @@ public final class PluginConfig
     public String getMixinConfig()
     {
         return mixinConfig;
+    }
+
+    public String getTweakerClass() {
+        return tweakerClass;
     }
 
     @Override

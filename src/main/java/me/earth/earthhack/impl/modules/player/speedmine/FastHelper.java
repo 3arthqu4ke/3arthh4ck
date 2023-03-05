@@ -106,7 +106,7 @@ public class FastHelper implements Globals {
         for (int i = 0; i < 9; i++) {
             ItemStack stack = mc.player.inventory.getStackInSlot(i);
             float damage = 0.0f;
-            long ticks = timer.getTime() / 50;
+            long ticks = timer.getTime() / module.tickTime.getValue();
             for (Boolean onGround : module.ongroundHistoryHelper) {
                 if (ticks-- <= 0) {
                     break;
@@ -153,7 +153,7 @@ public class FastHelper implements Globals {
                     && ((crystalSlot = InventoryUtil.findHotbarItem(Items.END_CRYSTAL)) != -1
                         || module.offhandPlace.getValue())
                     && (crystalPos = module.crystalHelper.calcCrystal(module.pos)) != null
-                    && module.crystalHelper.doCrystalPlace(crystalPos, crystalSlot, lastSlot, swap)
+                    && module.crystalHelper.doCrystalPlace(crystalPos, crystalSlot, lastSlot, swap, finalPrePlace)
                         || finalPrePlace)
                 {
                     return;

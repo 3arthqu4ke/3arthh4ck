@@ -19,6 +19,7 @@
     "block.MixinBlockFluidRenderer",
     "block.MixinBlockLiquid",
     "block.MixinBlockModelRenderer",
+    "block.MixinBlockSlime",
     "block.MixinBlockSoulSand",
     "block.MixinTileEntityEndGateway",
     "block.MixinTileEntityShulkerBox",

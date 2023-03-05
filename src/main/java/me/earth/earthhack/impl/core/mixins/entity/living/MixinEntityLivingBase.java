@@ -15,6 +15,7 @@ import me.earth.earthhack.impl.modules.movement.elytraflight.mode.ElytraMode;
 import me.earth.earthhack.impl.modules.player.fasteat.FastEat;
 import me.earth.earthhack.impl.modules.player.fasteat.mode.FastEatMode;
 import me.earth.earthhack.impl.modules.player.spectate.Spectate;
+import me.earth.earthhack.impl.modules.render.norender.NoRender;
 import me.earth.earthhack.impl.util.minecraft.ICachedDamage;
 import me.earth.earthhack.impl.util.minecraft.MotionTracker;
 import me.earth.earthhack.impl.util.thread.EnchantmentUtil;
@@ -40,6 +41,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -57,6 +59,8 @@ public abstract class MixinEntityLivingBase extends MixinEntity
             Caches.getModule(NoInterp.class);
     private static final ModuleCache<Spectate> SPECTATE =
             Caches.getModule(Spectate.class);
+    private static final ModuleCache<NoRender> NO_RENDER =
+            Caches.getModule(NoRender.class);
 
     @Shadow
     @Final
@@ -377,6 +381,13 @@ public abstract class MixinEntityLivingBase extends MixinEntity
         {
             info.cancel();
         }
+    }
+
+    @ModifyVariable(method = "updateItemUse", at = @At("HEAD"), ordinal = 0, argsOnly = true)
+    public int updateItemUse(int eatingParticlesAmount) {
+        if (NO_RENDER.isEnabled() && NO_RENDER.get().noEatingParticles())
+            return 0;
+        else return eatingParticlesAmount;
     }
 
     @Redirect(
